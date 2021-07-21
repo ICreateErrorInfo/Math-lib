@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Math-lib": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Moritz\\source\\repos\\Test\\Test\\bin\\Debug\\net5.0\\Test.exe"
+    }
+  }
+}
