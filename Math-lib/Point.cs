@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Math_lib
 {
-    public class Point
+    public readonly struct Point
     {
         //Properties
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public double X { get; init; }
+        public double Y { get; init; }
+        public double Z { get; init; }
 
 
         //Constructors
-        public Point()
-        {
-            X = Y = Z = 0;
-        }
         public Point(double x, double y, double z)
         {
             X = x;
@@ -522,16 +514,6 @@ namespace Math_lib
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(obj, null))
-            {
-                return false;
-            }
-
             if (obj is not Point other)
             {
                 return false;
@@ -540,9 +522,8 @@ namespace Math_lib
             return this == other;
         }
 
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+        public override int GetHashCode() {
+            return HashCode.Combine(X, Y, Z);
         }
     }
 }

@@ -1,44 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Math_lib
 {
     public class Matrix
     {
         //Felder
-        readonly double[,] matrix;
-        readonly int row;
-        readonly int col;
+        readonly double[,] _matrix;
+        readonly int _row;
+        readonly int _col;
 
         //Constructors
         public Matrix(int row, int col)
         {
-            matrix = new double[col, row];
-            this.row = row;
-            this.col = col;
+            _matrix = new double[col, row];
+            _row = row;
+            _col = col;
         }
         public Matrix(Matrix m)
         {
-            matrix = m.matrix;
-            row = m.row;
-            col = m.col;
+            _matrix = m._matrix;
+            _row = m._row;
+            _col = m._col;
         }
         public Matrix(double[,] m)
         {
-            matrix = m;
-            row = m.GetLength(0);
-            col = m.GetLength(1);
+            _matrix = m;
+            _row = m.GetLength(0);
+            _col = m.GetLength(1);
         }
+
         public Matrix(double[] m)
         {
-            matrix = new double[0, m.Length];
+            _matrix = new double[0, m.Length];
             for(int i = 0; i < m.Length; i++)
             {
-                matrix[0, i] = m[i];
+                _matrix[0, i] = m[i];
             }
+
+            _row = m.Length;
+            _col = 1;
+        }
+
+        public double this[int row, int column]
+        {
+            get => _matrix[row, column];
+            set => _matrix[row, column] = value;
         }
 
         //methods
@@ -51,17 +57,17 @@ namespace Math_lib
 
             Matrix m = new Matrix(i, i);
             
-            for(int j = 0; j < m.row; j++)
+            for(int j = 0; j < m._row; j++)
             {
-                for(int k = 0; k < m.col; k++)
+                for(int k = 0; k < m._col; k++)
                 {
                     if(j == k)
                     {
-                        m.matrix[j, k] = 1;
+                        m[j, k] = 1;
                     }
                     else
                     {
-                        m.matrix[j, k] = 0;
+                        m[j, k] = 0;
                     }
                 }
             }
@@ -73,18 +79,18 @@ namespace Math_lib
         //overrides *
         public static Matrix operator *(Matrix a, Matrix b)
         {
-            Matrix c = new Matrix(a.row, b.col);
+            Matrix c = new Matrix(a._row, b._col);
 
-            for (int i = 0; i < a.row; i++)
+            for (int i = 0; i < a._row; i++)
             {
-                for (int j = 0; j < b.col; j++)
+                for (int j = 0; j < b._col; j++)
                 {
                     double sum = 0;
-                    for (int k = 0; k < a.col; k++)
+                    for (int k = 0; k < a._col; k++)
                     {
-                        sum += a.matrix[i, k] * b.matrix[k, j];
+                        sum += a._matrix[i, k] * b._matrix[k, j];
                     }
-                    c.matrix[i, j] = sum;
+                    c._matrix[i, j] = sum;
                 }
             }
 
@@ -94,13 +100,13 @@ namespace Math_lib
         //overrides +
         public static Matrix operator +(Matrix a, Matrix b)
         {
-            Matrix c = new Matrix(a.row, b.col);
+            Matrix c = new Matrix(a._row, b._col);
 
-            for (int i = 0; i < a.row; i++)
+            for (int i = 0; i < a._row; i++)
             {
-                for (int j = 0; j < b.col; j++)
+                for (int j = 0; j < b._col; j++)
                 {
-                    c.matrix[i, j] = a.matrix[i, j] + b.matrix[i, j];
+                    c._matrix[i, j] = a._matrix[i, j] + b._matrix[i, j];
                 }
             }
 
@@ -110,13 +116,13 @@ namespace Math_lib
         //overrides -
         public static Matrix operator -(Matrix a, Matrix b)
         {
-            Matrix c = new Matrix(a.row, b.col);
+            Matrix c = new Matrix(a._row, b._col);
 
-            for (int i = 0; i < a.row; i++)
+            for (int i = 0; i < a._row; i++)
             {
-                for (int j = 0; j < b.col; j++)
+                for (int j = 0; j < b._col; j++)
                 {
-                    c.matrix[i, j] = a.matrix[i, j] - b.matrix[i, j];
+                    c._matrix[i, j] = a._matrix[i, j] - b._matrix[i, j];
                 }
             }
 
@@ -127,42 +133,17 @@ namespace Math_lib
         public override string ToString()
         {
             string output = "";
-            for (int i = 0; i < row; i++)
+            for (int i = 0; i < _row; i++)
             {
-                output = $"{output}[{matrix[i, 0]}";
+                output = $"{output}[{_matrix[i, 0]}";
 
-                for (int j = 1; j < col; j++)
+                for (int j = 1; j < _col; j++)
                 {
-                    output = $"{output}|{matrix[i, j]}";
+                    output = $"{output}|{_matrix[i, j]}";
                 }
                 output = $"{output}] \r\n";
             }
             return output;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(obj, null))
-            {
-                return false;
-            }
-
-            if (obj is not Matrix other)
-            {
-                return false;
-            }
-
-            return this == other;
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
         }
     }
 }

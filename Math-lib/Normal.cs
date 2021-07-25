@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Math_lib
 {
-    public class Normal
+    public readonly struct Normal
     {
         //Properties
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public double X { get; init; }
+        public double Y { get; init; }
+        public double Z { get; init; }
 
 
         //Constructors
-        public Normal()
-        {
-            X = Y = Z = 0;
-        }
         public Normal(double x, double y, double z)
         {
             X = x;
@@ -67,137 +59,137 @@ namespace Math_lib
         //overrides +
         public static Normal operator +(Normal n, Normal n1)
         {
-            return new Normal(n.X + n1.X,
-                              n.Y + n1.Y,
-                              n.Z + n1.Z);
+            return new(n.X + n1.X,
+                       n.Y + n1.Y,
+                       n.Z + n1.Z);
         }
         public static Normal operator +(Normal n, double d)
         {
-            return new Normal(n.X + d,
-                              n.Y + d,
-                              n.Z + d);
+            return new(n.X + d,
+                       n.Y + d,
+                       n.Z + d);
         }
         public static Normal operator +(double d, Normal n)
         {
-            return new Normal(n.X + d,
-                              n.Y + d,
-                              n.Z + d);
+            return new(n.X + d,
+                       n.Y + d,
+                       n.Z + d);
         }
         public static Normal operator +(Normal n, Vector v)
         {
-            return new Normal(n.X + v.X,
-                              n.Y + v.Y,
-                              n.Z + v.Z);
+            return new(n.X + v.X,
+                       n.Y + v.Y,
+                       n.Z + v.Z);
         }
         public static Normal operator +(Normal n, Point p)
         {
-            return new Normal(n.X + p.X,
-                              n.Y + p.Y,
-                              n.Z + p.Z);
+            return new(n.X + p.X,
+                       n.Y + p.Y,
+                       n.Z + p.Z);
         }
         public static Normal operator +(Normal n)
         {
-            return new Normal(+n.X, +n.Y, +n.Z);
+            return new(+n.X, +n.Y, +n.Z);
         }
 
         //overrides -
         public static Normal operator -(Normal n, Normal n1)
         {
-            return new Normal(n.X - n1.X,
-                              n.Y - n1.Y,
-                              n.Z - n1.Z);
+            return new(n.X - n1.X,
+                       n.Y - n1.Y,
+                       n.Z - n1.Z);
         }
         public static Normal operator -(Normal n, double d)
         {
-            return new Normal(n.X - d,
-                              n.Y - d,
-                              n.Z - d);
+            return new(n.X - d,
+                       n.Y - d,
+                       n.Z - d);
         }
         public static Normal operator -(double d, Normal n)
         {
-            return new Normal(n.X - d,
-                              n.Y - d,
-                              n.Z - d);
+            return new(n.X - d,
+                       n.Y - d,
+                       n.Z - d);
         }
         public static Normal operator -(Normal n, Vector v)
         {
-            return new Normal(n.X - v.X,
-                              n.Y - v.Y,
-                              n.Z - v.Z);
+            return new(n.X - v.X,
+                       n.Y - v.Y,
+                       n.Z - v.Z);
         }
         public static Normal operator -(Normal n, Point p)
         {
-            return new Normal(n.X - p.X,
-                              n.Y - p.Y,
-                              n.Z - p.Z);
+            return new(n.X - p.X,
+                       n.Y - p.Y,
+                       n.Z - p.Z);
         }
         public static Normal operator -(Normal n)
         {
-            return new Normal(-n.X, -n.Y, -n.Z);
+            return new(-n.X, -n.Y, -n.Z);
         }
 
         //overrides *
         public static Normal operator *(Normal n, Normal n1)
         {
-            return new Normal(n.X * n1.X,
-                              n.Y * n1.Y,
-                              n.Z * n1.Z);
+            return new(n.X * n1.X,
+                       n.Y * n1.Y,
+                       n.Z * n1.Z);
         }
         public static Normal operator *(Normal n, double d)
         {
-            return new Normal(n.X * d,
-                              n.Y * d,
-                              n.Z * d);
+            return new(n.X * d,
+                       n.Y * d,
+                       n.Z * d);
         }
         public static Normal operator *(double d, Normal n)
         {
-            return new Normal(n.X * d,
-                              n.Y * d,
-                              n.Z * d);
+            return new(n.X * d,
+                       n.Y * d,
+                       n.Z * d);
         }
         public static Normal operator *(Normal n, Vector v)
         {
-            return new Normal(n.X * v.X,
-                              n.Y * v.Y,
-                              n.Z * v.Z);
+            return new(n.X * v.X,
+                       n.Y * v.Y,
+                       n.Z * v.Z);
         }
         public static Normal operator *(Normal n, Point p)
         {
-            return new Normal(n.X * p.X,
-                              n.Y * p.Y,
-                              n.Z * p.Z);
+            return new(n.X * p.X,
+                       n.Y * p.Y,
+                       n.Z * p.Z);
         }
 
         //overrides /
         public static Normal operator /(Normal n, Normal n1)
         {
-            return new Normal(n.X / n1.X,
-                              n.Y / n1.Y,
-                              n.Z / n1.Z);
+            return new(n.X / n1.X,
+                       n.Y / n1.Y,
+                       n.Z / n1.Z);
         }
         public static Normal operator /(Normal n, double d)
         {
-            return new Normal(n.X / d,
-                              n.Y / d,
-                              n.Z / d);
+            return new(n.X / d,
+                       n.Y / d,
+                       n.Z / d);
         }
         public static Normal operator /(double d, Normal n)
         {
-            return new Normal(n.X / d,
-                              n.Y / d,
-                              n.Z / d);
+            return new(n.X / d,
+                       n.Y / d,
+                       n.Z / d);
         }
         public static Normal operator /(Normal n, Vector v)
         {
-            return new Normal(n.X / v.X,
-                              n.Y / v.Y,
-                              n.Z / v.Z);
+            return new(n.X / v.X,
+                       n.Y / v.Y,
+                       n.Z / v.Z);
         }
         public static Normal operator /(Normal n, Point p)
         {
-            return new Normal(n.X / p.X,
-                              n.Y / p.Y,
-                              n.Z / p.Z);
+            return new(n.X / p.X,
+                       n.Y / p.Y,
+                       n.Z / p.Z);
         }
 
         //overrides >
@@ -482,16 +474,6 @@ namespace Math_lib
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(obj, null))
-            {
-                return false;
-            }
-
             if(obj is not Normal other)
             {
                 return false;
@@ -502,7 +484,7 @@ namespace Math_lib
 
         public override int GetHashCode()
         {
-            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+            return HashCode.Combine(X,Y,Z);
         }
     }
 }
