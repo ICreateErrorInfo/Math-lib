@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 using Math_lib;
@@ -14,41 +16,42 @@ namespace Projection {
     public partial class MainWindow: Window {
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly DispatcherTimer _timer;
-        private          int             _angle;
-        readonly         Mesh            _meshCube = new();
-        private readonly Rasterizer      _rasterizer;
+        readonly DispatcherTimer _timer;
+        private  int             _angle;
+        readonly Mesh            _meshCube = new();
+        readonly Rasterizer      _rasterizer;
 
         public MainWindow() {
 
             //Cube
-            _meshCube.tris.Add(new Triangle(new Point(0, 0, 0), new Point(0, 1, 0), new Point(1, 1, 0)));
-            _meshCube.tris.Add(new Triangle(new Point(0, 0, 0), new Point(1, 1, 0), new Point(1, 0, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 0), new Point(0, 1, 0), new Point(1, 1, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 0), new Point(1, 1, 0), new Point(1, 0, 0)));
 
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 0), new Point(1, 1, 1)));
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 1), new Point(1, 0, 1)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 0), new Point(1, 1, 1)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 1), new Point(1, 0, 1)));
 
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 1), new Point(1, 1, 1), new Point(0, 1, 1)));
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 1), new Point(0, 1, 1), new Point(0, 0, 1)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(1, 1, 1), new Point(0, 1, 1)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 1, 1), new Point(0, 0, 1)));
 
-            _meshCube.tris.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 1), new Point(0, 1, 0)));
-            _meshCube.tris.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 0), new Point(0, 0, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 1), new Point(0, 1, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 0), new Point(0, 0, 0)));
 
-            _meshCube.tris.Add(new Triangle(new Point(0, 1, 0), new Point(0, 1, 1), new Point(1, 1, 1)));
-            _meshCube.tris.Add(new Triangle(new Point(0, 1, 0), new Point(1, 1, 1), new Point(1, 1, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 1, 0), new Point(0, 1, 1), new Point(1, 1, 1)));
+            _meshCube.Triangles.Add(new Triangle(new Point(0, 1, 0), new Point(1, 1, 1), new Point(1, 1, 0)));
 
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 1), new Point(0, 0, 0)));
-            _meshCube.tris.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 0), new Point(1, 0, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 1), new Point(0, 0, 0)));
+            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 0), new Point(1, 0, 0)));
 
             InitializeComponent();
 
             const int screenWidth  = 1024;
             const int screenHeight = 1024;
 
-            _rasterizer = new Rasterizer(screenWidth, screenHeight);
+            _rasterizer  = new BresenhamRasterizer(screenWidth, screenHeight);
 
+            Render();
             _timer = new DispatcherTimer {
-                Interval  = TimeSpan.FromMilliseconds(40),
+                Interval = TimeSpan.FromMilliseconds(40),
                 IsEnabled = true
             };
 
@@ -56,54 +59,63 @@ namespace Projection {
 
         }
 
-        private void OnRenderSzene(object sender, EventArgs e) {
-
-            _rasterizer.Clear();
-            var bmp = RenderScene(_meshCube, _angle++, _rasterizer);
-            Image.Source = bmp.ToImageSource();
+        protected override void OnKeyDown(KeyEventArgs e) {
+            _angle += 1;
+            OnRenderSzene(null, null);
         }
 
-        private static DirectBitmap RenderScene(Mesh meshCube, int angle, Rasterizer r) {
+        private void OnRenderSzene(object sender, EventArgs e) {
+            Render();
+        }
+
+        private void Render() {
+
+            _rasterizer.Clear();
+            RenderScene(_meshCube, _angle++, _rasterizer, Color.White);
+
+            Image.Source = _rasterizer.Bmp.ToImageSource();
+        }
+
+        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Color color) {
 
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
             //Draw
-            foreach (Triangle tri in meshCube.tris) {
+            foreach (Triangle tri in meshCube.Triangles) {
 
                 var triRotated = new Triangle();
 
-                triRotated.p[0] = Matrix4x4.RotateZMarix(angle) * tri.p[0];
-                triRotated.p[1] = Matrix4x4.RotateZMarix(angle) * tri.p[1];
-                triRotated.p[2] = Matrix4x4.RotateZMarix(angle) * tri.p[2];
+                triRotated.Points[0] = Matrix4x4.RotateZMarix(angle) * tri.Points[0];
+                triRotated.Points[1] = Matrix4x4.RotateZMarix(angle) * tri.Points[1];
+                triRotated.Points[2] = Matrix4x4.RotateZMarix(angle) * tri.Points[2];
 
-                triRotated.p[0] = Matrix4x4.RotateYMarix(angle) * triRotated.p[0];
-                triRotated.p[1] = Matrix4x4.RotateYMarix(angle) * triRotated.p[1];
-                triRotated.p[2] = Matrix4x4.RotateYMarix(angle) * triRotated.p[2];
+                triRotated.Points[0] = Matrix4x4.RotateYMarix(angle) * triRotated.Points[0];
+                triRotated.Points[1] = Matrix4x4.RotateYMarix(angle) * triRotated.Points[1];
+                triRotated.Points[2] = Matrix4x4.RotateYMarix(angle) * triRotated.Points[2];
 
                 var triTranslated = new Triangle();
 
-                triTranslated.p[0] = new Point(triRotated.p[0].X, triRotated.p[0].Y, triRotated.p[0].Z + 3);
-                triTranslated.p[1] = new Point(triRotated.p[1].X, triRotated.p[1].Y, triRotated.p[1].Z + 3);
-                triTranslated.p[2] = new Point(triRotated.p[2].X, triRotated.p[2].Y, triRotated.p[2].Z + 3);
+                triTranslated.Points[0] = new Point(triRotated.Points[0].X, triRotated.Points[0].Y, triRotated.Points[0].Z + 3);
+                triTranslated.Points[1] = new Point(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
+                triTranslated.Points[2] = new Point(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
 
-                Point p  = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.p[0];
-                Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.p[1];
-                Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.p[2];
+                Point p  = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[0];
+                Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[1];
+                Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[2];
 
                 var triProjected = new Triangle(p, p1, p2);
 
-                triProjected.p[0] += new Point(1, 1, 0);
-                triProjected.p[1] += new Point(1, 1, 0);
-                triProjected.p[2] += new Point(1, 1, 0);
+                triProjected.Points[0] += new Point(1, 1, 0);
+                triProjected.Points[1] += new Point(1, 1, 0);
+                triProjected.Points[2] += new Point(1, 1, 0);
 
-                triProjected.p[0] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                triProjected.p[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                triProjected.p[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                triProjected.Points[0] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                triProjected.Points[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                triProjected.Points[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
 
-                r.DrawTriangle(triProjected, System.Drawing.Color.White);
+                r.DrawTriangle(triProjected, color);
             }
 
-            return r.Bmp;
         }
 
     }

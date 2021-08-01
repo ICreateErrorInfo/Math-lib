@@ -2,28 +2,32 @@
 
 using Math_lib;
 
-namespace Projection { 
-    class Triangle 
-    {
-        public Triangle(Point p1, Point p2, Point p3) 
-        {
-            p[0] = p1;
-            p[1] = p2;
-            p[2] = p3;
-        }
-        public Triangle() 
-        {
+namespace Projection {
+
+    public class Triangle {
+
+        public Triangle() {
 
         }
 
-        public Point[] p = new Point[3];
+        public Triangle(Point p1, Point p2, Point p3) {
+            Points[0] = p1;
+            Points[1] = p2;
+            Points[2] = p3;
+        }
+
+        public Point[] Points { get; } = new Point[3];
+
     }
-    class Mesh 
-    {
+
+    class Mesh {
 
         public Mesh() {
-            tris = new();
+            Triangles = new();
         }
-        public List<Triangle> tris;
+
+        public List<Triangle> Triangles { get; }
+
     }
+
 }

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Drawing;
+
+using Point = Math_lib.Point;
+
+namespace Projection {
+
+    public class BresenhamRasterizer: Rasterizer {
+
+        public BresenhamRasterizer(Rasterizer rasterizer): base(rasterizer) {
+        }
+
+        public BresenhamRasterizer(int width, int height): base(width, height) {
+        }
+
+        public override void DrawLine(Point p1, Point p2, Color c) {
+
+            var x0 = (int) p1.X;
+            var y0 = (int) p1.Y;
+
+            var x1 = (int) p2.X;
+            var y1 = (int) p2.Y;
+
+            int dx = Math.Abs(x1 - x0);
+            int dy = -Math.Abs(y1 - y0);
+
+            var sx = x0 < x1 ? 1 : -1;
+            var sy = y0 < y1 ? 1 : -1;
+
+            int err = dx + dy;
+
+            while (true) {
+
+                Bmp.SetPixel(x0, y0, c);
+
+                if (x0 == x1 && y0 == y1) {
+                    break;
+                }
+
+                var e2 = 2 * err;
+                if (e2 > dy) {
+                    err += dy;
+                    x0  += sx;
+                }
+
+                if (e2 < dx) {
+                    err += dx;
+                    y0  += sy;
+                }
+
+            }
+
+        }
+
+    }
+
+}
