@@ -99,9 +99,9 @@ namespace Projection {
                 triTranslated.Points[1] = new Point(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
                 triTranslated.Points[2] = new Point(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
 
-                Point p  = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[0];
-                Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[1];
-                Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 150, 0.1, 1000) * triTranslated.Points[2];
+                Point p  = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[0];
+                Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[1];
+                Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[2];
 
                 var triProjected = new Triangle(p, p1, p2);
 
@@ -113,7 +113,10 @@ namespace Projection {
                 triProjected.Points[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
                 triProjected.Points[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
 
-                r.DrawTriangle(triProjected, color);
+                r.DrawTriangle(triProjected, color, true);
+
+                
+
             }
 
         }

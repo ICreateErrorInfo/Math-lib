@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Projection {
 
@@ -22,6 +24,57 @@ namespace Projection {
 
         public void Clear() {
             Array.Clear(Bits, 0, Bits.Length);
+        }
+
+        public void FloodFill(int x, int y, Color newColor) {
+
+            newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...
+
+            var replaceColor = GetPixel(x, y);
+            if (newColor == replaceColor) {
+                return;
+            }
+
+            FloodFillmpl(x, y, newColor, replaceColor);
+
+        }
+
+        void FloodFillmpl(int x1, int y1, Color newColor, Color replaceColor) {
+
+            Stack<(int X, int Y)> stack = new();
+
+            ProcessPixel(x1, y1);
+
+            while (stack.Any()) {
+
+                var (x, y) = stack.Pop();
+
+                ProcessPixel(x, y + 1);
+                ProcessPixel(x, y - 1);
+                ProcessPixel(x    + 1, y);
+                ProcessPixel(x    - 1, y);
+
+            }
+
+            void ProcessPixel(int x, int y) {
+
+                var currentColor = SafeGetPixel(x, y);
+
+                if (currentColor == replaceColor) {
+                    stack.Push((x, y));
+                    SetPixel(x, y, newColor);
+                }
+            }
+
+            Color? SafeGetPixel(int x, int y) {
+
+                if (x < 0 || x >= Width ||
+                    y < 0 || y >= Height) {
+                    return null;
+                }
+
+                return GetPixel(x, y);
+            }
         }
 
         public void SetPixel(int x, int y, Color color) {
