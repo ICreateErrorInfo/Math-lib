@@ -83,7 +83,6 @@ namespace Math_lib
             return new Point(p[x], p[y], p[z]);
         }
 
-
         //overrides +
         public static Point operator +(Point p, Point p1)
         {

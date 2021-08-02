@@ -45,13 +45,15 @@ namespace Projection {
 
             InitializeComponent();
 
-            const int screenWidth  = 1080;
-            const int screenHeight = 1080;
+            const int screenWidth  = 256;
+            const int screenHeight = 256;
 
-            _rasterizer  = new BresenhamRasterizer(screenWidth, screenHeight);
+            //_rasterizer  = new BresenhamRasterizer(screenWidth, screenHeight);
+            _rasterizer = new ScannLineRasterizer(screenWidth, screenHeight);
 
             Render();
-            _timer = new DispatcherTimer {
+            _timer = new DispatcherTimer
+            {
                 Interval = TimeSpan.FromMilliseconds(40),
                 IsEnabled = true
             };
