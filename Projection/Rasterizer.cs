@@ -25,23 +25,20 @@ namespace Projection {
 
         public abstract void DrawLine(Point p1, Point p2, Color c);
 
-        //public void DrawTriangle(Triangle tri, Color c, bool fill = false) {
+        public virtual void DrawTriangle(Triangle tri, Color c, bool fill = false) {
 
-            //DrawLine(tri.Points[0], tri.Points[1], c);
-            //DrawLine(tri.Points[1], tri.Points[2], c);
-            //DrawLine(tri.Points[0], tri.Points[2], c);
+            DrawLine(tri.Points[0], tri.Points[1], c);
+            DrawLine(tri.Points[1], tri.Points[2], c);
+            DrawLine(tri.Points[0], tri.Points[2], c);
 
-            //if (fill) {
-                //Point p = new Point((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
-                                    //(tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3, 0);
+            if (fill) {
+                Point p = new Point((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
+                                    (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3, 0);
 
-                //Bmp.FloodFill((int)p.X, (int)p.Y, c);
-            //}
+                Bmp.FloodFill((int)p.X, (int)p.Y, c);
+            }
 
-            
-        //}
-
-        public abstract void DrawTriangle(Triangle tri, Color c, bool fill = false);
+        }
 
     }
 
