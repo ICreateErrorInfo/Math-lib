@@ -35,7 +35,7 @@ namespace Projection {
                 Point p = new Point((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
                                     (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3, 0);
 
-                Bmp.FloodFill((int)p.X, (int)p.Y, Color.Red);
+                Bmp.FloodFill((int)p.X, (int)p.Y, c);
             }
 
             
