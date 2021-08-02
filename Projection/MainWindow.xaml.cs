@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Math_lib;
 
 using Point = Math_lib.Point;
+using Vector = Math_lib.Vector;
 
 namespace Projection {
 
@@ -80,9 +81,13 @@ namespace Projection {
 
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
+
+            Point cameraP = new Point(0, 0, 0);
+
             //Draw
             foreach (Triangle tri in meshCube.Triangles) {
 
+                //Rotation
                 var triRotated = new Triangle();
 
                 triRotated.Points[0] = Matrix4x4.RotateZMarix(angle) * tri.Points[0];
@@ -93,34 +98,39 @@ namespace Projection {
                 triRotated.Points[1] = Matrix4x4.RotateYMarix(angle) * triRotated.Points[1];
                 triRotated.Points[2] = Matrix4x4.RotateYMarix(angle) * triRotated.Points[2];
 
+                //Transation
                 var triTranslated = new Triangle();
 
                 triTranslated.Points[0] = new Point(triRotated.Points[0].X, triRotated.Points[0].Y, triRotated.Points[0].Z + 3);
                 triTranslated.Points[1] = new Point(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
                 triTranslated.Points[2] = new Point(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
 
-                Point p  = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[0];
-                Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[1];
-                Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[2];
+                Vector line1 = triTranslated.Points[1] - triTranslated.Points[0];
+                Vector line2 = triTranslated.Points[2] - triTranslated.Points[0];
 
-                var triProjected = new Triangle(p, p1, p2);
+                Vector normal = Vector.UnitVector(Vector.Cross(line1, line2));
 
-                triProjected.Points[0] += new Point(1, 1, 0);
-                triProjected.Points[1] += new Point(1, 1, 0);
-                triProjected.Points[2] += new Point(1, 1, 0);
+                if (Vector.Dot(normal, triTranslated.Points[0] - cameraP) < 0)
+                {
+                    //project
+                    Point p = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[0];
+                    Point p1 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[1];
+                    Point p2 = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000) * triTranslated.Points[2];
 
-                triProjected.Points[0] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                triProjected.Points[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                triProjected.Points[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                    var triProjected = new Triangle(p, p1, p2);
 
-                r.DrawTriangle(triProjected, color, true);
+                    //Scaled
+                    triProjected.Points[0] += new Point(1, 1, 0);
+                    triProjected.Points[1] += new Point(1, 1, 0);
+                    triProjected.Points[2] += new Point(1, 1, 0);
 
-                
+                    triProjected.Points[0] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                    triProjected.Points[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                    triProjected.Points[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
 
+                    r.DrawTriangle(triProjected, color, true);
+                }       
             }
-
         }
-
     }
-
 }

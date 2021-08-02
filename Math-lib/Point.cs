@@ -127,11 +127,11 @@ namespace Math_lib
         }
 
         //overrides -
-        public static Point operator -(Point p, Point p1)
+        public static Vector operator -(Point p, Point p1)
         {
-            return new Point(p.X - p1.X,
-                             p.Y - p1.Y,
-                             p.Z - p1.Z);
+            return new Vector(p.X - p1.X,
+                              p.Y - p1.Y,
+                              p.Z - p1.Z);
         }
         public static Point operator -(Point p, double d)
         {
