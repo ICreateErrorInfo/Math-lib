@@ -1,6 +1,7 @@
-﻿using System.Drawing;
+﻿using Math_lib;
+using System.Drawing;
 
-using Point = Math_lib.Point;
+using Point3 = Math_lib.Point3;
 
 namespace Projection {
 
@@ -23,17 +24,17 @@ namespace Projection {
             Bmp.Clear();
         }
 
-        public abstract void DrawLine(Point p1, Point p2, Color c);
+        public abstract void DrawLine(Point2 p1, Point2 p2, Color c);
 
-        public virtual void DrawTriangle(Triangle tri, Color c, bool fill = false) {
+        public virtual void DrawTriangle(Triangle2 tri, Color c, bool fill = false) {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
             DrawLine(tri.Points[1], tri.Points[2], c);
             DrawLine(tri.Points[0], tri.Points[2], c);
 
             if (fill) {
-                Point p = new Point((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
-                                    (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3, 0);
+                Point2 p = new Point2((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
+                                      (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3);
 
                 Bmp.FloodFill((int)p.X, (int)p.Y, c);
             }

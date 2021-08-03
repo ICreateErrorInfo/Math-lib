@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
-using Point = Math_lib.Point;
+using Point3 = Math_lib.Point3;
+using Point2 = Math_lib.Point2;
 
 namespace Projection {
 
@@ -13,7 +14,7 @@ namespace Projection {
         public BresenhamRasterizer(int width, int height): base(width, height) {
         }
 
-        public override void DrawLine(Point p1, Point p2, Color c) {
+        public override void DrawLine(Point2 p1, Point2 p2, Color c) {
 
             var x0 = (int) p1.X;
             var y0 = (int) p1.Y;
@@ -52,7 +53,7 @@ namespace Projection {
 
         }
 
-        public override void DrawTriangle(Triangle tri, Color c, bool fill = false)
+        public override void DrawTriangle(Triangle2 tri, Color c, bool fill = false)
         {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
@@ -61,7 +62,7 @@ namespace Projection {
 
             if (fill)
             {
-                Point p = new Point((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) / 3,
+                Point3 p = new Point3((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) / 3,
                 (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) / 3, 0);
 
                 Bmp.FloodFill((int)p.X, (int)p.Y, c);

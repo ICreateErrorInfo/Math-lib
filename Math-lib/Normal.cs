@@ -21,13 +21,13 @@ namespace Math_lib
         {
             X = Y = Z = i;
         }
-        public Normal(Vector v)
+        public Normal(Vector3 v)
         {
             X = v.X;
             Y = v.Y;
             Z = v.Z;
         }
-        public Normal(Point v)
+        public Normal(Point3 v)
         {
             X = v.X;
             Y = v.Y;
@@ -75,13 +75,13 @@ namespace Math_lib
                        n.Y + d,
                        n.Z + d);
         }
-        public static Normal operator +(Normal n, Vector v)
+        public static Normal operator +(Normal n, Vector3 v)
         {
             return new(n.X + v.X,
                        n.Y + v.Y,
                        n.Z + v.Z);
         }
-        public static Normal operator +(Normal n, Point p)
+        public static Normal operator +(Normal n, Point3 p)
         {
             return new(n.X + p.X,
                        n.Y + p.Y,
@@ -111,13 +111,13 @@ namespace Math_lib
                        n.Y - d,
                        n.Z - d);
         }
-        public static Normal operator -(Normal n, Vector v)
+        public static Normal operator -(Normal n, Vector3 v)
         {
             return new(n.X - v.X,
                        n.Y - v.Y,
                        n.Z - v.Z);
         }
-        public static Normal operator -(Normal n, Point p)
+        public static Normal operator -(Normal n, Point3 p)
         {
             return new(n.X - p.X,
                        n.Y - p.Y,
@@ -147,13 +147,13 @@ namespace Math_lib
                        n.Y * d,
                        n.Z * d);
         }
-        public static Normal operator *(Normal n, Vector v)
+        public static Normal operator *(Normal n, Vector3 v)
         {
             return new(n.X * v.X,
                        n.Y * v.Y,
                        n.Z * v.Z);
         }
-        public static Normal operator *(Normal n, Point p)
+        public static Normal operator *(Normal n, Point3 p)
         {
             return new(n.X * p.X,
                        n.Y * p.Y,
@@ -179,13 +179,13 @@ namespace Math_lib
                        n.Y / d,
                        n.Z / d);
         }
-        public static Normal operator /(Normal n, Vector v)
+        public static Normal operator /(Normal n, Vector3 v)
         {
             return new(n.X / v.X,
                        n.Y / v.Y,
                        n.Z / v.Z);
         }
-        public static Normal operator /(Normal n, Point p)
+        public static Normal operator /(Normal n, Point3 p)
         {
             return new(n.X / p.X,
                        n.Y / p.Y,
@@ -217,7 +217,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Normal n, Vector v)
+        public static bool operator >(Normal n, Vector3 v)
         {
             if (n.X > v.X && n.Y > v.Y && n.Z > v.Z)
             {
@@ -225,7 +225,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Normal n, Point p)
+        public static bool operator >(Normal n, Point3 p)
         {
             if (n.X > p.X && n.Y > p.Y && n.Z > p.Z)
             {
@@ -259,7 +259,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Normal n, Vector v)
+        public static bool operator <(Normal n, Vector3 v)
         {
             if (n.X < v.X && n.Y < v.Y && n.Z < v.Z)
             {
@@ -267,7 +267,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Normal n, Point p)
+        public static bool operator <(Normal n, Point3 p)
         {
             if (n.X < p.X && n.Y < p.Y && n.Z < p.Z)
             {
@@ -301,7 +301,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Normal n, Vector v)
+        public static bool operator ==(Normal n, Vector3 v)
         {
             if (n.X == v.X && n.Y == v.Y && n.Z == v.Z)
             {
@@ -309,7 +309,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Normal n, Point p)
+        public static bool operator ==(Normal n, Point3 p)
         {
             if (n.X == p.X && n.Y == p.Y && n.Z == p.Z)
             {
@@ -343,7 +343,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Normal n, Vector v)
+        public static bool operator !=(Normal n, Vector3 v)
         {
             if (n.X == v.X && n.Y == v.Y && n.Z == v.Z)
             {
@@ -351,7 +351,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Normal n, Point p)
+        public static bool operator !=(Normal n, Point3 p)
         {
             if (n.X == p.X && n.Y == p.Y && n.Z == p.Z)
             {
@@ -385,7 +385,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Normal n, Vector v)
+        public static bool operator <=(Normal n, Vector3 v)
         {
             if (n.X <= v.X && n.Y <= v.Y && n.Z <= v.Z)
             {
@@ -393,7 +393,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Normal n, Point p)
+        public static bool operator <=(Normal n, Point3 p)
         {
             if (n.X <= p.X && n.Y <= p.Y && n.Z <= p.Z)
             {
@@ -427,7 +427,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Normal n, Vector v)
+        public static bool operator >=(Normal n, Vector3 v)
         {
             if (n.X >= v.X && n.Y >= v.Y && n.Z >= v.Z)
             {
@@ -435,7 +435,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Normal n, Point p)
+        public static bool operator >=(Normal n, Point3 p)
         {
             if (n.X >= p.X && n.Y >= p.Y && n.Z >= p.Z)
             {

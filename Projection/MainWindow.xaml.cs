@@ -6,8 +6,8 @@ using System.Windows.Threading;
 
 using Math_lib;
 using Microsoft.Win32;
-using Point = Math_lib.Point;
-using Vector = Math_lib.Vector;
+using Point3 = Math_lib.Point3;
+using Vector3 = Math_lib.Vector3;
 
 namespace Projection {
 
@@ -84,7 +84,7 @@ namespace Projection {
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
 
-            Point cameraP = new Point(0, 0, 0);
+            Point3 cameraP = new Point3(0, 0, 0);
 
             Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
@@ -93,10 +93,10 @@ namespace Projection {
 
 
             //Draw
-            foreach (Triangle tri in meshCube.Triangles) {
+            foreach (Triangle3 tri in meshCube.Triangles) {
 
                 //Rotation
-                var triRotated = new Triangle();
+                var triRotated = new Triangle3();
 
                 triRotated.Points[0] = rotateZ * tri.Points[0];
                 triRotated.Points[1] = rotateZ * tri.Points[1];
@@ -107,44 +107,44 @@ namespace Projection {
                 triRotated.Points[2] = rotateY * triRotated.Points[2];
 
                 //Transation
-                var triTranslated = new Triangle();
+                var triTranslated = new Triangle3();
 
-                triTranslated.Points[0] = new Point(triRotated.Points[0].X, triRotated.Points[0].Y, triRotated.Points[0].Z + 3);
-                triTranslated.Points[1] = new Point(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
-                triTranslated.Points[2] = new Point(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
+                triTranslated.Points[0] = new Point3(triRotated.Points[0].X, triRotated.Points[0].Y, triRotated.Points[0].Z + 3);
+                triTranslated.Points[1] = new Point3(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
+                triTranslated.Points[2] = new Point3(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
 
                 //calc Normals
-                Vector line1 = triTranslated.Points[1] - triTranslated.Points[0];
-                Vector line2 = triTranslated.Points[2] - triTranslated.Points[0];
+                Vector3 line1 = triTranslated.Points[1] - triTranslated.Points[0];
+                Vector3 line2 = triTranslated.Points[2] - triTranslated.Points[0];
 
-                Vector normal = Vector.UnitVector(Vector.Cross(line1, line2));
+                Vector3 normal = Vector3.UnitVector(Vector3.Cross(line1, line2));
 
                 //check visability
-                if (Vector.Dot(normal, triTranslated.Points[0] - cameraP) < 0)
+                if (Vector3.Dot(normal, triTranslated.Points[0] - cameraP) < 0)
                 {
                     //Illumination
-                    Vector lightDirection = new Vector(0, 0, -1);
-                    lightDirection = Vector.UnitVector(lightDirection);
+                    Vector3 lightDirection = new Vector3(0, 0, -1);
+                    lightDirection = Vector3.UnitVector(lightDirection);
 
-                    double dp = Vector.Dot(normal, lightDirection);
+                    double dp = Vector3.Dot(normal, lightDirection);
                     var grayValue = Convert.ToByte(Math.Abs(dp * Byte.MaxValue));
                     var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
 
                     //project
-                    Point p  = projection * triTranslated.Points[0];
-                    Point p1 = projection * triTranslated.Points[1];
-                    Point p2 = projection * triTranslated.Points[2];
+                    Point3 p  = projection * triTranslated.Points[0];
+                    Point3 p1 = projection * triTranslated.Points[1];
+                    Point3 p2 = projection * triTranslated.Points[2];
 
-                    var triProjected = new Triangle(p, p1, p2);
+                    var triProjected = new Triangle2(p, p1, p2);
 
                     //Scaling into screenspace
-                    triProjected.Points[0] += new Point(1, 1, 0);
-                    triProjected.Points[1] += new Point(1, 1, 0);
-                    triProjected.Points[2] += new Point(1, 1, 0);
-
-                    triProjected.Points[0] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                    triProjected.Points[1] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
-                    triProjected.Points[2] *= new Point(0.5 * screenWidth, 0.5 * screenHeight, 1);
+                    triProjected.Points[0] += new Point2(1, 1);
+                    triProjected.Points[1] += new Point2(1, 1);
+                    triProjected.Points[2] += new Point2(1, 1);
+                                                       
+                    triProjected.Points[0] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+                    triProjected.Points[1] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+                    triProjected.Points[2] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
 
                     r.DrawTriangle(triProjected, col, true);
                 }       

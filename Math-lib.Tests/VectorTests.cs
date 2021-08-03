@@ -9,7 +9,7 @@ namespace Math_lib.Tests {
 
         [Test]
         public void TestSyntax() {
-            var v = new Vector {X = 3, Y = 2, Z = 1};
+            var v = new Vector3 {X = 3, Y = 2, Z = 1};
 
             Assert.That(v.X, Is.EqualTo(3));
             Assert.That(v.Y, Is.EqualTo(2));
@@ -19,7 +19,7 @@ namespace Math_lib.Tests {
         [Test]
         public void TestEmptyVector() {
 
-            var v = new Vector();
+            var v = new Vector3();
             Assert.That(v.X, Is.EqualTo(0));
             Assert.That(v.Y, Is.EqualTo(0));
             Assert.That(v.Z, Is.EqualTo(0));
@@ -27,7 +27,7 @@ namespace Math_lib.Tests {
 
         [Test]
         public void TestCtor1() {
-            var v = new Vector(3);
+            var v = new Vector3(3);
             Assert.That(v.X, Is.EqualTo(3));
             Assert.That(v.Y, Is.EqualTo(3));
             Assert.That(v.Z, Is.EqualTo(3));
@@ -35,7 +35,7 @@ namespace Math_lib.Tests {
 
         [Test]
         public void TestCtor2() {
-            var v = new Vector(1, 2, 3);
+            var v = new Vector3(1, 2, 3);
             Assert.That(v.X, Is.EqualTo(1));
             Assert.That(v.Y, Is.EqualTo(2));
             Assert.That(v.Z, Is.EqualTo(3));
@@ -43,13 +43,13 @@ namespace Math_lib.Tests {
 
         [Test]
         public void TestGetLength() {
-            var v = new Vector(3, 4, 5);
+            var v = new Vector3(3, 4, 5);
             Assert.That(v.GetLength(), Is.EqualTo(Math.Sqrt(50)));
         }
 
         [Test]
         public void TestGetLengthSqrt() {
-            var v = new Vector(3, 4, 5);
+            var v = new Vector3(3, 4, 5);
             Assert.That(v.GetLengthSqrt(), Is.EqualTo(50));
         }
 

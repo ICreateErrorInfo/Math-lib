@@ -16,18 +16,18 @@ namespace Math_lib
             }
         }
 
-        public static Point operator *(Matrix4x4 m, Point i) {
+        public static Point3 operator *(Matrix4x4 m, Point3 i) {
 
             double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + m[3, 0];
             double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + m[3, 1];
             double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + m[3, 2];
 
-            Point o = new Point(x, y, z);
+            Point3 o = new Point3(x, y, z);
 
             double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + m[3, 3];
 
             if (w != 0) {
-                Point wp = new Point(w, w, w);
+                Point3 wp = new Point3(w, w, w);
 
                 o /= wp;
             }
@@ -35,7 +35,7 @@ namespace Math_lib
             return o;
         }
 
-        public static Matrix4x4 ScaleMarix(Vector v)
+        public static Matrix4x4 ScaleMarix(Vector3 v)
         {
             return new(new[,]
             {

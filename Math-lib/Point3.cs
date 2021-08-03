@@ -2,7 +2,7 @@
 
 namespace Math_lib
 {
-    public readonly struct Point
+    public readonly struct Point3
     {
         //Properties
         public double X { get; init; }
@@ -11,228 +11,240 @@ namespace Math_lib
 
 
         //Constructors
-        public Point(double x, double y, double z)
+        public Point3(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
         }
-        public Point(double i)
+        public Point3(double i)
         {
             X = Y = Z = i;
         }
-        public Point(Point p)
+        public Point3(Point3 p)
         {
             X = p.X;
             Y = p.Y;
             Z = p.Z;
         }
-        public Point(Vector v)
+        public Point3(Point2 v)
+        {
+            X = v.X;
+            Y = v.Y;
+            Z = 0;
+        }
+        public Point3(Vector3 v)
         {
             X = v.X;
             Y = v.Y;
             Z = v.Z;
         }
+        public Point3(Vector2 v)
+        {
+            X = v.X;
+            Y = v.Y;
+            Z = 0;
+        }
 
 
         //Methods
-        public static double Distance(Point p, Point p1)
+        public static double Distance(Point3 p, Point3 p1)
         {
-            return new Vector(p - p1).GetLength();
+            return new Vector3(p - p1).GetLength();
         }
-        public static double DistanceSqrt(Point p, Point p1)
+        public static double DistanceSqrt(Point3 p, Point3 p1)
         {
-            return new Vector(p - p1).GetLengthSqrt();
+            return new Vector3(p - p1).GetLengthSqrt();
         }
-        public static Point Lerp(double t, Point p, Point p1)
+        public static Point3 Lerp(double t, Point3 p, Point3 p1)
         {
             return (1 - t) * p + t * p1;
         }
-        public static Point Min(Point p, Point p1)
+        public static Point3 Min(Point3 p, Point3 p1)
         {
-            return new Point(Math.Min(p.X, p1.X),
+            return new Point3(Math.Min(p.X, p1.X),
                              Math.Min(p.Y, p1.Y),
                              Math.Min(p.Z, p1.Z));
         }
-        public static Point Max(Point p, Point p1)
+        public static Point3 Max(Point3 p, Point3 p1)
         {
-            return new Point(Math.Max(p.X, p1.X),
+            return new Point3(Math.Max(p.X, p1.X),
                              Math.Max(p.Y, p1.Y),
                              Math.Max(p.Z, p1.Z));
         }
-        public static Point Floor(Point p)
+        public static Point3 Floor(Point3 p)
         {
-            return new Point(Math.Floor(p.X),
+            return new Point3(Math.Floor(p.X),
                              Math.Floor(p.Y),
                              Math.Floor(p.Z));
         }
-        public static Point Ceil(Point p)
+        public static Point3 Ceil(Point3 p)
         {
-            return new Point(Math.Ceiling(p.X),
+            return new Point3(Math.Ceiling(p.X),
                              Math.Ceiling(p.Y),
                              Math.Ceiling(p.Z));
         }
-        public static Point Abs(Point p)
+        public static Point3 Abs(Point3 p)
         {
-            return new Point(Math.Abs(p.X),
+            return new Point3(Math.Abs(p.X),
                              Math.Abs(p.Y),
                              Math.Abs(p.Z));
         }
-        public static Point Permute(Point p, int x, int y, int z)
+        public static Point3 Permute(Point3 p, int x, int y, int z)
         {
-            return new Point(p[x], p[y], p[z]);
+            return new Point3(p[x], p[y], p[z]);
         }
 
         //overrides +
-        public static Point operator +(Point p, Point p1)
+        public static Point3 operator +(Point3 p, Point3 p1)
         {
-            return new Point(p.X + p1.X,
+            return new Point3(p.X + p1.X,
                              p.Y + p1.Y,
                              p.Z + p1.Z);
         }
-        public static Point operator +(Point p, double p1)
+        public static Point3 operator +(Point3 p, double p1)
         {
-            return new Point(p.X + p1,
+            return new Point3(p.X + p1,
                              p.Y + p1,
                              p.Z + p1);
         }
-        public static Point operator +(double d, Point p)
+        public static Point3 operator +(double d, Point3 p)
         {
-            return new Point(p.X + d,
+            return new Point3(p.X + d,
                              p.Y + d,
                              p.Z + d);
         }
-        public static Point operator +(Point p, Vector v)
+        public static Point3 operator +(Point3 p, Vector3 v)
         {
-            return new Point(p.X + v.X,
+            return new Point3(p.X + v.X,
                              p.Y + v.Y,
                              p.Z + v.Z);
         }
-        public static Point operator +(Vector v, Point p)
+        public static Point3 operator +(Vector3 v, Point3 p)
         {
-            return new Point(v.X + p.X,
+            return new Point3(v.X + p.X,
                              v.Y + p.Y,
                              v.Z + p.Z);
         }
-        public static Point operator +(Point p, Normal n)
+        public static Point3 operator +(Point3 p, Normal n)
         {
-            return new Point(p.X + n.X,
+            return new Point3(p.X + n.X,
                              p.Y + n.Y,
                              p.Z + n.Z);
         }
-        public static Point operator +(Point p)
+        public static Point3 operator +(Point3 p)
         {
-            return new Point(+p.X, +p.Y, +p.Z);
+            return new Point3(+p.X, +p.Y, +p.Z);
         }
 
         //overrides -
-        public static Vector operator -(Point p, Point p1)
+        public static Vector3 operator -(Point3 p, Point3 p1)
         {
-            return new Vector(p.X - p1.X,
+            return new Vector3(p.X - p1.X,
                               p.Y - p1.Y,
                               p.Z - p1.Z);
         }
-        public static Point operator -(Point p, double d)
+        public static Point3 operator -(Point3 p, double d)
         {
-            return new Point(p.X - d,
+            return new Point3(p.X - d,
                              p.Y - d,
                              p.Z - d);
         }
-        public static Point operator -(double d, Point p)
+        public static Point3 operator -(double d, Point3 p)
         {
-            return new Point(p.X - d,
+            return new Point3(p.X - d,
                              p.Y - d,
                              p.Z - d);
         }
-        public static Point operator -(Point p, Vector v)
+        public static Point3 operator -(Point3 p, Vector3 v)
         {
-            return new Point(p.X - v.X,
+            return new Point3(p.X - v.X,
                              p.Y - v.Y,
                              p.Z - v.Z);
         }
-        public static Point operator -(Vector v, Point p)
+        public static Point3 operator -(Vector3 v, Point3 p)
         {
-            return new Point(v.X - p.X,
+            return new Point3(v.X - p.X,
                              v.Y - p.Y,
                              v.Z - p.Z);
         }
-        public static Point operator -(Point p, Normal n)
+        public static Point3 operator -(Point3 p, Normal n)
         {
-            return new Point(p.X - n.X,
+            return new Point3(p.X - n.X,
                              p.Y - n.Y,
                              p.Z - n.Z);
         }
-        public static Point operator -(Point p)
+        public static Point3 operator -(Point3 p)
         {
-            return new Point(-p.X, -p.Y, -p.Z);
+            return new Point3(-p.X, -p.Y, -p.Z);
         }
 
         //overrides *
-        public static Point operator *(Point p, Point p1)
+        public static Point3 operator *(Point3 p, Point3 p1)
         {
-            return new Point(p.X * p1.X,
+            return new Point3(p.X * p1.X,
                              p.Y * p1.Y,
                              p.Z * p1.Z);
         }
-        public static Point operator *(Point p, double d)
+        public static Point3 operator *(Point3 p, double d)
         {
-            return new Point(p.X * d,
+            return new Point3(p.X * d,
                              p.Y * d,
                              p.Z * d);
         }
-        public static Point operator *(double d, Point p)
+        public static Point3 operator *(double d, Point3 p)
         {
-            return new Point(p.X * d,
+            return new Point3(p.X * d,
                              p.Y * d,
                              p.Z * d);
         }
-        public static Point operator *(Point p, Vector v)
+        public static Point3 operator *(Point3 p, Vector3 v)
         {
-            return new Point(p.X * v.X,
+            return new Point3(p.X * v.X,
                              p.Y * v.Y,
                              p.Z * v.Z);
         }
-        public static Point operator *(Point p, Normal n)
+        public static Point3 operator *(Point3 p, Normal n)
         {
-            return new Point(p.X * n.X,
+            return new Point3(p.X * n.X,
                              p.Y * n.Y,
                              p.Z * n.Z);
         }
 
         //overrides /
-        public static Point operator /(Point p, Point p1)
+        public static Point3 operator /(Point3 p, Point3 p1)
         {
-            return new Point(p.X / p1.X,
+            return new Point3(p.X / p1.X,
                              p.Y / p1.Y,
                              p.Z / p1.Z);
         }
-        public static Point operator /(Point p, double d)
+        public static Point3 operator /(Point3 p, double d)
         {
-            return new Point(p.X / d,
+            return new Point3(p.X / d,
                              p.Y / d,
                              p.Z / d);
         }
-        public static Point operator /(double d, Point p)
+        public static Point3 operator /(double d, Point3 p)
         {
-            return new Point(p.X / d,
+            return new Point3(p.X / d,
                              p.Y / d,
                              p.Z / d);
         }
-        public static Point operator /(Point p, Vector v)
+        public static Point3 operator /(Point3 p, Vector3 v)
         {
-            return new Point(p.X / v.X,
+            return new Point3(p.X / v.X,
                              p.Y / v.Y,
                              p.Z / v.Z);
         }
-        public static Point operator /(Point p, Normal n)
+        public static Point3 operator /(Point3 p, Normal n)
         {
-            return new Point(p.X / n.X,
+            return new Point3(p.X / n.X,
                              p.Y / n.Y,
                              p.Z / n.Z);
         }
 
         //overrides >
-        public static bool operator >(Point p, Point p1)
+        public static bool operator >(Point3 p, Point3 p1)
         {
             if (p.X > p1.X && p.Y > p1.Y && p.Z > p1.Z)
             {
@@ -240,7 +252,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point p, double d)
+        public static bool operator >(Point3 p, double d)
         {
             if (p.X > d && p.Y > d && p.Z > d)
             {
@@ -248,7 +260,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(double d, Point p)
+        public static bool operator >(double d, Point3 p)
         {
             if (d > p.X && d > p.Y && d > p.Z)
             {
@@ -256,7 +268,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point p, Vector v)
+        public static bool operator >(Point3 p, Vector3 v)
         {
             if (p.X > v.X && p.Y > v.Y && p.Z > v.Z)
             {
@@ -264,7 +276,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point p, Normal n)
+        public static bool operator >(Point3 p, Normal n)
         {
             if (p.X > n.X && p.Y > n.Y && p.Z > n.Z)
             {
@@ -274,7 +286,7 @@ namespace Math_lib
         }
 
         //overrides <
-        public static bool operator <(Point p, Point p1)
+        public static bool operator <(Point3 p, Point3 p1)
         {
             if (p.X < p1.X && p.Y < p1.Y && p.Z < p1.Z)
             {
@@ -282,7 +294,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point p, double d)
+        public static bool operator <(Point3 p, double d)
         {
             if (p.X < d && p.Y < d && p.Z < d)
             {
@@ -290,7 +302,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(double d, Point p)
+        public static bool operator <(double d, Point3 p)
         {
             if (d < p.X && d < p.Y && d < p.Z)
             {
@@ -298,7 +310,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point p, Vector v)
+        public static bool operator <(Point3 p, Vector3 v)
         {
             if (p.X < v.X && p.Y < v.Y && p.Z < v.Z)
             {
@@ -306,7 +318,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point p, Normal n)
+        public static bool operator <(Point3 p, Normal n)
         {
             if (p.X < n.X && p.Y < n.Y && p.Z < n.Z)
             {
@@ -316,7 +328,7 @@ namespace Math_lib
         }
 
         //overrides ==
-        public static bool operator ==(Point p, Point p1)
+        public static bool operator ==(Point3 p, Point3 p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -324,7 +336,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point p, double d)
+        public static bool operator ==(Point3 p, double d)
         {
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -332,7 +344,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(double d, Point p)
+        public static bool operator ==(double d, Point3 p)
         {
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -340,7 +352,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point p, Vector p1)
+        public static bool operator ==(Point3 p, Vector3 p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -348,7 +360,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point p, Normal n)
+        public static bool operator ==(Point3 p, Normal n)
         {
             if (p.X == n.X && p.Y == n.Y && p.Z == n.Z)
             {
@@ -358,7 +370,7 @@ namespace Math_lib
         }
 
         //overrides !=
-        public static bool operator !=(Point p, Point p1)
+        public static bool operator !=(Point3 p, Point3 p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -366,7 +378,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point p, double d)
+        public static bool operator !=(Point3 p, double d)
         {
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -374,7 +386,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(double d, Point p)
+        public static bool operator !=(double d, Point3 p)
         {
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -382,7 +394,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point p, Vector v)
+        public static bool operator !=(Point3 p, Vector3 v)
         {
             if (p.X == v.X && p.Y == v.Y && p.Z == v.Z)
             {
@@ -390,7 +402,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point p, Normal n)
+        public static bool operator !=(Point3 p, Normal n)
         {
             if (p.X == n.X && p.Y == n.Y && p.Z == n.Z)
             {
@@ -400,7 +412,7 @@ namespace Math_lib
         }
 
         //overides <=
-        public static bool operator <=(Point p, Point p1)
+        public static bool operator <=(Point3 p, Point3 p1)
         {
             if (p.X <= p1.X && p.Y <= p1.Y && p.Z <= p1.Z)
             {
@@ -408,7 +420,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point p, double d)
+        public static bool operator <=(Point3 p, double d)
         {
             if (p.X <= d && p.Y <= d && p.Z <= d)
             {
@@ -416,7 +428,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(double d, Point p)
+        public static bool operator <=(double d, Point3 p)
         {
             if (d <= p.X && d <= p.Y && d <= p.Z)
             {
@@ -424,7 +436,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point p, Vector v)
+        public static bool operator <=(Point3 p, Vector3 v)
         {
             if (p.X <= v.X && p.Y <= v.Y && p.Z <= v.Z)
             {
@@ -432,7 +444,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point p, Normal n)
+        public static bool operator <=(Point3 p, Normal n)
         {
             if (p.X <= n.X && p.Y <= n.Y && p.Z <= n.Z)
             {
@@ -442,7 +454,7 @@ namespace Math_lib
         }
 
         //overrides >=
-        public static bool operator >=(Point p, Point p1)
+        public static bool operator >=(Point3 p, Point3 p1)
         {
             if (p.X >= p1.X && p.Y >= p1.Y && p.Z >= p1.Z)
             {
@@ -450,7 +462,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point p, double d)
+        public static bool operator >=(Point3 p, double d)
         {
             if (p.X >= d && p.Y >= d && p.Z >= d)
             {
@@ -458,7 +470,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(double d, Point p)
+        public static bool operator >=(double d, Point3 p)
         {
             if (d >= p.X && d >= p.Y && d >= p.Z)
             {
@@ -466,7 +478,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point p, Vector v)
+        public static bool operator >=(Point3 p, Vector3 v)
         {
             if (p.X >= v.X && p.Y >= v.Y && p.Z >= v.Z)
             {
@@ -474,7 +486,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point p, Normal n)
+        public static bool operator >=(Point3 p, Normal n)
         {
             if (p.X >= n.X && p.Y >= n.Y && p.Z >= n.Z)
             {
@@ -513,7 +525,7 @@ namespace Math_lib
 
         public override bool Equals(object obj)
         {
-            if (obj is not Point other)
+            if (obj is not Point3 other)
             {
                 return false;
             }

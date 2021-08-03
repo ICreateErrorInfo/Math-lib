@@ -10,19 +10,19 @@ namespace Projection
     {
         readonly IReadOnlyList<string> _stringList;
 
-        public Importer(IReadOnlyList<String> stringList, IReadOnlyList<Vector> verts)
+        public Importer(IReadOnlyList<String> stringList, IReadOnlyList<Vector3> verts)
         {
             _stringList = stringList;
             Verts = verts;
         }
 
-        public IReadOnlyList<Vector> Verts { get; }
+        public IReadOnlyList<Vector3> Verts { get; }
 
         public static Importer Obj(string filename)
         {
 
             var stringList = File.ReadAllLines(filename);
-            var verts = new List<Vector>();
+            var verts = new List<Vector3>();
 
             var provider = new NumberFormatInfo
             {
@@ -37,7 +37,7 @@ namespace Projection
 
                     if (zeile[0] == "v")
                     {
-                        verts.Add(new Vector(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider)));
+                        verts.Add(new Vector3(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider)));
                     }
                 }
             }
@@ -56,7 +56,7 @@ namespace Projection
 
                     if (zeile[0] == "f")
                     {
-                        triangles.Triangles.Add(new Triangle(new(Verts[Convert.ToInt32(zeile[1]) - 1]), new(Verts[Convert.ToInt32(zeile[2]) - 1]), new(Verts[Convert.ToInt32(zeile[3]) - 1])));
+                        triangles.Triangles.Add(new Triangle3(new(Verts[Convert.ToInt32(zeile[1]) - 1]), new(Verts[Convert.ToInt32(zeile[2]) - 1]), new(Verts[Convert.ToInt32(zeile[3]) - 1])));
                     }
                 }
             }

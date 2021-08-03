@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Point = Math_lib.Point;
+using Point3 = Math_lib.Point3;
 
 namespace Projection
 {
@@ -20,39 +20,39 @@ namespace Projection
         {
         }
 
-        public override void DrawLine(Point p1, Point p2, Color c)
+        public override void DrawLine(Point2 p1, Point2 p2, Color c)
         {
             
         }
-        public override void DrawTriangle(Triangle tri, Color c, bool fill = true)
+        public override void DrawTriangle(Triangle2 tri, Color c, bool fill = true)
         {
             fill = true;
 
-            Point p0 = tri.Points[0];
-            Point p1 = tri.Points[1];
-            Point p2 = tri.Points[2];
+            Point2 p0 = tri.Points[0];
+            Point2 p1 = tri.Points[1];
+            Point2 p2 = tri.Points[2];
 
-            if (p1.Y < p0.Y) { Point tempswap = p0; p0 = p1; p1 = tempswap; }
-            if (p2.Y < p1.Y) { Point tempswap = p1; p1 = p2; p2 = tempswap; }
-            if (p1.Y < p0.Y) { Point tempswap = p0; p0 = p1; p1 = tempswap; }
+            if (p1.Y < p0.Y) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
+            if (p2.Y < p1.Y) { Point2 tempswap = p1; p1 = p2; p2 = tempswap; }
+            if (p1.Y < p0.Y) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
 
             if(p0.Y == p1.Y) //top flat
             {
                 //sort
-                if(p1.X < p0.X) { Point tempswap = p0; p0 = p1; p1 = tempswap; }
+                if(p1.X < p0.X) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
                 DrawFlatTopTriangle(p0, p1, p2, c);
             }
             else if(p1.Y == p2.Y) // bottom flat
             {
                 //sort
-                if(p2.X < p1.X) { Point tempswap = p1; p1 = p2; p2 = tempswap; }
+                if(p2.X < p1.X) { Point2 tempswap = p1; p1 = p2; p2 = tempswap; }
                 DrawFlatBottomTriangle(p0, p1, p2, c);
             }
             else // general tri
             {
                 //find Splitting Point
                 double alphaSplit = (p1.Y - p0.Y) / (p2.Y - p0.Y);
-                Point vi = p0 + (p2 - p0) * alphaSplit;
+                Point2 vi = p0 + (p2 - p0) * alphaSplit;
 
                 if(p1.X < vi.X)
                 {
@@ -67,7 +67,7 @@ namespace Projection
             }
         }
 
-        private void DrawFlatTopTriangle(Point p0, Point p1, Point p2, Color c)
+        private void DrawFlatTopTriangle(Point2 p0, Point2 p1, Point2 p2, Color c)
         {
             double m0 = (p2.X - p0.X) / (p2.Y - p0.Y);
             double m1 = (p2.X - p1.X) / (p2.Y - p1.Y);
@@ -89,7 +89,7 @@ namespace Projection
                 }
             }
         }
-        private void DrawFlatBottomTriangle(Point p0, Point p1, Point p2, Color c)
+        private void DrawFlatBottomTriangle(Point2 p0, Point2 p1, Point2 p2, Color c)
         {
             double m0 = (p1.X - p0.X) / (p1.Y - p0.Y);
             double m1 = (p2.X - p0.X) / (p2.Y - p0.Y);
