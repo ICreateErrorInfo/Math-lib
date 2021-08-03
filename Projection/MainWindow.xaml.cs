@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 
 using Math_lib;
-
+using Microsoft.Win32;
 using Point = Math_lib.Point;
 using Vector = Math_lib.Vector;
 
@@ -17,40 +17,27 @@ namespace Projection {
     public partial class MainWindow: Window {
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        readonly DispatcherTimer _timer;
+        private readonly DispatcherTimer _timer;
         private  int             _angle;
-        readonly Mesh            _meshCube = new();
-        readonly Rasterizer      _rasterizer;
+        private readonly Rasterizer      _rasterizer;
+        private Mesh mesh = new();
+
 
         public MainWindow() {
 
-            //Cube
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 0), new Point(0, 1, 0), new Point(1, 1, 0)));
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 0), new Point(1, 1, 0), new Point(1, 0, 0)));
-
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 0), new Point(1, 1, 1)));
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 0), new Point(1, 1, 1), new Point(1, 0, 1)));
-
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(1, 1, 1), new Point(0, 1, 1)));
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 1, 1), new Point(0, 0, 1)));
-
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 1), new Point(0, 1, 0)));
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 0, 1), new Point(0, 1, 0), new Point(0, 0, 0)));
-
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 1, 0), new Point(0, 1, 1), new Point(1, 1, 1)));
-            _meshCube.Triangles.Add(new Triangle(new Point(0, 1, 0), new Point(1, 1, 1), new Point(1, 1, 0)));
-
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 1), new Point(0, 0, 0)));
-            _meshCube.Triangles.Add(new Triangle(new Point(1, 0, 1), new Point(0, 0, 0), new Point(1, 0, 0)));
-
             InitializeComponent();
 
-            const int screenWidth  = 256;
-            const int screenHeight = 256;
+            //Init
+            const int screenWidth = 1920;
+            const int screenHeight = 1080;
 
-            //_rasterizer  = new BresenhamRasterizer(screenWidth, screenHeight);
+            //Load Mesh
+            ShowOpenFile();
+
+            //Init Rasterizer
             _rasterizer = new ScannLineRasterizer(screenWidth, screenHeight);
 
+            //Render
             Render();
             _timer = new DispatcherTimer
             {
@@ -62,25 +49,38 @@ namespace Projection {
 
         }
 
+        private void ShowOpenFile()
+        {
+            var ofn = new OpenFileDialog
+            {
+                Filter = "Object files (*.obj)|*.obj",
+            };
+            if (ofn.ShowDialog() == true)
+            {
+                mesh = Importer.Obj(ofn.FileName).CreateMesh();
+            }
+        }
         protected override void OnKeyDown(KeyEventArgs e) {
-            _angle += 1;
-            OnRenderSzene(null, null);
+            if (e.Key == Key.P)
+            {
+                _timer.IsEnabled ^= true;
+                e.Handled = true;
+            }
         }
 
         private void OnRenderSzene(object sender, EventArgs e) {
             Render();
         }
-
         private void Render() {
 
             _rasterizer.Clear();
-            RenderScene(_meshCube, _angle++, _rasterizer);
+            RenderScene(mesh, _angle++, _rasterizer);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
-
         private static void RenderScene(Mesh meshCube, int angle, Rasterizer r) {
 
+            //Init
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
 
@@ -89,7 +89,8 @@ namespace Projection {
             Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
 
-            Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 90, 0.1, 1000);
+            Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 140, 0.1, 1000);
+
 
             //Draw
             foreach (Triangle tri in meshCube.Triangles) {
@@ -136,7 +137,7 @@ namespace Projection {
 
                     var triProjected = new Triangle(p, p1, p2);
 
-                    //Scaled
+                    //Scaling into screenspace
                     triProjected.Points[0] += new Point(1, 1, 0);
                     triProjected.Points[1] += new Point(1, 1, 0);
                     triProjected.Points[2] += new Point(1, 1, 0);
