@@ -3,6 +3,7 @@ using System.Drawing;
 
 using Point3 = Math_lib.Point3;
 using Point2 = Math_lib.Point2;
+using Math_lib;
 
 namespace Projection {
 

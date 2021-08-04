@@ -36,6 +36,7 @@ namespace Projection {
 
             //Init Rasterizer
             _rasterizer = new ScannLineRasterizer(screenWidth, screenHeight);
+            //_rasterizer = new BresenhamRasterizer(screenWidth, screenHeight);
 
             //Render
             Render();
@@ -86,7 +87,7 @@ namespace Projection {
 
             Point3 cameraP = new Point3(0, 0, 0);
 
-            Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
+            Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle / 2);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
 
             Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 140, 0.1, 1000);
@@ -96,15 +97,8 @@ namespace Projection {
             foreach (Triangle3 tri in meshCube.Triangles) {
 
                 //Rotation
-                var triRotated = new Triangle3();
-
-                triRotated.Points[0] = rotateZ * tri.Points[0];
-                triRotated.Points[1] = rotateZ * tri.Points[1];
-                triRotated.Points[2] = rotateZ * tri.Points[2];
-
-                triRotated.Points[0] = rotateY * triRotated.Points[0];
-                triRotated.Points[1] = rotateY * triRotated.Points[1];
-                triRotated.Points[2] = rotateY * triRotated.Points[2];
+                Triangle3 triRotated = rotateZ * tri;
+                          triRotated = rotateY * triRotated;
 
                 //Transation
                 var triTranslated = new Triangle3();
@@ -131,22 +125,17 @@ namespace Projection {
                     var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
 
                     //project
-                    Point3 p  = projection * triTranslated.Points[0];
-                    Point3 p1 = projection * triTranslated.Points[1];
-                    Point3 p2 = projection * triTranslated.Points[2];
+                    Triangle3 triProjected = projection * triTranslated;
 
-                    var triProjected = new Triangle2(p, p1, p2);
+                    //Convert from Triangle3 to Triangle2
+                    Triangle2 triProjectedConv = new(triProjected);
 
                     //Scaling into screenspace
-                    triProjected.Points[0] += new Point2(1, 1);
-                    triProjected.Points[1] += new Point2(1, 1);
-                    triProjected.Points[2] += new Point2(1, 1);
-                                                       
-                    triProjected.Points[0] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
-                    triProjected.Points[1] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
-                    triProjected.Points[2] *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+                    triProjectedConv += new Point2(1, 1);
+                    triProjectedConv *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
 
-                    r.DrawTriangle(triProjected, col, true);
+                    //Drawing
+                    r.DrawTriangle(triProjectedConv, col, true);
                 }       
             }
         }

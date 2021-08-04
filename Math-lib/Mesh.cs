@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Projection
+namespace Math_lib
 {
-    class Mesh
+    public class Mesh
     {
 
         public Mesh() {
