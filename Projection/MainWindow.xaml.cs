@@ -87,34 +87,35 @@ namespace Projection {
 
             Point3 cameraP = new Point3(0, 0, 0);
 
-            Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle / 2);
+            Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
+            Matrix4x4 rotateX = Matrix4x4.RotateXMarix(angle);
 
-            Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 140, 0.1, 1000);
+            Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 100, 1, 1000);
+            Matrix4x4 translation = Matrix4x4.Translation(0, 0, 3);
 
+            Matrix4x4 worldMatrix = new Matrix4x4();
+            worldMatrix = Matrix4x4.Identity();
+            worldMatrix = worldMatrix * translation;
+            worldMatrix = worldMatrix * rotateZ;
+            worldMatrix = worldMatrix * rotateX;
+            worldMatrix = worldMatrix * rotateY;
 
             //Draw
             foreach (Triangle3 tri in meshCube.Triangles) {
 
-                //Rotation
-                Triangle3 triRotated = rotateZ * tri;
-                          triRotated = rotateY * triRotated;
-
-                //Transation
-                var triTranslated = new Triangle3();
-
-                triTranslated.Points[0] = new Point3(triRotated.Points[0].X, triRotated.Points[0].Y, triRotated.Points[0].Z + 3);
-                triTranslated.Points[1] = new Point3(triRotated.Points[1].X, triRotated.Points[1].Y, triRotated.Points[1].Z + 3);
-                triTranslated.Points[2] = new Point3(triRotated.Points[2].X, triRotated.Points[2].Y, triRotated.Points[2].Z + 3);
+                //Transform triangel
+                Triangle3 triTranformed = new Triangle3();
+                triTranformed = worldMatrix * tri;
 
                 //calc Normals
-                Vector3 line1 = triTranslated.Points[1] - triTranslated.Points[0];
-                Vector3 line2 = triTranslated.Points[2] - triTranslated.Points[0];
+                Vector3 line1 = triTranformed.Points[1] - triTranformed.Points[0];
+                Vector3 line2 = triTranformed.Points[2] - triTranformed.Points[0];
 
                 Vector3 normal = Vector3.UnitVector(Vector3.Cross(line1, line2));
 
                 //check visability
-                if (Vector3.Dot(normal, triTranslated.Points[0] - cameraP) < 0)
+                if (Vector3.Dot(normal, triTranformed.Points[0] - cameraP) < 0)
                 {
                     //Illumination
                     Vector3 lightDirection = new Vector3(0, 0, -1);
@@ -125,7 +126,11 @@ namespace Projection {
                     var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
 
                     //project
-                    Triangle3 triProjected = projection * triTranslated;
+                    Triangle3 triProjected = projection * triTranformed;
+
+                    triProjected.Points[0] /= triProjected.Points[0].W;
+                    triProjected.Points[1] /= triProjected.Points[1].W;
+                    triProjected.Points[2] /= triProjected.Points[2].W;
 
                     //Convert from Triangle3 to Triangle2
                     Triangle2 triProjectedConv = new(triProjected);

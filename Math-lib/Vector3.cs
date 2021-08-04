@@ -8,6 +8,7 @@ namespace Math_lib
         public double X { get; init; }
         public double Y { get; init; }
         public double Z { get; init; }
+        public double W { get; init; }
 
 
         //Constructors
@@ -16,40 +17,54 @@ namespace Math_lib
             X = x;
             Y = y;
             Z = z;
+            W = 1;
+        }
+        public Vector3(double x, double y, double z, double w)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
         public Vector3(double i)
         {
             X = Y = Z = i;
+            W = 1;
         }
         public Vector3(Vector3 v)
         {
             X = v.X;
             Y = v.Y;
             Z = v.Z;
+            W = v.W;
         }
         public Vector3(Point3 p)
         {
             X = p.X;
             Y = p.Y;
             Z = p.Z;
+            W = p.W;
         }
         public Vector3(Normal n)
         {
             X = n.X;
             Y = n.Y;
             Z = n.Z;
+            W = 1;
         }
         public Vector3(Point2 p)
         {
             X = p.X;
             Y = p.Y;
             Z = 0;
+            W = 1;
         }
         public Vector3(Vector2 v)
         {
             X = v.X;
             Y = v.Y;
             Z = 0;
+            W = 1;
         }
 
 
