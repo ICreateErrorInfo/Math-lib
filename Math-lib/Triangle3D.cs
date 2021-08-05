@@ -13,6 +13,12 @@
             Points[1] = p;
             Points[2] = p;
         }
+        public Triangle3D(Triangle2D p)
+        {
+            Points[0] = new(p.Points[0]);
+            Points[1] = new(p.Points[1]);
+            Points[2] = new(0);
+        }
         public Triangle3D(Point3D p1, Point3D p2, Point3D p3) {
             Points[0] = p1;
             Points[1] = p2;

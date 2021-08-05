@@ -13,15 +13,18 @@ namespace Projection {
             Bmp = new DirectBitmap(width, height);
         }
 
-        public DirectBitmap Bmp { get; }
+        public DirectBitmap Bmp { get; private set; }
 
         public int Width  => Bmp.Width;
         public int Height => Bmp.Height;
 
+        public void OverrideBitmap(DirectBitmap bmp)
+        {
+            Bmp = bmp;
+        }
         public void Clear() {
             Bmp.Clear();
         }
-
         public abstract void DrawLine(Point2D p1, Point2D p2, Color c);
 
         public virtual void DrawTriangle(Triangle2D tri, Color c, bool fill) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace Projection {
         private          Mesh3D          _mesh = new();
 
         private readonly Camera _camera;
+        const bool wireframe = false;
 
         public MainWindow() {
 
@@ -120,6 +122,8 @@ namespace Projection {
         private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c) {
 
             //Init
+            var wireframeRasterizer = new BresenhamRasterizer(r.Width, r.Height);
+
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
 
@@ -178,7 +182,7 @@ namespace Projection {
                     clipped[0] = Clipping.outTri1;
                     clipped[1] = Clipping.outTri2;
 
-                    for(int n = 0; n < nClippedTris; n++)
+                    for (int n = 0; n < nClippedTris; n++)
                     {
                         //project
                         Triangle3D triProjected = projection * clipped[n];
@@ -187,17 +191,84 @@ namespace Projection {
                         triProjected.Points[1] /= triProjected.Points[1].W;
                         triProjected.Points[2] /= triProjected.Points[2].W;
 
-                    //Convert from Triangle3 to Triangle2
-                    Triangle2D triProjectedConv = new(triProjected);
+                        //Convert from Triangle3 to Triangle2
+                        Triangle3D triProjectedConv = triProjected;
 
-                    //Scaling into screenspace
-                    triProjectedConv += new Point2D(1, 1);
-                    triProjectedConv *= new Point2D(0.5 * screenWidth, 0.5 * screenHeight);
+                        //Scaling into screenspace
+                        triProjectedConv += new Point3D(1, 1, 0);
+                        triProjectedConv *= new Point3D(0.5 * screenWidth, 0.5 * screenHeight, 1);
+
+                        Triangle3D[] clippedProjected = new Triangle3D[2];
+                        List<Triangle3D> listTriangles = new List<Triangle3D>();
+                        listTriangles.Add(triProjectedConv);
+                        int nNewTris = 1;
+
+                        //Clipping screen Edges
+                        for(int p = 0; p < 4; p++)
+                        {
+                            int nTrisToAdd = 0;
+                            while(nNewTris > 0)
+                            {
+                                Triangle3D test = listTriangles[0];
+                                listTriangles.RemoveAt(0);
+                                nNewTris--;
+
+                                switch (p)
+                                {
+                                    //Clipping top
+                                    case 0: 
+                                        nTrisToAdd = Clipping.TriangleClipAgainstPlane(new(0, 0, 0), new(0, 1, 0), test);
+                                        clippedProjected[0] = Clipping.outTri1;
+                                        clippedProjected[1] = Clipping.outTri2;
+                                        break;
+                                    //Clipping bottom
+                                    case 1:
+                                        nTrisToAdd = Clipping.TriangleClipAgainstPlane(new(0, screenHeight - 1, 0), new(0, -1, 0), test);
+                                        clippedProjected[0] = Clipping.outTri1;
+                                        clippedProjected[1] = Clipping.outTri2;
+                                        break;
+                                    //Clipping left
+                                    case 2:
+                                        nTrisToAdd = Clipping.TriangleClipAgainstPlane(new(0, 0, 0), new(1, 0, 0), test);
+                                        clippedProjected[0] = Clipping.outTri1;
+                                        clippedProjected[1] = Clipping.outTri2;
+                                        break;
+                                    //Clipping Right
+                                    case 3:
+                                        nTrisToAdd = Clipping.TriangleClipAgainstPlane(new(screenWidth - 1, 0, 0), new(-1, 0, 0), test);
+                                        clippedProjected[0] = Clipping.outTri1;
+                                        clippedProjected[1] = Clipping.outTri2;
+                                        break;
+                                }
+
+                                //Saving new Triangles
+                                for(int w = 0; w < nTrisToAdd; w++)
+                                {
+                                    listTriangles.Add(clippedProjected[w]);
+                                }
+                            }
+                            nNewTris = listTriangles.Count;
+                        }
 
                         //Drawing
-                        r.DrawTriangle(triProjectedConv, col, false);
-                    }           
+                        foreach (Triangle3D t in listTriangles)
+                        {
+                            Triangle2D t2d = new(t);
+                            if (wireframe)
+                            {
+                                wireframeRasterizer.DrawTriangle(t2d, Color.Red, false);
+                            }
+                            else
+                            {
+                                r.DrawTriangle(t2d, col, false);
+                            }
+                        }
+                    }
                 }       
+            }
+            if (wireframe)
+            {
+                r.OverrideBitmap(wireframeRasterizer.Bmp);
             }
         }
     }
