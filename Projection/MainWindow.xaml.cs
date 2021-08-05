@@ -22,6 +22,7 @@ namespace Projection {
         private readonly Rasterizer      _rasterizer;
         private Mesh mesh = new();
 
+        private Point3 cameraP;
 
         public MainWindow() {
 
@@ -30,6 +31,7 @@ namespace Projection {
             //Init
             const int screenWidth = 1920;
             const int screenHeight = 1080;
+            cameraP = new Point3(0, 0, 0);
 
             //Load Mesh
             ShowOpenFile();
@@ -67,6 +69,14 @@ namespace Projection {
                 _timer.IsEnabled ^= true;
                 e.Handled = true;
             }
+            if(e.Key == Key.Space)
+            {
+                cameraP += new Point3(0, 1, 0);
+            }
+            if (e.Key == Key.LeftShift)
+            {
+                cameraP = new Point3(cameraP - new Point3(0,1,0));
+            }
         }
 
         private void OnRenderSzene(object sender, EventArgs e) {
@@ -75,24 +85,24 @@ namespace Projection {
         private void Render() {
 
             _rasterizer.Clear();
-            RenderScene(mesh, _angle++, _rasterizer);
+            RenderScene(mesh, _angle, _rasterizer, cameraP);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
-        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r) {
+        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Point3 cameraP) {
 
             //Init
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
 
-            Point3 cameraP = new Point3(0, 0, 0);
+            Vector3 lookDir;
 
             Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
             Matrix4x4 rotateX = Matrix4x4.RotateXMarix(angle);
 
             Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 100, 1, 1000);
-            Matrix4x4 translation = Matrix4x4.Translation(0, 0, 3);
+            Matrix4x4 translation = Matrix4x4.Translation(0, 0, 6);
 
             Matrix4x4 worldMatrix = new Matrix4x4();
             worldMatrix = Matrix4x4.Identity();
@@ -100,6 +110,12 @@ namespace Projection {
             worldMatrix = worldMatrix * rotateZ;
             worldMatrix = worldMatrix * rotateX;
             worldMatrix = worldMatrix * rotateY;
+
+            lookDir = new Vector3(0, 0, -1);
+            Vector3 up = new Vector3(0, 1, 0);
+            Vector3 target = new(cameraP + lookDir);
+
+            Matrix4x4 viewMatrix = Matrix4x4.LookAt(cameraP, target, up);
 
             //Draw
             foreach (Triangle3 tri in meshCube.Triangles) {
@@ -125,8 +141,11 @@ namespace Projection {
                     var grayValue = Convert.ToByte(Math.Abs(dp * Byte.MaxValue));
                     var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
 
+                    //Convert to View Space
+                    var triViewed = viewMatrix * triTranformed;
+
                     //project
-                    Triangle3 triProjected = projection * triTranformed;
+                    Triangle3 triProjected = projection * triViewed;
 
                     triProjected.Points[0] /= triProjected.Points[0].W;
                     triProjected.Points[1] /= triProjected.Points[1].W;

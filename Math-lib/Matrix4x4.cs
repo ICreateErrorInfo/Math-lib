@@ -48,17 +48,37 @@ namespace Math_lib
                 {Math.Round(aspectRatio * fovRad,3),  0                   ,  0                                             , 0},
                 {  0                               , Math.Round(fovRad,3) ,  0                                             , 0},
                 {  0                               ,  0                   , Math.Round(zFar / (zFar - zNear),3)            , 1},
-                {  0                               ,  0                   , Math.Round(-zFar * zNear / (zFar - zNear), 3)  , 0}
+                {  0                               ,  0                   , Math.Round(-zNear * zFar / (zFar - zNear), 3)  , 0}
             }); 
+        }
+        public static Matrix4x4 PointAt(Point3 pos, Vector3 target, Vector3 up)
+        {
+            Vector3 newForward = new(target - pos);
+            newForward = Vector3.UnitVector(newForward);
+
+            Vector3 a = newForward * Vector3.Dot(up, newForward);
+            Vector3 newUp = up - a;
+            newUp = Vector3.UnitVector(newUp);
+
+            Vector3 newRight = Vector3.Cross(newUp, newForward);
+
+            return new Matrix4x4(new double[,]
+            {
+                {newRight.X   ,newRight.Y   , newRight.Z   , 0},
+                {newUp.X      ,newUp.Y      , newUp.Z      , 0},
+                {newForward.X ,newForward.Y , newForward.Z , 0},
+                {pos.X        ,pos.Y        , pos.Z        , 1}
+            });
+
         }
         public static Matrix4x4 Translation(double x, double y, double z)
         {
             return new Matrix4x4(new double[,]
             {
-                { 1,0,0,x },
-                { 0,1,0,y },
-                { 0,0,1,z },
-                { 0,0,0,1 }
+                { 1,0,0,0 },
+                { 0,1,0,0 },
+                { 0,0,1,0 },
+                { x,y,z,1 }
             });
         }
         public static Matrix4x4 RotateXMarix(int ai)
@@ -94,6 +114,24 @@ namespace Math_lib
                 {                          0,                          0, 0 , 1 }
             });
         }
+        public static Matrix4x4 LookAt(Point3 pos, Vector3 target, Vector3 up)
+        {
+            var zaxis = Vector3.UnitVector(new(target - pos));
+            var xaxis = Vector3.UnitVector(Vector3.Cross(up, zaxis));
+            var yaxis = Vector3.Cross(zaxis, xaxis);
+
+            double ta = -Vector3.Dot(xaxis, new(pos));
+            double tb = -Vector3.Dot(yaxis, new(pos));
+            double tc = -Vector3.Dot(zaxis, new(pos));
+
+            return new Matrix4x4(new double[,]
+            {
+                { xaxis.X, yaxis.X, zaxis.X, 0},
+                { xaxis.Y, yaxis.Y, zaxis.Y, 0},
+                { xaxis.Z, yaxis.Z, zaxis.Z, 0},
+                { ta     , tb     , tc     , 1}
+            });
+        }
         public static double ToRad(double d)
         {
             return d * Math.PI / 180;
@@ -102,10 +140,10 @@ namespace Math_lib
         //overrides *
         public static Point3 operator *(Matrix4x4 m, Point3 i)
         {
-            double x = i.X * m[0, 0] + i.Y * m[0, 1] + i.Z * m[0, 2] + i.W * m[0, 3];
-            double y = i.X * m[1, 0] + i.Y * m[1, 1] + i.Z * m[1, 2] + i.W * m[1, 3];
-            double z = i.X * m[2, 0] + i.Y * m[2, 1] + i.Z * m[2, 2] + i.W * m[2, 3];
-            double w = i.X * m[3, 0] + i.Y * m[3, 1] + i.Z * m[3, 2] + i.W * m[3, 3];
+            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + i.W * m[3, 0];
+            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + i.W * m[3, 1];
+            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + i.W * m[3, 2];
+            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + i.W * m[3, 3];
 
             return new Point3(x, y, z, w);
         }
