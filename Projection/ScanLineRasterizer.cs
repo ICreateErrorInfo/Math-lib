@@ -14,15 +14,15 @@ namespace Projection
         {
         }
 
-        public override void DrawLine(Point2 p1, Point2 p2, Color c)
+        public override void DrawLine(Point2D p1, Point2D p2, Color c)
         {
             
         }
-        public override void DrawTriangle(Triangle2 tri, Color c, bool fill)
+        public override void DrawTriangle(Triangle2D tri, Color c, bool fill)
         {
-            Point2 p0 = tri.Points[0];
-            Point2 p1 = tri.Points[1];
-            Point2 p2 = tri.Points[2];
+            Point2D p0 = tri.Points[0];
+            Point2D p1 = tri.Points[1];
+            Point2D p2 = tri.Points[2];
 
             if (p1.Y < p0.Y) { (p0, p1) = (p1, p0); }
             if (p2.Y < p1.Y) { (p1, p2) = (p2, p1); }
@@ -45,7 +45,7 @@ namespace Projection
             {
                 //find Splitting Point
                 double alphaSplit = (p1.Y - p0.Y) / (p2.Y - p0.Y);
-                Point2 vi = p0 + (p2 - p0) * alphaSplit;
+                Point2D vi = p0 + (p2 - p0) * alphaSplit;
 
                 if(p1.X < vi.X)
                 {
@@ -60,7 +60,7 @@ namespace Projection
             }
         }
 
-        private void DrawFlatTopTriangle(Point2 p0, Point2 p1, Point2 p2, Color c)
+        private void DrawFlatTopTriangle(Point2D p0, Point2D p1, Point2D p2, Color c)
         {
             double m0 = (p2.X - p0.X) / (p2.Y - p0.Y);
             double m1 = (p2.X - p1.X) / (p2.Y - p1.Y);
@@ -82,7 +82,7 @@ namespace Projection
                 }
             }
         }
-        private void DrawFlatBottomTriangle(Point2 p0, Point2 p1, Point2 p2, Color c)
+        private void DrawFlatBottomTriangle(Point2D p0, Point2D p1, Point2D p2, Color c)
         {
             double m0 = (p1.X - p0.X) / (p1.Y - p0.Y);
             double m1 = (p2.X - p0.X) / (p2.Y - p0.Y);

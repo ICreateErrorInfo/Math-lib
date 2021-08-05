@@ -6,8 +6,6 @@ using System.Windows.Threading;
 
 using Math_lib;
 using Microsoft.Win32;
-using Point3 = Math_lib.Point3;
-using Vector3 = Math_lib.Vector3;
 
 namespace Projection {
 
@@ -20,7 +18,7 @@ namespace Projection {
         private readonly DispatcherTimer _timer;
         private  int             _angle;
         private readonly Rasterizer      _rasterizer;
-        private Mesh mesh = new();
+        private Mesh3D mesh = new();
 
         private Camera c;
 
@@ -72,14 +70,14 @@ namespace Projection {
 
             if(e.Key == Key.LeftCtrl)
             {
-                c.pos += new Point3(0, 1, 0);
+                c.pos += new Point3D(0, 1, 0);
             }
             if (e.Key == Key.Space)
             {
-                c.pos = new Point3(c.pos - new Point3(0,1,0));
+                c.pos = new Point3D(c.pos - new Point3D(0,1,0));
             }
 
-            Vector3 forward = c.lookDir * 1;
+            Vector3D forward = c.lookDir * 1;
             if (e.Key == Key.W)
             {
                 c.pos += forward;
@@ -89,7 +87,7 @@ namespace Projection {
                 c.pos -= forward;
             }
 
-            Vector3 cross = Vector3.Cross(forward, new Vector3(0, 1, 0));
+            Vector3D cross = Vector3D.Cross(forward, new Vector3D(0, 1, 0));
             if (e.Key == Key.D)
             {
                 c.pos -= cross;
@@ -119,7 +117,7 @@ namespace Projection {
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
-        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Camera c) {
+        private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c) {
 
             //Init
             var screenWidth  = r.Width;
@@ -140,34 +138,34 @@ namespace Projection {
             worldMatrix = worldMatrix * rotateY;
 
             //Camera
-            c.target = new Vector3(0, 0, -1);
+            c.target = new Vector3D(0, 0, -1);
             Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)c.yaw);
             c.lookDir = cameraRotY * c.target;
-            c.target = new Vector3(c.pos + c.lookDir);
+            c.target = new Vector3D(c.pos + c.lookDir);
 
             Matrix4x4 viewMatrix = Matrix4x4.LookAt(c.pos, c.target, c.up);
 
             //Draw
-            foreach (Triangle3 tri in meshCube.Triangles) {
+            foreach (Triangle3D tri in mesh3DCube.Triangles) {
 
                 //Transform triangel
-                Triangle3 triTranformed = new Triangle3();
+                Triangle3D triTranformed = new Triangle3D();
                 triTranformed = worldMatrix * tri;
 
                 //calc Normals
-                Vector3 line1 = triTranformed.Points[1] - triTranformed.Points[0];
-                Vector3 line2 = triTranformed.Points[2] - triTranformed.Points[0];
+                Vector3D line1 = triTranformed.Points[1] - triTranformed.Points[0];
+                Vector3D line2 = triTranformed.Points[2] - triTranformed.Points[0];
 
-                Vector3 normal = Vector3.UnitVector(Vector3.Cross(line1, line2));
+                Vector3D normal = Vector3D.UnitVector(Vector3D.Cross(line1, line2));
 
                 //check visability
-                if (Vector3.Dot(normal, triTranformed.Points[0] - c.pos) < 0)
+                if (Vector3D.Dot(normal, triTranformed.Points[0] - c.pos) < 0)
                 {
                     //Illumination
-                    Vector3 lightDirection = new Vector3(-.2,-.5,-1);
-                    lightDirection = Vector3.UnitVector(lightDirection);
+                    Vector3D lightDirection = new Vector3D(-.2,-.5,-1);
+                    lightDirection = Vector3D.UnitVector(lightDirection);
 
-                    double dp = Vector3.Dot(normal, lightDirection);
+                    double dp = Vector3D.Dot(normal, lightDirection);
                     var grayValue = Convert.ToByte(Math.Abs(dp * Byte.MaxValue));
                     var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
 
@@ -175,18 +173,18 @@ namespace Projection {
                     var triViewed = viewMatrix * triTranformed;
 
                     //project
-                    Triangle3 triProjected = projection * triViewed;
+                    Triangle3D triProjected = projection * triViewed;
 
                     triProjected.Points[0] /= triProjected.Points[0].W;
                     triProjected.Points[1] /= triProjected.Points[1].W;
                     triProjected.Points[2] /= triProjected.Points[2].W;
 
                     //Convert from Triangle3 to Triangle2
-                    Triangle2 triProjectedConv = new(triProjected);
+                    Triangle2D triProjectedConv = new(triProjected);
 
                     //Scaling into screenspace
-                    triProjectedConv += new Point2(1, 1);
-                    triProjectedConv *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+                    triProjectedConv += new Point2D(1, 1);
+                    triProjectedConv *= new Point2D(0.5 * screenWidth, 0.5 * screenHeight);
 
                     //Drawing
                     r.DrawTriangle(triProjectedConv, col, false);

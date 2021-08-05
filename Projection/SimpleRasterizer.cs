@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 
-using Point3 = Math_lib.Point3;
-using Point2 = Math_lib.Point2;
 using Math_lib;
 
 namespace Projection {
@@ -15,7 +13,7 @@ namespace Projection {
         public SimpleRasterizer(int width, int height): base(width, height) {
         }
 
-        public override void DrawLine(Point2 p1, Point2 p2, Color c) {
+        public override void DrawLine(Point2D p1, Point2D p2, Color c) {
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (p1.X == p2.X) {
@@ -26,8 +24,8 @@ namespace Projection {
                 }
 
             } else {
-                Point2 pMin;
-                Point2 pMax;
+                Point2D pMin;
+                Point2D pMax;
 
                 if (p1.X < p2.X) {
                     pMin = p1;
@@ -52,7 +50,7 @@ namespace Projection {
             }
         }
 
-        public override void DrawTriangle(Triangle2 tri, Color c, bool fill)
+        public override void DrawTriangle(Triangle2D tri, Color c, bool fill)
         {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
@@ -61,7 +59,7 @@ namespace Projection {
 
             if (fill)
             {
-                Point3 p = new Point3((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) / 3,
+                Point3D p = new Point3D((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) / 3,
                 (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) / 3, 0);
 
                 Bmp.FloodFill((int)p.X, (int)p.Y, c);

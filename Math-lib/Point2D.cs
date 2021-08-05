@@ -2,195 +2,195 @@
 
 namespace Math_lib
 {
-    public readonly struct Point2
+    public readonly struct Point2D
     {
         //Properties
         public double X { get; init; }
         public double Y { get; init; }
 
         //Constructors
-        public Point2(double x, double y)
+        public Point2D(double x, double y)
         {
             X = x;
             Y = y;
         }
-        public Point2(double i)
+        public Point2D(double i)
         {
             X = Y = i;
         }
-        public Point2(Point2 p)
+        public Point2D(Point2D p)
         {
             X = p.X;
             Y = p.Y;
         }
-        public Point2(Vector2 v)
+        public Point2D(Vector2D v)
         {
             X = v.X;
             Y = v.Y;
         }
-        public Point2(Point3 p)
+        public Point2D(Point3D p)
         {
             X = p.X;
             Y = p.Y;
         }
-        public Point2(Vector3 v)
+        public Point2D(Vector3D v)
         {
             X = v.X;
             Y = v.Y;
         }
 
         //Methods
-        public static double Distance(Point2 p, Point2 p1)
+        public static double Distance(Point2D p, Point2D p1)
         {
-            return new Vector2(p - p1).GetLength();
+            return new Vector2D(p - p1).GetLength();
         }
-        public static double DistanceSqrt(Point2 p, Point2 p1)
+        public static double DistanceSqrt(Point2D p, Point2D p1)
         {
-            return new Vector2(p - p1).GetLengthSqrt();
+            return new Vector2D(p - p1).GetLengthSqrt();
         }
-        public static Point2 Lerp(double t, Point2 p, Point2 p1)
+        public static Point2D Lerp(double t, Point2D p, Point2D p1)
         {
             return (1 - t) * p + t * p1;
         }
-        public static Point2 Min(Point2 p, Point2 p1)
+        public static Point2D Min(Point2D p, Point2D p1)
         {
-            return new Point2(Math.Min(p.X, p1.X),
+            return new Point2D(Math.Min(p.X, p1.X),
                              Math.Min(p.Y, p1.Y));
         }
-        public static Point2 Max(Point2 p, Point2 p1)
+        public static Point2D Max(Point2D p, Point2D p1)
         {
-            return new Point2(Math.Max(p.X, p1.X),
+            return new Point2D(Math.Max(p.X, p1.X),
                               Math.Max(p.Y, p1.Y));
         }
-        public static Point2 Floor(Point2 p)
+        public static Point2D Floor(Point2D p)
         {
-            return new Point2(Math.Floor(p.X),
+            return new Point2D(Math.Floor(p.X),
                               Math.Floor(p.Y));
         }
-        public static Point2 Ceil(Point2 p)
+        public static Point2D Ceil(Point2D p)
         {
-            return new Point2(Math.Ceiling(p.X),
+            return new Point2D(Math.Ceiling(p.X),
                               Math.Ceiling(p.Y));
         }
-        public static Point2 Abs(Point2 p)
+        public static Point2D Abs(Point2D p)
         {
-            return new Point2(Math.Abs(p.X),
+            return new Point2D(Math.Abs(p.X),
                               Math.Abs(p.Y));
         }
-        public static Point2 Permute(Point2 p, int x, int y, int z)
+        public static Point2D Permute(Point2D p, int x, int y, int z)
         {
-            return new Point2(p[x], p[y]);
+            return new Point2D(p[x], p[y]);
         }
 
 
         //overrides +
-        public static Point2 operator +(Point2 p, Point2 p1)
+        public static Point2D operator +(Point2D p, Point2D p1)
         {
-            return new Point2(p.X + p1.X,
+            return new Point2D(p.X + p1.X,
                               p.Y + p1.Y);
         }
-        public static Point2 operator +(Point2 p, double p1)
+        public static Point2D operator +(Point2D p, double p1)
         {
-            return new Point2(p.X + p1,
+            return new Point2D(p.X + p1,
                               p.Y + p1);
         }
-        public static Point2 operator +(double d, Point2 p)
+        public static Point2D operator +(double d, Point2D p)
         {
-            return new Point2(p.X + d,
+            return new Point2D(p.X + d,
                               p.Y + d);
         }
-        public static Point2 operator +(Point2 p, Vector2 v)
+        public static Point2D operator +(Point2D p, Vector2D v)
         {
-            return new Point2(p.X + v.X,
+            return new Point2D(p.X + v.X,
                               p.Y + v.Y);
         }
-        public static Point2 operator +(Vector2 v, Point2 p)
+        public static Point2D operator +(Vector2D v, Point2D p)
         {
-            return new Point2(v.X + p.X,
+            return new Point2D(v.X + p.X,
                               v.Y + p.Y);
         }
-        public static Point2 operator +(Point2 p)
+        public static Point2D operator +(Point2D p)
         {
-            return new Point2(+p.X, +p.Y);
+            return new Point2D(+p.X, +p.Y);
         }
 
         //overrides -
-        public static Vector2 operator -(Point2 p, Point2 p1)
+        public static Vector2D operator -(Point2D p, Point2D p1)
         {
-            return new Vector2(p.X - p1.X,
+            return new Vector2D(p.X - p1.X,
                                p.Y - p1.Y);
         }
-        public static Point2 operator -(Point2 p, double d)
+        public static Point2D operator -(Point2D p, double d)
         {
-            return new Point2(p.X - d,
+            return new Point2D(p.X - d,
                               p.Y - d);
         }
-        public static Point2 operator -(double d, Point2 p)
+        public static Point2D operator -(double d, Point2D p)
         {
-            return new Point2(p.X - d,
+            return new Point2D(p.X - d,
                               p.Y - d);
         }
-        public static Point2 operator -(Point2 p, Vector2 v)
+        public static Point2D operator -(Point2D p, Vector2D v)
         {
-            return new Point2(p.X - v.X,
+            return new Point2D(p.X - v.X,
                               p.Y - v.Y);
         }
-        public static Point2 operator -(Vector3 v, Point2 p)
+        public static Point2D operator -(Vector3D v, Point2D p)
         {
-            return new Point2(v.X - p.X,
+            return new Point2D(v.X - p.X,
                               v.Y - p.Y);
         }
-        public static Point2 operator -(Point2 p)
+        public static Point2D operator -(Point2D p)
         {
-            return new Point2(-p.X, -p.Y);
+            return new Point2D(-p.X, -p.Y);
         }
 
         //overrides *
-        public static Point2 operator *(Point2 p, Point2 p1)
+        public static Point2D operator *(Point2D p, Point2D p1)
         {
-            return new Point2(p.X * p1.X,
+            return new Point2D(p.X * p1.X,
                               p.Y * p1.Y );
         }
-        public static Point2 operator *(Point2 p, double d)
+        public static Point2D operator *(Point2D p, double d)
         {
-            return new Point2(p.X * d,
+            return new Point2D(p.X * d,
                               p.Y * d);
         }
-        public static Point2 operator *(double d, Point2 p)
+        public static Point2D operator *(double d, Point2D p)
         {
-            return new Point2(p.X * d,
+            return new Point2D(p.X * d,
                               p.Y * d);
         }
-        public static Point2 operator *(Point2 p, Vector2 v)
+        public static Point2D operator *(Point2D p, Vector2D v)
         {
-            return new Point2(p.X * v.X,
+            return new Point2D(p.X * v.X,
                               p.Y * v.Y);
         }
 
         //overrides /
-        public static Point2 operator /(Point2 p, Point2 p1)
+        public static Point2D operator /(Point2D p, Point2D p1)
         {
-            return new Point2(p.X / p1.X,
+            return new Point2D(p.X / p1.X,
                               p.Y / p1.Y);
         }
-        public static Point2 operator /(Point2 p, double d)
+        public static Point2D operator /(Point2D p, double d)
         {
-            return new Point2(p.X / d,
+            return new Point2D(p.X / d,
                               p.Y / d);
         }
-        public static Point2 operator /(double d, Point2 p)
+        public static Point2D operator /(double d, Point2D p)
         {
-            return new Point2(p.X / d,
+            return new Point2D(p.X / d,
                               p.Y / d);
         }
-        public static Point2 operator /(Point2 p, Vector2 v)
+        public static Point2D operator /(Point2D p, Vector2D v)
         {
-            return new Point2(p.X / v.X,
+            return new Point2D(p.X / v.X,
                               p.Y / v.Y);
         }
 
         //overrides >
-        public static bool operator >(Point2 p, Point2 p1)
+        public static bool operator >(Point2D p, Point2D p1)
         {
             if (p.X > p1.X && p.Y > p1.Y)
             {
@@ -198,7 +198,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point2 p, double d)
+        public static bool operator >(Point2D p, double d)
         {
             if (p.X > d && p.Y > d)
             {
@@ -206,7 +206,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(double d, Point2 p)
+        public static bool operator >(double d, Point2D p)
         {
             if (d > p.X && d > p.Y)
             {
@@ -214,7 +214,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point2 p, Vector2 v)
+        public static bool operator >(Point2D p, Vector2D v)
         {
             if (p.X > v.X && p.Y > v.Y)
             {
@@ -224,7 +224,7 @@ namespace Math_lib
         }
 
         //overrides <
-        public static bool operator <(Point2 p, Point2 p1)
+        public static bool operator <(Point2D p, Point2D p1)
         {
             if (p.X < p1.X && p.Y < p1.Y)
             {
@@ -232,7 +232,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point2 p, double d)
+        public static bool operator <(Point2D p, double d)
         {
             if (p.X < d && p.Y < d)
             {
@@ -240,7 +240,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(double d, Point2 p)
+        public static bool operator <(double d, Point2D p)
         {
             if (d < p.X && d < p.Y)
             {
@@ -248,7 +248,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point2 p, Vector2 v)
+        public static bool operator <(Point2D p, Vector2D v)
         {
             if (p.X < v.X && p.Y < v.Y)
             {
@@ -258,7 +258,7 @@ namespace Math_lib
         }
 
         //overrides ==
-        public static bool operator ==(Point2 p, Point2 p1)
+        public static bool operator ==(Point2D p, Point2D p1)
         {
             if (p.X == p1.X && p.Y == p1.Y)
             {
@@ -266,7 +266,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point2 p, double d)
+        public static bool operator ==(Point2D p, double d)
         {
             if (p.X == d && p.Y == d)
             {
@@ -274,7 +274,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(double d, Point2 p)
+        public static bool operator ==(double d, Point2D p)
         {
             if (d == p.X && d == p.Y)
             {
@@ -282,7 +282,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point2 p, Vector2 v)
+        public static bool operator ==(Point2D p, Vector2D v)
         {
             if (p.X == v.X && p.Y == v.Y)
             {
@@ -292,7 +292,7 @@ namespace Math_lib
         }
 
         //overrides !=
-        public static bool operator !=(Point2 p, Point2 p1)
+        public static bool operator !=(Point2D p, Point2D p1)
         {
             if (p.X == p1.X && p.Y == p1.Y)
             {
@@ -300,7 +300,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point2 p, double d)
+        public static bool operator !=(Point2D p, double d)
         {
             if (p.X == d && p.Y == d)
             {
@@ -308,7 +308,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(double d, Point2 p)
+        public static bool operator !=(double d, Point2D p)
         {
             if (d == p.X && d == p.Y)
             {
@@ -316,7 +316,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point2 p, Vector2 v)
+        public static bool operator !=(Point2D p, Vector2D v)
         {
             if (p.X == v.X && p.Y == v.Y)
             {
@@ -326,7 +326,7 @@ namespace Math_lib
         }
 
         //overides <=
-        public static bool operator <=(Point2 p, Point2 p1)
+        public static bool operator <=(Point2D p, Point2D p1)
         {
             if (p.X <= p1.X && p.Y <= p1.Y)
             {
@@ -334,7 +334,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point2 p, double d)
+        public static bool operator <=(Point2D p, double d)
         {
             if (p.X <= d && p.Y <= d)
             {
@@ -342,7 +342,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(double d, Point2 p)
+        public static bool operator <=(double d, Point2D p)
         {
             if (d <= p.X && d <= p.Y)
             {
@@ -350,7 +350,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point2 p, Vector2 v)
+        public static bool operator <=(Point2D p, Vector2D v)
         {
             if (p.X <= v.X && p.Y <= v.Y )
             {
@@ -360,7 +360,7 @@ namespace Math_lib
         }
 
         //overrides >=
-        public static bool operator >=(Point2 p, Point2 p1)
+        public static bool operator >=(Point2D p, Point2D p1)
         {
             if (p.X >= p1.X && p.Y >= p1.Y)
             {
@@ -368,7 +368,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point2 p, double d)
+        public static bool operator >=(Point2D p, double d)
         {
             if (p.X >= d && p.Y >= d)
             {
@@ -376,7 +376,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(double d, Point2 p)
+        public static bool operator >=(double d, Point2D p)
         {
             if (d >= p.X && d >= p.Y)
             {
@@ -384,7 +384,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point2 p, Vector2 v)
+        public static bool operator >=(Point2D p, Vector2D v)
         {
             if (p.X >= v.X && p.Y >= v.Y)
             {
@@ -419,7 +419,7 @@ namespace Math_lib
 
         public override bool Equals(object obj)
         {
-            if (obj is not Point2 other)
+            if (obj is not Point2D other)
             {
                 return false;
             }

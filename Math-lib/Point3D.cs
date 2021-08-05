@@ -2,7 +2,7 @@
 
 namespace Math_lib
 {
-    public readonly struct Point3
+    public readonly struct Point3D
     {
         //Properties
         public double X { get; init; }
@@ -12,47 +12,47 @@ namespace Math_lib
 
 
         //Constructors
-        public Point3(double x, double y, double z)
+        public Point3D(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
             W = 1;
         }
-        public Point3(double x, double y, double z, double w)
+        public Point3D(double x, double y, double z, double w)
         {
             X = x;
             Y = y;
             Z = z;
             W = w;
         }
-        public Point3(double i)
+        public Point3D(double i)
         {
             X = Y = Z = i;
             W = 1;
         }
-        public Point3(Point3 p)
+        public Point3D(Point3D p)
         {
             X = p.X;
             Y = p.Y;
             Z = p.Z;
             W = p.W;
         }
-        public Point3(Point2 v)
+        public Point3D(Point2D v)
         {
             X = v.X;
             Y = v.Y;
             Z = 0;
             W = 1;
         }
-        public Point3(Vector3 v)
+        public Point3D(Vector3D v)
         {
             X = v.X;
             Y = v.Y;
             Z = v.Z;
             W = v.W;
         }
-        public Point3(Vector2 v)
+        public Point3D(Vector2D v)
         {
             X = v.X;
             Y = v.Y;
@@ -62,203 +62,203 @@ namespace Math_lib
 
 
         //Methods
-        public static double Distance(Point3 p, Point3 p1)
+        public static double Distance(Point3D p, Point3D p1)
         {
-            return new Vector3(p - p1).GetLength();
+            return new Vector3D(p - p1).GetLength();
         }
-        public static double DistanceSqrt(Point3 p, Point3 p1)
+        public static double DistanceSqrt(Point3D p, Point3D p1)
         {
-            return new Vector3(p - p1).GetLengthSqrt();
+            return new Vector3D(p - p1).GetLengthSqrt();
         }
-        public static Point3 Lerp(double t, Point3 p, Point3 p1)
+        public static Point3D Lerp(double t, Point3D p, Point3D p1)
         {
             return (1 - t) * p + t * p1;
         }
-        public static Point3 Min(Point3 p, Point3 p1)
+        public static Point3D Min(Point3D p, Point3D p1)
         {
-            return new Point3(Math.Min(p.X, p1.X),
+            return new Point3D(Math.Min(p.X, p1.X),
                              Math.Min(p.Y, p1.Y),
                              Math.Min(p.Z, p1.Z));
         }
-        public static Point3 Max(Point3 p, Point3 p1)
+        public static Point3D Max(Point3D p, Point3D p1)
         {
-            return new Point3(Math.Max(p.X, p1.X),
+            return new Point3D(Math.Max(p.X, p1.X),
                              Math.Max(p.Y, p1.Y),
                              Math.Max(p.Z, p1.Z));
         }
-        public static Point3 Floor(Point3 p)
+        public static Point3D Floor(Point3D p)
         {
-            return new Point3(Math.Floor(p.X),
+            return new Point3D(Math.Floor(p.X),
                              Math.Floor(p.Y),
                              Math.Floor(p.Z));
         }
-        public static Point3 Ceil(Point3 p)
+        public static Point3D Ceil(Point3D p)
         {
-            return new Point3(Math.Ceiling(p.X),
+            return new Point3D(Math.Ceiling(p.X),
                              Math.Ceiling(p.Y),
                              Math.Ceiling(p.Z));
         }
-        public static Point3 Abs(Point3 p)
+        public static Point3D Abs(Point3D p)
         {
-            return new Point3(Math.Abs(p.X),
+            return new Point3D(Math.Abs(p.X),
                              Math.Abs(p.Y),
                              Math.Abs(p.Z));
         }
-        public static Point3 Permute(Point3 p, int x, int y, int z)
+        public static Point3D Permute(Point3D p, int x, int y, int z)
         {
-            return new Point3(p[x], p[y], p[z]);
+            return new Point3D(p[x], p[y], p[z]);
         }
 
         //overrides +
-        public static Point3 operator +(Point3 p, Point3 p1)
+        public static Point3D operator +(Point3D p, Point3D p1)
         {
-            return new Point3(p.X + p1.X,
+            return new Point3D(p.X + p1.X,
                              p.Y + p1.Y,
                              p.Z + p1.Z);
         }
-        public static Point3 operator +(Point3 p, double p1)
+        public static Point3D operator +(Point3D p, double p1)
         {
-            return new Point3(p.X + p1,
+            return new Point3D(p.X + p1,
                              p.Y + p1,
                              p.Z + p1);
         }
-        public static Point3 operator +(double d, Point3 p)
+        public static Point3D operator +(double d, Point3D p)
         {
-            return new Point3(p.X + d,
+            return new Point3D(p.X + d,
                              p.Y + d,
                              p.Z + d);
         }
-        public static Point3 operator +(Point3 p, Vector3 v)
+        public static Point3D operator +(Point3D p, Vector3D v)
         {
-            return new Point3(p.X + v.X,
+            return new Point3D(p.X + v.X,
                              p.Y + v.Y,
                              p.Z + v.Z);
         }
-        public static Point3 operator +(Vector3 v, Point3 p)
+        public static Point3D operator +(Vector3D v, Point3D p)
         {
-            return new Point3(v.X + p.X,
+            return new Point3D(v.X + p.X,
                              v.Y + p.Y,
                              v.Z + p.Z);
         }
-        public static Point3 operator +(Point3 p, Normal n)
+        public static Point3D operator +(Point3D p, Normal3D n)
         {
-            return new Point3(p.X + n.X,
+            return new Point3D(p.X + n.X,
                              p.Y + n.Y,
                              p.Z + n.Z);
         }
-        public static Point3 operator +(Point3 p)
+        public static Point3D operator +(Point3D p)
         {
-            return new Point3(+p.X, +p.Y, +p.Z);
+            return new Point3D(+p.X, +p.Y, +p.Z);
         }
 
         //overrides -
-        public static Vector3 operator -(Point3 p, Point3 p1)
+        public static Vector3D operator -(Point3D p, Point3D p1)
         {
-            return new Vector3(p.X - p1.X,
+            return new Vector3D(p.X - p1.X,
                               p.Y - p1.Y,
                               p.Z - p1.Z);
         }
-        public static Point3 operator -(Point3 p, double d)
+        public static Point3D operator -(Point3D p, double d)
         {
-            return new Point3(p.X - d,
+            return new Point3D(p.X - d,
                              p.Y - d,
                              p.Z - d);
         }
-        public static Point3 operator -(double d, Point3 p)
+        public static Point3D operator -(double d, Point3D p)
         {
-            return new Point3(p.X - d,
+            return new Point3D(p.X - d,
                              p.Y - d,
                              p.Z - d);
         }
-        public static Point3 operator -(Point3 p, Vector3 v)
+        public static Point3D operator -(Point3D p, Vector3D v)
         {
-            return new Point3(p.X - v.X,
+            return new Point3D(p.X - v.X,
                              p.Y - v.Y,
                              p.Z - v.Z);
         }
-        public static Point3 operator -(Vector3 v, Point3 p)
+        public static Point3D operator -(Vector3D v, Point3D p)
         {
-            return new Point3(v.X - p.X,
+            return new Point3D(v.X - p.X,
                              v.Y - p.Y,
                              v.Z - p.Z);
         }
-        public static Point3 operator -(Point3 p, Normal n)
+        public static Point3D operator -(Point3D p, Normal3D n)
         {
-            return new Point3(p.X - n.X,
+            return new Point3D(p.X - n.X,
                              p.Y - n.Y,
                              p.Z - n.Z);
         }
-        public static Point3 operator -(Point3 p)
+        public static Point3D operator -(Point3D p)
         {
-            return new Point3(-p.X, -p.Y, -p.Z);
+            return new Point3D(-p.X, -p.Y, -p.Z);
         }
 
         //overrides *
-        public static Point3 operator *(Point3 p, Point3 p1)
+        public static Point3D operator *(Point3D p, Point3D p1)
         {
-            return new Point3(p.X * p1.X,
+            return new Point3D(p.X * p1.X,
                              p.Y * p1.Y,
                              p.Z * p1.Z);
         }
-        public static Point3 operator *(Point3 p, double d)
+        public static Point3D operator *(Point3D p, double d)
         {
-            return new Point3(p.X * d,
+            return new Point3D(p.X * d,
                              p.Y * d,
                              p.Z * d);
         }
-        public static Point3 operator *(double d, Point3 p)
+        public static Point3D operator *(double d, Point3D p)
         {
-            return new Point3(p.X * d,
+            return new Point3D(p.X * d,
                              p.Y * d,
                              p.Z * d);
         }
-        public static Point3 operator *(Point3 p, Vector3 v)
+        public static Point3D operator *(Point3D p, Vector3D v)
         {
-            return new Point3(p.X * v.X,
+            return new Point3D(p.X * v.X,
                              p.Y * v.Y,
                              p.Z * v.Z);
         }
-        public static Point3 operator *(Point3 p, Normal n)
+        public static Point3D operator *(Point3D p, Normal3D n)
         {
-            return new Point3(p.X * n.X,
+            return new Point3D(p.X * n.X,
                              p.Y * n.Y,
                              p.Z * n.Z);
         }
 
         //overrides /
-        public static Point3 operator /(Point3 p, Point3 p1)
+        public static Point3D operator /(Point3D p, Point3D p1)
         {
-            return new Point3(p.X / p1.X,
+            return new Point3D(p.X / p1.X,
                              p.Y / p1.Y,
                              p.Z / p1.Z);
         }
-        public static Point3 operator /(Point3 p, double d)
+        public static Point3D operator /(Point3D p, double d)
         {
-            return new Point3(p.X / d,
+            return new Point3D(p.X / d,
                              p.Y / d,
                              p.Z / d);
         }
-        public static Point3 operator /(double d, Point3 p)
+        public static Point3D operator /(double d, Point3D p)
         {
-            return new Point3(p.X / d,
+            return new Point3D(p.X / d,
                              p.Y / d,
                              p.Z / d);
         }
-        public static Point3 operator /(Point3 p, Vector3 v)
+        public static Point3D operator /(Point3D p, Vector3D v)
         {
-            return new Point3(p.X / v.X,
+            return new Point3D(p.X / v.X,
                              p.Y / v.Y,
                              p.Z / v.Z);
         }
-        public static Point3 operator /(Point3 p, Normal n)
+        public static Point3D operator /(Point3D p, Normal3D n)
         {
-            return new Point3(p.X / n.X,
+            return new Point3D(p.X / n.X,
                              p.Y / n.Y,
                              p.Z / n.Z);
         }
 
         //overrides >
-        public static bool operator >(Point3 p, Point3 p1)
+        public static bool operator >(Point3D p, Point3D p1)
         {
             if (p.X > p1.X && p.Y > p1.Y && p.Z > p1.Z)
             {
@@ -266,7 +266,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point3 p, double d)
+        public static bool operator >(Point3D p, double d)
         {
             if (p.X > d && p.Y > d && p.Z > d)
             {
@@ -274,7 +274,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(double d, Point3 p)
+        public static bool operator >(double d, Point3D p)
         {
             if (d > p.X && d > p.Y && d > p.Z)
             {
@@ -282,7 +282,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point3 p, Vector3 v)
+        public static bool operator >(Point3D p, Vector3D v)
         {
             if (p.X > v.X && p.Y > v.Y && p.Z > v.Z)
             {
@@ -290,7 +290,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Point3 p, Normal n)
+        public static bool operator >(Point3D p, Normal3D n)
         {
             if (p.X > n.X && p.Y > n.Y && p.Z > n.Z)
             {
@@ -300,7 +300,7 @@ namespace Math_lib
         }
 
         //overrides <
-        public static bool operator <(Point3 p, Point3 p1)
+        public static bool operator <(Point3D p, Point3D p1)
         {
             if (p.X < p1.X && p.Y < p1.Y && p.Z < p1.Z)
             {
@@ -308,7 +308,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point3 p, double d)
+        public static bool operator <(Point3D p, double d)
         {
             if (p.X < d && p.Y < d && p.Z < d)
             {
@@ -316,7 +316,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(double d, Point3 p)
+        public static bool operator <(double d, Point3D p)
         {
             if (d < p.X && d < p.Y && d < p.Z)
             {
@@ -324,7 +324,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point3 p, Vector3 v)
+        public static bool operator <(Point3D p, Vector3D v)
         {
             if (p.X < v.X && p.Y < v.Y && p.Z < v.Z)
             {
@@ -332,7 +332,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Point3 p, Normal n)
+        public static bool operator <(Point3D p, Normal3D n)
         {
             if (p.X < n.X && p.Y < n.Y && p.Z < n.Z)
             {
@@ -342,7 +342,7 @@ namespace Math_lib
         }
 
         //overrides ==
-        public static bool operator ==(Point3 p, Point3 p1)
+        public static bool operator ==(Point3D p, Point3D p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -350,7 +350,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point3 p, double d)
+        public static bool operator ==(Point3D p, double d)
         {
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -358,7 +358,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(double d, Point3 p)
+        public static bool operator ==(double d, Point3D p)
         {
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -366,7 +366,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point3 p, Vector3 p1)
+        public static bool operator ==(Point3D p, Vector3D p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -374,7 +374,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Point3 p, Normal n)
+        public static bool operator ==(Point3D p, Normal3D n)
         {
             if (p.X == n.X && p.Y == n.Y && p.Z == n.Z)
             {
@@ -384,7 +384,7 @@ namespace Math_lib
         }
 
         //overrides !=
-        public static bool operator !=(Point3 p, Point3 p1)
+        public static bool operator !=(Point3D p, Point3D p1)
         {
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -392,7 +392,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point3 p, double d)
+        public static bool operator !=(Point3D p, double d)
         {
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -400,7 +400,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(double d, Point3 p)
+        public static bool operator !=(double d, Point3D p)
         {
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -408,7 +408,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point3 p, Vector3 v)
+        public static bool operator !=(Point3D p, Vector3D v)
         {
             if (p.X == v.X && p.Y == v.Y && p.Z == v.Z)
             {
@@ -416,7 +416,7 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Point3 p, Normal n)
+        public static bool operator !=(Point3D p, Normal3D n)
         {
             if (p.X == n.X && p.Y == n.Y && p.Z == n.Z)
             {
@@ -426,7 +426,7 @@ namespace Math_lib
         }
 
         //overides <=
-        public static bool operator <=(Point3 p, Point3 p1)
+        public static bool operator <=(Point3D p, Point3D p1)
         {
             if (p.X <= p1.X && p.Y <= p1.Y && p.Z <= p1.Z)
             {
@@ -434,7 +434,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point3 p, double d)
+        public static bool operator <=(Point3D p, double d)
         {
             if (p.X <= d && p.Y <= d && p.Z <= d)
             {
@@ -442,7 +442,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(double d, Point3 p)
+        public static bool operator <=(double d, Point3D p)
         {
             if (d <= p.X && d <= p.Y && d <= p.Z)
             {
@@ -450,7 +450,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point3 p, Vector3 v)
+        public static bool operator <=(Point3D p, Vector3D v)
         {
             if (p.X <= v.X && p.Y <= v.Y && p.Z <= v.Z)
             {
@@ -458,7 +458,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Point3 p, Normal n)
+        public static bool operator <=(Point3D p, Normal3D n)
         {
             if (p.X <= n.X && p.Y <= n.Y && p.Z <= n.Z)
             {
@@ -468,7 +468,7 @@ namespace Math_lib
         }
 
         //overrides >=
-        public static bool operator >=(Point3 p, Point3 p1)
+        public static bool operator >=(Point3D p, Point3D p1)
         {
             if (p.X >= p1.X && p.Y >= p1.Y && p.Z >= p1.Z)
             {
@@ -476,7 +476,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point3 p, double d)
+        public static bool operator >=(Point3D p, double d)
         {
             if (p.X >= d && p.Y >= d && p.Z >= d)
             {
@@ -484,7 +484,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(double d, Point3 p)
+        public static bool operator >=(double d, Point3D p)
         {
             if (d >= p.X && d >= p.Y && d >= p.Z)
             {
@@ -492,7 +492,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point3 p, Vector3 v)
+        public static bool operator >=(Point3D p, Vector3D v)
         {
             if (p.X >= v.X && p.Y >= v.Y && p.Z >= v.Z)
             {
@@ -500,7 +500,7 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >=(Point3 p, Normal n)
+        public static bool operator >=(Point3D p, Normal3D n)
         {
             if (p.X >= n.X && p.Y >= n.Y && p.Z >= n.Z)
             {
@@ -539,7 +539,7 @@ namespace Math_lib
 
         public override bool Equals(object obj)
         {
-            if (obj is not Point3 other)
+            if (obj is not Point3D other)
             {
                 return false;
             }

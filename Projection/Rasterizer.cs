@@ -22,16 +22,16 @@ namespace Projection {
             Bmp.Clear();
         }
 
-        public abstract void DrawLine(Point2 p1, Point2 p2, Color c);
+        public abstract void DrawLine(Point2D p1, Point2D p2, Color c);
 
-        public virtual void DrawTriangle(Triangle2 tri, Color c, bool fill) {
+        public virtual void DrawTriangle(Triangle2D tri, Color c, bool fill) {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
             DrawLine(tri.Points[1], tri.Points[2], c);
             DrawLine(tri.Points[0], tri.Points[2], c);
 
             if (fill) {
-                Point2 p = new Point2((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
+                Point2D p = new Point2D((tri.Points[0].X + tri.Points[1].X + tri.Points[2].X) /3,
                                       (tri.Points[0].Y + tri.Points[1].Y + tri.Points[2].Y) /3);
 
                 Bmp.FloodFill((int)p.X, (int)p.Y, c);

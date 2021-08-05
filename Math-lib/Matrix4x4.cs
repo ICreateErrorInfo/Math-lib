@@ -29,7 +29,7 @@ namespace Math_lib
                 {0,0,0,1 }
             });
         }
-        public static Matrix4x4 ScaleMarix(Vector3 v)
+        public static Matrix4x4 ScaleMarix(Vector3D v)
         {
             return new(new[,]
             {
@@ -52,16 +52,16 @@ namespace Math_lib
                 {  0                               ,  0                   , Math.Round(-zNear * zFar / (zFar - zNear), 3)  , 0}
             }); 
         }
-        public static Matrix4x4 PointAt(Point3 pos, Vector3 target, Vector3 up)
+        public static Matrix4x4 PointAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            Vector3 newForward = new(target - pos);
-            newForward = Vector3.UnitVector(newForward);
+            Vector3D newForward = new(target - pos);
+            newForward = Vector3D.UnitVector(newForward);
 
-            Vector3 a = newForward * Vector3.Dot(up, newForward);
-            Vector3 newUp = up - a;
-            newUp = Vector3.UnitVector(newUp);
+            Vector3D a = newForward * Vector3D.Dot(up, newForward);
+            Vector3D newUp = up - a;
+            newUp = Vector3D.UnitVector(newUp);
 
-            Vector3 newRight = Vector3.Cross(newUp, newForward);
+            Vector3D newRight = Vector3D.Cross(newUp, newForward);
 
             return new Matrix4x4(new[,]
             {
@@ -115,15 +115,15 @@ namespace Math_lib
                 {                          0,                          0, 0 , 1 }
             });
         }
-        public static Matrix4x4 LookAt(Point3 pos, Vector3 target, Vector3 up)
+        public static Matrix4x4 LookAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            var zaxis = Vector3.UnitVector(new(target - pos));
-            var xaxis = Vector3.UnitVector(Vector3.Cross(up, zaxis));
-            var yaxis = Vector3.Cross(zaxis, xaxis);
+            var zaxis = Vector3D.UnitVector(new(target - pos));
+            var xaxis = Vector3D.UnitVector(Vector3D.Cross(up, zaxis));
+            var yaxis = Vector3D.Cross(zaxis, xaxis);
 
-            double ta = -Vector3.Dot(xaxis, new(pos));
-            double tb = -Vector3.Dot(yaxis, new(pos));
-            double tc = -Vector3.Dot(zaxis, new(pos));
+            double ta = -Vector3D.Dot(xaxis, new(pos));
+            double tb = -Vector3D.Dot(yaxis, new(pos));
+            double tc = -Vector3D.Dot(zaxis, new(pos));
 
             return new Matrix4x4(new[,]
             {
@@ -139,27 +139,27 @@ namespace Math_lib
         }
 
         //overrides *
-        public static Point3 operator *(Matrix4x4 m, Point3 i)
+        public static Point3D operator *(Matrix4x4 m, Point3D i)
         {
             double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + i.W * m[3, 0];
             double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + i.W * m[3, 1];
             double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + i.W * m[3, 2];
             double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + i.W * m[3, 3];
 
-            return new Point3(x, y, z, w);
+            return new Point3D(x, y, z, w);
         }
-        public static Vector3 operator *(Matrix4x4 m, Vector3 i)
+        public static Vector3D operator *(Matrix4x4 m, Vector3D i)
         {
             double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + i.W * m[3, 0];
             double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + i.W * m[3, 1];
             double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + i.W * m[3, 2];
             double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + i.W * m[3, 3];
 
-            return new Vector3(x, y, z, w);
+            return new Vector3D(x, y, z, w);
         }
-        public static Triangle3 operator *(Matrix4x4 m, Triangle3 i)
+        public static Triangle3D operator *(Matrix4x4 m, Triangle3D i)
         {
-            return new Triangle3(m * i.Points[0],
+            return new Triangle3D(m * i.Points[0],
                                  m * i.Points[1],
                                  m * i.Points[2]);
         }
