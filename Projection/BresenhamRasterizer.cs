@@ -54,7 +54,7 @@ namespace Projection {
 
         }
 
-        public override void DrawTriangle(Triangle2 tri, Color c, bool fill = false)
+        public override void DrawTriangle(Triangle2 tri, Color c, bool fill)
         {
 
             DrawLine(tri.Points[0], tri.Points[1], c);

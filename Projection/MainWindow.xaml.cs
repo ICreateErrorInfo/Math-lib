@@ -37,7 +37,7 @@ namespace Projection {
             ShowOpenFile();
 
             //Init Rasterizer
-            _rasterizer = new ScannLineRasterizer(screenWidth, screenHeight);
+            _rasterizer = new ScanLineRasterizer(screenWidth, screenHeight);
             //_rasterizer = new BresenhamRasterizer(screenWidth, screenHeight);
 
             //Render

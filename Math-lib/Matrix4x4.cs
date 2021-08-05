@@ -2,6 +2,7 @@
 
 namespace Math_lib
 {
+    // ReSharper disable once InconsistentNaming
     public class Matrix4x4 : Matrix
     {
         //Constructors
@@ -41,9 +42,9 @@ namespace Math_lib
         public static Matrix4x4 Projection(int width, int height, int fov, double zNear, double zFar)
         {
             double aspectRatio = (double)height / width;
-            double fovRad = (double)1 / Math.Tan(fov * 0.5 / 180 * Math.PI);
+            double fovRad = 1 / Math.Tan(fov * 0.5 / 180 * Math.PI);
 
-            return new Matrix4x4(new double[,]
+            return new Matrix4x4(new[,]
             {
                 {Math.Round(aspectRatio * fovRad,3),  0                   ,  0                                             , 0},
                 {  0                               , Math.Round(fovRad,3) ,  0                                             , 0},
@@ -62,7 +63,7 @@ namespace Math_lib
 
             Vector3 newRight = Vector3.Cross(newUp, newForward);
 
-            return new Matrix4x4(new double[,]
+            return new Matrix4x4(new[,]
             {
                 {newRight.X   ,newRight.Y   , newRight.Z   , 0},
                 {newUp.X      ,newUp.Y      , newUp.Z      , 0},
@@ -73,7 +74,7 @@ namespace Math_lib
         }
         public static Matrix4x4 Translation(double x, double y, double z)
         {
-            return new Matrix4x4(new double[,]
+            return new Matrix4x4(new[,]
             {
                 { 1,0,0,0 },
                 { 0,1,0,0 },
@@ -124,7 +125,7 @@ namespace Math_lib
             double tb = -Vector3.Dot(yaxis, new(pos));
             double tc = -Vector3.Dot(zaxis, new(pos));
 
-            return new Matrix4x4(new double[,]
+            return new Matrix4x4(new[,]
             {
                 { xaxis.X, yaxis.X, zaxis.X, 0},
                 { xaxis.Y, yaxis.Y, zaxis.Y, 0},

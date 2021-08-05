@@ -1,22 +1,16 @@
 ﻿using Math_lib;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Point3 = Math_lib.Point3;
 
 namespace Projection
 {
-    class ScannLineRasterizer : Rasterizer
+    class ScanLineRasterizer : Rasterizer
     {
-        public ScannLineRasterizer(Rasterizer rasterizer) : base(rasterizer)
+        public ScanLineRasterizer(Rasterizer rasterizer) : base(rasterizer)
         {
         }
 
-        public ScannLineRasterizer(int width, int height) : base(width, height)
+        public ScanLineRasterizer(int width, int height) : base(width, height)
         {
         }
 
@@ -24,28 +18,27 @@ namespace Projection
         {
             
         }
-        public override void DrawTriangle(Triangle2 tri, Color c, bool fill = true)
+        public override void DrawTriangle(Triangle2 tri, Color c, bool fill)
         {
-            fill = true;
-
             Point2 p0 = tri.Points[0];
             Point2 p1 = tri.Points[1];
             Point2 p2 = tri.Points[2];
 
-            if (p1.Y < p0.Y) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
-            if (p2.Y < p1.Y) { Point2 tempswap = p1; p1 = p2; p2 = tempswap; }
-            if (p1.Y < p0.Y) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
+            if (p1.Y < p0.Y) { (p0, p1) = (p1, p0); }
+            if (p2.Y < p1.Y) { (p1, p2) = (p2, p1); }
+            if (p1.Y < p0.Y) { (p0, p1) = (p1, p0); }
 
             if(p0.Y == p1.Y) //top flat
             {
                 //sort
-                if(p1.X < p0.X) { Point2 tempswap = p0; p0 = p1; p1 = tempswap; }
+                if(p1.X < p0.X) { (p0, p1) = (p1, p0); }
+
                 DrawFlatTopTriangle(p0, p1, p2, c);
             }
             else if(p1.Y == p2.Y) // bottom flat
             {
                 //sort
-                if(p2.X < p1.X) { Point2 tempswap = p1; p1 = p2; p2 = tempswap; }
+                if(p2.X < p1.X) { (p1, p2) = (p2, p1); }
                 DrawFlatBottomTriangle(p0, p1, p2, c);
             }
             else // general tri
@@ -77,8 +70,8 @@ namespace Projection
 
             for(int y = yStart; y < yEnd; y++)
             {
-                double px0 = m0 * (double)(y + 0.5 - p0.Y) + p0.X;
-                double px1 = m1 * (double)(y + 0.5 - p1.Y) + p1.X;
+                double px0 = m0 * (y + 0.5 - p0.Y) + p0.X;
+                double px1 = m1 * (y + 0.5 - p1.Y) + p1.X;
 
                 int xStart = (int)Math.Ceiling(px0 - 0.5);
                 int xEnd   = (int)Math.Ceiling(px1 - 0.5);
@@ -99,8 +92,8 @@ namespace Projection
 
             for(int y = yStart; y < yEnd; y++)
             {
-                double px0 = m0 * (double)(y + 0.5 - p0.Y) + p0.X;
-                double px1 = m1 * (double)(y + 0.5 - p0.Y) + p0.X;
+                double px0 = m0 * (y + 0.5 - p0.Y) + p0.X;
+                double px1 = m1 * (y + 0.5 - p0.Y) + p0.X;
 
                 int xStart = (int)Math.Ceiling(px0 - 0.5);
                 int xEnd   = (int)Math.Ceiling(px1 - 0.5);

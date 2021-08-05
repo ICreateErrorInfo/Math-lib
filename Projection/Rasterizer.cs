@@ -1,8 +1,6 @@
 ﻿using Math_lib;
 using System.Drawing;
 
-using Point3 = Math_lib.Point3;
-
 namespace Projection {
 
     public abstract class Rasterizer {
@@ -26,7 +24,7 @@ namespace Projection {
 
         public abstract void DrawLine(Point2 p1, Point2 p2, Color c);
 
-        public virtual void DrawTriangle(Triangle2 tri, Color c, bool fill = false) {
+        public virtual void DrawTriangle(Triangle2 tri, Color c, bool fill) {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
             DrawLine(tri.Points[1], tri.Points[2], c);
