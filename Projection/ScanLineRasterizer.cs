@@ -1,7 +1,7 @@
 ﻿using Math_lib;
 using System;
 using System.Drawing;
-// ReSharper disable All
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace Projection
 {

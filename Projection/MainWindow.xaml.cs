@@ -14,11 +14,10 @@ namespace Projection {
     /// </summary>
     public partial class MainWindow: Window {
 
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DispatcherTimer _timer;
-        private  int             _angle;
         private readonly Rasterizer      _rasterizer;
-        private Mesh3D _mesh = new();
+        private          int             _angle;
+        private          Mesh3D          _mesh = new();
 
         private readonly Camera _camera;
 
@@ -27,6 +26,7 @@ namespace Projection {
             InitializeComponent();
 
             //Init
+            _angle = 0;
             const int screenWidth = 1920;
             const int screenHeight = 1080;
             _camera = new Camera();
