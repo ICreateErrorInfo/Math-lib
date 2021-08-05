@@ -18,9 +18,9 @@ namespace Projection {
         private readonly DispatcherTimer _timer;
         private  int             _angle;
         private readonly Rasterizer      _rasterizer;
-        private Mesh3D mesh = new();
+        private Mesh3D _mesh = new();
 
-        private Camera c;
+        private readonly Camera _camera;
 
         public MainWindow() {
 
@@ -29,7 +29,7 @@ namespace Projection {
             //Init
             const int screenWidth = 1920;
             const int screenHeight = 1080;
-            c = new Camera();
+            _camera = new Camera();
 
             //Load Mesh
             ShowOpenFile();
@@ -58,7 +58,7 @@ namespace Projection {
             };
             if (ofn.ShowDialog() == true)
             {
-                mesh = Importer.Obj(ofn.FileName).CreateMesh();
+                _mesh = Importer.Obj(ofn.FileName).CreateMesh();
             }
         }
         protected override void OnKeyDown(KeyEventArgs e) {
@@ -70,40 +70,40 @@ namespace Projection {
 
             if(e.Key == Key.LeftCtrl)
             {
-                c.pos += new Point3D(0, 1, 0);
+                _camera.Pos += new Point3D(0, 1, 0);
             }
             if (e.Key == Key.Space)
             {
-                c.pos = new Point3D(c.pos - new Point3D(0,1,0));
+                _camera.Pos = new Point3D(_camera.Pos - new Point3D(0,1,0));
             }
 
-            Vector3D forward = c.lookDir * 1;
+            Vector3D forward = _camera.LookDir * 1;
             if (e.Key == Key.W)
             {
-                c.pos += forward;
+                _camera.Pos += forward;
             }
             if (e.Key == Key.S)
             {
-                c.pos -= forward;
+                _camera.Pos -= forward;
             }
 
             Vector3D cross = Vector3D.Cross(forward, new Vector3D(0, 1, 0));
             if (e.Key == Key.D)
             {
-                c.pos -= cross;
+                _camera.Pos -= cross;
             }
             if (e.Key == Key.A)
             {
-                c.pos += cross;
+                _camera.Pos += cross;
             }
 
             if (e.Key == Key.Right)
             {
-                c.yaw -= 1;
+                _camera.Yaw -= 1;
             }
             if (e.Key == Key.Left)
             {
-                c.yaw += 1;
+                _camera.Yaw += 1;
             }
         }
 
@@ -113,7 +113,7 @@ namespace Projection {
         private void Render() {
 
             _rasterizer.Clear();
-            RenderScene(mesh, _angle, _rasterizer, c);
+            RenderScene(_mesh, _angle, _rasterizer, _camera);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
@@ -138,12 +138,12 @@ namespace Projection {
             worldMatrix = worldMatrix * rotateY;
 
             //Camera
-            c.target = new Vector3D(0, 0, -1);
-            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)c.yaw);
-            c.lookDir = cameraRotY * c.target;
-            c.target = new Vector3D(c.pos + c.lookDir);
+            c.Target = new Vector3D(0, 0, -1);
+            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)c.Yaw);
+            c.LookDir = cameraRotY * c.Target;
+            c.Target = new Vector3D(c.Pos + c.LookDir);
 
-            Matrix4x4 viewMatrix = Matrix4x4.LookAt(c.pos, c.target, c.up);
+            Matrix4x4 viewMatrix = Matrix4x4.LookAt(c.Pos, c.Target, c.Up);
 
             //Draw
             foreach (Triangle3D tri in mesh3DCube.Triangles) {
@@ -159,7 +159,7 @@ namespace Projection {
                 Vector3D normal = Vector3D.UnitVector(Vector3D.Cross(line1, line2));
 
                 //check visability
-                if (Vector3D.Dot(normal, triTranformed.Points[0] - c.pos) < 0)
+                if (Vector3D.Dot(normal, triTranformed.Points[0] - c.Pos) < 0)
                 {
                     //Illumination
                     Vector3D lightDirection = new Vector3D(-.2,-.5,-1);

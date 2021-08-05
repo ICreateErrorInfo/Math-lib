@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace Math_lib
 {
@@ -77,7 +78,7 @@ namespace Math_lib
             return new Point2D(Math.Abs(p.X),
                               Math.Abs(p.Y));
         }
-        public static Point2D Permute(Point2D p, int x, int y, int z)
+        public static Point2D Permute(Point2D p, int x, int y)
         {
             return new Point2D(p[x], p[y]);
         }

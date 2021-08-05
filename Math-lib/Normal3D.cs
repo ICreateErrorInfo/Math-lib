@@ -1,5 +1,5 @@
 ﻿using System;
-
+// ReSharper disable CompareOfFloatsByEqualityOperator
 namespace Math_lib
 {
     public readonly struct Normal3D
