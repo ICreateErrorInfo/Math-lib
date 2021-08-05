@@ -22,9 +22,7 @@ namespace Projection {
         private readonly Rasterizer      _rasterizer;
         private Mesh mesh = new();
 
-        private Point3 cameraP;
-        private double yaw;
-        private static Vector3 lookDir;
+        private Camera c;
 
         public MainWindow() {
 
@@ -33,7 +31,7 @@ namespace Projection {
             //Init
             const int screenWidth = 1920;
             const int screenHeight = 1080;
-            cameraP = new Point3(0, 0, 0);
+            c = new Camera();
 
             //Load Mesh
             ShowOpenFile();
@@ -72,42 +70,42 @@ namespace Projection {
                 e.Handled = true;
             }
 
-            if(e.Key == Key.Space)
+            if(e.Key == Key.LeftCtrl)
             {
-                cameraP += new Point3(0, 1, 0);
+                c.pos += new Point3(0, 1, 0);
             }
-            if (e.Key == Key.LeftCtrl)
+            if (e.Key == Key.Space)
             {
-                cameraP = new Point3(cameraP - new Point3(0,1,0));
+                c.pos = new Point3(c.pos - new Point3(0,1,0));
             }
 
-            Vector3 forward = lookDir * 1;
+            Vector3 forward = c.lookDir * 1;
             if (e.Key == Key.W)
             {
-                cameraP += forward;
+                c.pos += forward;
             }
             if (e.Key == Key.S)
             {
-                cameraP -= forward;
+                c.pos -= forward;
             }
 
             Vector3 cross = Vector3.Cross(forward, new Vector3(0, 1, 0));
             if (e.Key == Key.D)
             {
-                cameraP += cross;
+                c.pos -= cross;
             }
             if (e.Key == Key.A)
             {
-                cameraP -= cross;
+                c.pos += cross;
             }
 
             if (e.Key == Key.Right)
             {
-                yaw -= 1;
+                c.yaw -= 1;
             }
             if (e.Key == Key.Left)
             {
-                yaw += 1;
+                c.yaw += 1;
             }
         }
 
@@ -117,11 +115,11 @@ namespace Projection {
         private void Render() {
 
             _rasterizer.Clear();
-            RenderScene(mesh, _angle, _rasterizer, cameraP, yaw);
+            RenderScene(mesh, _angle, _rasterizer, c);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
-        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Point3 cameraP, double yaw) {
+        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Camera c) {
 
             //Init
             var screenWidth  = r.Width;
@@ -132,7 +130,7 @@ namespace Projection {
             Matrix4x4 rotateX = Matrix4x4.RotateXMarix(angle);
 
             Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 100, 1, 1000);
-            Matrix4x4 translation = Matrix4x4.Translation(0, 0, 6);
+            Matrix4x4 translation = Matrix4x4.Translation(0, 0, -6);
 
             Matrix4x4 worldMatrix = new Matrix4x4();
             worldMatrix = Matrix4x4.Identity();
@@ -141,14 +139,13 @@ namespace Projection {
             worldMatrix = worldMatrix * rotateX;
             worldMatrix = worldMatrix * rotateY;
 
-            Vector3 up = new Vector3(0, 1, 0);
-            Vector3 target = new Vector3(0,0,-1);
+            //Camera
+            c.target = new Vector3(0, 0, -1);
+            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)c.yaw);
+            c.lookDir = cameraRotY * c.target;
+            c.target = new Vector3(c.pos + c.lookDir);
 
-            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)yaw);
-            lookDir = cameraRotY * target;
-            target = new Vector3(cameraP + lookDir);
-
-            Matrix4x4 viewMatrix = Matrix4x4.LookAt(cameraP, target, up);
+            Matrix4x4 viewMatrix = Matrix4x4.LookAt(c.pos, c.target, c.up);
 
             //Draw
             foreach (Triangle3 tri in meshCube.Triangles) {
@@ -164,10 +161,10 @@ namespace Projection {
                 Vector3 normal = Vector3.UnitVector(Vector3.Cross(line1, line2));
 
                 //check visability
-                if (Vector3.Dot(normal, triTranformed.Points[0] - cameraP) < 0)
+                if (Vector3.Dot(normal, triTranformed.Points[0] - c.pos) < 0)
                 {
                     //Illumination
-                    Vector3 lightDirection = cameraP - new Point3(0,0,-1);
+                    Vector3 lightDirection = new Vector3(-.2,-.5,-1);
                     lightDirection = Vector3.UnitVector(lightDirection);
 
                     double dp = Vector3.Dot(normal, lightDirection);
