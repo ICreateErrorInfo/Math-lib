@@ -173,7 +173,7 @@ namespace Projection {
                     var triViewed = viewMatrix * triTranformed;
 
                     int nClippedTris = 0;
-                    Triangle3[] clipped = new Triangle3[2];
+                    Triangle3D[] clipped = new Triangle3D[2];
                     nClippedTris = Clipping.TriangleClipAgainstPlane(new(0, 0, 1), new(0, 0, 1), triViewed);
                     clipped[0] = Clipping.outTri1;
                     clipped[1] = Clipping.outTri2;
@@ -181,7 +181,7 @@ namespace Projection {
                     for(int n = 0; n < nClippedTris; n++)
                     {
                         //project
-                        Triangle3 triProjected = projection * clipped[n];
+                        Triangle3D triProjected = projection * clipped[n];
 
                         triProjected.Points[0] /= triProjected.Points[0].W;
                         triProjected.Points[1] /= triProjected.Points[1].W;

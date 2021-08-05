@@ -9,34 +9,34 @@ namespace Projection
 {
     class Clipping
     {
-        public static Triangle3 outTri1;
-        public static Triangle3 outTri2;
+        public static Triangle3D outTri1;
+        public static Triangle3D outTri2;
 
         //calc Intersection Point of two Lines
-        public static Point3 IntersectPlane(Point3 planeP, Normal planeN, Point3 lineStart, Point3 lineEnd)
+        public static Point3D IntersectPlane(Point3D planeP, Normal3D planeN, Point3D lineStart, Point3D lineEnd)
         {
-            planeN = new(Vector3.UnitVector(new(planeN)));
-            double planeD = -Vector3.Dot(new(planeN), new(planeP));
-            double ad = Vector3.Dot(new(lineStart), new(planeN));
-            double bd = Vector3.Dot(new(lineEnd), new(planeN));
+            planeN = new(Vector3D.UnitVector(new(planeN)));
+            double planeD = -Vector3D.Dot(new(planeN), new(planeP));
+            double ad = Vector3D.Dot(new(lineStart), new(planeN));
+            double bd = Vector3D.Dot(new(lineEnd), new(planeN));
             double t = (-planeD - ad) / (bd - ad);
-            Vector3 lineStartToEnd = lineEnd - lineStart;
-            Vector3 lineToIntersect = lineStartToEnd * t;
+            Vector3D lineStartToEnd = lineEnd - lineStart;
+            Vector3D lineToIntersect = lineStartToEnd * t;
             return lineStart + lineToIntersect;
         }
 
-        public static int TriangleClipAgainstPlane(Point3 planeP, Normal planeN, Triangle3 inTri)
+        public static int TriangleClipAgainstPlane(Point3D planeP, Normal3D planeN, Triangle3D inTri)
         {
             //Init Triangles
-            outTri1 = new Triangle3();
-            outTri2 = new Triangle3();
+            outTri1 = new Triangle3D();
+            outTri2 = new Triangle3D();
 
             //Normalize the Normal
-            planeN = new(Vector3.UnitVector(new(planeN)));
+            planeN = new(Vector3D.UnitVector(new(planeN)));
 
             //Storage
-            Point3[] insidePoints = new Point3[3];
-            Point3[] outsidePoints = new Point3[3];
+            Point3D[] insidePoints = new Point3D[3];
+            Point3D[] outsidePoints = new Point3D[3];
             int insidePointsCount  = 0;
             int outsidePointsCount = 0;
 
@@ -113,9 +113,9 @@ namespace Projection
 
             return 1;
         }
-        static double calcDistance(Point3 p, Point3 planeP, Normal planeN)
+        static double calcDistance(Point3D p, Point3D planeP, Normal3D planeN)
         {
-            Vector3 erg = new(planeN * (p - planeP));
+            Vector3D erg = new(planeN * (p - planeP));
 
             return erg.X + erg.Y + erg.Z;
         }
