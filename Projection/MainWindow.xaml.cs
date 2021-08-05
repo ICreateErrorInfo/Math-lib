@@ -174,22 +174,31 @@ namespace Projection {
                     //Convert to View Space
                     var triViewed = viewMatrix * triTranformed;
 
-                    //project
-                    Triangle3 triProjected = projection * triViewed;
+                    int nClippedTris = 0;
+                    Triangle3[] clipped = new Triangle3[2];
+                    nClippedTris = Clipping.TriangleClipAgainstPlane(new(0, 0, 1), new(0, 0, 1), triViewed);
+                    clipped[0] = Clipping.outTri1;
+                    clipped[1] = Clipping.outTri2;
 
-                    triProjected.Points[0] /= triProjected.Points[0].W;
-                    triProjected.Points[1] /= triProjected.Points[1].W;
-                    triProjected.Points[2] /= triProjected.Points[2].W;
+                    for(int n = 0; n < nClippedTris; n++)
+                    {
+                        //project
+                        Triangle3 triProjected = projection * clipped[n];
 
-                    //Convert from Triangle3 to Triangle2
-                    Triangle2 triProjectedConv = new(triProjected);
+                        triProjected.Points[0] /= triProjected.Points[0].W;
+                        triProjected.Points[1] /= triProjected.Points[1].W;
+                        triProjected.Points[2] /= triProjected.Points[2].W;
 
-                    //Scaling into screenspace
-                    triProjectedConv += new Point2(1, 1);
-                    triProjectedConv *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+                        //Convert from Triangle3 to Triangle2
+                        Triangle2 triProjectedConv = new(triProjected);
 
-                    //Drawing
-                    r.DrawTriangle(triProjectedConv, col, false);
+                        //Scaling into screenspace
+                        triProjectedConv += new Point2(1, 1);
+                        triProjectedConv *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
+
+                        //Drawing
+                        r.DrawTriangle(triProjectedConv, col, false);
+                    }           
                 }       
             }
         }
