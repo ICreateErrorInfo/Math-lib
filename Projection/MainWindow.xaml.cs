@@ -23,6 +23,8 @@ namespace Projection {
         private Mesh mesh = new();
 
         private Point3 cameraP;
+        private double yaw;
+        private static Vector3 lookDir;
 
         public MainWindow() {
 
@@ -69,13 +71,43 @@ namespace Projection {
                 _timer.IsEnabled ^= true;
                 e.Handled = true;
             }
+
             if(e.Key == Key.Space)
             {
                 cameraP += new Point3(0, 1, 0);
             }
-            if (e.Key == Key.LeftShift)
+            if (e.Key == Key.LeftCtrl)
             {
                 cameraP = new Point3(cameraP - new Point3(0,1,0));
+            }
+
+            Vector3 forward = lookDir * 1;
+            if (e.Key == Key.W)
+            {
+                cameraP += forward;
+            }
+            if (e.Key == Key.S)
+            {
+                cameraP -= forward;
+            }
+
+            Vector3 cross = Vector3.Cross(forward, new Vector3(0, 1, 0));
+            if (e.Key == Key.D)
+            {
+                cameraP += cross;
+            }
+            if (e.Key == Key.A)
+            {
+                cameraP -= cross;
+            }
+
+            if (e.Key == Key.Right)
+            {
+                yaw -= 1;
+            }
+            if (e.Key == Key.Left)
+            {
+                yaw += 1;
             }
         }
 
@@ -85,17 +117,15 @@ namespace Projection {
         private void Render() {
 
             _rasterizer.Clear();
-            RenderScene(mesh, _angle, _rasterizer, cameraP);
+            RenderScene(mesh, _angle, _rasterizer, cameraP, yaw);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
         }
-        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Point3 cameraP) {
+        private static void RenderScene(Mesh meshCube, int angle, Rasterizer r, Point3 cameraP, double yaw) {
 
             //Init
             var screenWidth  = r.Width;
             var screenHeight = r.Height;
-
-            Vector3 lookDir;
 
             Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
             Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
@@ -111,9 +141,12 @@ namespace Projection {
             worldMatrix = worldMatrix * rotateX;
             worldMatrix = worldMatrix * rotateY;
 
-            lookDir = new Vector3(0, 0, -1);
             Vector3 up = new Vector3(0, 1, 0);
-            Vector3 target = new(cameraP + lookDir);
+            Vector3 target = new Vector3(0,0,-1);
+
+            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)yaw);
+            lookDir = cameraRotY * target;
+            target = new Vector3(cameraP + lookDir);
 
             Matrix4x4 viewMatrix = Matrix4x4.LookAt(cameraP, target, up);
 
@@ -134,7 +167,7 @@ namespace Projection {
                 if (Vector3.Dot(normal, triTranformed.Points[0] - cameraP) < 0)
                 {
                     //Illumination
-                    Vector3 lightDirection = new Vector3(0, 0, -1);
+                    Vector3 lightDirection = cameraP - new Point3(0,0,-1);
                     lightDirection = Vector3.UnitVector(lightDirection);
 
                     double dp = Vector3.Dot(normal, lightDirection);
@@ -159,7 +192,7 @@ namespace Projection {
                     triProjectedConv *= new Point2(0.5 * screenWidth, 0.5 * screenHeight);
 
                     //Drawing
-                    r.DrawTriangle(triProjectedConv, col, true);
+                    r.DrawTriangle(triProjectedConv, col, false);
                 }       
             }
         }

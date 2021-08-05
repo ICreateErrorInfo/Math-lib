@@ -147,6 +147,15 @@ namespace Math_lib
 
             return new Point3(x, y, z, w);
         }
+        public static Vector3 operator *(Matrix4x4 m, Vector3 i)
+        {
+            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + i.W * m[3, 0];
+            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + i.W * m[3, 1];
+            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + i.W * m[3, 2];
+            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + i.W * m[3, 3];
+
+            return new Vector3(x, y, z, w);
+        }
         public static Triangle3 operator *(Matrix4x4 m, Triangle3 i)
         {
             return new Triangle3(m * i.Points[0],
