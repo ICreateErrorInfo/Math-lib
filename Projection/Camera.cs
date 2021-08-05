@@ -4,27 +4,27 @@ namespace Projection
 {
     class Camera
     {
-        public Point3 pos;
-        public Vector3 up;
-        public double yaw;
-        public Vector3 lookDir;
-        public Vector3 target;
-
         public Camera()
         {
-            pos = new Point3(0, 0, 0);
-            up = new Vector3(0, 1, 0);
-            lookDir = new Vector3(0, 0, -1);
-            target = new Vector3(0, 0, -1);
-            yaw = 0;
+            Pos     = new Point3D(0, 0, 0);
+            Up      = new Vector3D(0, 1, 0);
+            LookDir = new Vector3D(0, 0, -1);
+            Target  = new Vector3D(0, 0, -1);
+            Yaw     = 0;
         }
-        public Camera(Point3 pos, Vector3 up, Vector3 lookDir, Vector3 target, double yaw)
+        public Camera(Point3D pos, Vector3D up, Vector3D lookDir, Vector3D target, double yaw)
         {
-            this.pos = pos;
-            this.up = up;
-            this.lookDir = lookDir;
-            this.target = target;
-            this.yaw = yaw;
+            Pos     = pos;
+            Up      = up;
+            LookDir = lookDir;
+            Target  = target;
+            Yaw     = yaw;
         }
+
+        public Point3D  Pos     { get; set; }
+        public Vector3D Up      { get; set; }
+        public double   Yaw     { get; set; }
+        public Vector3D LookDir { get; set; }
+        public Vector3D Target  { get; set; }
     }
 }
