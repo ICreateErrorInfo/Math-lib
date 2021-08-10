@@ -7,14 +7,22 @@ namespace Projection
 {
     class ScanLineRasterizer : Rasterizer
     {
-        public ZBuffer zb;
+        readonly ZBuffer _zb;
+
         public ScanLineRasterizer(Rasterizer rasterizer) : base(rasterizer)
         {
+            _zb = new ZBuffer(rasterizer.Width, rasterizer.Height);
         }
 
         public ScanLineRasterizer(int width, int height) : base(width, height)
         {
-            zb = new ZBuffer(width, height);
+            _zb = new ZBuffer(width, height);
+        }
+
+
+        public override void Clear() {
+            base.Clear();
+            _zb.Clear();
         }
 
         public override void DrawLine(Point3D p1, Point3D p2, Color c)
@@ -90,8 +98,8 @@ namespace Projection
             int yStart = (int)Math.Ceiling(it0.Y - 0.5);
             int yEnd = (int)Math.Ceiling(it2.Y - 0.5);
 
-            itEdge0 += dv0 * (double)(yStart + 0.5 - it0.Y);
-            itEdge  += dv1 * (double)(yStart + 0.5 - it0.Y);
+            itEdge0 += dv0 * (yStart + 0.5 - it0.Y);
+            itEdge  += dv1 * (yStart + 0.5 - it0.Y);
 
             for(int y = yStart; y < yEnd; y++, itEdge0 += dv0, itEdge += dv1)
             {
@@ -103,13 +111,13 @@ namespace Projection
                 double dx = itEdge.X - itEdge0.X;
                 var diLine = (itEdge - iLine) / dx;
 
-                iLine += diLine * (double)(xStart + 0.5 - itEdge0.X);
+                iLine += diLine * (xStart + 0.5 - itEdge0.X);
 
                 for (int x = xStart; x < xEnd; x++, iLine += diLine)
                 {
                     double z = 1 / iLine.Z;
 
-                    if (zb.TestAndSet(x, y, z))
+                    if (_zb.TestAndSet(x, y, z))
                     {
                         Bmp.SetPixel(x, y, c);
                     }

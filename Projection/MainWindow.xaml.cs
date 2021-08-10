@@ -19,10 +19,9 @@ namespace Projection {
         private readonly ScanLineRasterizer      _rasterizer;
         private          int             _angle;
         private          Mesh3D          _mesh = new();
-        private static ZBuffer zb;
 
         private readonly Camera _camera;
-        const bool wireframe = false;
+        bool _wireframe;
 
         public MainWindow() {
 
@@ -38,7 +37,6 @@ namespace Projection {
             ShowOpenFile();
 
             //Init Rasterizer
-            zb = new ZBuffer(screenWidth, screenHeight);
             _rasterizer = new ScanLineRasterizer(screenWidth, screenHeight);
 
             //Render
@@ -65,10 +63,17 @@ namespace Projection {
             }
         }
         protected override void OnKeyDown(KeyEventArgs e) {
+        
             if (e.Key == Key.P)
             {
                 _timer.IsEnabled ^= true;
-                e.Handled = true;
+                e.Handled        =  true;
+            }
+
+            if (e.Key == Key.F)
+            {
+                _wireframe ^= true;
+                e.Handled  =  true;
             }
 
             if(e.Key == Key.LeftCtrl)
@@ -109,15 +114,19 @@ namespace Projection {
                 _camera.Yaw += 1;
             }
         }
-
+        
         private void OnRenderSzene(object sender, EventArgs e) {
             Render();
         }
         private void Render() {
-
-            _rasterizer.zb.Clear();
             _rasterizer.Clear();
-            RenderScene(_mesh, _angle, _rasterizer, _camera);
+
+            RenderScene(
+                mesh3DCube: _mesh, 
+                angle: _angle, 
+                r: _rasterizer, 
+                c: _camera, 
+                wireframe: _wireframe);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
 
@@ -150,7 +159,8 @@ namespace Projection {
 
             //Image.Source = bmp.ToImageSource();
         }
-        private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c) {
+
+        private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c, bool wireframe) {
 
             //Init
             var wireframeRasterizer = new BresenhamRasterizer(r.Width, r.Height);

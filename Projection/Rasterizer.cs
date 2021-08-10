@@ -22,7 +22,7 @@ namespace Projection {
         {
             Bmp = bmp;
         }
-        public void Clear() {
+        public virtual void Clear() {
             Bmp.Clear();
         }
         public abstract void DrawLine(Point3D p1, Point3D p2, Color c);
