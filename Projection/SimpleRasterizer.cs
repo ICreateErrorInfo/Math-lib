@@ -13,7 +13,7 @@ namespace Projection {
         public SimpleRasterizer(int width, int height): base(width, height) {
         }
 
-        public override void DrawLine(Point2D p1, Point2D p2, Color c) {
+        public override void DrawLine(Point3D p1, Point3D p2, Color c) {
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (p1.X == p2.X) {
@@ -24,8 +24,8 @@ namespace Projection {
                 }
 
             } else {
-                Point2D pMin;
-                Point2D pMax;
+                Point3D pMin;
+                Point3D pMax;
 
                 if (p1.X < p2.X) {
                     pMin = p1;
@@ -50,7 +50,7 @@ namespace Projection {
             }
         }
 
-        public override void DrawTriangle(Triangle2D tri, Color c, bool fill)
+        public override void DrawTriangle(Triangle3D tri, Color c, bool fill)
         {
 
             DrawLine(tri.Points[0], tri.Points[1], c);

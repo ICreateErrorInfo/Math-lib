@@ -16,9 +16,10 @@ namespace Projection {
     public partial class MainWindow: Window {
 
         private readonly DispatcherTimer _timer;
-        private readonly Rasterizer      _rasterizer;
+        private readonly ScanLineRasterizer      _rasterizer;
         private          int             _angle;
         private          Mesh3D          _mesh = new();
+        private static ZBuffer zb;
 
         private readonly Camera _camera;
         const bool wireframe = false;
@@ -37,8 +38,8 @@ namespace Projection {
             ShowOpenFile();
 
             //Init Rasterizer
+            zb = new ZBuffer(screenWidth, screenHeight);
             _rasterizer = new ScanLineRasterizer(screenWidth, screenHeight);
-            //_rasterizer = new BresenhamRasterizer(screenWidth, screenHeight);
 
             //Render
             Render();
@@ -114,10 +115,40 @@ namespace Projection {
         }
         private void Render() {
 
+            _rasterizer.zb.Clear();
             _rasterizer.Clear();
             RenderScene(_mesh, _angle, _rasterizer, _camera);
 
             Image.Source = _rasterizer.Bmp.ToImageSource();
+
+            //Show DepthBuffer
+
+            //int max = 0;
+            //DirectBitmap bmp = new DirectBitmap(_rasterizer.Width, _rasterizer.Height);
+            //for (int x = 0; x < _rasterizer.Width; x++)
+            //{
+            //    for (int y = 0; y < _rasterizer.Height; y++)
+            //    {
+            //        byte byteVal = 0;
+            //        if (double.IsNegativeInfinity(_rasterizer.zb.At(x, y)))
+            //        {
+            //            byteVal = 255;
+
+            //        }
+            //        else
+            //        {
+            //            byteVal = Convert.ToByte((_rasterizer.zb.At(x, y) * 100) - 10);
+            //            if (byteVal > max)
+            //            {
+            //                max = byteVal;
+            //            }
+            //        }
+            //        bmp.SetPixel(x, y, Color.FromArgb(1, byteVal, byteVal, byteVal));
+            //    }
+            //}
+
+
+            //Image.Source = bmp.ToImageSource();
         }
         private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c) {
 
@@ -253,14 +284,13 @@ namespace Projection {
                         //Drawing
                         foreach (Triangle3D t in listTriangles)
                         {
-                            Triangle2D t2d = new(t);
                             if (wireframe)
                             {
-                                wireframeRasterizer.DrawTriangle(t2d, Color.Red, false);
+                                wireframeRasterizer.DrawTriangle(t, Color.Red, false);
                             }
                             else
                             {
-                                r.DrawTriangle(t2d, col, false);
+                                r.DrawTriangle(t, col, false);
                             }
                         }
                     }

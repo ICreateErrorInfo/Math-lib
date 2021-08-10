@@ -7,23 +7,25 @@ namespace Projection
 {
     class ScanLineRasterizer : Rasterizer
     {
+        public ZBuffer zb;
         public ScanLineRasterizer(Rasterizer rasterizer) : base(rasterizer)
         {
         }
 
         public ScanLineRasterizer(int width, int height) : base(width, height)
         {
+            zb = new ZBuffer(width, height);
         }
 
-        public override void DrawLine(Point2D p1, Point2D p2, Color c)
+        public override void DrawLine(Point3D p1, Point3D p2, Color c)
         {
             
         }
-        public override void DrawTriangle(Triangle2D tri, Color c, bool fill)
+        public override void DrawTriangle(Triangle3D tri, Color c, bool fill)
         {
-            Point2D p0 = tri.Points[0];
-            Point2D p1 = tri.Points[1];
-            Point2D p2 = tri.Points[2];
+            Point3D p0 = tri.Points[0];
+            Point3D p1 = tri.Points[1];
+            Point3D p2 = tri.Points[2];
 
             if (p1.Y < p0.Y) { (p0, p1) = (p1, p0); }
             if (p2.Y < p1.Y) { (p1, p2) = (p2, p1); }
@@ -46,7 +48,7 @@ namespace Projection
             {
                 //find Splitting Point
                 double alphaSplit = (p1.Y - p0.Y) / (p2.Y - p0.Y);
-                Point2D vi = p0 + (p2 - p0) * alphaSplit;
+                Point3D vi = p0 + (p2 - p0) * alphaSplit;
 
                 if(p1.X < vi.X)
                 {
@@ -61,47 +63,56 @@ namespace Projection
             }
         }
 
-        private void DrawFlatTopTriangle(Point2D p0, Point2D p1, Point2D p2, Color c)
+        private void DrawFlatTopTriangle(Point3D p0, Point3D p1, Point3D p2, Color c)
         {
-            double m0 = (p2.X - p0.X) / (p2.Y - p0.Y);
-            double m1 = (p2.X - p1.X) / (p2.Y - p1.Y);
+            double deltaY = p2.Y - p0.Y;
+            Point3D dit0 = new((p2 - p0) / deltaY);
+            Point3D dit1 = new((p2 - p1) / deltaY);
 
-            int yStart = (int)Math.Ceiling(p0.Y - 0.5);
-            int yEnd = (int)Math.Ceiling(p2.Y - 0.5);
+            var itEdge1 = p1;
 
-            for(int y = yStart; y < yEnd; y++)
-            {
-                double px0 = m0 * (y + 0.5 - p0.Y) + p0.X;
-                double px1 = m1 * (y + 0.5 - p1.Y) + p1.X;
-
-                int xStart = (int)Math.Ceiling(px0 - 0.5);
-                int xEnd   = (int)Math.Ceiling(px1 - 0.5);
-
-                for(int x = xStart; x < xEnd; x++)
-                {
-                    Bmp.SetPixel(x, y, c);
-                }
-            }
+            DrawFlatTriangle(p0, p1, p2, dit0, dit1, itEdge1, c);
         }
-        private void DrawFlatBottomTriangle(Point2D p0, Point2D p1, Point2D p2, Color c)
+        private void DrawFlatBottomTriangle(Point3D p0, Point3D p1, Point3D p2, Color c)
         {
-            double m0 = (p1.X - p0.X) / (p1.Y - p0.Y);
-            double m1 = (p2.X - p0.X) / (p2.Y - p0.Y);
+            double deltaY = p2.Y - p0.Y;
+            Point3D dit0 = new((p1 - p0) / deltaY);
+            Point3D dit1 = new((p2 - p0) / deltaY);
 
-            int yStart = (int)Math.Ceiling(p0.Y - 0.5);
-            int yEnd   = (int)Math.Ceiling(p2.Y - 0.5);
+            var itEdge1 = p0;
 
-            for(int y = yStart; y < yEnd; y++)
+            DrawFlatTriangle(p0, p1, p2, dit0, dit1, itEdge1, c);
+        }
+        private void DrawFlatTriangle(Point3D it0, Point3D it1, Point3D it2, Point3D dv0, Point3D dv1, Point3D itEdge, Color c)
+        {
+            var itEdge0 = it0;
+
+            int yStart = (int)Math.Ceiling(it0.Y - 0.5);
+            int yEnd = (int)Math.Ceiling(it2.Y - 0.5);
+
+            itEdge0 += dv0 * (double)(yStart + 0.5 - it0.Y);
+            itEdge  += dv1 * (double)(yStart + 0.5 - it0.Y);
+
+            for(int y = yStart; y < yEnd; y++, itEdge0 += dv0, itEdge += dv1)
             {
-                double px0 = m0 * (y + 0.5 - p0.Y) + p0.X;
-                double px1 = m1 * (y + 0.5 - p0.Y) + p0.X;
+                int xStart = (int)Math.Ceiling(itEdge0.X - 0.5);
+                int xEnd = (int)Math.Ceiling(itEdge.X - 0.5);
 
-                int xStart = (int)Math.Ceiling(px0 - 0.5);
-                int xEnd   = (int)Math.Ceiling(px1 - 0.5);
+                var iLine = itEdge0;
 
-                for(int x = xStart; x < xEnd; x++)
+                double dx = itEdge.X - itEdge0.X;
+                var diLine = (itEdge - iLine) / dx;
+
+                iLine += diLine * (double)(xStart + 0.5 - itEdge0.X);
+
+                for (int x = xStart; x < xEnd; x++, iLine += diLine)
                 {
-                    Bmp.SetPixel(x, y, c);
+                    double z = 1 / iLine.Z;
+
+                    if (zb.TestAndSet(x, y, z))
+                    {
+                        Bmp.SetPixel(x, y, c);
+                    }
                 }
             }
         }

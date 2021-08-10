@@ -25,9 +25,9 @@ namespace Projection {
         public void Clear() {
             Bmp.Clear();
         }
-        public abstract void DrawLine(Point2D p1, Point2D p2, Color c);
+        public abstract void DrawLine(Point3D p1, Point3D p2, Color c);
 
-        public virtual void DrawTriangle(Triangle2D tri, Color c, bool fill) {
+        public virtual void DrawTriangle(Triangle3D tri, Color c, bool fill) {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
             DrawLine(tri.Points[1], tri.Points[2], c);

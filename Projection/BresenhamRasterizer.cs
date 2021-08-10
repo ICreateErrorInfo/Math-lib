@@ -13,7 +13,7 @@ namespace Projection {
         public BresenhamRasterizer(int width, int height): base(width, height) {
         }
 
-        public override void DrawLine(Point2D p1, Point2D p2, Color c) {
+        public override void DrawLine(Point3D p1, Point3D p2, Color c) {
 
             var x0 = (int) p1.X;
             var y0 = (int) p1.Y;
@@ -52,7 +52,7 @@ namespace Projection {
 
         }
 
-        public override void DrawTriangle(Triangle2D tri, Color c, bool fill)
+        public override void DrawTriangle(Triangle3D tri, Color c, bool fill)
         {
 
             DrawLine(tri.Points[0], tri.Points[1], c);
