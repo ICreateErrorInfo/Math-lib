@@ -21,7 +21,7 @@ namespace Projection
 
             return new Vertex( 
             new Point3D((p.pos.X * zInv + 1.0f) * xFactor,
-                       (-p.pos.Y * zInv + 1.0f) * yFactor, 0), p.t);
+                       (-p.pos.Y * zInv + 1.0f) * yFactor, 0));
         }
         public Vertex GetTransformed(Vertex p)
         {

@@ -45,7 +45,8 @@ namespace Projection {
             };
             if (ofn.ShowDialog() == true)
             {
-                Importer.Obj(ofn.FileName);
+                var importer = new Importer<TextureEffect.Vertex, TextureEffect.VertexFactory>();
+                importer.Obj(ofn.FileName);
             }
         }
         protected override void OnKeyDown(KeyEventArgs e) 
@@ -77,10 +78,12 @@ namespace Projection {
 
         private void OnRenderSzene(object sender, EventArgs e) {
 
-            Pipeline p = new Pipeline();
+            var importer = new Importer<TextureEffect.Vertex, TextureEffect.VertexFactory>();
+            var p = new Pipeline<TextureEffect, TextureEffect.Vertex>();
+
             p.BindTranslation(new(0,0,3));
             p.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
-            p.Draw(Importer.mesh);
+            p.Draw(importer.mesh);
             Image.Source = p.Bmp.ToImageSource();
         }       
     }

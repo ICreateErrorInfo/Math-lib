@@ -5,13 +5,15 @@ using System.Drawing;
 
 namespace Projection
 {
-    class Pipeline
+
+    class Pipeline<TEffect, TVertex> where TEffect:Effect, new() where TVertex:Vertex
     {
         public Pipeline()
         {
-
+            _effect = new TEffect();
         }
-        public void Draw(Mesh triList)
+        public Effect Effect => _effect;
+        public void Draw(Mesh<TVertex> triList)
         {
             ProcessVertices(triList.vertices, triList.indices);
         }
@@ -25,14 +27,14 @@ namespace Projection
         }
 
 
-        private void ProcessVertices(List<Vertex> vertices, List<int> indices)
+        private void ProcessVertices(List<TVertex> vertices, List<int> indices)
         {
             List<Vertex> verticesOut = new List<Vertex>();
 
             foreach(var v in vertices)
             {
                 //Translation
-                verticesOut.Add(new Vertex(rotation * v.pos + translation, v.t));
+                verticesOut.Add(Effect.CreateVertex(rotation * v.pos + translation));
             }
 
             AssembleTriangles(verticesOut, indices);
@@ -64,21 +66,21 @@ namespace Projection
         }
         private void ProcessTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
-            PostProcessTriangleVertices(new Triangle3D(v0, v1, v2));
+            PostProcessTriangleVertices(v0, v1, v2);
         }
-        private void PostProcessTriangleVertices(Triangle3D triangle)
+        private void PostProcessTriangleVertices(Vertex v0, Vertex v1, Vertex v2)
         {
-            triangle.v0 =  pst.Transform(triangle.v0);
-            triangle.v1 =  pst.Transform(triangle.v1);
-            triangle.v2 =  pst.Transform(triangle.v2);
+            v0 =  pst.Transform(v0);
+            v1 =  pst.Transform(v1);
+            v2 =  pst.Transform(v2);
 
-            DrawTriangle(triangle);
+            DrawTriangle(v0, v1, v2);
         }
-        private void DrawTriangle(Triangle3D tri)
+        private void DrawTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
-            Vertex p0 = tri.v0;
-            Vertex p1 = tri.v1;
-            Vertex p2 = tri.v2;
+            Vertex p0 = v0;
+            Vertex p1 = v1;
+            Vertex p2 = v2;
 
             if (p1.pos.Y < p0.pos.Y) { (p0, p1) = (p1, p0); }
             if (p2.pos.Y < p1.pos.Y) { (p1, p2) = (p2, p1); }
@@ -101,7 +103,7 @@ namespace Projection
             {
                 //find Splitting Point
                 double alphaSplit = (p1.pos.Y - p0.pos.Y) / (p2.pos.Y - p0.pos.Y);
-                Vertex vi = p0 + (p2 - p0) * new Vertex(new Point3D(alphaSplit));
+                Vertex vi = p0 + (p2 - p0) * Effect.CreateVertex(new Point3D(alphaSplit));
 
                 if (p1.pos.X < vi.pos.X)
                 {
@@ -142,8 +144,8 @@ namespace Projection
             int yStart = (int)Math.Ceiling(it0.pos.Y - 0.5);
             int yEnd = (int)Math.Ceiling(it2.pos.Y - 0.5);
 
-            itEdge0 += new Vertex(dv0 * (double)(yStart + 0.5 - it0.pos.Y));
-            itEdge += new Vertex(dv1 * (double)(yStart + 0.5 - it0.pos.Y));
+            itEdge0 += Effect.CreateVertex(dv0 * (double)(yStart + 0.5 - it0.pos.Y));
+            itEdge += Effect.CreateVertex(dv1 * (double)(yStart + 0.5 - it0.pos.Y));
 
             for (int y = yStart; y < yEnd; y++, itEdge0.pos += dv0, itEdge.pos += dv1)
             {
@@ -155,7 +157,7 @@ namespace Projection
                 double dx = itEdge.pos.X - itEdge0.pos.X;
                 var diLine = (itEdge.pos - iLine.pos) / dx;
 
-                iLine += new Vertex(new(diLine * (double)(xStart + 0.5 - itEdge0.pos.X)));
+                iLine += Effect.CreateVertex(diLine * (double)(xStart + 0.5 - itEdge0.pos.X));
 
                 for (int x = xStart; x < xEnd; x++, iLine.pos += diLine)
                 {
@@ -163,7 +165,7 @@ namespace Projection
 
                     if (zb.TestAndSet(x, y, z))
                     {
-                        Bmp.SetPixel(x, y, c);
+                        Bmp.SetPixel(x, y, _effect.PixelShader(iLine));
                     }
                 }
             }
@@ -172,6 +174,7 @@ namespace Projection
         public Color c;
         public DirectBitmap Bmp = new DirectBitmap(Options.screenWidth, Options.screenHeight);
 
+        Effect _effect;
         private ZBuffer zb = new ZBuffer(Options.screenWidth, Options.screenHeight);
         private PubeScreenTransformer pst = new PubeScreenTransformer();
         private Matrix4x4 rotation = Matrix4x4.Identity();

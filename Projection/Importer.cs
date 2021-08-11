@@ -6,13 +6,13 @@ using Math_lib;
 
 namespace Projection
 {
-    class Importer
+    class Importer<TVertex, TVertexFactory> where TVertex : Vertex where TVertexFactory : IFactory<TVertex>, new()
     {
-        public static Mesh mesh = new Mesh();
+        public Mesh<TVertex> mesh = new Mesh<TVertex>();
 
-        public static void Obj(string filename)
+        public void Obj(string filename)
         {
-
+            var factory = new TVertexFactory();
             var stringList = File.ReadAllLines(filename);
 
             var provider = new NumberFormatInfo
@@ -28,7 +28,7 @@ namespace Projection
 
                     if (zeile[0] == "v")
                     {
-                        mesh.vertices.Add(new(new Point3D(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider))));
+                        mesh.vertices.Add(factory.CreateVertex(new Point3D(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider))));
                     }
                     if(zeile[0] == "f")
                     {
