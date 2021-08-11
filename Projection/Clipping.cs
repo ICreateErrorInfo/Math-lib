@@ -1,11 +1,12 @@
-﻿using Math_lib;
+﻿using System.Collections.Generic;
+
+using Math_lib;
 
 namespace Projection
 {
     class Clipping
     {
-        public static Triangle3D outTri1;
-        public static Triangle3D outTri2;
+       
 
         //calc Intersection Point of two Lines
         public static Point3D IntersectPlane(Point3D planeP, Normal3D planeN, Point3D lineStart, Point3D lineEnd)
@@ -20,25 +21,22 @@ namespace Projection
             return lineStart + lineToIntersect;
         }
 
-        public static int TriangleClipAgainstPlane(Point3D planeP, Normal3D planeN, Triangle3D inTri)
+        public static IEnumerable<Triangle3D> TriangleClipAgainstPlane(Point3D planeP, Normal3D planeN, Triangle3D inTri)
         {
-            //Init Triangles
-            outTri1 = new Triangle3D();
-            outTri2 = new Triangle3D();
 
             //Normalize the Normal
             planeN = new(Vector3D.UnitVector(new(planeN)));
 
             //Storage
-            Point3D[] insidePoints = new Point3D[3];
-            Point3D[] outsidePoints = new Point3D[3];
+            var insidePoints = new Point3D[3];
+            var outsidePoints = new Point3D[3];
             int insidePointsCount  = 0;
             int outsidePointsCount = 0;
 
             //Distances
-            double d0 = calcDistance(inTri.Points[0], planeP, planeN);
-            double d1 = calcDistance(inTri.Points[1], planeP, planeN);
-            double d2 = calcDistance(inTri.Points[2], planeP, planeN);
+            double d0 = CalcDistance(inTri.Points[0], planeP, planeN);
+            double d1 = CalcDistance(inTri.Points[1], planeP, planeN);
+            double d2 = CalcDistance(inTri.Points[2], planeP, planeN);
 
             //Check if its a point outside or inside
             if(d0 > 0)
@@ -71,44 +69,56 @@ namespace Projection
             //all points outside
             if (insidePointsCount == 0)
             {
-                return 0;
+                yield break;
             }
             //all ponts inside
             if (insidePointsCount == 3)
             {
-                outTri1 = inTri;
-                return 1;
+                yield return inTri;
             }
 
             //Clipping Triangle
             //One point inside
             if (insidePointsCount == 1 && outsidePointsCount == 2)
             {
-                outTri1.Points[0] = insidePoints[0];
-                outTri1.Points[1] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[0]);
-                outTri1.Points[2] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[1]);
+                var outTri1 = new Triangle3D {
+                    Points = {
+                        [0] = insidePoints[0],
+                        [1] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[0]),
+                        [2] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[1])
+                    }
+                };
 
-                return 1;
+                yield return outTri1;
             }
 
             //Clipping Triangle
             //two points indide
             if (insidePointsCount == 2 && outsidePointsCount == 1)
             {
-                outTri1.Points[0] = insidePoints[0];
-                outTri1.Points[1] = insidePoints[1];
-                outTri1.Points[2] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[0]);
+                var outTri1 = new Triangle3D {
+                    Points = {
+                        [0] = insidePoints[0],
+                        [1] = insidePoints[1],
+                        [2] = IntersectPlane(planeP, planeN, insidePoints[0], outsidePoints[0])
+                    }
+                };
+                yield return outTri1;
 
-                outTri2.Points[0] = insidePoints[1];
-                outTri2.Points[1] = outTri1.Points[2];
-                outTri2.Points[2] = IntersectPlane(planeP, planeN, insidePoints[1], outsidePoints[0]);
+                var outTri2 = new Triangle3D {
+                    Points = {
+                        [0] = insidePoints[1],
+                        [1] = outTri1.Points[2],
+                        [2] = IntersectPlane(planeP, planeN, insidePoints[1], outsidePoints[0])
+                    }
+                };
 
-                return 2;
+                yield return outTri2;
             }
 
-            return 1;
         }
-        static double calcDistance(Point3D p, Point3D planeP, Normal3D planeN)
+
+        static double CalcDistance(Point3D p, Point3D planeP, Normal3D planeN)
         {
             Vector3D erg = new(planeN * (p - planeP));
 
