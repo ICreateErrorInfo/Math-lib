@@ -157,11 +157,20 @@ namespace Math_lib
 
             return new Vector3D(x, y, z, w);
         }
+        public static Vertex operator *(Matrix4x4 m, Vertex i)
+        {
+            double x = i.pos.X * m[0, 0] + i.pos.Y * m[1, 0] + i.pos.Z * m[2, 0] + i.pos.W * m[3, 0];
+            double y = i.pos.X * m[0, 1] + i.pos.Y * m[1, 1] + i.pos.Z * m[2, 1] + i.pos.W * m[3, 1];
+            double z = i.pos.X * m[0, 2] + i.pos.Y * m[1, 2] + i.pos.Z * m[2, 2] + i.pos.W * m[3, 2];
+            double w = i.pos.X * m[0, 3] + i.pos.Y * m[1, 3] + i.pos.Z * m[2, 3] + i.pos.W * m[3, 3];
+
+            return new Vertex(new Point3D(x, y, z, w), i.t);
+        }
         public static Triangle3D operator *(Matrix4x4 m, Triangle3D i)
         {
-            return new Triangle3D(m * i.Points[0],
-                                 m * i.Points[1],
-                                 m * i.Points[2]);
+            return new Triangle3D(m * i.v0,
+                                  m * i.v1,
+                                  m * i.v2);
         }
         public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
         {

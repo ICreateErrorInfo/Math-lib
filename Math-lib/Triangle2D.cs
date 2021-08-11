@@ -8,12 +8,6 @@
         {
 
         }
-        public Triangle2D(Triangle3D p)
-        {
-            Points[0] = new Point2D(p.Points[0]);
-            Points[1] = new Point2D(p.Points[1]);
-            Points[2] = new Point2D(p.Points[2]);
-        }
         public Triangle2D(Point2D p1, Point2D p2, Point2D p3)
         {
             Points[0] = p1;
