@@ -19,6 +19,7 @@ namespace Projection
             _zb = new ZBuffer(width, height);
         }
 
+        public ZBuffer ZBuffer => _zb;
 
         public override void Clear() {
             base.Clear();
