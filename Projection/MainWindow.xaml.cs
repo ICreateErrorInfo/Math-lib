@@ -20,21 +20,27 @@ namespace Projection {
         private int angleX = 0;
         Mesh mesh;
         Effect _effect;
+        WaveTextureEffect we;
+        double timer = 0;
 
         public MainWindow() {
 
             InitializeComponent();
 
-            mesh = Mesh.GetCube();
+            mesh = Plane.GetSkinned(20);
 
             //var solidColor = new SolidColorEffect();
             //solidColor.SetColor(Color.White);
             //_effect = solidColor;
 
 
-            var textureEffect = new TextureEffect();
-            textureEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\office_skin.jpg");
-            _effect = textureEffect;
+            //var textureEffect = new TextureEffect();
+            //textureEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
+            //_effect = textureEffect;
+
+            var waveEffect = new WaveTextureEffect();
+            waveEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
+            we = waveEffect;
 
             //Load Mesh
             ShowOpenFile();
@@ -42,7 +48,7 @@ namespace Projection {
             //Render
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(40),
+                Interval = TimeSpan.FromMilliseconds(1),
                 IsEnabled = true
             };
 
@@ -90,13 +96,17 @@ namespace Projection {
 
         private void OnRenderSzene(object sender, EventArgs e) {
 
+            we.SetTime(timer);
+            _effect = we;
+
             Pipeline p = new Pipeline();
-            _effect.BindTranslation(new(0,0,3));
+            _effect.BindTranslation(new(0,0,2));
             _effect.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
 
-            p.Draw(Importer.mesh, _effect);
+            p.Draw(mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
+            timer += .05;
         }       
     }
 }
