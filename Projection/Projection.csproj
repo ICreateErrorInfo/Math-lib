@@ -15,4 +15,13 @@
     <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Images\office_skin.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\sauron-bhole-100x100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

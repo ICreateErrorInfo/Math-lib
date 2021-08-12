@@ -1,62 +1,60 @@
 ﻿using Math_lib;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Projection
 {
     class WaveTextureEffect : Effect
     {
+        //Texture
+        DirectBitmap _pTex;
+        double       _texWidth;
+        double       _texHeigh;
+        double       _texClampX;
+        double       _texClampY;
+
+        //Wave
+        double _time;
+        double _freqWave   = 10;
+        double _freqScroll = 5;
+        double _amplitude  = 0.05;
+
         public override Color GetColor(Vertex v)
         {
-            return pTex.GetPixel((int)Math.Min(v.t.X * texWidth + 0.5, texClampX),
-                                 (int)Math.Min(v.t.Y * texHeigh + 0.5, texClampY));
+            return _pTex.GetPixel((int)Math.Min(v.t.X * _texWidth + 0.5, _texClampX),
+                                 (int)Math.Min(v.t.Y * _texHeigh + 0.5, _texClampY));
         }
 
         public void BindTexture(string filename)
         {
             Bitmap img = (Bitmap)Image.FromFile(filename);
 
-            pTex = new DirectBitmap(img.Width, img.Height);
+            _pTex = new DirectBitmap(img.Width, img.Height);
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
-                    pTex.SetPixel(x, y, img.GetPixel(x, y));
+                    _pTex.SetPixel(x, y, img.GetPixel(x, y));
                 }
             }
 
-            texWidth = img.Width;
-            texHeigh = img.Height;
-            texClampX = texWidth - 1;
-            texClampY = texHeigh - 1;
+            _texWidth = img.Width;
+            _texHeigh = img.Height;
+            _texClampX = _texWidth - 1;
+            _texClampY = _texHeigh - 1;
         }
 
         public override Vertex Translate(Vertex vIn)
         {
             Point3D pos = rotation * vIn.pos + translation;
-            pos += new Point3D(0, amplitude * Math.Sin(time * freqScroll + pos.X * freqWave), 0);
+            pos += new Point3D(0, _amplitude * Math.Sin(_time * _freqScroll + pos.X * _freqWave), 0);
             return new Vertex(pos, vIn.t);
         }
         public void SetTime(double t)
         {
-            time = t;
+            _time = t;
         }
 
-        //Texture
-        public DirectBitmap pTex;
-        double texWidth;
-        double texHeigh;
-        double texClampX;
-        double texClampY;
-
-        //Wave
-        double time = 0;
-        double freqWave = 10;
-        double freqScroll = 5;
-        double amplitude = 0.05;
+       
     }
 }
