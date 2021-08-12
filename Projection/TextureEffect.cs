@@ -34,6 +34,11 @@ namespace Projection
             texClampY = texHeigh - 1;
         }
 
+        public override Vertex Translate(Vertex vIn)
+        {
+            return new(rotation * vIn.pos + translation, vIn.t);
+        }
+
         public DirectBitmap pTex;
         double texWidth;
         double texHeigh;

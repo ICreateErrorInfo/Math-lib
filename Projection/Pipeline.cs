@@ -13,16 +13,8 @@ namespace Projection
         }
         public void Draw(Mesh triList, Effect e)
         {
-            _Effect = e;
+            _effect = e;
             ProcessVertices(triList.vertices, triList.indices);
-        }
-        public void BindRotation(Matrix4x4 rotationIn)
-        {
-            rotation = rotationIn;
-        }
-        public void BindTranslation(Vector3D translationIn)
-        {
-            translation = translationIn;
         }
 
 
@@ -33,7 +25,7 @@ namespace Projection
             foreach(var v in vertices)
             {
                 //Translation
-                verticesOut.Add(new(rotation * v.pos + translation, v.t));
+                verticesOut.Add(_effect.Translate(v));
             }
 
             AssembleTriangles(verticesOut, indices);
@@ -157,18 +149,16 @@ namespace Projection
 
                     if (zb.TestAndSet(x, y, z))
                     {
-                        Bmp.SetPixel(x, y, _Effect.GetColor(attr));
+                        Bmp.SetPixel(x, y, _effect.GetColor(attr));
                     }
                 }
             }
         }
 
-        private Effect _Effect;
+        private Effect _effect;
         public DirectBitmap Bmp = new DirectBitmap(Options.screenWidth, Options.screenHeight);
 
         private ZBuffer zb = new ZBuffer(Options.screenWidth, Options.screenHeight);
         private PubeScreenTransformer pst = new PubeScreenTransformer();
-        private Matrix4x4 rotation = Matrix4x4.Identity();
-        private Vector3D translation = new Vector3D();
     }
 }

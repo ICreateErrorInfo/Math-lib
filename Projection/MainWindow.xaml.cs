@@ -91,8 +91,8 @@ namespace Projection {
         private void OnRenderSzene(object sender, EventArgs e) {
 
             Pipeline p = new Pipeline();
-            p.BindTranslation(new(0,0,3));
-            p.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
+            _effect.BindTranslation(new(0,0,3));
+            _effect.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
 
             p.Draw(Importer.mesh, _effect);
 

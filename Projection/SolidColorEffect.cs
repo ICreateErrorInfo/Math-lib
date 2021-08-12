@@ -20,6 +20,11 @@ namespace Projection
             return c;
         }
 
+        public override Vertex Translate(Vertex vIn)
+        {
+            return new(rotation * vIn.pos + translation, vIn.t);
+        }
+
         Color c = Color.Red;
     }
 }
