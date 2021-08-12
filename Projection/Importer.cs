@@ -28,7 +28,7 @@ namespace Projection
 
                     if (zeile[0] == "v")
                     {
-                        mesh.vertices.Add(new BasicVertex(new Point3D(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider))));
+                        mesh.vertices.Add(new Vertex(new Point3D(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider))));
                     }
                     if(zeile[0] == "f")
                     {

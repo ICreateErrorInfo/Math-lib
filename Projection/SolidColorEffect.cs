@@ -15,7 +15,7 @@ namespace Projection
             this.c = c;
         }
 
-        public override Color GetColor(Vertex v = null)
+        public override Color GetColor(Vertex v)
         {
             return c;
         }

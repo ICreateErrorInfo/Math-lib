@@ -23,26 +23,26 @@ namespace Math_lib
             double side = size / 2;
             Mesh cube = new Mesh();
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 0)));
-            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 0)));
+            cube.vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 0)));
+            cube.vertices.Add(new Vertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 0)));
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side,  side, -side), ConvertTexCoord(1, 1)));
-            cube.vertices.Add(new TexVertex(new Point3D( side,  side, -side), ConvertTexCoord(0, 1)));
+            cube.vertices.Add(new Vertex(new Point3D(-side,  side, -side), ConvertTexCoord(1, 1)));
+            cube.vertices.Add(new Vertex(new Point3D( side,  side, -side), ConvertTexCoord(0, 1)));
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side, -side,  side), ConvertTexCoord(1, 3)));
-            cube.vertices.Add(new TexVertex(new Point3D( side, -side,  side), ConvertTexCoord(0, 3)));
+            cube.vertices.Add(new Vertex(new Point3D(-side, -side,  side), ConvertTexCoord(1, 3)));
+            cube.vertices.Add(new Vertex(new Point3D( side, -side,  side), ConvertTexCoord(0, 3)));
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side,  side,  side), ConvertTexCoord(1, 2)));
-            cube.vertices.Add(new TexVertex(new Point3D( side,  side,  side), ConvertTexCoord(0, 2)));
+            cube.vertices.Add(new Vertex(new Point3D(-side,  side,  side), ConvertTexCoord(1, 2)));
+            cube.vertices.Add(new Vertex(new Point3D( side,  side,  side), ConvertTexCoord(0, 2)));
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 4)));
-            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 4)));
+            cube.vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 4)));
+            cube.vertices.Add(new Vertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 4)));
 
-            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(2, 1)));
-            cube.vertices.Add(new TexVertex(new Point3D(-side, -side,  side), ConvertTexCoord(2, 2)));
+            cube.vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(2, 1)));
+            cube.vertices.Add(new Vertex(new Point3D(-side, -side,  side), ConvertTexCoord(2, 2)));
 
-            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(-1, 1)));
-            cube.vertices.Add(new TexVertex(new Point3D( side, -side,  side), ConvertTexCoord(-1, 2)));
+            cube.vertices.Add(new Vertex(new Point3D( side, -side, -side), ConvertTexCoord(-1, 1)));
+            cube.vertices.Add(new Vertex(new Point3D( side, -side,  side), ConvertTexCoord(-1, 2)));
 
 
             List<int> ind = new List<int>{
@@ -59,9 +59,9 @@ namespace Math_lib
             return cube;
         }
 
-        private static Vector2D ConvertTexCoord(double u, double v)
+        private static Point2D ConvertTexCoord(double u, double v)
         {
-            return new Vector2D((u + 1) / 3, v / 4);
+            return new Point2D((u + 1) / 3, v / 4);
         }
     }
 

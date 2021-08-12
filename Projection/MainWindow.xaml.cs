@@ -19,18 +19,22 @@ namespace Projection {
         private int angleY = 0;
         private int angleX = 0;
         Mesh mesh;
-        TextureEffect effect;
+        Effect _effect;
 
         public MainWindow() {
 
             InitializeComponent();
 
-
-            //SolidColorEffect effect = new SolidColorEffect();
-            //effect.SetColor(Color.White);
             mesh = Mesh.GetCube();
-            effect = new TextureEffect();
-            effect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
+
+            //var solidColor = new SolidColorEffect();
+            //solidColor.SetColor(Color.White);
+            //_effect = solidColor;
+
+
+            var textureEffect = new TextureEffect();
+            textureEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\office_skin.jpg");
+            _effect = textureEffect;
 
             //Load Mesh
             ShowOpenFile();
@@ -90,7 +94,7 @@ namespace Projection {
             p.BindTranslation(new(0,0,3));
             p.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
 
-            p.Draw(mesh, effect);
+            p.Draw(mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
         }       

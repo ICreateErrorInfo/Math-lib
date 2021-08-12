@@ -33,7 +33,7 @@ namespace Projection
             foreach(var v in vertices)
             {
                 //Translation
-                verticesOut.Add(v.ConvertFrom(rotation * v.pos + translation));
+                verticesOut.Add(new(rotation * v.pos + translation, v.t));
             }
 
             AssembleTriangles(verticesOut, indices);
@@ -94,7 +94,7 @@ namespace Projection
             {
                 //find Splitting Point
                 double alphaSplit = (p1.pos.Y - p0.pos.Y) / (p2.pos.Y - p0.pos.Y);
-                Vertex vi = p0 + (p2 - p0) * p0.ConvertFrom(alphaSplit);
+                Vertex vi = p0 + (p2 - p0) * new Vertex(alphaSplit);
 
                 if (p1.pos.X < vi.pos.X)
                 {
@@ -111,8 +111,8 @@ namespace Projection
         private void DrawFlatTopTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
             double deltaY = p2.pos.Y - p0.pos.Y;
-            Vertex dit0 = (p2 - p0) / p1.ConvertFrom(deltaY);
-            Vertex dit1 = (p2 - p1) / p2.ConvertFrom(deltaY);
+            Vertex dit0 = (p2 - p0) / new Vertex(deltaY);
+            Vertex dit1 = (p2 - p1) / new Vertex(deltaY);
 
             var itEdge1 = p1;
 
@@ -121,8 +121,8 @@ namespace Projection
         private void DrawFlatBottomTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
             double deltaY = p2.pos.Y - p0.pos.Y;
-            Vertex dit0 = (p1 - p0) / p1.ConvertFrom(deltaY);
-            Vertex dit1 = (p2 - p0) / p2.ConvertFrom(deltaY);
+            Vertex dit0 = (p1 - p0) / new Vertex(deltaY);
+            Vertex dit1 = (p2 - p0) / new Vertex(deltaY);
 
             var itEdge1 = p0;
 
@@ -135,8 +135,8 @@ namespace Projection
             int yStart = (int)Math.Ceiling(it0.pos.Y - 0.5);
             int yEnd = (int)Math.Ceiling(it2.pos.Y - 0.5);
 
-            itEdge0 += dv0 * it0.ConvertFrom((yStart + 0.5 - it0.pos.Y));
-            itEdge += dv1 * it0.ConvertFrom((yStart + 0.5 - it0.pos.Y));
+            itEdge0 += dv0 * new Vertex((yStart + 0.5 - it0.pos.Y));
+            itEdge += dv1 * new Vertex((yStart + 0.5 - it0.pos.Y));
 
             for (int y = yStart; y < yEnd; y++, itEdge0 += dv0, itEdge += dv1)
             {
@@ -146,14 +146,14 @@ namespace Projection
                 var iLine = itEdge0;
 
                 double dx = itEdge.pos.X - itEdge0.pos.X;
-                var diLine = (itEdge - iLine) / itEdge.ConvertFrom(dx);
+                var diLine = (itEdge - iLine) / new Vertex(dx);
 
-                iLine += diLine * diLine.ConvertFrom(xStart + 0.5 - itEdge0.pos.X);
+                iLine += diLine * new Vertex(xStart + 0.5 - itEdge0.pos.X);
 
                 for (int x = xStart; x < xEnd; x++, iLine += diLine)
                 {
                     double z = 1 / iLine.pos.Z;
-                    var attr = iLine * iLine.ConvertFrom(z);
+                    var attr = iLine * new Vertex(z);
 
                     if (zb.TestAndSet(x, y, z))
                     {

@@ -19,7 +19,7 @@ namespace Projection
         {
             double zInv = 1 / v.pos.Z;
 
-            v = v * v.ConvertFrom(zInv);
+            v = v * new Vertex(zInv);
 
             v.pos = new Point3D((v.pos.X + 1) * xFactor, (-v.pos.Y + 1) * yFactor, zInv);
 

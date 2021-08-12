@@ -5,6 +5,6 @@ namespace Projection
 {
     abstract class Effect
     {
-        public abstract Color GetColor(Vertex v = null);
+        public abstract Color GetColor(Vertex v);
     }
 }
