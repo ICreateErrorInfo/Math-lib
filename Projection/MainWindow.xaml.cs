@@ -58,7 +58,7 @@ namespace Projection {
             };
             if (ofn.ShowDialog() == true)
             {
-                Importer.Obj(ofn.FileName);
+                Importer.Obj(ofn.FileName, true);
             }
         }
         protected override void OnKeyDown(KeyEventArgs e) 
@@ -94,7 +94,7 @@ namespace Projection {
             p.BindTranslation(new(0,0,3));
             p.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
 
-            p.Draw(mesh, _effect);
+            p.Draw(Importer.mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
         }       
