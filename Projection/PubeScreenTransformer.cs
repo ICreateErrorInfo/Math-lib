@@ -15,13 +15,15 @@ namespace Projection
             yFactor = Options.screenHeight / 2;
         }
 
-        public Vertex Transform(Vertex p)
+        public Vertex Transform(Vertex v)
         {
-            double zInv = 1 / p.pos.Z;
+            double zInv = 1 / v.pos.Z;
 
-            return new Vertex( 
-            new Point3D((p.pos.X * zInv + 1.0f) * xFactor,
-                       (-p.pos.Y * zInv + 1.0f) * yFactor, 0), p.t);
+            v = v * v.ConvertFrom(zInv);
+
+            v.pos = new Point3D((v.pos.X + 1) * xFactor, (-v.pos.Y + 1) * yFactor, zInv);
+
+            return v;
         }
         public Vertex GetTransformed(Vertex p)
         {

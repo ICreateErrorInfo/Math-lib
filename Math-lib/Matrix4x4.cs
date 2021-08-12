@@ -164,13 +164,7 @@ namespace Math_lib
             double z = i.pos.X * m[0, 2] + i.pos.Y * m[1, 2] + i.pos.Z * m[2, 2] + i.pos.W * m[3, 2];
             double w = i.pos.X * m[0, 3] + i.pos.Y * m[1, 3] + i.pos.Z * m[2, 3] + i.pos.W * m[3, 3];
 
-            return new Vertex(new Point3D(x, y, z, w), i.t);
-        }
-        public static Triangle3D operator *(Matrix4x4 m, Triangle3D i)
-        {
-            return new Triangle3D(m * i.v0,
-                                  m * i.v1,
-                                  m * i.v2);
+            return i.Create(new Point3D(x, y, z, w));
         }
         public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
         {

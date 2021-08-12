@@ -18,10 +18,19 @@ namespace Projection {
         private readonly DispatcherTimer _timer;
         private int angleY = 0;
         private int angleX = 0;
+        Mesh mesh;
+        TextureEffect effect;
 
         public MainWindow() {
 
             InitializeComponent();
+
+
+            //SolidColorEffect effect = new SolidColorEffect();
+            //effect.SetColor(Color.White);
+            mesh = Mesh.GetCube();
+            effect = new TextureEffect();
+            effect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
 
             //Load Mesh
             ShowOpenFile();
@@ -80,7 +89,9 @@ namespace Projection {
             Pipeline p = new Pipeline();
             p.BindTranslation(new(0,0,3));
             p.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
-            p.Draw(Importer.mesh);
+
+            p.Draw(mesh, effect);
+
             Image.Source = p.Bmp.ToImageSource();
         }       
     }

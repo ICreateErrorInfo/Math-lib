@@ -11,8 +11,9 @@ namespace Projection
         {
 
         }
-        public void Draw(Mesh triList)
+        public void Draw(Mesh triList, Effect e)
         {
+            _Effect = e;
             ProcessVertices(triList.vertices, triList.indices);
         }
         public void BindRotation(Matrix4x4 rotationIn)
@@ -32,7 +33,7 @@ namespace Projection
             foreach(var v in vertices)
             {
                 //Translation
-                verticesOut.Add(new Vertex(rotation * v.pos + translation, v.t));
+                verticesOut.Add(v.ConvertFrom(rotation * v.pos + translation));
             }
 
             AssembleTriangles(verticesOut, indices);
@@ -49,14 +50,6 @@ namespace Projection
                 //Backface Culling
                 if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), new(v0.pos)) <= 0))
                 {
-                    //Illumination
-                    Vector3D lightDirection = new Vector3D(0,0,1);
-                    lightDirection = Vector3D.UnitVector(lightDirection);
-
-                    double dp = Vector3D.Dot(Vector3D.UnitVector(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos)), lightDirection);
-                    var grayValue = Convert.ToByte(Math.Abs(dp * Byte.MaxValue));
-                    c = System.Drawing.Color.FromArgb(255, grayValue, grayValue, grayValue);
-
                     //process 3 verts into a triangle
                     ProcessTriangle(v0, v1, v2);
                 }
@@ -64,21 +57,21 @@ namespace Projection
         }
         private void ProcessTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
-            PostProcessTriangleVertices(new Triangle3D(v0, v1, v2));
+            PostProcessTriangleVertices(v0, v1, v2);
         }
-        private void PostProcessTriangleVertices(Triangle3D triangle)
+        private void PostProcessTriangleVertices(Vertex v0, Vertex v1, Vertex v2)
         {
-            triangle.v0 =  pst.Transform(triangle.v0);
-            triangle.v1 =  pst.Transform(triangle.v1);
-            triangle.v2 =  pst.Transform(triangle.v2);
+            v0 =  pst.Transform(v0);
+            v1 =  pst.Transform(v1);
+            v2 =  pst.Transform(v2);
 
-            DrawTriangle(triangle);
+            DrawTriangle(v0, v1, v2);
         }
-        private void DrawTriangle(Triangle3D tri)
+        private void DrawTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
-            Vertex p0 = tri.v0;
-            Vertex p1 = tri.v1;
-            Vertex p2 = tri.v2;
+            Vertex p0 = v0;
+            Vertex p1 = v1;
+            Vertex p2 = v2;
 
             if (p1.pos.Y < p0.pos.Y) { (p0, p1) = (p1, p0); }
             if (p2.pos.Y < p1.pos.Y) { (p1, p2) = (p2, p1); }
@@ -101,7 +94,7 @@ namespace Projection
             {
                 //find Splitting Point
                 double alphaSplit = (p1.pos.Y - p0.pos.Y) / (p2.pos.Y - p0.pos.Y);
-                Vertex vi = p0 + (p2 - p0) * new Vertex(new Point3D(alphaSplit));
+                Vertex vi = p0 + (p2 - p0) * p0.ConvertFrom(alphaSplit);
 
                 if (p1.pos.X < vi.pos.X)
                 {
@@ -118,8 +111,8 @@ namespace Projection
         private void DrawFlatTopTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
             double deltaY = p2.pos.Y - p0.pos.Y;
-            Point3D dit0 = new((p2.pos - p0.pos) / deltaY);
-            Point3D dit1 = new((p2.pos - p1.pos) / deltaY);
+            Vertex dit0 = (p2 - p0) / p1.ConvertFrom(deltaY);
+            Vertex dit1 = (p2 - p1) / p2.ConvertFrom(deltaY);
 
             var itEdge1 = p1;
 
@@ -128,24 +121,24 @@ namespace Projection
         private void DrawFlatBottomTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
             double deltaY = p2.pos.Y - p0.pos.Y;
-            Point3D dit0 = new((p1.pos - p0.pos) / deltaY);
-            Point3D dit1 = new((p2.pos - p0.pos) / deltaY);
+            Vertex dit0 = (p1 - p0) / p1.ConvertFrom(deltaY);
+            Vertex dit1 = (p2 - p0) / p2.ConvertFrom(deltaY);
 
             var itEdge1 = p0;
 
             DrawFlatTriangle(p0, p1, p2, dit0, dit1, itEdge1);
         }
-        private void DrawFlatTriangle(Vertex it0, Vertex it1, Vertex it2, Point3D dv0, Point3D dv1, Vertex itEdge)
+        private void DrawFlatTriangle(Vertex it0, Vertex it1, Vertex it2, Vertex dv0, Vertex dv1, Vertex itEdge)
         {
             var itEdge0 = it0;
 
             int yStart = (int)Math.Ceiling(it0.pos.Y - 0.5);
             int yEnd = (int)Math.Ceiling(it2.pos.Y - 0.5);
 
-            itEdge0 += new Vertex(dv0 * (double)(yStart + 0.5 - it0.pos.Y));
-            itEdge += new Vertex(dv1 * (double)(yStart + 0.5 - it0.pos.Y));
+            itEdge0 += dv0 * it0.ConvertFrom((yStart + 0.5 - it0.pos.Y));
+            itEdge += dv1 * it0.ConvertFrom((yStart + 0.5 - it0.pos.Y));
 
-            for (int y = yStart; y < yEnd; y++, itEdge0.pos += dv0, itEdge.pos += dv1)
+            for (int y = yStart; y < yEnd; y++, itEdge0 += dv0, itEdge += dv1)
             {
                 int xStart = (int)Math.Ceiling(itEdge0.pos.X - 0.5);
                 int xEnd = (int)Math.Ceiling(itEdge.pos.X - 0.5);
@@ -153,23 +146,24 @@ namespace Projection
                 var iLine = itEdge0;
 
                 double dx = itEdge.pos.X - itEdge0.pos.X;
-                var diLine = (itEdge.pos - iLine.pos) / dx;
+                var diLine = (itEdge - iLine) / itEdge.ConvertFrom(dx);
 
-                iLine += new Vertex(new(diLine * (double)(xStart + 0.5 - itEdge0.pos.X)));
+                iLine += diLine * diLine.ConvertFrom(xStart + 0.5 - itEdge0.pos.X);
 
-                for (int x = xStart; x < xEnd; x++, iLine.pos += diLine)
+                for (int x = xStart; x < xEnd; x++, iLine += diLine)
                 {
                     double z = 1 / iLine.pos.Z;
+                    var attr = iLine * iLine.ConvertFrom(z);
 
                     if (zb.TestAndSet(x, y, z))
                     {
-                        Bmp.SetPixel(x, y, c);
+                        Bmp.SetPixel(x, y, _Effect.GetColor(attr));
                     }
                 }
             }
         }
 
-        public Color c;
+        private Effect _Effect;
         public DirectBitmap Bmp = new DirectBitmap(Options.screenWidth, Options.screenHeight);
 
         private ZBuffer zb = new ZBuffer(Options.screenWidth, Options.screenHeight);

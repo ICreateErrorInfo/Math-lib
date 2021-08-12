@@ -17,29 +17,52 @@ namespace Math_lib
         public List<Vertex> vertices = new List<Vertex>();
         public List<int> indices = new List<int>();
 
-        public static Mesh GetCube(double size)
+
+        public static Mesh GetCube(double size = 1)
         {
             double side = size / 2;
+            Mesh cube = new Mesh();
 
-            Mesh meshCube = new Mesh();
+            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 0)));
+            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 0)));
 
-            meshCube.vertices.Add(new Vertex(new Point3D(-side, -side, -side)));
-            meshCube.vertices.Add(new Vertex(new Point3D( side, -side, -side)));
-            meshCube.vertices.Add(new Vertex(new Point3D(-side,  side, -side)));
-            meshCube.vertices.Add(new Vertex(new Point3D( side,  side, -side)));
-            meshCube.vertices.Add(new Vertex(new Point3D(-side, -side,  side)));
-            meshCube.vertices.Add(new Vertex(new Point3D( side, -side,  side)));
-            meshCube.vertices.Add(new Vertex(new Point3D(-side,  side,  side)));
-            meshCube.vertices.Add(new Vertex(new Point3D( side,  side,  side)));
+            cube.vertices.Add(new TexVertex(new Point3D(-side,  side, -side), ConvertTexCoord(1, 1)));
+            cube.vertices.Add(new TexVertex(new Point3D( side,  side, -side), ConvertTexCoord(0, 1)));
 
-            //Todo indices
-            meshCube.indices.Add(0); meshCube.indices.Add(2); meshCube.indices.Add(1);
-            meshCube.indices.Add(2); meshCube.indices.Add(3); meshCube.indices.Add(1);
-            meshCube.indices.Add(4); meshCube.indices.Add(3); meshCube.indices.Add(1);
+            cube.vertices.Add(new TexVertex(new Point3D(-side, -side,  side), ConvertTexCoord(1, 3)));
+            cube.vertices.Add(new TexVertex(new Point3D( side, -side,  side), ConvertTexCoord(0, 3)));
 
-            return meshCube;
+            cube.vertices.Add(new TexVertex(new Point3D(-side,  side,  side), ConvertTexCoord(1, 2)));
+            cube.vertices.Add(new TexVertex(new Point3D( side,  side,  side), ConvertTexCoord(0, 2)));
+
+            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 4)));
+            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(0, 4)));
+
+            cube.vertices.Add(new TexVertex(new Point3D(-side, -side, -side), ConvertTexCoord(2, 1)));
+            cube.vertices.Add(new TexVertex(new Point3D(-side, -side,  side), ConvertTexCoord(2, 2)));
+
+            cube.vertices.Add(new TexVertex(new Point3D( side, -side, -side), ConvertTexCoord(-1, 1)));
+            cube.vertices.Add(new TexVertex(new Point3D( side, -side,  side), ConvertTexCoord(-1, 2)));
+
+
+            List<int> ind = new List<int>{
+                0,2,1,   2,3,1,
+                4,8,5,   5,8,9,
+                2,6,3,   3,6,7,
+                4,5,7,   4,7,6,
+                2,10,11, 2,11,6,
+                12,3,7,  12,7,13
+            };
+
+            cube.indices = ind;
+
+            return cube;
         }
 
+        private static Vector2D ConvertTexCoord(double u, double v)
+        {
+            return new Vector2D((u + 1) / 3, v / 4);
+        }
     }
 
 }

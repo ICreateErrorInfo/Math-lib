@@ -14,6 +14,12 @@ namespace Projection {
             Height = height;
             Bits   = new byte[Stride * height];
         }
+        public DirectBitmap(int width, int height, byte[] b)
+        {
+            Width = width;
+            Height = height;
+            Bits = b;
+        }
 
         public byte[] Bits { get; }
 
