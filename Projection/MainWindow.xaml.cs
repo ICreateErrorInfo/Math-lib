@@ -29,7 +29,7 @@ namespace Projection {
 
             InitializeComponent();
 
-            _mesh = Plane.GetSkinned();
+            _mesh = Mesh.GetCube();
 
             //var solidColor = new SolidColorEffect();
             //solidColor.SetColor(Color.White);
@@ -41,12 +41,12 @@ namespace Projection {
             //textureEffect.BindTexture(textureFile);
             //_effect = textureEffect;
 
-            //var waveEffect = new WaveTextureEffect();
-            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
-            //waveEffect.BindTexture(textureFile);
-            //_we = waveEffect;
-            //_effect = waveEffect;
+            //var waveeffect = new wavetextureeffect();
+            //var exedir = path.getdirectoryname(system.reflection.assembly.getentryassembly()?.location) ?? "";
+            //string texturefile = path.combine(exedir, "images", @"sauron-bhole-100x100.png");
+            //waveeffect.bindtexture(texturefile);
+            //_we = waveeffect;
+            //_effect = waveeffect;
 
             var solidGeoEffect = new SolidGeometryEffect();
             solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });

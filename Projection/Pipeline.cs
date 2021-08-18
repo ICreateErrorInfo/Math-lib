@@ -32,7 +32,7 @@ namespace Projection
         }
         private void AssembleTriangles(List<Vertex> vertieces, List<int> indices)
         {
-            for(int i = 0, end = indices.Count / 3; i < end; i++, triangleIndex++)
+            for(int i = 0, end = indices.Count / 3; i < end; i++)
             {
                 //Determine Triangle Vertices 
                 var v0 = vertieces[indices[i * 3]];
@@ -43,11 +43,11 @@ namespace Projection
                 if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), new(v0.pos)) <= 0))
                 {
                     //process 3 verts into a triangle
-                    ProcessTriangle(v0, v1, v2);
+                    ProcessTriangle(v0, v1, v2, i);
                 }
             }
         }
-        private void ProcessTriangle(Vertex v0, Vertex v1, Vertex v2)
+        private void ProcessTriangle(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
         {
             PostProcessTriangleVertices(_effect.ProcessTri(v0, v1, v2, triangleIndex));
         }
@@ -160,6 +160,5 @@ namespace Projection
 
         private ZBuffer zb = new ZBuffer(Options.screenWidth, Options.screenHeight);
         private PubeScreenTransformer pst = new PubeScreenTransformer();
-        private int triangleIndex = 0;
     }
 }
