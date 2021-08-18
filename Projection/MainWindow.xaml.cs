@@ -27,7 +27,7 @@ namespace Projection {
 
             InitializeComponent();
 
-            mesh = Plane.GetSkinned(20);
+            mesh = Mesh.GetCube();
 
             //var solidColor = new SolidColorEffect();
             //solidColor.SetColor(Color.White);
@@ -38,9 +38,13 @@ namespace Projection {
             //textureEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
             //_effect = textureEffect;
 
-            var waveEffect = new WaveTextureEffect();
-            waveEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
-            we = waveEffect;
+            //var waveEffect = new WaveTextureEffect();
+            //waveEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
+            //we = waveEffect;
+
+            var solidGeoEffect = new SolidGeometryEffect();
+            solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
+            _effect = solidGeoEffect;
 
             //Load Mesh
             ShowOpenFile();
@@ -96,8 +100,8 @@ namespace Projection {
 
         private void OnRenderSzene(object sender, EventArgs e) {
 
-            we.SetTime(timer);
-            _effect = we;
+            //we.SetTime(timer);
+            //_effect = we;
 
             Pipeline p = new Pipeline();
             _effect.BindTranslation(new(0,0,2));

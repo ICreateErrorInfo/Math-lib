@@ -46,6 +46,11 @@ namespace Projection
             time = t;
         }
 
+        public override Triangle3D ProcessTri(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
+        {
+            return new(v0, v1, v2);
+        }
+
         //Texture
         public DirectBitmap pTex;
         double texWidth;
