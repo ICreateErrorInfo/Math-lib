@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -27,27 +29,24 @@ namespace Projection {
 
             InitializeComponent();
 
-            mesh = Mesh.GetCube();
+            _mesh = Plane.GetSkinned();
 
             //var solidColor = new SolidColorEffect();
             //solidColor.SetColor(Color.White);
             //_effect = solidColor;
 
-            //var    textureEffect = new TextureEffect();
-            //var    exeDir        = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string textureFile   = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
+            //var textureEffect = new TextureEffect();
+            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
             //textureEffect.BindTexture(textureFile);
             //_effect = textureEffect;
 
-            var    waveEffect  = new WaveTextureEffect();
-
-            var    exeDir      = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
-            waveEffect.BindTexture(textureFile);
-
             //var waveEffect = new WaveTextureEffect();
-            //waveEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
-            //we = waveEffect;
+            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
+            //waveEffect.BindTexture(textureFile);
+            //_we = waveEffect;
+            //_effect = waveEffect;
 
             var solidGeoEffect = new SolidGeometryEffect();
             solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });

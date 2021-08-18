@@ -48,16 +48,16 @@ namespace Projection
         }
 
         //Texture
-        public DirectBitmap pTex;
-        double texWidth;
-        double texHeigh;
-        double texClampX;
-        double texClampY;
+        public DirectBitmap _pTex;
+        double _texWidth;
+        double _texHeigh;
+        double _texClampX;
+        double _texClampY;
 
         //Wave
-        double time = 0;
-        double freqWave = 10;
-        double freqScroll = 5;
-        double amplitude = 0.05;
+        double _time = 0;
+        double _freqWave = 10;
+        double _freqScroll = 5;
+        double _amplitude = 0.05;
     }
 }
