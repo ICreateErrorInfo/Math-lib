@@ -153,6 +153,20 @@ namespace Math_lib
                 return new Vector3D(0);
             }
         }
+        public Vector3D Saturate()
+        {
+            double x = Math.Min(1, Math.Max(0, X));
+            double y = Math.Min(1, Math.Max(0, Y));
+            double z = Math.Min(1, Math.Max(0, Z));
+
+            return new(x, y, z);
+        }
+        public Vector3D GetSaturated()
+        {
+            Vector3D temp = this;
+            temp.Saturate();
+            return temp;
+        }
 
 
         //overrides +
