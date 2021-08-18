@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -15,13 +14,14 @@ namespace Projection {
     /// </summary>
     public partial class MainWindow: Window {
 
-        private readonly DispatcherTimer _timer;
-        private int angleY = 0;
-        private int angleX = 0;
-        Mesh mesh;
-        Effect _effect;
-        WaveTextureEffect we;
-        double timer = 0;
+        readonly DispatcherTimer   _timer;
+        readonly Mesh              _mesh;
+        readonly WaveTextureEffect _we;
+        readonly Effect            _effect;
+
+        int    _angleY;
+        int    _angleX;
+        double _time;
 
         public MainWindow() {
 
@@ -33,10 +33,17 @@ namespace Projection {
             //solidColor.SetColor(Color.White);
             //_effect = solidColor;
 
-
-            //var textureEffect = new TextureEffect();
-            //textureEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
+            //var    textureEffect = new TextureEffect();
+            //var    exeDir        = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string textureFile   = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
+            //textureEffect.BindTexture(textureFile);
             //_effect = textureEffect;
+
+            var    waveEffect  = new WaveTextureEffect();
+
+            var    exeDir      = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
+            waveEffect.BindTexture(textureFile);
 
             //var waveEffect = new WaveTextureEffect();
             //waveEffect.BindTexture(@"C:\Users\Moritz\source\repos\Math-lib\Projection\Images\sauron-bhole-100x100.png");
@@ -81,36 +88,35 @@ namespace Projection {
 
             if (e.Key == Key.A)
             {
-                angleY += 1;
+                _angleY += 1;
             }
             if (e.Key == Key.D)
             {
-                angleY -= 1;
+                _angleY -= 1;
             }
 
             if (e.Key == Key.W)
             {
-                angleX += 1;
+                _angleX += 1;
             }
             if (e.Key == Key.S)
             {
-                angleX -= 1;
+                _angleX -= 1;
             }
         }
 
         private void OnRenderSzene(object sender, EventArgs e) {
 
-            //we.SetTime(timer);
-            //_effect = we;
+            _we?.SetTime(_time);
 
             Pipeline p = new Pipeline();
             _effect.BindTranslation(new(0,0,2));
-            _effect.BindRotation(Matrix4x4.RotateYMarix(angleY) * Matrix4x4.RotateXMarix(angleX));
+            _effect.BindRotation(Matrix4x4.RotateYMarix(_angleY) * Matrix4x4.RotateXMarix(_angleX));
 
-            p.Draw(mesh, _effect);
+            p.Draw(_mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
-            timer += .05;
+            _time += .05;
         }       
     }
 }
