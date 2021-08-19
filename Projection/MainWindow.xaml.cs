@@ -21,8 +21,8 @@ namespace Projection {
         readonly WaveTextureEffect _we;
         readonly Effect            _effect;
 
-        int    _angleY;
-        int    _angleX;
+        double    _angleY;
+        double _angleX;
         double _time;
 
         public MainWindow() {
@@ -54,9 +54,13 @@ namespace Projection {
             //_effect = solidGeoEffect;
             //_mesh = Cube.GetPlain();
 
-            var VertexFlatEffect = new VertexFlatEffect();
-            _effect = VertexFlatEffect;
-            _mesh = Cube.GetIndependentFacesNormals();
+            //var VertexFlatEffect = new VertexFlatEffect();
+            //_effect = VertexFlatEffect;
+            //_mesh = Cube.GetIndependentFacesNormals();
+
+            var GeometryFlatEffect = new GeometryFlatEffect();
+            _effect = GeometryFlatEffect;
+            _mesh = Sphere.GetPlain();
 
             //Load Mesh
             ShowOpenFile();
@@ -93,20 +97,20 @@ namespace Projection {
 
             if (e.Key == Key.A)
             {
-                _angleY += 1;
+                _angleY += 0.1;
             }
             if (e.Key == Key.D)
             {
-                _angleY -= 1;
+                _angleY -= 0.1;
             }
 
             if (e.Key == Key.W)
             {
-                _angleX += 1;
+                _angleX += .1;
             }
             if (e.Key == Key.S)
             {
-                _angleX -= 1;
+                _angleX -= .1;
             }
         }
 

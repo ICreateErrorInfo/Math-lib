@@ -82,9 +82,8 @@ namespace Math_lib
                 { x,y,z,1 }
             });
         }
-        public static Matrix4x4 RotateXMarix(int ai)
+        public static Matrix4x4 RotateXMarix(double a)
         {
-            double a = ToRad(ai);
             return new(new[,]
             {
                 {  1,                          0,                           0, 0 },
@@ -93,9 +92,8 @@ namespace Math_lib
                 {  0,                          0,                           0, 1 }
             });
         }
-        public static Matrix4x4 RotateYMarix(int ai)
+        public static Matrix4x4 RotateYMarix(double a)
         {
-            double a = ToRad(ai);
             return new(new[,]
             {
                 {  Math.Round(Math.Cos(a), 3) , 0 , Math.Round(Math.Sin(a), 3), 0 },
@@ -104,9 +102,8 @@ namespace Math_lib
                 {                            0, 0 ,                          0, 1 }
             });
         }
-        public static Matrix4x4 RotateZMarix(int ai)
+        public static Matrix4x4 RotateZMarix(double a)
         {
-            double a = ToRad(ai);
             return new(new[,]
             {
                 {  Math.Round(Math.Cos(a),3), Math.Round(-Math.Sin(a),3), 0 , 0 },
