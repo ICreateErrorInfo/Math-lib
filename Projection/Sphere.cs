@@ -73,6 +73,16 @@ namespace Projection
             return sphere;
         }
 
+        public static Mesh GetPlainNormals(double radius = 1, int latDiv = 12, int longDiv = 24)
+        {
+            var sphere = GetPlain(radius, latDiv, longDiv);
+            foreach(var element in sphere.vertices)
+            {
+                element.n = Vector3D.UnitVector(new(element.pos));
+            }
+            return sphere;
+        }
+
         private static int calcIdx(int iLat, int iLong, int longDiv)
         {
             return iLat * longDiv + iLong;

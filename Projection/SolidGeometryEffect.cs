@@ -17,9 +17,9 @@ namespace Projection
 
         public override Triangle3D ProcessTri(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
         {
-            return new Triangle3D(new(v0.pos, v0.t, triangleColors[triangleIndex / 2]),
-                                  new(v1.pos, v1.t, triangleColors[triangleIndex / 2]),
-                                  new(v2.pos, v2.t, triangleColors[triangleIndex / 2]));
+            return new Triangle3D(new(v0.pos, v0.t, triangleColors[triangleIndex / 2], v0.n),
+                                  new(v1.pos, v1.t, triangleColors[triangleIndex / 2], v1.n),
+                                  new(v2.pos, v2.t, triangleColors[triangleIndex / 2], v2.n));
         }
 
         public override Vertex Translate(Vertex vIn)
