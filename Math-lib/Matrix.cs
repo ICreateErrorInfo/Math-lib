@@ -9,7 +9,8 @@ namespace Math_lib
         readonly int _row;
         readonly int _col;
 
-        //Constructors
+
+        //Ctors
         public Matrix(int row, int col)
         {
             _matrix = new double[col, row];
@@ -28,7 +29,6 @@ namespace Math_lib
             _row = m.GetLength(0);
             _col = m.GetLength(1);
         }
-
         public Matrix(double[] m)
         {
             _matrix = new double[0, m.Length];
@@ -41,92 +41,12 @@ namespace Math_lib
             _col = 1;
         }
 
+
+        //overrides
         public double this[int row, int column]
         {
             get => _matrix[row, column];
             set => _matrix[row, column] = value;
-        }
-
-        //methods
-        public static Matrix IdentityMatrix(int i)
-        {
-            if(i <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(i), "Muss größer als 0 sein");
-            }
-
-            Matrix m = new Matrix(i, i);
-            
-            for(int j = 0; j < m._row; j++)
-            {
-                for(int k = 0; k < m._col; k++)
-                {
-                    if(j == k)
-                    {
-                        m[j, k] = 1;
-                    }
-                    else
-                    {
-                        m[j, k] = 0;
-                    }
-                }
-            }
-
-            return m;
-        }
-
-
-        //overrides *
-        public static Matrix operator *(Matrix a, Matrix b)
-        {
-            Matrix c = new Matrix(a._row, b._col);
-
-            for (int i = 0; i < a._row; i++)
-            {
-                for (int j = 0; j < b._col; j++)
-                {
-                    double sum = 0;
-                    for (int k = 0; k < a._col; k++)
-                    {
-                        sum += a._matrix[i, k] * b._matrix[k, j];
-                    }
-                    c._matrix[i, j] = sum;
-                }
-            }
-
-            return c;
-        }
-
-        //overrides +
-        public static Matrix operator +(Matrix a, Matrix b)
-        {
-            Matrix c = new Matrix(a._row, b._col);
-
-            for (int i = 0; i < a._row; i++)
-            {
-                for (int j = 0; j < b._col; j++)
-                {
-                    c._matrix[i, j] = a._matrix[i, j] + b._matrix[i, j];
-                }
-            }
-
-            return c;
-        }
-
-        //overrides -
-        public static Matrix operator -(Matrix a, Matrix b)
-        {
-            Matrix c = new Matrix(a._row, b._col);
-
-            for (int i = 0; i < a._row; i++)
-            {
-                for (int j = 0; j < b._col; j++)
-                {
-                    c._matrix[i, j] = a._matrix[i, j] - b._matrix[i, j];
-                }
-            }
-
-            return c;
         }
 
         //overides toString

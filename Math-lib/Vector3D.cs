@@ -8,7 +8,6 @@ namespace Math_lib
         public double X { get; init; }
         public double Y { get; init; }
         public double Z { get; init; }
-        public double W { get; init; }
 
 
         //Constructors
@@ -17,54 +16,16 @@ namespace Math_lib
             X = x;
             Y = y;
             Z = z;
-            W = 1;
-        }
-        public Vector3D(double x, double y, double z, double w)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-            W = w;
         }
         public Vector3D(double i)
         {
             X = Y = Z = i;
-            W = 1;
         }
         public Vector3D(Vector3D v)
         {
             X = v.X;
             Y = v.Y;
             Z = v.Z;
-            W = v.W;
-        }
-        public Vector3D(Point3D p)
-        {
-            X = p.X;
-            Y = p.Y;
-            Z = p.Z;
-            W = p.W;
-        }
-        public Vector3D(Normal3D n)
-        {
-            X = n.X;
-            Y = n.Y;
-            Z = n.Z;
-            W = 1;
-        }
-        public Vector3D(Point2D p)
-        {
-            X = p.X;
-            Y = p.Y;
-            Z = 0;
-            W = 1;
-        }
-        public Vector3D(Vector2D v)
-        {
-            X = v.X;
-            Y = v.Y;
-            Z = 0;
-            W = 1;
         }
 
 
@@ -89,9 +50,9 @@ namespace Math_lib
                        v.Z * v1.X - v.X * v1.Z,
                        v.X * v1.Y - v.Y * v1.X);
         }
-        public static Vector3D UnitVector(Vector3D v)
+        public Vector3D UnitVector()
         {
-            return v / v.GetLength();
+            return this / this.GetLength();
         }
         public static Vector3D Abs(Vector3D v)
         {
@@ -167,6 +128,10 @@ namespace Math_lib
             temp.Saturate();
             return temp;
         }
+        public Point3D ToPoint()
+        {
+            return new(X, Y, Z);
+        }
 
 
         //overrides +
@@ -188,11 +153,9 @@ namespace Math_lib
                        v.Y + v1,
                        v.Z + v1);
         }
-        public static Vector3D operator +(Vector3D v, Normal3D n)
+        public static Vector3D operator +(Vector3D v, Point3D p)
         {
-            return new(v.X + n.X,
-                       v.Y + n.Y,
-                       v.Z + n.Z);
+            return new(v.X + p.X, v.Y + p.Y, v.Z + p.Z);
         }
         public static Vector3D operator +(Vector3D v)
         {
@@ -218,11 +181,9 @@ namespace Math_lib
                        v.Y - v1,
                        v.Z - v1);
         }
-        public static Vector3D operator -(Vector3D v, Normal3D n)
+        public static Vector3D operator -(Vector3D v, Point3D p)
         {
-            return new(v.X - n.X,
-                       v.Y - n.Y,
-                       v.Z - n.Z);
+            return new(v.X - p.X, v.Y - p.Y, v.Z - p.Z);
         }
         public static Vector3D operator -(Vector3D v)
         {
@@ -250,15 +211,7 @@ namespace Math_lib
         }
         public static Vector3D operator *(Vector3D v, Point3D p)
         {
-            return new(v.X * p.X,
-                       v.Y * p.Y,
-                       v.Z * p.Z);
-        }
-        public static Vector3D operator *(Vector3D v, Normal3D n)
-        {
-            return new(v.X * n.X,
-                       v.Y * n.Y,
-                       v.Z * n.Z);
+            return new(v.X * p.X, v.Y * p.Y, v.Z * p.Z);
         }
 
         //overrides /
@@ -282,15 +235,7 @@ namespace Math_lib
         }
         public static Vector3D operator /(Vector3D v, Point3D p)
         {
-            return new(v.X / p.X,
-                       v.Y / p.Y,
-                       v.Z / p.Z);
-        }
-        public static Vector3D operator /(Vector3D v, Normal3D n)
-        {
-            return new(v.X / n.X,
-                       v.Y / n.Y,
-                       v.Z / n.Z);
+            return new(v.X / p.X, v.Y / p.Y, v.Z / p.Z);
         }
 
         //overrides >
@@ -313,22 +258,6 @@ namespace Math_lib
         public static bool operator >(double v, Vector3D v1)
         {
             if (v > v1.X && v > v1.Y && v > v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Vector3D v, Point3D v1)
-        {
-            if (v.X > v1.X && v.Y > v1.Y && v.Z > v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Vector3D v, Normal3D n)
-        {
-            if (v.X > n.X && v.Y > n.Y && v.Z > n.Z)
             {
                 return true;
             }
@@ -360,22 +289,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Vector3D v, Point3D v1)
-        {
-            if (v.X < v1.X && v.Y < v1.Y && v.Z < v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <(Vector3D v, Normal3D n)
-        {
-            if (v.X < n.X && v.Y < n.Y && v.Z < n.Z)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides ==
         public static bool operator ==(Vector3D v, Vector3D v1)
@@ -397,22 +310,6 @@ namespace Math_lib
         public static bool operator ==(double v, Vector3D v1)
         {
             if (v == v1.X && v == v1.Y && v == v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator ==(Vector3D v, Point3D v1)
-        {
-            if (v.X == v1.X && v.Y == v1.Y && v.Z == v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator ==(Vector3D v, Normal3D n)
-        {
-            if (v.X == n.X && v.Y == n.Y && v.Z == n.Z)
             {
                 return true;
             }
@@ -444,22 +341,6 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Vector3D v, Point3D v1)
-        {
-            if (v.X == v1.X && v.Y == v1.Y && v.Z == v1.Z)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator !=(Vector3D v, Normal3D n)
-        {
-            if (v.X == n.X && v.Y == n.Y && v.Z == n.Z)
-            {
-                return false;
-            }
-            return true;
-        }
 
         //overides <=
         public static bool operator <=(Vector3D v, Vector3D v1)
@@ -486,22 +367,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Vector3D v, Point3D v1)
-        {
-            if (v.X <= v1.X && v.Y <= v1.Y && v.Z <= v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(Vector3D v, Normal3D n)
-        {
-            if (v.X <= n.X && v.Y <= n.Y && v.Z <= n.Z)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides >=
         public static bool operator >=(Vector3D v, Vector3D v1)
@@ -523,22 +388,6 @@ namespace Math_lib
         public static bool operator >=(double v, Vector3D v1)
         {
             if (v >= v1.X && v >= v1.Y && v >= v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Vector3D v, Point3D v1)
-        {
-            if (v.X >= v1.X && v.Y >= v1.Y && v.Z >= v1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Vector3D v, Normal3D n)
-        {
-            if (v.X >= n.X && v.Y >= n.Y && v.Z >= n.Z)
             {
                 return true;
             }
@@ -582,7 +431,6 @@ namespace Math_lib
 
             return this == other;
         }
-
         public override int GetHashCode() {
             return HashCode.Combine(X, Y, Z);
         }

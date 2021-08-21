@@ -120,7 +120,7 @@ namespace Projection {
 
             Pipeline p = new Pipeline();
             _effect.BindTranslation(new(0,0,2));
-            _effect.BindRotation(Matrix4x4.RotateYMarix(_angleY) * Matrix4x4.RotateXMarix(_angleX));
+            _effect.BindRotation(Matrix3x3.RotateYMarix(_angleY) * Matrix3x3.RotateXMarix(_angleX));
 
             p.Draw(_mesh, _effect);
 

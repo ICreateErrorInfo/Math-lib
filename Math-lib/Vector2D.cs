@@ -23,21 +23,6 @@ namespace Math_lib
             X = v.X;
             Y = v.Y;
         }
-        public Vector2D(Vector3D v)
-        {
-            X = v.X;
-            Y = v.Y;
-        }
-        public Vector2D(Point2D p)
-        {
-            X = p.X;
-            Y = p.Y;
-        }
-        public Vector2D(Point3D p)
-        {
-            X = p.X;
-            Y = p.Y;
-        }
 
         //Methods
         public double GetLength()
@@ -53,9 +38,9 @@ namespace Math_lib
             return v.X * v1.X
                  + v.Y * v1.Y;
         }
-        public static Vector2D UnitVector(Vector2D v)
+        public Vector2D UnitVector()
         {
-            return v / v.GetLength();
+            return this / this.GetLength();
         }
         public static Vector2D Abs(Vector2D v)
         {
@@ -92,6 +77,10 @@ namespace Math_lib
             return new(Math.Sqrt(v.X),
                        Math.Sqrt(v.Y));
         }
+        public Point2D ToPoint()
+        {
+            return new(X, Y);
+        }
 
         //overrides +
         public static Vector2D operator +(Vector2D v, Vector2D v1)
@@ -108,6 +97,10 @@ namespace Math_lib
         {
             return new(v.X + v1,
                        v.Y + v1);
+        }
+        public static Vector2D operator +(Vector2D v, Point2D p)
+        {
+            return new(v.X + p.X, v.Y + p.Y);
         }
         public static Vector2D operator +(Vector2D v)
         {
@@ -129,6 +122,10 @@ namespace Math_lib
         {
             return new(v.X - v1,
                        v.Y - v1);
+        }
+        public static Vector2D operator -(Vector2D v, Point2D p)
+        {
+            return new(v.X - p.X, v.Y - p.Y);
         }
         public static Vector2D operator -(Vector2D v)
         {
@@ -153,8 +150,7 @@ namespace Math_lib
         }
         public static Vector2D operator *(Vector2D v, Point2D p)
         {
-            return new(v.X * p.X,
-                       v.Y * p.Y);
+            return new(v.X * p.X, v.Y * p.Y);
         }
 
         //overrides /
@@ -175,8 +171,7 @@ namespace Math_lib
         }
         public static Vector2D operator /(Vector2D v, Point2D p)
         {
-            return new(v.X / p.X,
-                       v.Y / p.Y);
+            return new(v.X / p.X, v.Y / p.Y);
         }
 
         //overrides >
@@ -199,14 +194,6 @@ namespace Math_lib
         public static bool operator >(double v, Vector2D v1)
         {
             if (v > v1.X && v > v1.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Vector2D v, Point2D p)
-        {
-            if (v.X > p.X && v.Y > p.Y)
             {
                 return true;
             }
@@ -238,14 +225,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Vector2D v, Point2D p)
-        {
-            if (v.X < p.X && v.Y < p.Y)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides ==
         public static bool operator ==(Vector2D v, Vector2D v1)
@@ -267,14 +246,6 @@ namespace Math_lib
         public static bool operator ==(double v, Vector2D v1)
         {
             if (v == v1.X && v == v1.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator ==(Vector2D v, Point2D p)
-        {
-            if (v.X == p.X && v.Y == p.Y)
             {
                 return true;
             }
@@ -306,14 +277,6 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Vector2D v, Point2D p)
-        {
-            if (v.X == p.X && v.Y == p.Y)
-            {
-                return false;
-            }
-            return true;
-        }
 
         //overides <=
         public static bool operator <=(Vector2D v, Vector2D v1)
@@ -340,14 +303,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Vector2D v, Point2D p)
-        {
-            if (v.X <= p.X && v.Y <= p.Y)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides >=
         public static bool operator >=(Vector2D v, Vector2D v1)
@@ -369,14 +324,6 @@ namespace Math_lib
         public static bool operator >=(double v, Vector2D v1)
         {
             if (v >= v1.X && v >= v1.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Vector2D v, Point2D p)
-        {
-            if (v.X >= p.X && v.Y >= p.Y)
             {
                 return true;
             }

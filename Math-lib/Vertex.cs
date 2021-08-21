@@ -53,7 +53,7 @@ namespace Math_lib
         }
         public static Vertex operator -(Vertex v0, Vertex v1)
         {
-            return new(new(v0.pos - v1.pos), new(v0.t - v1.t), v0.col, v0.n - v1.n);
+            return new((v0.pos - v1.pos).ToPoint(), (v0.t - v1.t).ToPoint(), v0.col, v0.n - v1.n);
         }
         public static Vertex operator *(Vertex v0, Vertex v1)
         {

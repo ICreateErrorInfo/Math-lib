@@ -19,10 +19,10 @@ namespace Projection
 
             for (int iLat = 1; iLat < latDiv; iLat++)
             {
-                var latBase = Matrix4x4.RotateXMarix(lattitudeAngle * iLat) * baseP;
+                var latBase = Matrix3x3.RotateXMarix(lattitudeAngle * iLat) * baseP;
                 for (int iLong = 0; iLong < longDiv; iLong++)
                 {
-                    sphere.vertices.Add(new Vertex(Matrix4x4.RotateZMarix(longitudeAngle * iLong) * latBase));
+                    sphere.vertices.Add(new Vertex(Matrix3x3.RotateZMarix(longitudeAngle * iLong) * latBase));
                 }
             }
 
@@ -78,7 +78,7 @@ namespace Projection
             var sphere = GetPlain(radius, latDiv, longDiv);
             foreach(var element in sphere.vertices)
             {
-                element.n = Vector3D.UnitVector(new(element.pos));
+                element.n = element.pos.ToVec().UnitVector();
             }
             return sphere;
         }

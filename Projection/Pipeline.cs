@@ -40,7 +40,7 @@ namespace Projection
                 var v2 = vertieces[indices[i * 3 + 2]];
 
                 //Backface Culling
-                if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), new(v0.pos)) <= 0))
+                if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), v0.pos.ToVec()) <= 0))
                 {
                     //process 3 verts into a triangle
                     ProcessTriangle(v0, v1, v2, i);

@@ -21,18 +21,6 @@ namespace Math_lib
         {
             X = Y = Z = i;
         }
-        public Normal3D(Vector3D v)
-        {
-            X = v.X;
-            Y = v.Y;
-            Z = v.Z;
-        }
-        public Normal3D(Point3D v)
-        {
-            X = v.X;
-            Y = v.Y;
-            Z = v.Z;
-        }
         public Normal3D(Normal3D n)
         {
             X = n.X;
@@ -75,18 +63,6 @@ namespace Math_lib
                        n.Y + d,
                        n.Z + d);
         }
-        public static Normal3D operator +(Normal3D n, Vector3D v)
-        {
-            return new(n.X + v.X,
-                       n.Y + v.Y,
-                       n.Z + v.Z);
-        }
-        public static Normal3D operator +(Normal3D n, Point3D p)
-        {
-            return new(n.X + p.X,
-                       n.Y + p.Y,
-                       n.Z + p.Z);
-        }
         public static Normal3D operator +(Normal3D n)
         {
             return new(+n.X, +n.Y, +n.Z);
@@ -110,18 +86,6 @@ namespace Math_lib
             return new(n.X - d,
                        n.Y - d,
                        n.Z - d);
-        }
-        public static Normal3D operator -(Normal3D n, Vector3D v)
-        {
-            return new(n.X - v.X,
-                       n.Y - v.Y,
-                       n.Z - v.Z);
-        }
-        public static Normal3D operator -(Normal3D n, Point3D p)
-        {
-            return new(n.X - p.X,
-                       n.Y - p.Y,
-                       n.Z - p.Z);
         }
         public static Normal3D operator -(Normal3D n)
         {
@@ -147,18 +111,6 @@ namespace Math_lib
                        n.Y * d,
                        n.Z * d);
         }
-        public static Normal3D operator *(Normal3D n, Vector3D v)
-        {
-            return new(n.X * v.X,
-                       n.Y * v.Y,
-                       n.Z * v.Z);
-        }
-        public static Normal3D operator *(Normal3D n, Point3D p)
-        {
-            return new(n.X * p.X,
-                       n.Y * p.Y,
-                       n.Z * p.Z);
-        }
 
         //overrides /
         public static Normal3D operator /(Normal3D n, Normal3D n1)
@@ -178,18 +130,6 @@ namespace Math_lib
             return new(n.X / d,
                        n.Y / d,
                        n.Z / d);
-        }
-        public static Normal3D operator /(Normal3D n, Vector3D v)
-        {
-            return new(n.X / v.X,
-                       n.Y / v.Y,
-                       n.Z / v.Z);
-        }
-        public static Normal3D operator /(Normal3D n, Point3D p)
-        {
-            return new(n.X / p.X,
-                       n.Y / p.Y,
-                       n.Z / p.Z);
         }
 
         //overrides >
@@ -212,22 +152,6 @@ namespace Math_lib
         public static bool operator >(double d, Normal3D n)
         {
             if (d > n.X && d > n.Y && d > n.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Normal3D n, Vector3D v)
-        {
-            if (n.X > v.X && n.Y > v.Y && n.Z > v.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Normal3D n, Point3D p)
-        {
-            if (n.X > p.X && n.Y > p.Y && n.Z > p.Z)
             {
                 return true;
             }
@@ -259,22 +183,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <(Normal3D n, Vector3D v)
-        {
-            if (n.X < v.X && n.Y < v.Y && n.Z < v.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <(Normal3D n, Point3D p)
-        {
-            if (n.X < p.X && n.Y < p.Y && n.Z < p.Z)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides ==
         public static bool operator ==(Normal3D n, Normal3D n1)
@@ -296,22 +204,6 @@ namespace Math_lib
         public static bool operator ==(double d, Normal3D n)
         {
             if (d == n.X && d == n.Y && d == n.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator ==(Normal3D n, Vector3D v)
-        {
-            if (n.X == v.X && n.Y == v.Y && n.Z == v.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator ==(Normal3D n, Point3D p)
-        {
-            if (n.X == p.X && n.Y == p.Y && n.Z == p.Z)
             {
                 return true;
             }
@@ -343,22 +235,6 @@ namespace Math_lib
             }
             return true;
         }
-        public static bool operator !=(Normal3D n, Vector3D v)
-        {
-            if (n.X == v.X && n.Y == v.Y && n.Z == v.Z)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator !=(Normal3D n, Point3D p)
-        {
-            if (n.X == p.X && n.Y == p.Y && n.Z == p.Z)
-            {
-                return false;
-            }
-            return true;
-        }
 
         //overides <=
         public static bool operator <=(Normal3D n, Normal3D n1)
@@ -385,22 +261,6 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Normal3D n, Vector3D v)
-        {
-            if (n.X <= v.X && n.Y <= v.Y && n.Z <= v.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(Normal3D n, Point3D p)
-        {
-            if (n.X <= p.X && n.Y <= p.Y && n.Z <= p.Z)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //overrides >=
         public static bool operator >=(Normal3D n, Normal3D n1)
@@ -422,22 +282,6 @@ namespace Math_lib
         public static bool operator >=(double d, Normal3D n)
         {
             if (d >= n.X && d >= n.Y && d >= n.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Normal3D n, Vector3D v)
-        {
-            if (n.X >= v.X && n.Y >= v.Y && n.Z >= v.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Normal3D n, Point3D p)
-        {
-            if (n.X >= p.X && n.Y >= p.Y && n.Z >= p.Z)
             {
                 return true;
             }
@@ -481,7 +325,6 @@ namespace Math_lib
 
             return this == other;
         }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(X,Y,Z);
