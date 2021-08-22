@@ -211,6 +211,7 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
+            Debug.Assert(p1.X == 0 || p1.Y == 0);
 
             return new Point2D(p.X / p1.X,
                               p.Y / p1.Y);
@@ -218,6 +219,7 @@ namespace Math_lib
         public static Point2D operator /(Point2D p, double d)
         {
             Debug.Assert(IsNaN(p));
+            Debug.Assert(d == 0);
 
             double inv = (double)1 / d;
 
@@ -227,6 +229,7 @@ namespace Math_lib
         public static Point2D operator /(double d, Point2D p)
         {
             Debug.Assert(IsNaN(p));
+            Debug.Assert(p.X == 0 || p.Y == 0);
 
             return new Point2D(p.X / d,
                               p.Y / d);
@@ -235,6 +238,7 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
             Debug.Assert(Vector2D.IsNaN(v));
+            Debug.Assert(v.X == 0 || v.Y == 0);
 
             return new(p.X / v.X, p.Y / v.Y);
         }
