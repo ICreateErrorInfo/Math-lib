@@ -49,14 +49,18 @@ namespace Math_lib
         {
             return X * X + Y * Y;
         }
+        public static Vector2D Normalize(Vector2D v)
+        {
+            return v / v.GetLength();
+        }
         public static double Dot(Vector2D v, Vector2D v1)
         {
             return v.X * v1.X
                  + v.Y * v1.Y;
         }
-        public Vector2D UnitVector()
+        public static double AbsDot(Vector2D v, Vector2D v1)
         {
-            return this / this.GetLength();
+            return Math.Abs(Dot(v,v1));
         }
         public static Vector2D Abs(Vector2D v)
         {
@@ -100,6 +104,22 @@ namespace Math_lib
 
             return new(Math.Clamp(v.X, min.X, max.X),
                        Math.Clamp(v.Y, min.Y, max.Y));
+        }
+        public static int MaxDimension(Vector2D v)
+        {
+            if(v.X > v.Y)
+            {
+                return 0;
+            }else
+            {
+                return 1;
+            }
+        }
+        public static Vector2D Permute(Vector2D p, int x, int y)
+        {
+            Debug.Assert(IsNaN(p));
+
+            return new Vector2D(p[x], p[y]);
         }
         public static Vector2D SquareRoot(Vector2D v)
         {

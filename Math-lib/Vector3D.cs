@@ -49,21 +49,25 @@ namespace Math_lib
         {
             return X * X + Y * Y + Z * Z;
         }
+        public static Vector3D Normalize(Vector3D v)
+        {
+            return v / v.GetLength();
+        }
         public static double Dot(Vector3D v, Vector3D v1)
         {
             return v.X * v1.X
                  + v.Y * v1.Y
                  + v.Z * v1.Z;
         }
+        public static double AbsDot(Vector3D v, Vector3D v1)
+        {
+            return Math.Abs(Dot(v, v1));
+        }
         public static Vector3D Cross(Vector3D v, Vector3D v1)
         {
-            return new(v.Y * v1.Z - v.Z * v1.Y,
-                       v.Z * v1.X - v.X * v1.Z,
-                       v.X * v1.Y - v.Y * v1.X);
-        }
-        public Vector3D UnitVector()
-        {
-            return this / this.GetLength();
+            return new((v.Y * v1.Z) - (v.Z * v1.Y),
+                       (v.Z * v1.X) - (v.X * v1.Z),
+                       (v.X * v1.Y) - (v.Y * v1.X));
         }
         public static Vector3D Abs(Vector3D v)
         {
@@ -116,6 +120,16 @@ namespace Math_lib
             return new(Math.Clamp(v.X, min.X, max.X),
                        Math.Clamp(v.Y, min.Y, max.Y),
                        Math.Clamp(v.Z, min.Z, max.Z));
+        }
+        public static int MaxDimension(Vector3D v)
+        {
+            return (v.X > v.Y) ? ((v.X > v.Z) ? 0 : 2) : ((v.Y > v.Z) ? 1 : 2);
+        }
+        public static Vector3D Permute(Vector3D p, int x, int y, int z)
+        {
+            Debug.Assert(IsNaN(p));
+
+            return new Vector3D(p[x], p[y], p[z]);
         }
         public static Vector3D SquareRoot(Vector3D v)
         {
@@ -193,7 +207,7 @@ namespace Math_lib
         public static Vector3D operator +(Vector3D v, Point3D p)
         {
             Debug.Assert(IsNaN(v));
-            Debug.Assert(Point3D.IsNan(p));
+            Debug.Assert(Point3D.IsNaN(p));
 
             return new(v.X + p.X, v.Y + p.Y, v.Z + p.Z);
         }
@@ -230,7 +244,7 @@ namespace Math_lib
         public static Vector3D operator -(Vector3D v, Point3D p)
         {
             Debug.Assert(IsNaN(v));
-            Debug.Assert(Point3D.IsNan(p));
+            Debug.Assert(Point3D.IsNaN(p));
 
             return new(v.X - p.X, v.Y - p.Y, v.Z - p.Z);
         }
@@ -267,7 +281,7 @@ namespace Math_lib
         public static Vector3D operator *(Vector3D v, Point3D p)
         {
             Debug.Assert(IsNaN(v));
-            Debug.Assert(Point3D.IsNan(p));
+            Debug.Assert(Point3D.IsNaN(p));
 
             return new(v.X * p.X, v.Y * p.Y, v.Z * p.Z);
         }
@@ -303,7 +317,7 @@ namespace Math_lib
         public static Vector3D operator /(Vector3D v, Point3D p)
         {
             Debug.Assert(IsNaN(v));
-            Debug.Assert(Point3D.IsNan(p));
+            Debug.Assert(Point3D.IsNaN(p));
 
             return new(v.X / p.X, v.Y / p.Y, v.Z / p.Z);
         }

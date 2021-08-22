@@ -25,7 +25,7 @@ namespace Math_lib
         }
         public Point3D(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             X = p.X;
             Y = p.Y;
@@ -34,7 +34,7 @@ namespace Math_lib
 
 
         //Methods
-        public static bool IsNan(Point3D v)
+        public static bool IsNaN(Point3D v)
         {
             if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
             {
@@ -57,8 +57,8 @@ namespace Math_lib
         }
         public static Point3D Min(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Point3D(Math.Min(p.X, p1.X),
                                Math.Min(p.Y, p1.Y),
@@ -66,8 +66,8 @@ namespace Math_lib
         }
         public static Point3D Max(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Point3D(Math.Max(p.X, p1.X),
                                Math.Max(p.Y, p1.Y),
@@ -75,7 +75,7 @@ namespace Math_lib
         }
         public static Point3D Floor(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(Math.Floor(p.X),
                              Math.Floor(p.Y),
@@ -83,7 +83,7 @@ namespace Math_lib
         }
         public static Point3D Ceil(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(Math.Ceiling(p.X),
                              Math.Ceiling(p.Y),
@@ -91,7 +91,7 @@ namespace Math_lib
         }
         public static Point3D Abs(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(Math.Abs(p.X),
                              Math.Abs(p.Y),
@@ -99,21 +99,21 @@ namespace Math_lib
         }
         public static Point3D Permute(Point3D p, int x, int y, int z)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p[x], p[y], p[z]);
         }
         public static explicit operator Vector3D(Point3D a)
         {
-            Debug.Assert(IsNan(a));
+            Debug.Assert(IsNaN(a));
             return new Vector3D() { X = a.X, Y = a.Y, Z = a.Z };
         }
 
         //overrides +
         public static Point3D operator +(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Point3D(p.X + p1.X,
                              p.Y + p1.Y,
@@ -121,7 +121,7 @@ namespace Math_lib
         }
         public static Point3D operator +(Point3D p, double p1)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X + p1,
                              p.Y + p1,
@@ -129,7 +129,7 @@ namespace Math_lib
         }
         public static Point3D operator +(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X + d,
                              p.Y + d,
@@ -137,14 +137,14 @@ namespace Math_lib
         }
         public static Point3D operator +(Point3D p, Vector3D v)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
             Debug.Assert(Vector3D.IsNaN(v));
 
             return new(p.X + v.X, p.Y + v.Y, p.Z + v.Z);
         }
         public static Point3D operator +(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(+p.X, +p.Y, +p.Z);
         }
@@ -152,8 +152,8 @@ namespace Math_lib
         //overrides -
         public static Vector3D operator -(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Vector3D(p.X - p1.X,
                               p.Y - p1.Y,
@@ -161,7 +161,7 @@ namespace Math_lib
         }
         public static Point3D operator -(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X - d,
                              p.Y - d,
@@ -169,7 +169,7 @@ namespace Math_lib
         }
         public static Point3D operator -(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X - d,
                              p.Y - d,
@@ -177,14 +177,14 @@ namespace Math_lib
         }
         public static Point3D operator -(Point3D p, Vector3D v)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
             Debug.Assert(Vector3D.IsNaN(v));
 
             return new(p.X - v.X, p.Y - v.Y, p.Z - v.Z);
         }
         public static Point3D operator -(Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(-p.X, -p.Y, -p.Z);
         }
@@ -192,8 +192,8 @@ namespace Math_lib
         //overrides *
         public static Point3D operator *(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Point3D(p.X * p1.X,
                              p.Y * p1.Y,
@@ -201,7 +201,7 @@ namespace Math_lib
         }
         public static Point3D operator *(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X * d,
                              p.Y * d,
@@ -209,7 +209,7 @@ namespace Math_lib
         }
         public static Point3D operator *(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X * d,
                              p.Y * d,
@@ -217,7 +217,7 @@ namespace Math_lib
         }
         public static Point3D operator *(Point3D p, Vector3D v)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
             Debug.Assert(Vector3D.IsNaN(v));
 
             return new(p.X * v.X, p.Y * v.Y, p.Z * v.Z);
@@ -226,8 +226,8 @@ namespace Math_lib
         //overrides /
         public static Point3D operator /(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             return new Point3D(p.X / p1.X,
                              p.Y / p1.Y,
@@ -235,7 +235,7 @@ namespace Math_lib
         }
         public static Point3D operator /(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             double inv = 1 / d;
 
@@ -245,7 +245,7 @@ namespace Math_lib
         }
         public static Point3D operator /(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             return new Point3D(p.X / d,
                              p.Y / d,
@@ -253,7 +253,7 @@ namespace Math_lib
         }
         public static Point3D operator /(Point3D p, Vector3D v)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
             Debug.Assert(Vector3D.IsNaN(v));
 
             return new(p.X / v.X, p.Y / v.Y, p.Z / v.Z);
@@ -262,8 +262,8 @@ namespace Math_lib
         //overrides >
         public static bool operator >(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X > p1.X && p.Y > p1.Y && p.Z > p1.Z)
             {
@@ -273,7 +273,7 @@ namespace Math_lib
         }
         public static bool operator >(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X > d && p.Y > d && p.Z > d)
             {
@@ -283,7 +283,7 @@ namespace Math_lib
         }
         public static bool operator >(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d > p.X && d > p.Y && d > p.Z)
             {
@@ -295,8 +295,8 @@ namespace Math_lib
         //overrides <
         public static bool operator <(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X < p1.X && p.Y < p1.Y && p.Z < p1.Z)
             {
@@ -306,7 +306,7 @@ namespace Math_lib
         }
         public static bool operator <(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X < d && p.Y < d && p.Z < d)
             {
@@ -316,7 +316,7 @@ namespace Math_lib
         }
         public static bool operator <(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d < p.X && d < p.Y && d < p.Z)
             {
@@ -328,8 +328,8 @@ namespace Math_lib
         //overrides ==
         public static bool operator ==(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -339,7 +339,7 @@ namespace Math_lib
         }
         public static bool operator ==(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -349,7 +349,7 @@ namespace Math_lib
         }
         public static bool operator ==(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -361,8 +361,8 @@ namespace Math_lib
         //overrides !=
         public static bool operator !=(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X == p1.X && p.Y == p1.Y && p.Z == p1.Z)
             {
@@ -372,7 +372,7 @@ namespace Math_lib
         }
         public static bool operator !=(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X == d && p.Y == d && p.Z == d)
             {
@@ -382,7 +382,7 @@ namespace Math_lib
         }
         public static bool operator !=(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d == p.X && d == p.Y && d == p.Z)
             {
@@ -394,8 +394,8 @@ namespace Math_lib
         //overides <=
         public static bool operator <=(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X <= p1.X && p.Y <= p1.Y && p.Z <= p1.Z)
             {
@@ -405,7 +405,7 @@ namespace Math_lib
         }
         public static bool operator <=(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X <= d && p.Y <= d && p.Z <= d)
             {
@@ -415,7 +415,7 @@ namespace Math_lib
         }
         public static bool operator <=(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d <= p.X && d <= p.Y && d <= p.Z)
             {
@@ -427,8 +427,8 @@ namespace Math_lib
         //overrides >=
         public static bool operator >=(Point3D p, Point3D p1)
         {
-            Debug.Assert(IsNan(p));
-            Debug.Assert(IsNan(p1));
+            Debug.Assert(IsNaN(p));
+            Debug.Assert(IsNaN(p1));
 
             if (p.X >= p1.X && p.Y >= p1.Y && p.Z >= p1.Z)
             {
@@ -438,7 +438,7 @@ namespace Math_lib
         }
         public static bool operator >=(Point3D p, double d)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (p.X >= d && p.Y >= d && p.Z >= d)
             {
@@ -448,7 +448,7 @@ namespace Math_lib
         }
         public static bool operator >=(double d, Point3D p)
         {
-            Debug.Assert(IsNan(p));
+            Debug.Assert(IsNaN(p));
 
             if (d >= p.X && d >= p.Y && d >= p.Z)
             {

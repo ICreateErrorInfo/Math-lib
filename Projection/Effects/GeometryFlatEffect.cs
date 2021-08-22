@@ -19,7 +19,7 @@ namespace Projection
         //Geometry Shader
         public override Triangle3D ProcessTri(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
         {
-            var n = Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos).UnitVector();
+            var n = Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos).Normalize();
             var d = diffuse * Math.Max(0, Vector3D.Dot(-n , dir));
             var c = (color * (d + ambient)).Saturate() * 255;
 
@@ -39,7 +39,7 @@ namespace Projection
         }
         public void SetLightDir(Vector3D dl)
         {
-            dir = dl.UnitVector();
+            dir = dl.Normalize();
         }
         public void SetMaterialColor(Color c)
         {

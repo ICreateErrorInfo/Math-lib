@@ -49,11 +49,11 @@ namespace Math_lib
         public static Matrix4x4 PointAt(Point3D pos, Vector3D target, Vector3D up)
         {
             Vector3D newForward = target - pos;
-            newForward = newForward.UnitVector();
+            newForward = newForward.Normalize();
 
             Vector3D a = newForward * Vector3D.Dot(up, newForward);
             Vector3D newUp = up - a;
-            newUp = newUp.UnitVector();
+            newUp = newUp.Normalize();
 
             Vector3D newRight = Vector3D.Cross(newUp, newForward);
 
@@ -68,8 +68,8 @@ namespace Math_lib
         }
         public static Matrix4x4 LookAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            var zaxis = (target - pos).UnitVector();
-            var xaxis = (Vector3D.Cross(up, zaxis)).UnitVector();
+            var zaxis = (target - pos).Normalize();
+            var xaxis = (Vector3D.Cross(up, zaxis)).Normalize();
             var yaxis = Vector3D.Cross(zaxis, xaxis);
 
             double ta = -Vector3D.Dot(xaxis, (Vector3D)pos);
