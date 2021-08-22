@@ -224,8 +224,11 @@ namespace Math_lib
         public static Vector2D operator /(Vector2D v, double v1)
         {
             Debug.Assert(IsNaN(v));
-            return new(v.X / v1,
-                       v.Y / v1);
+
+            double inv = (double)1 / v1;
+
+            return new(v.X * inv,
+                       v.Y * inv);
         }
         public static Vector2D operator /(double v1, Vector2D v)
         {

@@ -237,9 +237,11 @@ namespace Math_lib
         {
             Debug.Assert(IsNan(p));
 
-            return new Point3D(p.X / d,
-                             p.Y / d,
-                             p.Z / d);
+            double inv = 1 / d;
+
+            return new Point3D(p.X * inv,
+                               p.Y * inv,
+                               p.Z * inv);
         }
         public static Point3D operator /(double d, Point3D p)
         {

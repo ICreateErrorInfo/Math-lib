@@ -219,8 +219,10 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
 
-            return new Point2D(p.X / d,
-                              p.Y / d);
+            double inv = (double)1 / d;
+
+            return new Point2D(p.X * inv,
+                               p.Y * inv);
         }
         public static Point2D operator /(double d, Point2D p)
         {

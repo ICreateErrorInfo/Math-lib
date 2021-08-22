@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 // ReSharper disable CompareOfFloatsByEqualityOperator
 namespace Math_lib
 {
@@ -23,6 +24,7 @@ namespace Math_lib
         }
         public Normal3D(Normal3D n)
         {
+            Debug.Assert(IsNan(n));
             X = n.X;
             Y = n.Y;
             Z = n.Z;
@@ -30,6 +32,15 @@ namespace Math_lib
 
 
         //Methods
+        public static bool IsNan(Normal3D v)
+        {
+            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
+            {
+                return false;
+                throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
+            }
+            return true;
+        }
         public double GetLength()
         {
             return Math.Sqrt(X * X + Y * Y + Z * Z);
@@ -47,66 +58,91 @@ namespace Math_lib
         //overrides +
         public static Normal3D operator +(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             return new(n.X + n1.X,
                        n.Y + n1.Y,
                        n.Z + n1.Z);
         }
         public static Normal3D operator +(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X + d,
                        n.Y + d,
                        n.Z + d);
         }
         public static Normal3D operator +(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X + d,
                        n.Y + d,
                        n.Z + d);
         }
         public static Normal3D operator +(Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(+n.X, +n.Y, +n.Z);
         }
 
         //overrides -
         public static Normal3D operator -(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             return new(n.X - n1.X,
                        n.Y - n1.Y,
                        n.Z - n1.Z);
         }
         public static Normal3D operator -(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X - d,
                        n.Y - d,
                        n.Z - d);
         }
         public static Normal3D operator -(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X - d,
                        n.Y - d,
                        n.Z - d);
         }
         public static Normal3D operator -(Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(-n.X, -n.Y, -n.Z);
         }
 
         //overrides *
         public static Normal3D operator *(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             return new(n.X * n1.X,
                        n.Y * n1.Y,
                        n.Z * n1.Z);
         }
         public static Normal3D operator *(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X * d,
                        n.Y * d,
                        n.Z * d);
         }
         public static Normal3D operator *(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X * d,
                        n.Y * d,
                        n.Z * d);
@@ -115,18 +151,27 @@ namespace Math_lib
         //overrides /
         public static Normal3D operator /(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             return new(n.X / n1.X,
                        n.Y / n1.Y,
                        n.Z / n1.Z);
         }
         public static Normal3D operator /(Normal3D n, double d)
         {
-            return new(n.X / d,
-                       n.Y / d,
-                       n.Z / d);
+            Debug.Assert(IsNan(n));
+
+            double inv = (double)1 / d;
+
+            return new(n.X * inv,
+                       n.Y * inv,
+                       n.Z * inv);
         }
         public static Normal3D operator /(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             return new(n.X / d,
                        n.Y / d,
                        n.Z / d);
@@ -135,6 +180,9 @@ namespace Math_lib
         //overrides >
         public static bool operator >(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X > n1.X && n.Y > n1.Y && n.Z > n1.Z)
             {
                 return true;
@@ -143,6 +191,8 @@ namespace Math_lib
         }
         public static bool operator >(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X > d || n.Y > d || n.Z > d)
             {
                 return true;
@@ -151,6 +201,8 @@ namespace Math_lib
         }
         public static bool operator >(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d > n.X && d > n.Y && d > n.Z)
             {
                 return true;
@@ -161,6 +213,9 @@ namespace Math_lib
         //overrides <
         public static bool operator <(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X < n1.X && n.Y < n1.Y && n.Z < n1.Z)
             {
                 return true;
@@ -169,6 +224,8 @@ namespace Math_lib
         }
         public static bool operator <(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X < d && n.Y < d && n.Z < d)
             {
                 return true;
@@ -177,6 +234,8 @@ namespace Math_lib
         }
         public static bool operator <(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d < n.X && d < n.Y && d < n.Z)
             {
                 return true;
@@ -187,6 +246,9 @@ namespace Math_lib
         //overrides ==
         public static bool operator ==(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X == n1.X && n.Y == n1.Y && n.Z == n1.Z)
             {
                 return true;
@@ -195,6 +257,8 @@ namespace Math_lib
         }
         public static bool operator ==(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X == d && n.Y == d && n.Z == d)
             {
                 return true;
@@ -203,6 +267,8 @@ namespace Math_lib
         }
         public static bool operator ==(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d == n.X && d == n.Y && d == n.Z)
             {
                 return true;
@@ -213,6 +279,9 @@ namespace Math_lib
         //overrides !=
         public static bool operator !=(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X == n1.X && n.Y == n1.Y && n.Z == n1.Z)
             {
                 return false;
@@ -221,6 +290,8 @@ namespace Math_lib
         }
         public static bool operator !=(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X == d && n.Y == d && n.Z == d)
             {
                 return false;
@@ -229,6 +300,8 @@ namespace Math_lib
         }
         public static bool operator !=(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d == n.X && d == n.Y && d == n.Z)
             {
                 return false;
@@ -239,6 +312,9 @@ namespace Math_lib
         //overides <=
         public static bool operator <=(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X <= n1.X && n.Y <= n1.Y && n.Z <= n1.Z)
             {
                 return true;
@@ -247,6 +323,8 @@ namespace Math_lib
         }
         public static bool operator <=(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X <= d && n.Y <= d && n.Z <= d)
             {
                 return true;
@@ -255,6 +333,8 @@ namespace Math_lib
         }
         public static bool operator <=(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d <= n.X && d <= n.Y && d <= n.Z)
             {
                 return true;
@@ -265,6 +345,9 @@ namespace Math_lib
         //overrides >=
         public static bool operator >=(Normal3D n, Normal3D n1)
         {
+            Debug.Assert(IsNan(n));
+            Debug.Assert(IsNan(n1));
+
             if (n.X >= n1.X && n.Y >= n1.Y && n.Z >= n1.Z)
             {
                 return true;
@@ -273,6 +356,8 @@ namespace Math_lib
         }
         public static bool operator >=(Normal3D n, double d)
         {
+            Debug.Assert(IsNan(n));
+
             if (n.X >= d && n.Y >= d && n.Z >= d)
             {
                 return true;
@@ -281,6 +366,8 @@ namespace Math_lib
         }
         public static bool operator >=(double d, Normal3D n)
         {
+            Debug.Assert(IsNan(n));
+
             if (d >= n.X && d >= n.Y && d >= n.Z)
             {
                 return true;

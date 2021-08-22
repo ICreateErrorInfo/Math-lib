@@ -286,9 +286,11 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(v));
 
-            return new(v.X / v1,
-                       v.Y / v1,
-                       v.Z / v1);
+            double inv = (double)1 / v1;
+
+            return new(v.X * inv,
+                       v.Y * inv,
+                       v.Z * inv);
         }
         public static Vector3D operator /(double v1, Vector3D v)
         {
