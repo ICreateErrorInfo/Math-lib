@@ -29,7 +29,7 @@ namespace Projection
         }
         public void SetLightDir(Vector3D dl)
         {
-            dir = dl.Normalize();
+            dir = Vector3D.Normalize(dl);
         }
         public void SetMaterialColor(Color c)
         {

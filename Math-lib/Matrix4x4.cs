@@ -49,11 +49,11 @@ namespace Math_lib
         public static Matrix4x4 PointAt(Point3D pos, Vector3D target, Vector3D up)
         {
             Vector3D newForward = target - pos;
-            newForward = newForward.Normalize();
+            newForward = Vector3D.Normalize(newForward);
 
             Vector3D a = newForward * Vector3D.Dot(up, newForward);
             Vector3D newUp = up - a;
-            newUp = newUp.Normalize();
+            newUp = Vector3D.Normalize(newUp);
 
             Vector3D newRight = Vector3D.Cross(newUp, newForward);
 
@@ -68,8 +68,8 @@ namespace Math_lib
         }
         public static Matrix4x4 LookAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            var zaxis = (target - pos).Normalize();
-            var xaxis = (Vector3D.Cross(up, zaxis)).Normalize();
+            var zaxis = Vector3D.Normalize((target - pos));
+            var xaxis = Vector3D.Normalize((Vector3D.Cross(up, zaxis)));
             var yaxis = Vector3D.Cross(zaxis, xaxis);
 
             double ta = -Vector3D.Dot(xaxis, (Vector3D)pos);
@@ -129,30 +129,24 @@ namespace Math_lib
         //overrides *
         //Todo
 
-        //public static Point3D operator *(Matrix4x4 m, Point3D i)
-        //{
-        //    double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0];
-        //    double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1];
-        //    double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2];
+        public static Point3D operator *(Matrix4x4 m, Point3D i)
+        {
+            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + m[3, 0];
+            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + m[3, 1];
+            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + m[3, 2];
+            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + m[3, 3];
 
-        //    return new Point3D(x, y, z);
-        //}
-        //public static Vector3D operator *(Matrix4x4 m, Vector3D i)
-        //{
-        //    double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0];
-        //    double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1];
-        //    double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2];
+            return new Point3D(x, y, z) / w;
+        }
+        public static Vector3D operator *(Matrix4x4 m, Vector3D i)
+        {
+            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + m[3, 0];
+            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + m[3, 1];
+            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + m[3, 2];
+            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + m[3, 3];
 
-        //    return new Vector3D(x, y, z);
-        //}
-        //public static Vertex operator *(Matrix4x4 m, Vertex i)
-        //{
-        //    double x = i.pos.X * m[0, 0] + i.pos.Y * m[1, 0] + i.pos.Z * m[2, 0];
-        //    double y = i.pos.X * m[0, 1] + i.pos.Y * m[1, 1] + i.pos.Z * m[2, 1];
-        //    double z = i.pos.X * m[0, 2] + i.pos.Y * m[1, 2] + i.pos.Z * m[2, 2];
-
-        //    return new Vertex(new Point3D(x, y, z));
-        //}
+            return new Vector3D(x, y, z) / w;
+        }
 
         public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
         {

@@ -44,6 +44,7 @@ namespace Math_lib
         {
             this.pos = new Point3D(d);
             this.t = new Point2D(d);
+            this.n = new Vector3D(1);
         }
 
 
