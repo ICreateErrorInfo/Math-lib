@@ -306,7 +306,7 @@ namespace Math_lib
                     return Z;
                 }
 
-                return 0;
+                throw new IndexOutOfRangeException();
             }
         }
 

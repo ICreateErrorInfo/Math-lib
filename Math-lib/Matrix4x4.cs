@@ -72,9 +72,9 @@ namespace Math_lib
             var xaxis = (Vector3D.Cross(up, zaxis)).UnitVector();
             var yaxis = Vector3D.Cross(zaxis, xaxis);
 
-            double ta = -Vector3D.Dot(xaxis, pos.ToVec());
-            double tb = -Vector3D.Dot(yaxis, pos.ToVec());
-            double tc = -Vector3D.Dot(zaxis, pos.ToVec());
+            double ta = -Vector3D.Dot(xaxis, (Vector3D)pos);
+            double tb = -Vector3D.Dot(yaxis, (Vector3D)pos);
+            double tc = -Vector3D.Dot(zaxis, (Vector3D)pos);
 
             return new Matrix4x4(new[,]
             {
