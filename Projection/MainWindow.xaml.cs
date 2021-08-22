@@ -41,15 +41,13 @@ namespace Projection {
             //_effect = textureEffect;
             //_mesh = Cube.GetPlain();
 
-            //TODO Bug
-
-            //var waveeffect = new WaveTextureEffect();
-            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
-            //waveeffect.BindTexture(texturefile);
-            //_we = waveeffect;
-            //_effect = waveeffect;
-            //_mesh = Plane.GetSkinned(20);
+            var waveeffect = new WaveTextureEffect();
+            var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            waveeffect.BindTexture(texturefile);
+            _we = waveeffect;
+            _effect = waveeffect;
+            _mesh = Plane.GetSkinned(20);
 
             //var solidGeoEffect = new SolidGeometryEffect();
             //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
@@ -60,9 +58,9 @@ namespace Projection {
             //_effect = VertexFlatEffect;
             //_mesh = Cube.GetIndependentFacesNormals();
 
-            var GeometryFlatEffect = new GeometryFlatEffect();
-            _effect = GeometryFlatEffect;
-            _mesh = Sphere.GetPlain();
+            //var GeometryFlatEffect = new GeometryFlatEffect();
+            //_effect = GeometryFlatEffect;
+            //_mesh = Sphere.GetPlain();
 
             //Load Mesh
             ShowOpenFile();

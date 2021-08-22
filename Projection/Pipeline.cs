@@ -124,11 +124,14 @@ namespace Projection
         {
             var itEdge0 = it0;
 
-            int yStart = (int)Math.Ceiling(it0.pos.Y - 0.5);
-            int yEnd = (int)Math.Ceiling(it2.pos.Y - 0.5);
+            int yStart = Math.Max((int)Math.Ceiling(it0.pos.Y - 0.5),0);
+            int yEnd = Math.Min((int)Math.Ceiling(it2.pos.Y - 0.5), Options.screenHeight - 1);
 
-            itEdge0 += dv0 * new Vertex((yStart + 0.5 - it0.pos.Y));
-            itEdge += dv1 * new Vertex((yStart + 0.5 - it0.pos.Y));
+            Vertex zw = new Vertex((yStart + 0.5 - it0.pos.Y));
+            if(zw.pos == 0) { zw = new Vertex(zw.pos + 0.01, zw.t, zw.col , zw.n); }
+
+            itEdge0 += dv0 * zw;
+            itEdge += dv1 * zw;
 
             for (int y = yStart; y < yEnd; y++, itEdge0 += dv0, itEdge += dv1)
             {

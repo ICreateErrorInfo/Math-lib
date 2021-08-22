@@ -19,7 +19,7 @@ namespace Projection
         {
             Vertex v1 = new Vertex(Matrix4x4.Projection(Options.screenWidth, Options.screenHeight, Options.Fov, 0.1, 1000) * v.pos);
 
-            return new(new Point3D((v1.pos.X + 1) * xFactor, (-v1.pos.Y + 1) * yFactor, 1), v.t, v.col, v.n);
+            return new(new Point3D((v1.pos.X + 1) * xFactor, (-v1.pos.Y + 1) * yFactor, v1.pos.Z), v.t, v.col, v.n);
         }
         public Vertex GetTransformed(Vertex p)
         {
