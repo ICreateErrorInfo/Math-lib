@@ -6,7 +6,8 @@ namespace Math_lib
     {
         public Mesh()
         {
-
+            vertices = new List<Vertex>();
+            indices = new List<int>();
         }
         public Mesh(List<Vertex> vertsIn, List<int> indicesIn)
         {
@@ -14,8 +15,8 @@ namespace Math_lib
             indices = indicesIn;
         }
 
-        public List<Vertex> vertices = new List<Vertex>();
-        public List<int> indices = new List<int>();
+        public readonly List<Vertex> vertices;
+        public readonly List<int> indices;
     }
 
 }

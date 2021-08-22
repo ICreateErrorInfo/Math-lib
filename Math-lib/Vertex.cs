@@ -9,7 +9,7 @@ namespace Math_lib
 {
     public class Vertex
     {
-        public Point3D pos;
+        public Point3D pos { get; init; }
         public Point2D t;
         public Vector3D n;
         public Color col;

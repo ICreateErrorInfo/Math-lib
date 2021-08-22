@@ -41,10 +41,12 @@ namespace Projection {
             //_effect = textureEffect;
             //_mesh = Cube.GetPlain();
 
-            //var waveeffect = new wavetextureeffect();
-            //var exedir = path.getdirectoryname(system.reflection.assembly.getentryassembly()?.location) ?? "";
-            //string texturefile = path.combine(exedir, "images", @"sauron-bhole-100x100.png");
-            //waveeffect.bindtexture(texturefile);
+            //TODO Bug
+
+            //var waveeffect = new WaveTextureEffect();
+            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            //waveeffect.BindTexture(texturefile);
             //_we = waveeffect;
             //_effect = waveeffect;
             //_mesh = Plane.GetSkinned(20);

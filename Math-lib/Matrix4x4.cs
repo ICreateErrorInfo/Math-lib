@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Math_lib
 {
-    class Matrix4x4 : Matrix
+    public class Matrix4x4 : Matrix
     {
         //Ctors
         public Matrix4x4() : base(4, 4)

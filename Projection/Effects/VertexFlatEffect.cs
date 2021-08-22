@@ -36,7 +36,7 @@ namespace Projection
             color = new(c.R / 255, c.G / 255, c.B / 255);
         }
 
-        private Vector3D dir = new(0, .5, .5);
+        private Vector3D dir = new(0, 0, 1);
         private Vector3D diffuse = new(1, 1, 1);
         private Vector3D ambient = new(0.05, 0.05, 0.05);
         private Vector3D color = new(0.8, 0.85, 1);

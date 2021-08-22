@@ -8,7 +8,8 @@ namespace Projection
 {
     struct Options
     {
-        public const int screenWidth = 1080;
+        public const int screenWidth = 1920;
         public const int screenHeight = 1080;
+        public const int Fov = 90;
     }
 }
