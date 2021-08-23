@@ -10,7 +10,7 @@ namespace Math_lib
         public double X { get; init; }
         public double Y { get; init; }
 
-        //Constructors
+        //Ctors
         public Point2D(double x, double y)
         {
                 X = x;

@@ -11,8 +11,7 @@ namespace Math_lib
         public double Z { get; init; }
 
 
-        //Constructors
-        //Constructors
+        //Ctors
         public Point3D(double x, double y, double z)
         {
                 X = x;
