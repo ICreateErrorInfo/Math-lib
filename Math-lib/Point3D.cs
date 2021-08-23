@@ -228,7 +228,7 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
-            Debug.Assert(p1.X != 0 || p1.Y != 0 || p1.Z != 0);
+             Debug.Assert(p1.X != 0 || p1.Y != 0 || p1.Z != 0);
 
             return new Point3D(p.X / p1.X,
                              p.Y / p1.Y,

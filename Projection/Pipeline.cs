@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Projection
 {
@@ -40,16 +41,20 @@ namespace Projection
                 var v2 = vertieces[indices[i * 3 + 2]];
 
                 //Backface Culling
-                if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), (Vector3D)v0.pos) <= 0))
+                if((Vector3D.Dot(Vector3D.Cross(v1.pos - v0.pos, v2.pos - v0.pos), (Vector3D)v0.pos) < 0))
                 {
-                    //process 3 verts into a triangle
-                    ProcessTriangle(v0, v1, v2, i);
+
+                    var clippedTris = Clipping.TriangleClipAgainstPlane(new(0,0,Options.Nplane), new(0,0, Options.Nplane), new(v0, v1, v2));
+                    foreach (var clipped in clippedTris)
+                    {
+                        ProcessTriangle(clipped, i);
+                    }
                 }
             }
         }
-        private void ProcessTriangle(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
+        private void ProcessTriangle(Triangle3D tri, int triangleIndex)
         {
-            PostProcessTriangleVertices(_effect.ProcessTri(v0, v1, v2, triangleIndex));
+            PostProcessTriangleVertices(_effect.ProcessTri(tri.Points[0], tri.Points[1], tri.Points[2], triangleIndex));
         }
         private void PostProcessTriangleVertices(Triangle3D triangle)
         {
@@ -57,7 +62,44 @@ namespace Projection
             var v1 =  pst.Transform(triangle.Points[1]);
             var v2 =  pst.Transform(triangle.Points[2]);
 
-            DrawTriangle(v0, v1, v2);
+            var listTriangles = new List<Triangle3D>();
+            listTriangles.Add(new(v0, v1, v2));
+            int nNewTris = 1;
+
+            for (int p = 0; p < 4; p++)
+            {
+                while (nNewTris > 0)
+                {
+                    Triangle3D test = listTriangles[0];
+                    listTriangles.RemoveAt(0);
+                    nNewTris--;
+                    var trisToAdd = p switch
+                    {
+                        //Clipping top
+                        0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
+                        //Clipping bottom
+                        1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.screenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
+                        //Clipping left
+                        2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
+                        //Clipping Right
+                        3 => Clipping.TriangleClipAgainstPlane(new(x: Options.screenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
+                        _ => Enumerable.Empty<Triangle3D>()
+                    };
+
+                    //Saving new Triangles
+                    foreach (var t in trisToAdd)
+                    {
+                        listTriangles.Add(t);
+                    }
+                }
+                nNewTris = listTriangles.Count;
+            }
+
+
+            foreach (Triangle3D t in listTriangles)
+            {
+                DrawTriangle(t.Points[0], t.Points[1], t.Points[2]);
+            }
         }
         private void DrawTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
@@ -103,6 +145,12 @@ namespace Projection
         private void DrawFlatTopTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
             double deltaY = p2.pos.Y - p0.pos.Y;
+            //Todo
+            //ka warum deltaY 0 wird
+            if (deltaY == 0)
+            {
+                deltaY = 0.001;
+            }
             Vertex dit0 = (p2 - p0) / new Vertex(deltaY);
             Vertex dit1 = (p2 - p1) / new Vertex(deltaY);
 
@@ -141,6 +189,12 @@ namespace Projection
                 var iLine = itEdge0;
 
                 double dx = itEdge.pos.X - itEdge0.pos.X;
+                //Todo
+                //ka warum dx 0 wird
+                if (dx == 0)
+                {
+                    dx = 0.01;
+                }
                 var diLine = (itEdge - iLine) / new Vertex(dx);
 
                 iLine += diLine * new Vertex(xStart + 0.5 - itEdge0.pos.X);
