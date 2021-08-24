@@ -14,6 +14,7 @@ namespace Math_lib
         public Matrix(int row, int col)
         {
             _matrix = new double[col, row];
+            _matrix[0,0] = _matrix[1,1] = _matrix[2,2] = _matrix[3,3] = 1;
             _row = row;
             _col = col;
         }
