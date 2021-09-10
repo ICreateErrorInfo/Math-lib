@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Projection {
+namespace Math_lib
+{
 
     public class DirectBitmap {
 

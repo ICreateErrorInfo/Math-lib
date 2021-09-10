@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Math-lib.Tests", "Math-lib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection", "Projection\Projection.csproj", "{48F639F6-2261-487B-AF0C-B683A211896D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaytracingInOneWeek", "RaytracingInOneWeek\RaytracingInOneWeek.csproj", "{8E498CEE-731C-4A2E-8A70-D9C2AC104C5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{48F639F6-2261-487B-AF0C-B683A211896D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F639F6-2261-487B-AF0C-B683A211896D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F639F6-2261-487B-AF0C-B683A211896D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E498CEE-731C-4A2E-8A70-D9C2AC104C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E498CEE-731C-4A2E-8A70-D9C2AC104C5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E498CEE-731C-4A2E-8A70-D9C2AC104C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E498CEE-731C-4A2E-8A70-D9C2AC104C5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
