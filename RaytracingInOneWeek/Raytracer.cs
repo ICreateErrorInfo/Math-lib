@@ -23,7 +23,11 @@ namespace RaytracingInOneWeek
         public DirectBitmap Render()
         {
             //Calc AspectRatio
-            aspectRatio = width / height;
+            aspectRatio = (double)width / height;
+
+            //World
+            Shape shape = new Sphere(new(0,0,-1), 0.5);
+
 
             //Camera Init
             double vHeight = 2;
@@ -47,15 +51,21 @@ namespace RaytracingInOneWeek
 
                     Ray r = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
 
-                    bmp.SetPixel(x,-(y - height + 1), RayColor(r));
+                    bmp.SetPixel(x,-(y - height + 1), RayColor(r, shape));
                 }
             }
 
             return bmp;
         }
 
-        private Color RayColor(Ray r)
+        private Color RayColor(Ray r, Shape shape)
         {
+            IntersectionData Id = new IntersectionData();
+            if (shape.hit(r, 0, ref Id))
+            {
+                return (0.5 * ((Vector3D)Id.normal + 1)).ToColor();
+            }
+
             Vector3D unitDir = Vector3D.Normalize(r.d);
             var t = 0.5 * (unitDir.Y + 1);
 
