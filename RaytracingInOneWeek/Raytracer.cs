@@ -26,7 +26,9 @@ namespace RaytracingInOneWeek
             aspectRatio = (double)width / height;
 
             //World
-            Shape shape = new Sphere(new(0,0,-1), 0.5);
+            Scene world = new Scene();
+            world.objects.Add(new Sphere(new(0,0,-1), 0.5));
+            world.objects.Add(new Sphere(new(0, -100.5, -1), 100));
 
 
             //Camera Init
@@ -51,7 +53,7 @@ namespace RaytracingInOneWeek
 
                     Ray r = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
 
-                    bmp.SetPixel(x,-(y - height + 1), RayColor(r, shape));
+                    bmp.SetPixel(x,-(y - height + 1), RayColor(r, world));
                 }
             }
 

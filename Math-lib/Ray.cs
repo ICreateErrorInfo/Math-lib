@@ -5,8 +5,8 @@
         //properties
         public Point3D o { get; init; }
         public Vector3D d { get; init; }
-        public double tMax { get; init; }
-        public double time { get; init; }
+        public double tMax;
+        public double time;
 
 
         //Ctors
