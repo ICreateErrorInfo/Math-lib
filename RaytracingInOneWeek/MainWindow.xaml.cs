@@ -12,7 +12,7 @@ namespace RaytracingInOneWeek
         {
             InitializeComponent();
 
-            Raytracer r = new Raytracer(256, 256);
+            Raytracer r = new Raytracer(1920, 1080);
 
             Screen.Source = r.Render().ToImageSource();
         }

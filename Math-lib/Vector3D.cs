@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 // ReSharper disable CompareOfFloatsByEqualityOperator
 namespace Math_lib
 {
@@ -170,6 +171,15 @@ namespace Math_lib
             Vector3D temp = this;
             temp.Saturate();
             return temp;
+        }
+        public Color ToColor()
+        {
+            if(this <= 255)
+            {
+                byte max = byte.MaxValue;
+                return Color.FromArgb(max, (int)(X * max), (int)(Y * max), (int)(Z * max));
+            }
+            throw new Exception("Number to Big");
         }
         public static explicit operator Point3D(Vector3D a)
         {

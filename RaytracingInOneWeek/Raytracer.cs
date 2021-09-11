@@ -12,6 +12,7 @@ namespace RaytracingInOneWeek
     {
         int width;
         int height;
+        double aspectRatio;
 
         public Raytracer(int width, int height)
         {
@@ -21,25 +22,46 @@ namespace RaytracingInOneWeek
 
         public DirectBitmap Render()
         {
-            DirectBitmap bmp = new DirectBitmap(width, height);
+            //Calc AspectRatio
+            aspectRatio = width / height;
 
-            for(int y = 0; y < height; y++)
+            //Camera Init
+            double vHeight = 2;
+            double vWidth = aspectRatio * vHeight;
+            double focalLength = 1;
+
+            //Calc Virtual Viewport
+            Point3D  origin     = new Point3D (0, 0, 0);
+            Vector3D horizontal = new Vector3D(vWidth, 0, 0);
+            Vector3D vertical   = new Vector3D(0, vHeight, 0);
+            Point3D lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - new Vector3D(0, 0, focalLength);
+
+            //Render Loop
+            DirectBitmap bmp = new DirectBitmap(width, height);
+            for (int y = 0; y < height; y++)
             {
                 for(int x = 0; x < width; x++)
                 {
-                    double r = (double)x / (width - 1);
-                    double g = (double)y / (height - 1);
-                    double b = 0.25;
+                    double u = (double)x / (width  - 1);
+                    double v = (double)y / (height - 1);
 
-                    int ir = Convert.ToInt32(255 * r);
-                    int ig = Convert.ToInt32(255 * g);
-                    int ib = Convert.ToInt32(255 * b);
+                    Ray r = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
 
-                    bmp.SetPixel(x,-(y - 255), Color.FromArgb(ir,ig,ib));
+                    bmp.SetPixel(x,-(y - height + 1), RayColor(r));
                 }
             }
 
             return bmp;
+        }
+
+        private Color RayColor(Ray r)
+        {
+            Vector3D unitDir = Vector3D.Normalize(r.d);
+            var t = 0.5 * (unitDir.Y + 1);
+
+            Vector3D colInVec = (1 - t) * 1 + t * new Vector3D(0.5, 0.7, 1);
+
+            return colInVec.ToColor();
         }
     }
 }
