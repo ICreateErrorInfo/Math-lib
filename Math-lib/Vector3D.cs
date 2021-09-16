@@ -172,14 +172,37 @@ namespace Math_lib
             temp.Saturate();
             return temp;
         }
-        public Color ToColor()
+        public Color ToColor(int samplesPerPixel = 1)
         {
             if(this <= 255)
             {
                 byte max = byte.MaxValue;
-                return Color.FromArgb(max, (int)(X * max), (int)(Y * max), (int)(Z * max));
+                double r = X;
+                double g = Y;
+                double b = Z;
+
+                double scale = (double)1 / samplesPerPixel;
+                r *= scale;
+                g *= scale;
+                b *= scale;
+
+                return Color.FromArgb(max, (int)(256 * Math.Clamp(r, 0, 0.999)), (int)(256 * Math.Clamp(g, 0, 0.999)), (int)(256 * Math.Clamp(b, 0, 0.999)));
             }
             throw new Exception("Number to Big");
+        }
+        public static Vector3D Random(int min, int max)
+        {
+            Random r = new Random();
+            return new Vector3D(r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min);
+        }
+        public static Vector3D RandomInUnitSphere()
+        {
+            while (true)
+            {
+                Vector3D p = Random(-1, 1);
+                if (p.GetLengthSqrt() >= 1) continue;
+                return p;
+            }
         }
         public static explicit operator Point3D(Vector3D a)
         {

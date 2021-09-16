@@ -115,6 +115,11 @@ namespace Math_lib
             Debug.Assert(IsNaN(a));
             return new Vector3D() { X = a.X, Y = a.Y, Z = a.Z };
         }
+        public static explicit operator Point3D(Normal3D a)
+        {
+            Debug.Assert(IsNaN(a));
+            return new Point3D() { X = a.X, Y = a.Y, Z = a.Z };
+        }
 
 
         //overrides +
