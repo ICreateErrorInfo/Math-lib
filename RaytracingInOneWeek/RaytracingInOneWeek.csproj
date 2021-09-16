@@ -4,7 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <LangVersion>9.0</LangVersion>
+    <ApplicationIcon />
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,15 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Images\office_skin.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\sauron-bhole-100x100.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

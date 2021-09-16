@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -16,35 +16,64 @@ namespace Projection {
     /// </summary>
     public partial class MainWindow: Window {
 
-        private readonly DispatcherTimer _timer;
-        private readonly ScanLineRasterizer      _rasterizer;
-        private          int             _angle;
-        private          Mesh3D          _mesh = new();
+        readonly DispatcherTimer   _timer;
+        readonly Mesh              _mesh;
+        readonly WaveTextureEffect _we;
+        readonly Effect            _effect;
 
-        private readonly Camera _camera;
-        bool _wireframe;
+        double    _angleY;
+        double _angleX;
+        Vector3D trans = new Vector3D(0,0,3);
+        double _time;
 
         public MainWindow() {
 
             InitializeComponent();
 
-            //Init
-            _angle = 0;
-            const int screenWidth = 1920;
-            const int screenHeight = 1080;
-            _camera = new Camera();
+            //var solidColor = new SolidColorEffect();
+            //solidColor.SetColor(Color.White);
+            //_effect = solidColor;
+            //_mesh = Cube.GetPlain();
+
+            //Todo TextureBug
+
+            //var textureEffect = new TextureEffect();
+            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
+            //textureEffect.BindTexture(textureFile);
+            //_effect = textureEffect;
+            //_mesh = Cube.GetPlain();
+
+            //var waveeffect = new WaveTextureEffect();
+            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            //waveeffect.BindTexture(texturefile);
+            //_we = waveeffect;
+            //_effect = waveeffect;
+            //_mesh = Plane.GetSkinned(20);
+
+            //var solidGeoEffect = new SolidGeometryEffect();
+            //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
+            //_effect = solidGeoEffect;
+            //_mesh = Cube.GetPlain();
+
+            var VertexFlatEffect = new VertexFlatEffect();
+            _effect = VertexFlatEffect;
+            _mesh = Cube.GetIndependentFacesNormals();
+
+            //TODO clipping funktioniert nicht richtig
+
+            //var GeometryFlatEffect = new GeometryFlatEffect();
+            //_effect = GeometryFlatEffect;
+            //_mesh = Sphere.GetPlain();
 
             //Load Mesh
             ShowOpenFile();
 
-            //Init Rasterizer
-            _rasterizer = new ScanLineRasterizer(screenWidth, screenHeight);
-
             //Render
-            Render();
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(40),
+                Interval = TimeSpan.FromMilliseconds(1),
                 IsEnabled = true
             };
 
@@ -60,229 +89,64 @@ namespace Projection {
             };
             if (ofn.ShowDialog() == true)
             {
-                _mesh = Importer.Obj(ofn.FileName).CreateMesh();
+                Importer.Obj(ofn.FileName, true);
             }
         }
-        protected override void OnKeyDown(KeyEventArgs e) {
-        
+        protected override void OnKeyDown(KeyEventArgs e) 
+        {
             if (e.Key == Key.P)
             {
                 _timer.IsEnabled ^= true;
-                e.Handled        =  true;
+                e.Handled = true;
             }
 
-            if (e.Key == Key.F)
+            if (e.Key == Key.A)
             {
-                _wireframe ^= true;
-                e.Handled  =  true;
+                _angleY += 0.1;
+            }
+            if (e.Key == Key.D)
+            {
+                _angleY -= 0.1;
             }
 
-            if(e.Key == Key.LeftCtrl)
-            {
-                _camera.Pos += new Point3D(0, 1, 0);
-            }
-            if (e.Key == Key.Space)
-            {
-                _camera.Pos = new Point3D(_camera.Pos - new Point3D(0,1,0));
-            }
-
-            Vector3D forward = _camera.LookDir * 1;
             if (e.Key == Key.W)
             {
-                _camera.Pos += forward;
+                _angleX += .1;
             }
             if (e.Key == Key.S)
             {
-                _camera.Pos -= forward;
+                _angleX -= .1;
             }
-
-            Vector3D cross = Vector3D.Cross(forward, new Vector3D(0, 1, 0));
-            if (e.Key == Key.D)
+            if(e.Key == Key.Up)
             {
-                _camera.Pos -= cross;
+                trans += new Vector3D(0, .1, 0);
             }
-            if (e.Key == Key.A)
+            if (e.Key == Key.Down)
             {
-                _camera.Pos += cross;
+                trans -= new Vector3D(0, .1, 0);
             }
-
             if (e.Key == Key.Right)
             {
-                _camera.Yaw -= 1;
+                trans += new Vector3D(.1, 0, 0);
             }
             if (e.Key == Key.Left)
             {
-                _camera.Yaw += 1;
+                trans -= new Vector3D(.1, 0, 0);
             }
         }
-        
+
         private void OnRenderSzene(object sender, EventArgs e) {
-            Render();
-        }
-        private void Render() {
-            _rasterizer.Clear();
 
-            RenderScene(
-                mesh3DCube: _mesh, 
-                angle: _angle, 
-                r: _rasterizer, 
-                c: _camera, 
-                wireframe: _wireframe);
+            _we?.SetTime(_time);
 
-            Image.Source = _rasterizer.Bmp.ToImageSource();
+            Pipeline p = new Pipeline();
+            _effect.BindTranslation(trans);
+            _effect.BindRotation(Matrix3x3.RotateYMarix(_angleY) * Matrix3x3.RotateXMarix(_angleX));
 
-            //Show DepthBuffer
+            p.Draw(_mesh, _effect);
 
-            int max = 0;
-            DirectBitmap bmp = new DirectBitmap(_rasterizer.Width, _rasterizer.Height);
-            for (int x = 0; x < _rasterizer.Width; x++) {
-                for (int y = 0; y < _rasterizer.Height; y++) {
-                    byte byteVal = 0;
-                    if (double.IsNegativeInfinity(_rasterizer.ZBuffer.At(x, y))) {
-                        byteVal = 255;
-
-                    } else {
-                        byteVal = Convert.ToByte((_rasterizer.ZBuffer.At(x, y) * 100) - 10);
-                        if (byteVal > max) {
-                            max = byteVal;
-                        }
-                    }
-                    bmp.SetPixel(x, y, Color.FromArgb(1, byteVal, byteVal, byteVal));
-                }
-            }
-
-
-            Image.Source = bmp.ToImageSource();
-        }
-
-        private static void RenderScene(Mesh3D mesh3DCube, int angle, Rasterizer r, Camera c, bool wireframe) {
-
-            //Init
-            var wireframeRasterizer = new BresenhamRasterizer(r.Width, r.Height);
-
-            var screenWidth  = r.Width;
-            var screenHeight = r.Height;
-
-            Matrix4x4 rotateZ = Matrix4x4.RotateZMarix(angle);
-            Matrix4x4 rotateY = Matrix4x4.RotateYMarix(angle);
-            Matrix4x4 rotateX = Matrix4x4.RotateXMarix(angle);
-
-            Matrix4x4 projection = Matrix4x4.Projection(screenWidth, screenHeight, 100, 1, 1000);
-            Matrix4x4 translation = Matrix4x4.Translation(0, 0, -6);
-
-            Matrix4x4 worldMatrix = new Matrix4x4();
-            worldMatrix = Matrix4x4.Identity();
-            worldMatrix = worldMatrix * translation;
-            worldMatrix = worldMatrix * rotateZ;
-            worldMatrix = worldMatrix * rotateX;
-            worldMatrix = worldMatrix * rotateY;
-
-            //Camera
-            c.Target = new Vector3D(0, 0, -1);
-            Matrix4x4 cameraRotY = Matrix4x4.RotateYMarix((int)c.Yaw);
-            c.LookDir = cameraRotY * c.Target;
-            c.Target = new Vector3D(c.Pos + c.LookDir);
-
-            Matrix4x4 viewMatrix = Matrix4x4.LookAt(c.Pos, c.Target, c.Up);
-
-            //Draw
-            foreach (Triangle3D tri in mesh3DCube.Triangles) {
-
-                //Transform triangel
-                Triangle3D triTranformed = new Triangle3D();
-                triTranformed = worldMatrix * tri;
-
-                //calc Normals
-                Vector3D line1 = triTranformed.Points[1] - triTranformed.Points[0];
-                Vector3D line2 = triTranformed.Points[2] - triTranformed.Points[0];
-
-                Vector3D normal = Vector3D.UnitVector(Vector3D.Cross(line1, line2));
-
-                //check visability
-                if (Vector3D.Dot(normal, triTranformed.Points[0] - c.Pos) < 0)
-                {
-                    //Illumination
-                    Vector3D lightDirection = new Vector3D(-.2,-.5,-1);
-                    lightDirection = Vector3D.UnitVector(lightDirection);
-
-                    double dp = Vector3D.Dot(normal, lightDirection);
-                    var grayValue = Convert.ToByte(Math.Abs(dp * Byte.MaxValue));
-                    var col = Color.FromArgb(255, grayValue, grayValue, grayValue);
-
-                    //Convert to View Space
-                    var triViewed = viewMatrix * triTranformed;
-
-                    var clippedTris = Clipping.TriangleClipAgainstPlane(planeP: new(0, 0, 1), planeN: new(0, 0, 1), inTri: triViewed);
-                    foreach (var clipped in clippedTris)
-                    {
-                        //project
-                        Triangle3D triProjected = projection * clipped;
-
-                        triProjected.Points[0] /= triProjected.Points[0].W;
-                        triProjected.Points[1] /= triProjected.Points[1].W;
-                        triProjected.Points[2] /= triProjected.Points[2].W;
-
-                        //Convert from Triangle3 to Triangle2
-                        Triangle3D triProjectedConv = triProjected;
-
-                        //Scaling into screenspace
-                        triProjectedConv += new Point3D(1, 1, 0);
-                        triProjectedConv *= new Point3D(0.5 * screenWidth, 0.5 * screenHeight, 1);
-
-                        var listTriangles = new List<Triangle3D>();
-                        listTriangles.Add(triProjectedConv);
-                        int nNewTris = 1;
-
-                        //Clipping screen Edges
-                        for(int p = 0; p < 4; p++)
-                        {
-                            
-                            while(nNewTris > 0)
-                            {
-                                Triangle3D test = listTriangles[0];
-                                listTriangles.RemoveAt(0);
-                                nNewTris--;
-                                var trisToAdd = p switch 
-                                {
-                                    //Clipping top
-                                    0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
-                                    //Clipping bottom
-                                    1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: screenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
-                                    //Clipping left
-                                    2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
-                                    //Clipping Right
-                                    3 => Clipping.TriangleClipAgainstPlane(new(x: screenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
-                                    _ => Enumerable.Empty<Triangle3D>()
-                                };
-
-                                //Saving new Triangles
-                                foreach(var t in trisToAdd)
-                                {
-                                    listTriangles.Add(t);
-                                }
-                            }
-                            nNewTris = listTriangles.Count;
-                        }
-
-                        //Drawing
-                        foreach (Triangle3D t in listTriangles)
-                        {
-                            if (wireframe)
-                            {
-                                wireframeRasterizer.DrawTriangle(t, Color.Red, false);
-                            }
-                            else
-                            {
-                                r.DrawTriangle(t, col, false);
-                            }
-                        }
-                    }
-                }       
-            }
-            if (wireframe)
-            {
-                r.OverrideBitmap(wireframeRasterizer.Bmp);
-            }
-        }
+            Image.Source = p.Bmp.ToImageSource();
+            _time += .05;
+        }       
     }
 }

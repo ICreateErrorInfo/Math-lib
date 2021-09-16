@@ -32,13 +32,7 @@ namespace Projection
         }
         public bool TestAndSet(int x, int y, double depth)
         {
-            if (x == 540 && y == 600)
-            {
-
-            }
-
-            double depthInBuffer = At(x, y);
-            if (depth > depthInBuffer)
+            if (depth > At(x,y))
             {
                 pBuffer[y * width + x] = depth;
                 return true;

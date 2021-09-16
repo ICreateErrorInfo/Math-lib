@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Projection {
+namespace Math_lib
+{
 
     public class DirectBitmap {
 
@@ -13,6 +14,12 @@ namespace Projection {
             Width  = width;
             Height = height;
             Bits   = new byte[Stride * height];
+        }
+        public DirectBitmap(int width, int height, byte[] b)
+        {
+            Width = width;
+            Height = height;
+            Bits = b;
         }
 
         public byte[] Bits { get; }
