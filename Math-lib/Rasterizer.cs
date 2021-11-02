@@ -156,6 +156,7 @@ namespace Math_lib
 
             return points;
         }
+
         public void DrawRectangle(Point2D p1, Point2D p3, System.Drawing.Color c, bool fill = false)
         {
             Point2D p2 = new Point2D(p3.X, p1.Y);
@@ -180,36 +181,7 @@ namespace Math_lib
 
                 Point2D[] p = k.ToArray();
 
-                for (int i = 0; i < points.Count; i++)
-                {
-                    if (i + 1 > points.Count - 1)
-                    {
-                        break;
-                    }
-                    if (p[i].Y != p[i + 1].Y)
-                    {
-                        continue;
-                    }
-
-                    int anf = (int)p[i].X;
-                    int end = (int)p[i + 1].X;
-
-                    if (end - anf > 0)
-                    {
-                        for (int j = anf; j < end; j++)
-                        {
-                            _bmp.SetPixel(j, (int)p[i].Y, c);
-                        }
-                    }
-                    else
-                    {
-                        for (int j = anf; j > end; j--)
-                        {
-                            _bmp.SetPixel(j, (int)p[i].Y, c);
-                        }
-                    }
-
-                }
+                Fill(p, c);
             }
         }
         public void DrawRectangle(Point2D p1, Point2D p2, Point2D p3, Point2D p4, System.Drawing.Color c, bool fill = false)
@@ -233,41 +205,120 @@ namespace Math_lib
 
                 Point2D[] p = k.ToArray();
 
-                for (int i = 0; i < points.Count; i++)
-                {
-                    if (i + 1 > points.Count - 1)
-                    {
-                        break;
-                    }
-                    if (p[i].Y != p[i + 1].Y)
-                    {
-                        continue;
-                    }
-
-                    int anf = (int)p[i].X;
-                    int end = (int)p[i + 1].X;
-
-                    if (end - anf > 0)
-                    {
-                        for (int j = anf; j < end; j++)
-                        {
-                            _bmp.SetPixel(j, (int)p[i].Y, c);
-                        }
-                    }
-                    else
-                    {
-                        for (int j = anf; j > end; j--)
-                        {
-                            _bmp.SetPixel(j, (int)p[i].Y, c);
-                        }
-                    }
-
-                }
+                Fill(p, c);
             }       
         }    
+
+        public void DrawCircle(Point2D p1, int radius, System.Drawing.Color c, bool fill = false)
+        {
+            List<Point2D> points = new List<Point2D>();
+            int x0 = (int)p1.X;
+            int y0 = (int)p1.Y;
+
+            int f = 1 - radius;
+            int ddfX = 0;
+            int ddfY = -2 * radius;
+            int x = 0;
+            int y = radius;
+
+            _bmp.SetPixel(x0,Math.Clamp(y0 + radius, 0, height - 1), c);
+            _bmp.SetPixel(x0,Math.Clamp(y0 - radius, 0, height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0 + radius, 0, width - 1), y0, c);
+            _bmp.SetPixel(Math.Clamp(x0 - radius, 0, width - 1), y0, c);
+
+            if (fill)
+            {
+                points.Add(new(x0,Math.Clamp(y0 + radius, 0, height - 1)));
+                points.Add(new(x0,Math.Clamp(y0 - radius, 0, height - 1)));
+                points.Add(new(Math.Clamp(x0 + radius, 0, width - 1), y0));
+                points.Add(new(Math.Clamp(x0 - radius, 0, width - 1), y0));
+            }
+
+            while (x < y)
+            {
+                if(f >= 0)
+                {
+                    y--;
+                    ddfY += 2;
+                    f += ddfY;
+                }
+                x++;
+                ddfX += 2;
+                f += ddfX + 1;
+
+                _bmp.SetPixel(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1), c);
+
+                if (fill)
+                {
+                    points.Add(new(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1)));
+                }
+
+                _bmp.SetPixel(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1), c);
+
+                if (fill)
+                {
+                    points.Add(new(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1)));
+                }
+            }
+
+            if (fill)
+            {
+                var k = points.OrderBy(p => p.Y);
+
+                Point2D[] p = k.ToArray();
+
+                Fill(p, c);
+            }
+        }
+
         public ImageSource GetSource()
         {
             return ToImageSource(_bmp);
+        }
+
+        private void Fill(Point2D[] p, System.Drawing.Color c)
+        {
+            for (int i = 0; i < p.Length - 1; i++)
+            {
+                if (i + 1 > p.Length - 1)
+                {
+                    break;
+                }
+                if (p[i].Y != p[i + 1].Y)
+                {
+                    continue;
+                }
+
+                int anf = (int)p[i].X;
+                int end = (int)p[i + 1].X;
+
+                if (end - anf > 0)
+                {
+                    for (int j = anf; j < end; j++)
+                    {
+                        _bmp.SetPixel(j, (int)p[i].Y, c);
+                    }
+                }
+                else
+                {
+                    for (int j = anf; j > end; j--)
+                    {
+                        _bmp.SetPixel(j, (int)p[i].Y, c);
+                    }
+                }
+            }
         }
 
         private ImageSource ToImageSource(DirectBitmap bitmap)
