@@ -9,18 +9,55 @@ namespace Math_lib
     public class Rasterizer
     {
         private DirectBitmap _bmp = null;
+        private bool CooMi;
+        private double scale;
         public int width;
         public int height;
 
-        public Rasterizer(int width, int height)
+        public Rasterizer(int width, int height, bool CooMi = false, int scale = 1)
         {
             _bmp = new DirectBitmap(width, height);
             this.width = width;
             this.height = height;
-        }
+            this.CooMi = CooMi;
+            this.scale = (double)1 / scale;
+
+            double arrowLength = 0.1 / 2;
+            double arrowHeight = 0.07 / 2;
+            double thickness = 0.005 / 2;
+            System.Drawing.Color c = System.Drawing.Color.White;
+
+            Point2D p = new Point2D(scale, 0);
+            DrawLine(new(0,0), p, c, thickness);
+            DrawLine(p, new(p.X - arrowLength, p.Y + arrowHeight), c, thickness);
+            DrawLine(p, new(p.X - arrowLength, p.Y - arrowHeight), c, thickness);
+
+            Point2D p1 = new Point2D(-scale, 0);
+            DrawLine(new(0, 0), p1, c, thickness);
+            DrawLine(p1, new(p1.X + arrowLength, p1.Y + arrowHeight), c, thickness);
+            DrawLine(p1, new(p1.X + arrowLength, p1.Y - arrowHeight), c, thickness);
+
+            Point2D p2 = new Point2D(0, (double)scale / ((double)width / height));
+            DrawLine(new(0, 0), p2, c, thickness);
+            DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, thickness);
+            DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, thickness);
+
+            Point2D p3 = new Point2D(0, (double)-scale / ((double)width / height));
+            DrawLine(new(0, 0), p3, c, thickness);
+            DrawLine(p3, new(p3.X + arrowHeight, p3.Y + arrowLength), c, thickness);
+            DrawLine(p3, new(p3.X - arrowHeight, p3.Y + arrowLength), c, thickness);
+
+            DrawCircle(new(0,0), arrowHeight, c, true);
+        }                                             
 
         public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c)
         {
+            if (CooMi)
+            {
+                p1 = ConvertToCoo(p1);
+                p2 = ConvertToCoo(p2);
+            }
+
             var x0 = (int)p1.X;
             var y0 = (int)p1.Y;
 
@@ -78,7 +115,7 @@ namespace Math_lib
 
             }
         }
-        public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c, int thickness)
+        public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c, double thickness)
         {
             Vector2D p1p2 = new Vector2D(p2.X - p1.X, p2.Y - p1.Y);
             p1p2 = Vector2D.Normalize(p1p2);
@@ -95,6 +132,12 @@ namespace Math_lib
         }
         private List<Point2D> DrawLineWithOut(Point2D p1, Point2D p2, System.Drawing.Color c)
         {
+            if (CooMi)
+            {
+                p1 = ConvertToCoo(p1);
+                p2 = ConvertToCoo(p2);
+            } 
+
             List<Point2D> points = new List<Point2D>();
             var x0 = (int)p1.X;
             var y0 = (int)p1.Y;
@@ -209,29 +252,41 @@ namespace Math_lib
             }       
         }    
 
-        public void DrawCircle(Point2D p1, int radius, System.Drawing.Color c, bool fill = false)
+        public void DrawCircle(Point2D p1, double radius, System.Drawing.Color c, bool fill = false)
         {
+            int radiusInt;
+
+            if (CooMi)
+            {
+                radiusInt = (int)ConvertDouble(radius, height);
+                p1 = ConvertToCoo(p1);
+            }
+            else
+            {
+                radiusInt = (int)radius;
+            }
+
             List<Point2D> points = new List<Point2D>();
             int x0 = (int)p1.X;
             int y0 = (int)p1.Y;
 
-            int f = 1 - radius;
+            int f = 1 - radiusInt;
             int ddfX = 0;
-            int ddfY = -2 * radius;
+            int ddfY = -2 * radiusInt;
             int x = 0;
-            int y = radius;
+            int y = radiusInt;
 
-            _bmp.SetPixel(x0,Math.Clamp(y0 + radius, 0, height - 1), c);
-            _bmp.SetPixel(x0,Math.Clamp(y0 - radius, 0, height - 1), c);
-            _bmp.SetPixel(Math.Clamp(x0 + radius, 0, width - 1), y0, c);
-            _bmp.SetPixel(Math.Clamp(x0 - radius, 0, width - 1), y0, c);
+            _bmp.SetPixel(Math.Clamp(x0, 0, width - 1),Math.Clamp(y0 + radiusInt, 0, height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0, 0, width - 1), Math.Clamp(y0 - radiusInt, 0, height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0 + radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0 - radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1), c);
 
             if (fill)
             {
-                points.Add(new(x0,Math.Clamp(y0 + radius, 0, height - 1)));
-                points.Add(new(x0,Math.Clamp(y0 - radius, 0, height - 1)));
-                points.Add(new(Math.Clamp(x0 + radius, 0, width - 1), y0));
-                points.Add(new(Math.Clamp(x0 - radius, 0, width - 1), y0));
+                points.Add(new(Math.Clamp(x0, 0, width - 1),Math.Clamp(y0 + radiusInt, 0, height - 1)));
+                points.Add(new(Math.Clamp(x0, 0, width - 1), Math.Clamp(y0 - radiusInt, 0, height - 1)));
+                points.Add(new(Math.Clamp(x0 + radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1)));
+                points.Add(new(Math.Clamp(x0 - radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1)));
             }
 
             while (x < y)
@@ -321,6 +376,16 @@ namespace Math_lib
             }
         }
 
+        private Point2D ConvertToCoo(Point2D p)
+        {
+            p = new Point2D(p.X, -p.Y);
+            double aspectRatio = (double)width / height;
+            return new Point2D(ConvertDouble(p.X, width) + width / 2, ConvertDouble(p.Y, (int)(height * aspectRatio)) + height / 2);
+        }
+        private double ConvertDouble(double d, int l)
+        {
+            return d * l * scale / 2;
+        }
         private ImageSource ToImageSource(DirectBitmap bitmap)
         {
 
