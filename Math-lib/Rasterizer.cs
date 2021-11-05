@@ -280,15 +280,8 @@ namespace Math_lib
         {
             int radiusInt;
 
-            if (CooMi)
-            {
-                radiusInt = (int)ConvertDouble(radius, height);
-                p1 = ConvertToCoo(p1);
-            }
-            else
-            {
-                radiusInt = (int)radius;
-            }
+            radiusInt = (int)ConvertDouble(radius, width);
+            p1 = ConvertToCoo(p1);
 
             List<Point2D> points = new List<Point2D>();
             int x0 = (int)p1.X;
