@@ -22,34 +22,50 @@ namespace Math_lib
             this.CooMi = CooMi;
             this.scale = (double)1 / scale;
 
-            double arrowLength = 0.1 / 2;
-            double arrowHeight = 0.07 / 2;
-            double thickness = 0.005 / 2;
+            DrawCoo();
+        }                                             
+
+        private void DrawCoo()
+        {
+            double scale = 1 / this.scale;
+            double arrowLength = 0.1 / 2 / 6 * scale;
+            double arrowHeight = 0.07 / 2 / 6 * scale;
+            double thickness = 0.005 / 2 / 3 * scale;
+            double arrowThickness = 0.005 / 2 / 3 * scale;
             System.Drawing.Color c = System.Drawing.Color.White;
 
+            System.Drawing.Color cL = System.Drawing.Color.FromArgb(120, 120, 120);
+            for (int i = 1; i < scale; i++)
+            {
+                DrawLine(new(i, (double)-scale / ((double)width / height)), new(i, (double)scale / ((double)width / height)), cL);
+                DrawLine(new(-i, (double)-scale / ((double)width / height)), new(-i, (double)scale / ((double)width / height)), cL);
+            }
+            for (int i = 1; i < (double)scale / ((double)width / height); i++)
+            {
+                DrawLine(new(-scale, i), new(scale, i), cL);
+                DrawLine(new(-scale, -i), new(scale, -i), cL);
+            }
+
+            //Lines
             Point2D p = new Point2D(scale, 0);
-            DrawLine(new(0,0), p, c, thickness);
-            DrawLine(p, new(p.X - arrowLength, p.Y + arrowHeight), c, thickness);
-            DrawLine(p, new(p.X - arrowLength, p.Y - arrowHeight), c, thickness);
+            DrawLine(new(0, 0), p, c, thickness);
+            DrawLine(p, new(p.X - arrowLength, p.Y + arrowHeight), c, arrowThickness);
+            DrawLine(p, new(p.X - arrowLength, p.Y - arrowHeight), c, arrowThickness);
 
             Point2D p1 = new Point2D(-scale, 0);
             DrawLine(new(0, 0), p1, c, thickness);
-            DrawLine(p1, new(p1.X + arrowLength, p1.Y + arrowHeight), c, thickness);
-            DrawLine(p1, new(p1.X + arrowLength, p1.Y - arrowHeight), c, thickness);
 
             Point2D p2 = new Point2D(0, (double)scale / ((double)width / height));
             DrawLine(new(0, 0), p2, c, thickness);
-            DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, thickness);
-            DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, thickness);
+            DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, arrowThickness);
+            DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, arrowThickness);
 
             Point2D p3 = new Point2D(0, (double)-scale / ((double)width / height));
             DrawLine(new(0, 0), p3, c, thickness);
-            DrawLine(p3, new(p3.X + arrowHeight, p3.Y + arrowLength), c, thickness);
-            DrawLine(p3, new(p3.X - arrowHeight, p3.Y + arrowLength), c, thickness);
 
-            DrawCircle(new(0,0), arrowHeight, c, true);
-        }                                             
-
+            //Center
+            DrawCircle(new(0, 0), arrowHeight, c, true);
+        }
         public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c)
         {
             if (CooMi)
@@ -79,21 +95,23 @@ namespace Math_lib
                 if (x0 < 0)
                 {
                     xnew = 0;
-                }
+                }else
                 if (y0 < 0)
                 {
                     ynew = 0;
-                }
+                }else
                 if (x0 > width - 1)
                 {
                     xnew = width - 1;
-                }
+                }else
                 if (y0 > height - 1)
                 {
                     ynew = height - 1;
                 }
-
-                _bmp.SetPixel(xnew, ynew, c);
+                else
+                {
+                    _bmp.SetPixel(xnew, ynew, c);
+                }
 
                 if (x0 == x1 && y0 == y1)
                 {
@@ -118,8 +136,8 @@ namespace Math_lib
         public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c, double thickness)
         {
             Vector2D p1p2 = new Vector2D(p2.X - p1.X, p2.Y - p1.Y);
-            p1p2 = Vector2D.Normalize(p1p2);
             Vector2D oP1P2 = new Vector2D(p1p2.Y, -p1p2.X);
+            oP1P2 = Vector2D.Normalize(oP1P2);
             oP1P2 *= thickness;
 
             Point2D p1New = new Point2D(p1.X + oP1P2.X, p1.Y + oP1P2.Y);
@@ -160,21 +178,24 @@ namespace Math_lib
                 if (x0 < 0)
                 {
                     xnew = 0;
-                }
+                }else
                 if (y0 < 0)
                 {
                     ynew = 0;
-                }
+                }else
                 if (x0 > width - 1)
                 {
                     xnew = width - 1;
-                }
+                }else
                 if (y0 > height - 1)
                 {
                     ynew = height - 1;
                 }
+                else
+                {
+                    _bmp.SetPixel(xnew, ynew, c);
+                }
 
-                _bmp.SetPixel(xnew, ynew, c);
                 points.Add(new Point2D(xnew, ynew));
 
                 if (x0 == x1 && y0 == y1)

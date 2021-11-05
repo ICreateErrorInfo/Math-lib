@@ -84,7 +84,7 @@ namespace Math_lib
         {
             return p >= b.pMin && p <= b.pMax;
         }
-        public bool INsideExclusive(Point2D p, Bounds2D b)
+        public bool InsideExclusive(Point2D p, Bounds2D b)
         {
             return p >= pMin && p < b.pMax;
         }
