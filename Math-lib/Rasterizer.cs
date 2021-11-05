@@ -14,7 +14,7 @@ namespace Math_lib
         public int width;
         public int height;
 
-        public Rasterizer(int width, int height, bool CooMi = false, int scale = 1)
+        public Rasterizer(int width, int height, int scale = 1, bool CooMi = true)
         {
             _bmp = new DirectBitmap(width, height);
             this.width = width;
@@ -32,7 +32,7 @@ namespace Math_lib
             double arrowHeight = 0.07 / 2 / 6 * scale;
             double thickness = 0.005 / 2 / 3 * scale;
             double arrowThickness = 0.005 / 2 / 3 * scale;
-            System.Drawing.Color c = System.Drawing.Color.White;
+            System.Drawing.Color c = System.Drawing.Color.Red;
 
             System.Drawing.Color cL = System.Drawing.Color.FromArgb(120, 120, 120);
             for (int i = 1; i < scale; i++)
@@ -57,22 +57,28 @@ namespace Math_lib
 
             Point2D p2 = new Point2D(0, (double)scale / ((double)width / height));
             DrawLine(new(0, 0), p2, c, thickness);
-            DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, arrowThickness);
-            DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, arrowThickness);
 
             Point2D p3 = new Point2D(0, (double)-scale / ((double)width / height));
             DrawLine(new(0, 0), p3, c, thickness);
+            if (CooMi)
+            {
+                DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, arrowThickness);
+                DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, arrowThickness);
+            }
+            else
+            {
+                DrawLine(p3, new(p3.X + arrowHeight, p3.Y + arrowLength), c, arrowThickness);
+                DrawLine(p3, new(p3.X - arrowHeight, p3.Y + arrowLength), c, arrowThickness);
+            }
+
 
             //Center
             DrawCircle(new(0, 0), arrowHeight, c, true);
         }
         public void DrawLine(Point2D p1, Point2D p2, System.Drawing.Color c)
         {
-            if (CooMi)
-            {
-                p1 = ConvertToCoo(p1);
-                p2 = ConvertToCoo(p2);
-            }
+            p1 = ConvertToCoo(p1);
+            p2 = ConvertToCoo(p2);        
 
             var x0 = (int)p1.X;
             var y0 = (int)p1.Y;
@@ -150,11 +156,8 @@ namespace Math_lib
         }
         private List<Point2D> DrawLineWithOut(Point2D p1, Point2D p2, System.Drawing.Color c)
         {
-            if (CooMi)
-            {
-                p1 = ConvertToCoo(p1);
-                p2 = ConvertToCoo(p2);
-            } 
+            p1 = ConvertToCoo(p1);
+            p2 = ConvertToCoo(p2);      
 
             List<Point2D> points = new List<Point2D>();
             var x0 = (int)p1.X;
@@ -401,11 +404,26 @@ namespace Math_lib
         {
             p = new Point2D(p.X, -p.Y);
             double aspectRatio = (double)width / height;
-            return new Point2D(ConvertDouble(p.X, width) + width / 2, ConvertDouble(p.Y, (int)(height * aspectRatio)) + height / 2);
+            if(CooMi == true)
+            {
+                return new Point2D(ConvertDouble(p.X, width) + width / 2, ConvertDouble(p.Y, (int)(height * aspectRatio)) + height / 2);
+            }
+            else
+            {
+                return new Point2D(ConvertDouble(p.X, width), ConvertDouble(p.Y, (int)(height * aspectRatio)));
+            }
+
         }
         private double ConvertDouble(double d, int l)
         {
-            return d * l * scale / 2;
+            if (CooMi)
+            {
+                return d * l * scale / 2;
+            }
+            else
+            {
+                return d * l * scale;
+            }
         }
         private ImageSource ToImageSource(DirectBitmap bitmap)
         {

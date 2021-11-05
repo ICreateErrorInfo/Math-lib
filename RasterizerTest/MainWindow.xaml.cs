@@ -12,7 +12,7 @@ namespace RasterizerTest
         {
             InitializeComponent();  
             
-            Rasterizer r = new Rasterizer(1920, 1080, true, 18);
+            Rasterizer r = new Rasterizer(1920, 1080, 18, false);
 
             //r.DrawLine(p1: new(0,0), p2: new(2, 0), c: System.Drawing.Color.Red, thickness: 1);
             //r.DrawLine(p1: new(0,0), p2: new(r.width - 1, r.height - 1), c: System.Drawing.Color.FromArgb(226, 7, 255), thickness: 10);
@@ -26,7 +26,7 @@ namespace RasterizerTest
             //r.DrawCircle(new(0,0), 0.5, System.Drawing.Color.White, true);
             //r.DrawLine(new(-1,-1), new(1,1), System.Drawing.Color.White);
 
-            //r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
+            //r.DrawRectangle(new(-1+18, 1), new(1+18, -1), System.Drawing.Color.White, true);
             //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White);
 
             //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White);
