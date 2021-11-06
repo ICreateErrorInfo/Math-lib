@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RasterizerTest"
         mc:Ignorable="d"
+        ResizeMode="CanResizeWithGrip"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Image x:Name="Display" />
