@@ -8,26 +8,27 @@ namespace Math_lib
 {
     public class Rasterizer
     {
-        private DirectBitmap _bmp = null;
-        private bool CooMi;
-        private double scale;
-        public int width;
-        public int height;
+        private readonly DirectBitmap _bmp;
+        private readonly bool         _cooMi;
+        private readonly double       _scale;
+        
 
-        public Rasterizer(int width, int height, int scale = 1, bool CooMi = true)
+        public Rasterizer(int width, int height, int scale = 1, bool cooMi = true)
         {
             _bmp = new DirectBitmap(width, height);
-            this.width = width;
-            this.height = height;
-            this.CooMi = CooMi;
-            this.scale = (double)1 / scale;
+
+            _cooMi = cooMi;
+            _scale = (double)1 / scale;
 
             DrawCoo();
-        }                                             
+        }
+
+        public int Width  => _bmp.Width;
+        public int Height => _bmp.Height;
 
         private void DrawCoo()
         {
-            double scale = 1 / this.scale;
+            double scale = 1 / _scale;
             double arrowLength = 0.1 / 2 / 6 * scale;
             double arrowHeight = 0.07 / 2 / 6 * scale;
             double thickness = 0.005 / 2 / 3 * scale;
@@ -37,10 +38,10 @@ namespace Math_lib
             System.Drawing.Color cL = System.Drawing.Color.FromArgb(120, 120, 120);
             for (int i = 1; i < scale; i++)
             {
-                DrawLine(new(i, (double)-scale / ((double)width / height)), new(i, (double)scale / ((double)width / height)), cL);
-                DrawLine(new(-i, (double)-scale / ((double)width / height)), new(-i, (double)scale / ((double)width / height)), cL);
+                DrawLine(new(i, (double)-scale / ((double)Width / Height)), new(i, (double)scale / ((double)Width / Height)), cL);
+                DrawLine(new(-i, (double)-scale / ((double)Width / Height)), new(-i, (double)scale / ((double)Width / Height)), cL);
             }
-            for (int i = 1; i < (double)scale / ((double)width / height); i++)
+            for (int i = 1; i < (double)scale / ((double)Width / Height); i++)
             {
                 DrawLine(new(-scale, i), new(scale, i), cL);
                 DrawLine(new(-scale, -i), new(scale, -i), cL);
@@ -55,12 +56,12 @@ namespace Math_lib
             Point2D p1 = new Point2D(-scale, 0);
             DrawLine(new(0, 0), p1, c, thickness);
 
-            Point2D p2 = new Point2D(0, (double)scale / ((double)width / height));
+            Point2D p2 = new Point2D(0, (double)scale / ((double)Width / Height));
             DrawLine(new(0, 0), p2, c, thickness);
 
-            Point2D p3 = new Point2D(0, (double)-scale / ((double)width / height));
+            Point2D p3 = new Point2D(0, (double)-scale / ((double)Width / Height));
             DrawLine(new(0, 0), p3, c, thickness);
-            if (CooMi)
+            if (_cooMi)
             {
                 DrawLine(p2, new(p2.X + arrowHeight, p2.Y - arrowLength), c, arrowThickness);
                 DrawLine(p2, new(p2.X - arrowHeight, p2.Y - arrowLength), c, arrowThickness);
@@ -106,13 +107,13 @@ namespace Math_lib
                 {
                     ynew = 0;
                 }else
-                if (x0 > width - 1)
+                if (x0 > Width - 1)
                 {
-                    xnew = width - 1;
+                    xnew = Width - 1;
                 }else
-                if (y0 > height - 1)
+                if (y0 > Height - 1)
                 {
-                    ynew = height - 1;
+                    ynew = Height - 1;
                 }
                 else
                 {
@@ -186,13 +187,13 @@ namespace Math_lib
                 {
                     ynew = 0;
                 }else
-                if (x0 > width - 1)
+                if (x0 > Width - 1)
                 {
-                    xnew = width - 1;
+                    xnew = Width - 1;
                 }else
-                if (y0 > height - 1)
+                if (y0 > Height - 1)
                 {
-                    ynew = height - 1;
+                    ynew = Height - 1;
                 }
                 else
                 {
@@ -280,7 +281,7 @@ namespace Math_lib
         {
             int radiusInt;
 
-            radiusInt = (int)ConvertDouble(radius, width);
+            radiusInt = (int)ConvertDouble(radius, Width);
             p1 = ConvertToCoo(p1);
 
             List<Point2D> points = new List<Point2D>();
@@ -293,17 +294,17 @@ namespace Math_lib
             int x = 0;
             int y = radiusInt;
 
-            _bmp.SetPixel(Math.Clamp(x0, 0, width - 1),Math.Clamp(y0 + radiusInt, 0, height - 1), c);
-            _bmp.SetPixel(Math.Clamp(x0, 0, width - 1), Math.Clamp(y0 - radiusInt, 0, height - 1), c);
-            _bmp.SetPixel(Math.Clamp(x0 + radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1), c);
-            _bmp.SetPixel(Math.Clamp(x0 - radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0, 0, Width - 1),Math.Clamp(y0 + radiusInt, 0, Height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0, 0, Width - 1), Math.Clamp(y0 - radiusInt, 0, Height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0 + radiusInt, 0, Width - 1), Math.Clamp(y0, 0, Height - 1), c);
+            _bmp.SetPixel(Math.Clamp(x0 - radiusInt, 0, Width - 1), Math.Clamp(y0, 0, Height - 1), c);
 
             if (fill)
             {
-                points.Add(new(Math.Clamp(x0, 0, width - 1),Math.Clamp(y0 + radiusInt, 0, height - 1)));
-                points.Add(new(Math.Clamp(x0, 0, width - 1), Math.Clamp(y0 - radiusInt, 0, height - 1)));
-                points.Add(new(Math.Clamp(x0 + radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1)));
-                points.Add(new(Math.Clamp(x0 - radiusInt, 0, width - 1), Math.Clamp(y0, 0, height - 1)));
+                points.Add(new(Math.Clamp(x0, 0, Width - 1),Math.Clamp(y0 + radiusInt, 0, Height - 1)));
+                points.Add(new(Math.Clamp(x0, 0, Width - 1), Math.Clamp(y0 - radiusInt, 0, Height - 1)));
+                points.Add(new(Math.Clamp(x0 + radiusInt, 0, Width - 1), Math.Clamp(y0, 0, Height - 1)));
+                points.Add(new(Math.Clamp(x0 - radiusInt, 0, Width - 1), Math.Clamp(y0, 0, Height - 1)));
             }
 
             while (x < y)
@@ -318,30 +319,30 @@ namespace Math_lib
                 ddfX += 2;
                 f += ddfX + 1;
 
-                _bmp.SetPixel(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + x, 0, Width - 1), Math.Clamp(y0 + y, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - x, 0, Width - 1), Math.Clamp(y0 + y, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + x, 0, Width - 1), Math.Clamp(y0 - y, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - x, 0, Width - 1), Math.Clamp(y0 - y, 0, Height - 1), c);
 
                 if (fill)
                 {
-                    points.Add(new(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 + y, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 + x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 - x, 0, width - 1), Math.Clamp(y0 - y, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 + x, 0, Width - 1), Math.Clamp(y0 + y, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 - x, 0, Width - 1), Math.Clamp(y0 + y, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 + x, 0, Width - 1), Math.Clamp(y0 - y, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 - x, 0, Width - 1), Math.Clamp(y0 - y, 0, Height - 1)));
                 }
 
-                _bmp.SetPixel(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1), c);
-                _bmp.SetPixel(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + y, 0, Width - 1), Math.Clamp(y0 + x, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - y, 0, Width - 1), Math.Clamp(y0 + x, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 + y, 0, Width - 1), Math.Clamp(y0 - x, 0, Height - 1), c);
+                _bmp.SetPixel(Math.Clamp(x0 - y, 0, Width - 1), Math.Clamp(y0 - x, 0, Height - 1), c);
 
                 if (fill)
                 {
-                    points.Add(new(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 + x, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 + y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1)));
-                    points.Add(new(Math.Clamp(x0 - y, 0, width - 1), Math.Clamp(y0 - x, 0, height - 1)));
+                    points.Add(new(Math.Clamp(x0 + y, 0, Width - 1), Math.Clamp(y0 + x, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 - y, 0, Width - 1), Math.Clamp(y0 + x, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 + y, 0, Width - 1), Math.Clamp(y0 - x, 0, Height - 1)));
+                    points.Add(new(Math.Clamp(x0 - y, 0, Width - 1), Math.Clamp(y0 - x, 0, Height - 1)));
                 }
             }
 
@@ -396,26 +397,26 @@ namespace Math_lib
         private Point2D ConvertToCoo(Point2D p)
         {
             p = new Point2D(p.X, -p.Y);
-            double aspectRatio = (double)width / height;
-            if(CooMi == true)
+            double aspectRatio = (double)Width / Height;
+            if(_cooMi)
             {
-                return new Point2D(ConvertDouble(p.X, width) + width / 2, ConvertDouble(p.Y, (int)(height * aspectRatio)) + height / 2);
+                return new Point2D(ConvertDouble(p.X, Width) + Width / 2, ConvertDouble(p.Y, (int)(Height * aspectRatio)) + Height / 2);
             }
             else
             {
-                return new Point2D(ConvertDouble(p.X, width), ConvertDouble(p.Y, (int)(height * aspectRatio)));
+                return new Point2D(ConvertDouble(p.X, Width), ConvertDouble(p.Y, (int)(Height * aspectRatio)));
             }
 
         }
         private double ConvertDouble(double d, int l)
         {
-            if (CooMi)
+            if (_cooMi)
             {
-                return d * l * scale / 2;
+                return d * l * _scale / 2;
             }
             else
             {
-                return d * l * scale;
+                return d * l * _scale;
             }
         }
         private ImageSource ToImageSource(DirectBitmap bitmap)

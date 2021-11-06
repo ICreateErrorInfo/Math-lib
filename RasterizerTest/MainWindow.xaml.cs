@@ -18,8 +18,11 @@ namespace RasterizerTest
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
         {
             base.OnRenderSizeChanged(sizeInfo);
-             
-            var r = new Rasterizer(width: (int)ActualWidth, height: (int)ActualHeight, scale: 18, CooMi: true);
+            
+            var r = new Rasterizer(width: (int)sizeInfo.NewSize.Width,
+                                   height: (int)sizeInfo.NewSize.Height, 
+                                   scale: 18,
+                                   cooMi: true);
 
             //r.DrawLine(p1: new(0,0), p2: new(2, 0), c: System.Drawing.Color.Red, thickness: 1);
             //r.DrawLine(p1: new(0,0), p2: new(r.width - 1, r.height - 1), c: System.Drawing.Color.FromArgb(226, 7, 255), thickness: 10);
