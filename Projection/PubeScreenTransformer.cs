@@ -1,9 +1,4 @@
 ﻿using Math_lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Projection
 {
@@ -11,13 +6,13 @@ namespace Projection
     {
         public PubeScreenTransformer()
         {
-            xFactor = Options.screenWidth / 2;
-            yFactor = Options.screenHeight / 2;
+            xFactor = Options.ScreenWidth / 2;
+            yFactor = Options.ScreenHeight / 2;
         }
 
         public Vertex Transform(Vertex v)
         {
-            Vertex v1 = new Vertex(Matrix4x4.Projection(Options.screenWidth, Options.screenHeight, Options.Fov, Options.Nplane, Options.Fplane) * v.pos);
+            Vertex v1 = new Vertex(Matrix4x4.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane) * v.pos);
 
             return new(new Point3D((v1.pos.X + 1) * xFactor, (-v1.pos.Y + 1) * yFactor, v1.pos.Z), v.t, v.col, v.n);
         }

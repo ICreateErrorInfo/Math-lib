@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Math_lib
+﻿namespace Math_lib
 {
     public class Matrix
     {

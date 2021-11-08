@@ -1,7 +1,6 @@
 ﻿using Math_lib;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Projection
@@ -78,11 +77,11 @@ namespace Projection
                         //Clipping top
                         0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
                         //Clipping bottom
-                        1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.screenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
+                        1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.ScreenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
                         //Clipping left
                         2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
                         //Clipping Right
-                        3 => Clipping.TriangleClipAgainstPlane(new(x: Options.screenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
+                        3 => Clipping.TriangleClipAgainstPlane(new(x: Options.ScreenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
                         _ => Enumerable.Empty<Triangle3D>()
                     };
 
@@ -173,7 +172,7 @@ namespace Projection
             var itEdge0 = it0;
 
             int yStart = Math.Max((int)Math.Ceiling(it0.pos.Y - 0.5),0);
-            int yEnd = Math.Min((int)Math.Ceiling(it2.pos.Y - 0.5), Options.screenHeight - 1);
+            int yEnd = Math.Min((int)Math.Ceiling(it2.pos.Y - 0.5), Options.ScreenHeight - 1);
 
             Vertex zw = new Vertex((yStart + 0.5 - it0.pos.Y));
             if(zw.pos == 0) { zw = new Vertex(zw.pos + 0.01, zw.t, zw.col , zw.n); }
@@ -213,9 +212,9 @@ namespace Projection
         }
 
         private Effect _effect;
-        public DirectBitmap Bmp = new DirectBitmap(Options.screenWidth, Options.screenHeight);
+        public DirectBitmap Bmp = new DirectBitmap(Options.ScreenWidth, Options.ScreenHeight);
 
-        private ZBuffer zb = new ZBuffer(Options.screenWidth, Options.screenHeight);
+        private ZBuffer zb = new ZBuffer(Options.ScreenWidth, Options.ScreenHeight);
         private PubeScreenTransformer pst = new PubeScreenTransformer();
     }
 }
