@@ -355,6 +355,13 @@ namespace Math_lib
                 Fill(p, c);
             }
         }
+        public void DrawPoint(Point2D p, System.Drawing.Color c)
+        {
+            Point2D p1 = new Point2D(p.X + 0.5, p.Y + 0.5);
+            Point2D p2 = new Point2D(p.X - 0.5, p.Y - 0.5);
+
+            DrawRectangle(p1, p2, c, true);
+        }
 
         public ImageSource GetSource()
         {

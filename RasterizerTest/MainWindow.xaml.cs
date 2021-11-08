@@ -41,6 +41,8 @@ namespace RasterizerTest
 
             //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White);
 
+            //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
+
             Display.Source = r.GetSource();
         }
 
