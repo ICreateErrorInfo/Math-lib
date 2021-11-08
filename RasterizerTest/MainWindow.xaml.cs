@@ -18,9 +18,9 @@ namespace RasterizerTest
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
         {
             base.OnRenderSizeChanged(sizeInfo);
-            
+
             var r = new Rasterizer(width: (int)sizeInfo.NewSize.Width,
-                                   height: (int)sizeInfo.NewSize.Height, 
+                                   height: (int)sizeInfo.NewSize.Height,
                                    scale: 18,
                                    cooMi: true);
 
@@ -31,13 +31,13 @@ namespace RasterizerTest
 
             // r.DrawCircle(p1: new(r.width/2.0, r.height/2.0), radius: 30, c: System.Drawing.Color.White, fill: true);
             //
-            //r.DrawCircle(p1: new(0,0), radius: 30, c: System.Drawing.Color.White, fill: true);
+            //r.DrawCircle(p1: new(0,0), radius: 1, c: System.Drawing.Color.White, fill: true);
 
             //r.DrawCircle(new(0,0), 1, System.Drawing.Color.White, true);
             //r.DrawLine(new(-1,-1), new(1,1), System.Drawing.Color.White);
 
-            //r.DrawRectangle(new(-1+18, 1), new(1+18, -1), System.Drawing.Color.White, true);
-            //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White);
+            //r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
+            //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White, 1);
 
             //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White);
 
