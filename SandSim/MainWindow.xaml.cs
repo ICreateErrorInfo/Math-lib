@@ -53,15 +53,25 @@ namespace SandSim
 
             Display.Source = r.GetSource();
         }
-        private void OnRenderSzene(object? sender, EventArgs e)
-        {
+        private void OnRenderSzene(object? sender, EventArgs e) {
+          
+            r.Clear();
             s.UpdateFrame();
 
             for (int y = s.array.GetLength(0) - 1; y >= 0; y--)
             {
-                for (int x = 0; x < s.array.GetLength(1); x++)
+                for (int x = 0; x < s.array.GetLength(1); x++) 
                 {
-                    r.DrawPoint(new Point2D(x + .5, -(y - (scale - 1)) + .5), s.array[x, y].color);
+                    
+                    var color = s.array[x, y].color;
+                   
+                    if (color == System.Drawing.Color.Black) 
+                    {
+                        continue;
+                    }
+
+                    r.DrawPoint(new Point2D(x + .5, -(y - (scale - 1)) + .5), color);
+
                 }
             }
 

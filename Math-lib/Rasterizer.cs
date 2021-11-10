@@ -27,6 +27,8 @@ namespace Math_lib
             _showCoo = showCoo;
         }
 
+        public void Clear() => _drawingObjs.Clear();
+
         public void UpdateScale(int width, int height)
         {
             Width = width;
