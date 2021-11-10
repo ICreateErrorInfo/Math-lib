@@ -115,6 +115,13 @@ namespace Math_lib
 
             _drawingObjs.Add(new Rectangle(p1, p2, p3, p4, c, fill));
         }
+        public void DrawPoint(Point2D p, System.Drawing.Color c)
+        {
+            Point2D p1 = new Point2D(p.X + 0.5, p.Y + 0.5);
+            Point2D p2 = new Point2D(p.X - 0.5, p.Y - 0.5);
+
+            DrawRectangle(p1, p2, c, true);
+        }
 
         public void DrawCircle(Point2D p1, double radius, System.Drawing.Color c, bool fill = false)
         {
@@ -159,11 +166,11 @@ namespace Math_lib
         }
 
         private Point2D ConvertToCoo(Point2D p)
-        {
-            p = new Point2D(p.X, -p.Y);
+        {         
             double aspectRatio = (double)Width / Height;
             if (_cooMi)
             {
+                p = new Point2D(p.X, -p.Y);
                 return new Point2D(x: ConvertDouble(p.X, Width) + Width / 2.0,
                                    y: ConvertDouble(p.Y, (int)(Height * aspectRatio)) + Height / 2.0);
             }

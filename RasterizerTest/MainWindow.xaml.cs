@@ -17,7 +17,7 @@ namespace RasterizerTest
             r = new Rasterizer(width: 1,
                                height: 1,
                                scale: 8,
-                               cooMi: true);
+                               cooMi: false);
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
@@ -41,7 +41,9 @@ namespace RasterizerTest
 
             //r.DrawEllipse(new(0,0), 19, 2, System.Drawing.Color.White, true);
 
-            r.DrawQuadBezier(new(0,0), new(0, 2), new(2,2), System.Drawing.Color.White);
+            //r.DrawQuadBezier(new(0,0), new(0, 2), new(2,2), System.Drawing.Color.White);
+
+            r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
 
             Display.Source = r.GetSource();
         }

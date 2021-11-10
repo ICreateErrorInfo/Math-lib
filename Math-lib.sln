@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31903.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Math-lib", "Math-lib\Math-lib.csproj", "{E168EC8C-D8B6-4A0C-9B0E-330B6C0046E2}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaytracingInOneWeek", "RaytracingInOneWeek\RaytracingInOneWeek.csproj", "{6A59690D-B3C5-48CE-A463-5FD5DE4882AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RasterizerTest", "RasterizerTest\RasterizerTest.csproj", "{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandSim", "SandSim\SandSim.csproj", "{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
