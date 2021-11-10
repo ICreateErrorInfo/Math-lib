@@ -21,7 +21,7 @@ namespace RasterizerTest
 
             var r = new Rasterizer(width: (int)sizeInfo.NewSize.Width,
                                    height: (int)sizeInfo.NewSize.Height,
-                                   scale: 18,
+                                   scale: 8,
                                    cooMi: true);
 
             //r.DrawLine(p1: new(0,0), p2: new(2, 0), c: System.Drawing.Color.Red, thickness: 1);
@@ -38,7 +38,9 @@ namespace RasterizerTest
 
             //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White); //Todo
 
-            //r.DrawElipse(new(0,0), 19, 2, System.Drawing.Color.White, true);
+            //r.DrawEllipse(new(0,0), 19, 2, System.Drawing.Color.White, true);
+
+            r.DrawQuadBezier(new(0,0), new(0, 2), new(2,2), System.Drawing.Color.White);
 
             Display.Source = r.GetSource();
         }

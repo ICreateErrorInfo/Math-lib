@@ -130,6 +130,15 @@ namespace Math_lib
             _drawingObjs.Add(new Ellipse(m, a, b, c, fill));
         }
 
+        public void DrawQuadBezier(Point2D p, Point2D p1, Point2D p2, System.Drawing.Color c)
+        {
+            p = ConvertToCoo(p);
+            p1 = ConvertToCoo(p1);
+            p2 = ConvertToCoo(p2);
+
+            _drawingObjs.Add(new QuadBezier(p, p1, p2, c));
+        }
+
         public ImageSource GetSource()
         {
             DirectBitmap dBmp = new DirectBitmap(Width, Height);
