@@ -15,6 +15,7 @@ namespace Math_lib
         public           int              Height;
         private readonly bool             _cooMi;
         private readonly double           _scale;
+        private readonly bool _showCoo;
 
         public Rasterizer(int width, int height, int scale = 1, bool cooMi = true, bool showCoo = true)
         {
@@ -23,13 +24,14 @@ namespace Math_lib
             _cooMi = cooMi;
             _scale = (double)1 / scale;
             _drawingObjs = new List<DrawingObject>();
-
-            if (showCoo)
-            {
-                DrawCoo();
-            }
+            _showCoo = showCoo;
         }
 
+        public void UpdateScale(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
         private void DrawCoo()
         {
             double scale = 1 / _scale;
@@ -142,11 +144,17 @@ namespace Math_lib
         public ImageSource GetSource()
         {
             DirectBitmap dBmp = new DirectBitmap(Width, Height);
-            foreach (DrawingObject element in _drawingObjs)
+            if (_showCoo)
             {
-                dBmp = element.Draw(dBmp);
+                DrawCoo();
             }
 
+            for(int i = _drawingObjs.Count - 1; i >= 0; i--)
+            {
+                dBmp = _drawingObjs[i].Draw(dBmp);
+            }
+
+            _drawingObjs.Clear();
             return ToImageSource(dBmp);
         }
 
