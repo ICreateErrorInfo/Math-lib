@@ -121,6 +121,14 @@ namespace Math_lib
 
             _drawingObjs.Add(new Circle(p1, radius, c, fill));
         }
+        public void DrawEllipse(Point2D m, int a, int b, System.Drawing.Color c, bool fill = false)
+        {
+            m = ConvertToCoo(m);
+            a = (int)ConvertDouble(a, Width);
+            b = (int)ConvertDouble(b, Width);
+
+            _drawingObjs.Add(new Ellipse(m, a, b, c, fill));
+        }
 
         public ImageSource GetSource()
         {

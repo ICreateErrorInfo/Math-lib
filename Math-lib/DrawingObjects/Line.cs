@@ -187,6 +187,11 @@ namespace Math_lib.DrawingObjects {
 
             return points;
         }
+
+        public override string ToString()
+        {
+            return $"{Point2D.Floor(_p1).ToString()} | {Point2D.Floor(_p2).ToString()} | {_thickness} | {_color.ToString()}";
+        }
     }
 
 }

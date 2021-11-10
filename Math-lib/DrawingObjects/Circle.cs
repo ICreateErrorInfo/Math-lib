@@ -129,6 +129,11 @@ namespace Math_lib.DrawingObjects {
 
             return bmp;
         }
+
+        public override string ToString()
+        {
+            return $"{Point2D.Floor(_p1).ToString()} | {_radius} | {_color.ToString()}";
+        }
     }
 
 }
