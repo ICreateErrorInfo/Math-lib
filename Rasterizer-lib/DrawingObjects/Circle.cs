@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Math_lib;
 
-namespace Math_lib.DrawingObjects {
+namespace Rasterizer_lib.DrawingObjects {
 
     public class Circle : DrawingObject
     {

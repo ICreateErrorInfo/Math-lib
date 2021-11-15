@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Math_lib;
 
-namespace Math_lib.DrawingObjects {
+namespace Rasterizer_lib.DrawingObjects
+{
 
     public class Rectangle : DrawingObject
     {
@@ -38,8 +40,18 @@ namespace Math_lib.DrawingObjects {
 
         public override DirectBitmap Draw(DirectBitmap bmp)
         {
-            bmp = new Triangle(_p1, _p2, _p3, _color).Draw(bmp);
-            bmp = new Triangle(_p3, _p4, _p1, _color).Draw(bmp);
+            if (_fill)
+            {
+                bmp = new Triangle(_p1, _p2, _p3, _color).Draw(bmp);
+                bmp = new Triangle(_p3, _p4, _p1, _color).Draw(bmp);
+            }
+            else
+            {
+                bmp = new Line(_p1, _p2, _color).Draw(bmp);
+                bmp = new Line(_p2, _p3, _color).Draw(bmp);
+                bmp = new Line(_p3, _p4, _color).Draw(bmp);
+                bmp = new Line(_p4, _p1, _color).Draw(bmp);
+            }
 
             return bmp;
         }

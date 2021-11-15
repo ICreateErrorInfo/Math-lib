@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Rasterizer_lib.DrawingObjects;
+using Math_lib;
 
-using Math_lib.DrawingObjects;
-
-namespace Math_lib
+namespace Rasterizer_lib
 {
 
     public class Rasterizer
@@ -29,7 +29,7 @@ namespace Math_lib
 
         public void Clear() => _drawingObjs.Clear();
 
-        public void UpdateScale(int width, int height)
+        public void UpdateSize(int width, int height)
         {
             Width = width;
             Height = height;

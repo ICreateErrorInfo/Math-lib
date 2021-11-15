@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RasterizerTest", "Rasterize
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandSim", "SandSim\SandSim.csproj", "{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rasterizer-lib", "Rasterizer-lib\Rasterizer-lib.csproj", "{B98CDF66-C010-4460-B2E9-3B31D18C01ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

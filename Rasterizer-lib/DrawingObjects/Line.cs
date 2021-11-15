@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Math_lib;
 
-namespace Math_lib.DrawingObjects {
+namespace Rasterizer_lib.DrawingObjects
+{
 
     public class Line : DrawingObject
     {

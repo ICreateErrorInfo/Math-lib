@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Math_lib;
 
-namespace Math_lib.DrawingObjects
+namespace Rasterizer_lib.DrawingObjects
 {
     public class Ellipse : DrawingObject
     {

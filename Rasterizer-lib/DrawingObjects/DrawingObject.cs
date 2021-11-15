@@ -1,4 +1,7 @@
-﻿namespace Math_lib.DrawingObjects {
+﻿using Math_lib;
+
+namespace Rasterizer_lib.DrawingObjects 
+{
 
     public abstract class DrawingObject
     {

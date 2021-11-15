@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
+    <ProjectReference Include="..\Rasterizer-lib\Rasterizer-lib.csproj" />
   </ItemGroup>
 
 </Project>

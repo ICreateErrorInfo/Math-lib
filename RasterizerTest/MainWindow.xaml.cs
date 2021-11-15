@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Math_lib;
+using Rasterizer_lib;
 
 namespace RasterizerTest
 {
@@ -23,7 +24,7 @@ namespace RasterizerTest
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
         {
             base.OnRenderSizeChanged(sizeInfo);
-            r.UpdateScale((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            r.UpdateSize((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
 
             //r.DrawLine(p1: new(0,0), p2: new(2, 0), c: System.Drawing.Color.Red, thickness: 1);
 

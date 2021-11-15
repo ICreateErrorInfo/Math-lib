@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Math_lib;
+using Rasterizer_lib;
 
 namespace SandSim
 {
