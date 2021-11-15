@@ -15,8 +15,8 @@ namespace RasterizerTest
         public MainWindow()
         {
             InitializeComponent();
-            r = new Rasterizer(width: 1,
-                               height: 1,
+            r = new Rasterizer(width: 100,
+                               height: 100,
                                scale: 8,
                                cooMi: true);
         }
@@ -33,10 +33,10 @@ namespace RasterizerTest
             //r.DrawCircle(new(0,0), 1, System.Drawing.Color.White, true);
             //r.DrawLine(new(-1,-1), new(1,1), System.Drawing.Color.White);
 
-            r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
+            //r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
             //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White, 1);
 
-            //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White);
+            r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White, 0.1);
 
             //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White); //Todo
 

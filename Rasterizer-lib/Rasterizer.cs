@@ -37,10 +37,10 @@ namespace Rasterizer_lib
         private void DrawCoo()
         {
             double scale = 1 / _scale;
-            double arrowLength = 0.1 / 2 / 6 * scale;
-            double arrowHeight = 0.07 / 2 / 6 * scale;
-            double thickness = 0.005 / 2 / 3 * scale;
-            double arrowThickness = 0.005 / 2 / 3 * scale;
+            double arrowLength = 0.1;
+            double arrowHeight = 0.07;
+            double thickness = 0.01;
+            double arrowThickness = 0.01;
             System.Drawing.Color c = System.Drawing.Color.Red;
 
             System.Drawing.Color cL = System.Drawing.Color.FromArgb(120, 120, 120);

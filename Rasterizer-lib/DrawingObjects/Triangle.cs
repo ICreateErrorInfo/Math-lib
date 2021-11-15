@@ -15,6 +15,7 @@ namespace Rasterizer_lib.DrawingObjects
         private System.Drawing.Color _color;
 
         private int _Height;
+        private int _Width;
 
         public Triangle(Point2D p0, Point2D p1, Point2D p2, System.Drawing.Color c)
         {
@@ -27,6 +28,7 @@ namespace Rasterizer_lib.DrawingObjects
         public override DirectBitmap Draw(DirectBitmap bmp)
         {
             _Height = bmp.Height;
+            _Width = bmp.Width;
 
             if (_p1.Y < _p0.Y) { (_p0, _p1) = (_p1, _p0); }
             if (_p2.Y < _p1.Y) { (_p1, _p2) = (_p2, _p1); }
@@ -83,7 +85,13 @@ namespace Rasterizer_lib.DrawingObjects
 
                 for(int x = xStart; x < xEnd; x++)
                 {
-                    bmp.SetPixel(x, y, _color);
+                    if (   x > 0
+                        && x < _Width
+                        && y > 0
+                        && y < _Height)
+                    {
+                        bmp.SetPixel(x, y, _color);
+                    }
                 }
             }
 
@@ -107,7 +115,13 @@ namespace Rasterizer_lib.DrawingObjects
 
                 for (int x = xStart; x < xEnd; x++)
                 {
-                    bmp.SetPixel(x, y, _color);
+                    if (   x > 0
+                        && x < _Width
+                        && y > 0
+                        && y < _Height)
+                    {
+                        bmp.SetPixel(x, y, _color);
+                    }
                 }
             }
 
