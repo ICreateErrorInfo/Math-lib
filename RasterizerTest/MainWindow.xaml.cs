@@ -17,7 +17,7 @@ namespace RasterizerTest
             r = new Rasterizer(width: 1,
                                height: 1,
                                scale: 8,
-                               cooMi: false);
+                               cooMi: true);
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
@@ -32,7 +32,7 @@ namespace RasterizerTest
             //r.DrawCircle(new(0,0), 1, System.Drawing.Color.White, true);
             //r.DrawLine(new(-1,-1), new(1,1), System.Drawing.Color.White);
 
-            //r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
+            r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
             //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White, 1);
 
             //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White);
@@ -43,7 +43,8 @@ namespace RasterizerTest
 
             //r.DrawQuadBezier(new(0,0), new(0, 2), new(2,2), System.Drawing.Color.White);
 
-            r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
+            //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
+            //r.DrawTriangle(new(0,0), new(1,0), new(2,-2), System.Drawing.Color.AliceBlue);
 
             Display.Source = r.GetSource();
         }

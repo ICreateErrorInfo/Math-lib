@@ -150,6 +150,15 @@ namespace Math_lib
             _drawingObjs.Add(new QuadBezier(p, p1, p2, c));
         }
 
+        public void DrawTriangle(Point2D p, Point2D p1, Point2D p2, System.Drawing.Color c)
+        {
+            p = ConvertToCoo(p);
+            p1 = ConvertToCoo(p1);
+            p2 = ConvertToCoo(p2);
+
+            _drawingObjs.Add(new Triangle(p, p1, p2, c));
+        }
+
         public ImageSource GetSource()
         {
             DirectBitmap dBmp = new DirectBitmap(Width, Height);
@@ -158,7 +167,7 @@ namespace Math_lib
                 DrawCoo();
             }
 
-            for(int i = _drawingObjs.Count - 1; i >= 0; i--)
+            for(int i = _drawingObjs.Count -1; i >= 0; i--)
             {
                 dBmp = _drawingObjs[i].Draw(dBmp);
             }
