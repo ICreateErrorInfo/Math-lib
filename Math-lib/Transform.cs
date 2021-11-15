@@ -3,8 +3,8 @@
     public class Transform
     {
         //Properties
-        private Matrix4x4 m {get; init;}
-        private Matrix4x4 mInv {get; init; }
+        public Matrix4x4 m { get; private init;}
+        public Matrix4x4 mInv {get; private init; }
 
 
         //Ctors
@@ -47,14 +47,6 @@
                     m[3,0] == 0 && m[3,1] == 0 && m[3,2] == 0 &&
                     m[3,3] == 1);
         }
-        public Matrix4x4 GetMatrix()
-        {
-            return m;
-        }
-        public Matrix4x4 GetInverseMatrix()
-        {
-            return mInv;
-        }
         public Point3D Trans(Point3D p)
         {
             double x = p.X, y = p.Y, z = p.Z;
@@ -63,8 +55,15 @@
             double yp = m[1,0] * x + m[1,1] * y + m[1,2] * z + m[1,3];
             double zp = m[2,0] * x + m[2,1] * y + m[2,2] * z + m[2,3];
             double wp = m[3,0] * x + m[3,1] * y + m[3,2] * z + m[3,3];
-            if (wp == 1) return new Point3D(xp, yp, zp);
-            else         return new Point3D(xp, yp, zp) / wp;
+
+            if (wp == 1)
+            {
+                return new Point3D(xp, yp, zp);
+            }
+            else
+            {
+                return new Point3D(xp, yp, zp) / wp;
+            }
         }
         public Vector3D Trans(Vector3D v)
         {
@@ -85,6 +84,7 @@
         {
             Point3D o = Trans(r.o);
             Vector3D d = Trans(r.d);
+
             return new Ray(o, d, r.tMax, r.time);
         }
         public RayDifferential Trans(RayDifferential r)
@@ -96,13 +96,13 @@
             ret.ryOrigin = Trans(r.ryOrigin);
             ret.rxDirection = Trans(r.rxDirection);
             ret.ryDirection = Trans(r.ryDirection);
+
             return ret;
         }
         public Bounds3D Trans(Bounds3D b)
         {
-            Transform M = this;
-            Bounds3D ret = new(M.Trans(new Point3D(b.pMin.X, b.pMin.Y, b.pMin.Z)));
-            ret = Bounds3D.Union(ret, M.Trans(new Point3D(b.pMin.X + b.Diagonal().X, b.pMin.Y + b.Diagonal().Y, b.pMin.Z + b.Diagonal().Z)));
+            Bounds3D ret = new(Trans(new Point3D(b.pMin.X, b.pMin.Y, b.pMin.Z)));
+            ret = Bounds3D.Union(ret, Trans(new Point3D(b.pMin.X + b.Diagonal().X, b.pMin.Y + b.Diagonal().Y, b.pMin.Z + b.Diagonal().Z)));
             return ret;
         }
         public bool SwapsHandness()
@@ -112,7 +112,6 @@
                          m[0,2] * (m[1,0] * m[2,1] - m[1,1] * m[2,0]);
             return det < 0;
         }
-
 
 
         //override
@@ -149,6 +148,7 @@
             return true;
         }
 
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
@@ -163,7 +163,6 @@
 
             throw new System.NotImplementedException();
         }
-
         public override int GetHashCode()
         {
             throw new System.NotImplementedException();

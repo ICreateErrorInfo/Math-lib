@@ -1,4 +1,6 @@
-﻿namespace Math_lib
+﻿using Math_lib;
+
+namespace Projection
 {
     public class Triangle3D
     {

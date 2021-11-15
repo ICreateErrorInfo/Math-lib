@@ -36,9 +36,9 @@ namespace RasterizerTest
             //r.DrawRectangle(new(-1, 1), new(1, -1), System.Drawing.Color.White, true);
             //r.DrawLine(new(-1, 1), new(1, -1), System.Drawing.Color.White, 1);
 
-            r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White, 0.1);
+            //r.DrawLine(new(0, 0), new(80, 8), System.Drawing.Color.White, 0.1);
 
-            //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White); //Todo
+            //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
 
             //r.DrawEllipse(new(0,0), 19, 2, System.Drawing.Color.White, true);
 

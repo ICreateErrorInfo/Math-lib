@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+
 // ReSharper disable CompareOfFloatsByEqualityOperator
 namespace Math_lib
 {
@@ -15,12 +16,16 @@ namespace Math_lib
         //Ctors
         public Vector3D(double x, double y, double z)
         {
+            Debug.Assert(!double.IsNaN(x) || !double.IsNaN(y) || !double.IsNaN(z));
+
             X = x;
             Y = y;
             Z = z;
         }
         public Vector3D(double i)
         {
+            Debug.Assert(!double.IsNaN(i));
+
             X = Y = Z = i;
         }
         public Vector3D(Vector3D v)
@@ -36,7 +41,7 @@ namespace Math_lib
         //Mehods
         public static bool IsNaN(Vector3D v)
         {
-            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
+            if (!double.IsNaN(v.X) || !double.IsNaN(v.Y) || !double.IsNaN(v.Z))
             {
                 return false;
             }
@@ -48,24 +53,32 @@ namespace Math_lib
         }
         public double GetLengthSqrt()
         {
+            Debug.Assert(!double.IsNaN(X));
+            Debug.Assert(!double.IsNaN(Y));
+            Debug.Assert(!double.IsNaN(Z));
+
             return X * X + Y * Y + Z * Z;
         }
         public static Vector3D Normalize(Vector3D v)
         {
+            Debug.Assert(IsNaN(v));
+
             return v / v.GetLength();
         }
         public static double Dot(Vector3D v, Vector3D v1)
         {
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(IsNaN(v1));
+
             return v.X * v1.X
                  + v.Y * v1.Y
                  + v.Z * v1.Z;
         }
-        public static double AbsDot(Vector3D v, Vector3D v1)
-        {
-            return Math.Abs(Dot(v, v1));
-        }
         public static Vector3D Cross(Vector3D v, Vector3D v1)
         {
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(IsNaN(v1));
+
             return new((v.Y * v1.Z) - (v.Z * v1.Y),
                        (v.Z * v1.X) - (v.X * v1.Z),
                        (v.X * v1.Y) - (v.Y * v1.X));
@@ -124,11 +137,16 @@ namespace Math_lib
         }
         public static int MaxDimension(Vector3D v)
         {
+            Debug.Assert(IsNaN(v));
+
             return (v.X > v.Y) ? ((v.X > v.Z) ? 0 : 2) : ((v.Y > v.Z) ? 1 : 2);
         }
         public static Vector3D Permute(Vector3D p, int x, int y, int z)
         {
             Debug.Assert(IsNaN(p));
+            Debug.Assert(!double.IsNaN(x));
+            Debug.Assert(!double.IsNaN(y));
+            Debug.Assert(!double.IsNaN(z));
 
             return new Vector3D(p[x], p[y], p[z]);
         }
@@ -140,15 +158,22 @@ namespace Math_lib
                        Math.Sqrt(v.Y),
                        Math.Sqrt(v.Z));
         }
-        public static Vector3D Reflect(Vector3D d, Vector3D n)
+        public static Vector3D Reflect(Vector3D v, Vector3D v1)
         {
-            return d - 2 * Dot(d, n) * n;
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(IsNaN(v1));
+
+            return v - 2 * Dot(v, v1) * v1;
         }
-        public static Vector3D Refract(Vector3D i, Vector3D n, double eta)
+        public static Vector3D Refract(Vector3D v, Vector3D v1, double eta)
         {
-            double cosi = Dot(-i, n);
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(IsNaN(v1));
+            Debug.Assert(!double.IsNaN(eta));
+
+            double cosi = Dot(-v, v1);
             double cost2 = 1 - eta * eta * (1 - cosi * cosi);
-            Vector3D t = eta * i + (eta * cosi - Math.Sqrt(Math.Abs(cost2)) * n);
+            Vector3D t = eta * v + (eta * cosi - Math.Sqrt(Math.Abs(cost2)) * v1);
             if (cost2 > 0)
             {
                 return t * 1;
@@ -166,15 +191,11 @@ namespace Math_lib
 
             return new(x, y, z);
         }
-        public Vector3D GetSaturated()
-        {
-            Vector3D temp = this;
-            temp.Saturate();
-            return temp;
-        }
         public Color ToColor(int samplesPerPixel = 1)
         {
-            if(this <= 255)
+            Debug.Assert(!double.IsNaN(samplesPerPixel));
+
+            if (this <= 255)
             {
                 byte max = byte.MaxValue;
                 double r = X;
@@ -192,6 +213,9 @@ namespace Math_lib
         }
         public static Vector3D Random(int min, int max)
         {
+            Debug.Assert(!double.IsNaN(min));
+            Debug.Assert(!double.IsNaN(max));
+
             Random r = new Random();
             return new Vector3D(r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min);
         }
@@ -221,21 +245,23 @@ namespace Math_lib
                        v.Y + v1.Y,
                        v.Z + v1.Z);
         }
-        public static Vector3D operator +(Vector3D v, double v1)
+        public static Vector3D operator +(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
 
-            return new(v.X + v1,
-                       v.Y + v1,
-                       v.Z + v1);
+            return new(v.X + d,
+                       v.Y + d,
+                       v.Z + d);
         }
-        public static Vector3D operator +(double v1, Vector3D v)
+        public static Vector3D operator +(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
 
-            return new(v.X + v1,
-                       v.Y + v1,
-                       v.Z + v1);
+            return new(v.X + d,
+                       v.Y + d,
+                       v.Z + d);
         }
         public static Vector3D operator +(Vector3D v, Point3D p)
         {
@@ -247,6 +273,7 @@ namespace Math_lib
         public static Vector3D operator +(Vector3D v)
         {
             Debug.Assert(IsNaN(v));
+
             return new(+v.X, +v.Y, +v.Z);
         }
 
@@ -260,19 +287,23 @@ namespace Math_lib
                        v.Y - v1.Y,
                        v.Z - v1.Z);
         }
-        public static Vector3D operator -(Vector3D v, double v1)
+        public static Vector3D operator -(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            return new(v.X - v1,
-                       v.Y - v1,
-                       v.Z - v1);
+            Debug.Assert(!double.IsNaN(d));
+
+            return new(v.X - d,
+                       v.Y - d,
+                       v.Z - d);
         }
-        public static Vector3D operator -(double v1, Vector3D v)
+        public static Vector3D operator -(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
-            return new(v.X - v1,
-                       v.Y - v1,
-                       v.Z - v1);
+            Debug.Assert(!double.IsNaN(d));
+
+            return new(v.X - d,
+                       v.Y - d,
+                       v.Z - d);
         }
         public static Vector3D operator -(Vector3D v, Point3D p)
         {
@@ -284,6 +315,7 @@ namespace Math_lib
         public static Vector3D operator -(Vector3D v)
         {
             Debug.Assert(IsNaN(v));
+
             return new(-v.X, -v.Y, -v.Z);
         }
 
@@ -297,19 +329,23 @@ namespace Math_lib
                        v.Y * v1.Y,
                        v.Z * v1.Z);
         }
-        public static Vector3D operator *(Vector3D v, double v1)
+        public static Vector3D operator *(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            return new(v.X * v1,
-                       v.Y * v1,
-                       v.Z * v1);
+            Debug.Assert(!double.IsNaN(d));
+
+            return new(v.X * d,
+                       v.Y * d,
+                       v.Z * d);
         }
-        public static Vector3D operator *(double v1, Vector3D v)
+        public static Vector3D operator *(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
-            return new(v.X * v1,
-                       v.Y * v1,
-                       v.Z * v1);
+            Debug.Assert(!double.IsNaN(d));
+
+            return new(v.X * d,
+                       v.Y * d,
+                       v.Z * d);
         }
         public static Vector3D operator *(Vector3D v, Point3D p)
         {
@@ -330,25 +366,27 @@ namespace Math_lib
                        v.Y / v1.Y,
                        v.Z / v1.Z);
         }
-        public static Vector3D operator /(Vector3D v, double v1)
+        public static Vector3D operator /(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            Debug.Assert(v1 != 0);
+            Debug.Assert(!double.IsNaN(d));
+            Debug.Assert(d != 0);
 
-            double inv = (double)1 / v1;
+            double inv = (double)1 / d;
 
             return new(v.X * inv,
                        v.Y * inv,
                        v.Z * inv);
         }
-        public static Vector3D operator /(double v1, Vector3D v)
+        public static Vector3D operator /(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
             Debug.Assert(v.X != 0 || v.Y != 0 || v.Z != 0);
 
-            return new(v1 / v.X,
-                       v1 / v.Y,
-                       v1 / v.Z);
+            return new(d / v.X,
+                       d / v.Y,
+                       d / v.Z);
         }
         public static Vector3D operator /(Vector3D v, Point3D p)
         {
@@ -371,19 +409,23 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator >(Vector3D v, double v1)
+        public static bool operator >(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X > v1 && v.Y > v1 && v.Z > v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v.X > d && v.Y > d && v.Z > d)
             {
                 return true;
             }
             return false;
         }
-        public static bool operator >(double v, Vector3D v1)
+        public static bool operator >(double d, Vector3D v)
         {
-            Debug.Assert(IsNaN(v1));
-            if (v > v1.X && v > v1.Y && v > v1.Z)
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
+
+            if (d > v.X && d > v.Y && d > v.Z)
             {
                 return true;
             }
@@ -396,16 +438,18 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v.X < v1.X && v.Y < v1.Y && v.Z < v1.Z)
+            if (v !> v1)
             {
                 return true;
             }
             return false;
         }
-        public static bool operator <(Vector3D v, double v1)
+        public static bool operator <(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X < v1 && v.Y < v1 && v.Z < v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v !> d)
             {
                 return true;
             }
@@ -414,7 +458,9 @@ namespace Math_lib
         public static bool operator <(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
-            if (d < v.X && d < v.Y && d < v.Z)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (d !> v)
             {
                 return true;
             }
@@ -433,10 +479,12 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator ==(Vector3D v, double v1)
+        public static bool operator ==(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X == v1 && v.Y == v1 && v.Z == v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v.X == d && v.Y == d && v.Z == d)
             {
                 return true;
             }
@@ -445,6 +493,8 @@ namespace Math_lib
         public static bool operator ==(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
+
             if (d == v.X && d == v.Y && d == v.Z)
             {
                 return true;
@@ -458,16 +508,18 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v.X == v1.X && v.Y == v1.Y && v.Z == v1.Z)
+            if (v == v1)
             {
                 return false;
             }
             return true;
         }
-        public static bool operator !=(Vector3D v, double v1)
+        public static bool operator !=(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X == v1 && v.Y == v1 && v.Z == v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v == d)
             {
                 return false;
             }
@@ -476,7 +528,9 @@ namespace Math_lib
         public static bool operator !=(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
-            if (d == v.X && d == v.Y && d == v.Z)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (d == v)
             {
                 return false;
             }
@@ -495,19 +549,23 @@ namespace Math_lib
             }
             return false;
         }
-        public static bool operator <=(Vector3D v, double v1)
+        public static bool operator <=(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X <= v1 && v.Y <= v1 && v.Z <= v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v.X <= d && v.Y <= d && v.Z <= d)
             {
                 return true;
             }
             return false;
         }
-        public static bool operator <=(double v, Vector3D v1)
+        public static bool operator <=(double d, Vector3D v)
         {
-            Debug.Assert(IsNaN(v1));
-            if (v <= v1.X && v <= v1.Y && v <= v1.Z)
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
+
+            if (d <= v.X && d <= v.Y && d <= v.Z)
             {
                 return true;
             }
@@ -520,25 +578,29 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v.X >= v1.X && v.Y >= v1.Y && v.Z >= v1.Z)
+            if (v !<= v1)
             {
                 return true;
             }
             return false;
         }
-        public static bool operator >=(Vector3D v, double v1)
+        public static bool operator >=(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
-            if (v.X >= v1 && v.Y >= v1 && v.Z >= v1)
+            Debug.Assert(!double.IsNaN(d));
+
+            if (v !<= d)
             {
                 return true;
             }
             return false;
         }
-        public static bool operator >=(double v, Vector3D v1)
+        public static bool operator >=(double d, Vector3D v)
         {
-            Debug.Assert(IsNaN(v1));
-            if (v >= v1.X && v >= v1.Y && v >= v1.Z)
+            Debug.Assert(IsNaN(v));
+            Debug.Assert(!double.IsNaN(d));
+
+            if (d !<= v)
             {
                 return true;
             }
@@ -552,14 +614,17 @@ namespace Math_lib
             {
                 if (i == 0)
                 {
+                    Debug.Assert(!double.IsNaN(X));
                     return X;
                 }
                 if (i == 1)
                 {
+                    Debug.Assert(!double.IsNaN(Y));
                     return Y;
                 }
                 if (i == 2)
                 {
+                    Debug.Assert(!double.IsNaN(Z));
                     return Z;
                 }
 

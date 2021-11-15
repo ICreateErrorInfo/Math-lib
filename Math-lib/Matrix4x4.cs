@@ -244,6 +244,18 @@ namespace Math_lib
 
             return new Vector3D(x, y, z) / w;
         }
+        public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
+        {
+            Matrix4x4 matrix = new Matrix4x4();
+            for (int c = 0; c < 4; c++)
+            {
+                for (int r = 0; r < 4; r++)
+                {
+                    matrix[r, c] = m1[r, 0] * m2[0, c] + m1[r, 1] * m2[1, c] + m1[r, 2] * m2[2, c] + m1[r, 3] * m2[3, c];
+                }
+            }
+            return matrix;
+        }
 
         //overrides ==
         public static bool operator ==(Matrix4x4 m, Matrix4x4 m1)
@@ -260,18 +272,6 @@ namespace Math_lib
             return !(m == m1);
         }
 
-        public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
-        {
-            Matrix4x4 matrix = new Matrix4x4();
-            for (int c = 0; c < 4; c++)
-            {
-                for (int r = 0; r < 4; r++)
-                {
-                    matrix[r, c] = m1[r, 0] * m2[0, c] + m1[r, 1] * m2[1, c] + m1[r, 2] * m2[2, c] + m1[r, 3] * m2[3, c];
-                }
-            }
-            return matrix;
-        }
 
         public override bool Equals(object obj)
         {
@@ -287,7 +287,6 @@ namespace Math_lib
 
             throw new NotImplementedException();
         }
-
         public override int GetHashCode()
         {
             throw new NotImplementedException();
