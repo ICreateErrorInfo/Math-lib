@@ -47,6 +47,8 @@ namespace RasterizerTest
             //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
             //r.DrawTriangle(new(0,0), new(1,0), new(2,-2), System.Drawing.Color.AliceBlue);
 
+            var i = Vector3D.Normalize(new Vector3D(3, 4, 5)).GetLength();
+
             Display.Source = r.GetSource();
         }
 

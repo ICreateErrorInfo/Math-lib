@@ -61,7 +61,7 @@ namespace Math_lib
         }
         public static Vector3D Normalize(Vector3D v)
         {
-            Debug.Assert(IsNaN(v));
+            //Debug.Assert(IsNaN(v));
 
             return v / v.GetLength();
         }
@@ -301,9 +301,9 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            return new(v.X - d,
-                       v.Y - d,
-                       v.Z - d);
+            return new(d - v.X,
+                       d - v.Y,
+                       d - v.Z);
         }
         public static Vector3D operator -(Vector3D v, Point3D p)
         {
@@ -438,33 +438,33 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v !> v1)
+            if (v > v1)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(Vector3D v, double d)
         {
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (v !> d)
+            if (v > d)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(double d, Vector3D v)
         {
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !> v)
+            if (d > v)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         //overrides ==
@@ -578,7 +578,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v !<= v1)
+            if (v > v1 || v == v1)
             {
                 return true;
             }
@@ -589,7 +589,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (v !<= d)
+            if (v > d || v == d)
             {
                 return true;
             }
@@ -600,7 +600,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !<= v)
+            if (d > v || d == v)
             {
                 return true;
             }
