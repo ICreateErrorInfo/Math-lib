@@ -87,7 +87,7 @@ namespace Math_lib
             return new Point2D(Math.Floor(p.X),
                                Math.Floor(p.Y));
         }
-        public static Point2D Ceil(Point2D p)
+        public static Point2D Ceiling(Point2D p)
         {
             Debug.Assert(IsNaN(p));
 
@@ -139,8 +139,8 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            return new Point2D(p.X + d,
-                               p.Y + d);
+            return new Point2D(d + p.X,
+                               d + p.Y);
         }
         public static Point2D operator +(Point2D p, Vector2D v)
         {
@@ -178,8 +178,8 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            return new Point2D(p.X - d,
-                               p.Y - d);
+            return new Point2D(d - p.X,
+                               d - p.Y);
         }
         public static Point2D operator -(Point2D p, Vector2D v)
         {
@@ -218,8 +218,8 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            return new Point2D(p.X * d,
-                               p.Y * d);
+            return new Point2D(d * p.X,
+                               d * p.Y);
         }
         public static Point2D operator *(Point2D p, Vector2D v)
         {
@@ -257,8 +257,8 @@ namespace Math_lib
             Debug.Assert(!double.IsNaN(d));
             Debug.Assert(p.X != 0 || p.Y != 0);
 
-            return new Point2D(p.X / d,
-                               p.Y / d);
+            return new Point2D(d / p.X,
+                               d / p.Y);
         }
         public static Point2D operator /(Point2D p, Vector2D v)
         {
@@ -311,33 +311,33 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
 
-            if (p !> p1)
+            if (p > p1)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(Point2D p, double d)
         {
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            if (p !> d)
+            if (p > d)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(double d, Point2D p)
         {
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !>= p)
+            if (d > p)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         //overrides ==
@@ -451,7 +451,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
 
-            if (p !<= p1)
+            if (p > p1 || p == p1)
             {
                 return true;
             }
@@ -462,7 +462,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            if (p !<= d)
+            if (p > d || p == d)
             {
                 return true;
             }
@@ -473,7 +473,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !<= p)
+            if (d > p || d== p)
             {
                 return true;
             }
