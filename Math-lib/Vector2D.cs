@@ -202,8 +202,8 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(v));
 
-            return new(v.X - d,
-                       v.Y - d);
+            return new(d - v.X,
+                       d - v.Y);
         }
         public static Vector2D operator -(Vector2D v, Point2D p)
         {
@@ -326,33 +326,33 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v !> v1)
+            if (v > v1)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(Vector2D v, double d)
         {
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (v !> d)
+            if (v > d)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(double d, Vector2D v)
         {
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !> v)
+            if (d > v)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         //overrides ==
@@ -466,7 +466,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
-            if (v !<= v1)
+            if (v > v1 || v == v1)
             {
                 return true;
             }
@@ -477,7 +477,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (v !<= d)
+            if (v > d || v == d)
             {
                 return true;
             }
@@ -488,7 +488,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(v));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !<= v)
+            if (d > v || d == v)
             {
                 return true;
             }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Math_lib.Tests {
 
     [TestFixture]
-    public class VectorTests {
+    public class Vector3DTests {
 
         [Test]
         public void TestSyntax() {
@@ -485,7 +485,7 @@ namespace Math_lib.Tests {
             Assert.That(v1 <= v, Is.EqualTo(true));
         }
 
-        // <=
+        // >=
         [Test]
         public void TestOpGreaterEqualVV()
         {
