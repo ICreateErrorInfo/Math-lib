@@ -88,7 +88,7 @@ namespace Math_lib
                              Math.Floor(p.Y),
                              Math.Floor(p.Z));
         }
-        public static Point3D Ceil(Point3D p)
+        public static Point3D Ceiling(Point3D p)
         {
             Debug.Assert(IsNaN(p));
 
@@ -188,9 +188,9 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(!double.IsNaN(d));
 
-            return new Point3D(p.X - d,
-                               p.Y - d,
-                               p.Z - d);
+            return new Point3D(d - p.X,
+                               d - p.Y,
+                               d - p.Z);
         }
         public static Point3D operator -(Point3D p, Vector3D v)
         {
@@ -269,9 +269,9 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(p.X != 0 || p.Y != 0 || p.Z != 0);
 
-            return new Point3D(p.X / d,
-                               p.Y / d,
-                               p.Z / d);
+            return new Point3D(d / p.X,
+                               d / p.Y,
+                               d / p.Z);
         }
         public static Point3D operator /(Point3D p, Vector3D v)
         {
@@ -323,31 +323,31 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
 
-            if (p !> p1)
+            if (p > p1)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(Point3D p, double d)
         {
             Debug.Assert(IsNaN(p));
 
-            if (p !> d)
+            if (p > d)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public static bool operator <(double d, Point3D p)
         {
             Debug.Assert(IsNaN(p));
 
-            if (d !> p)
+            if (d > p)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         //overrides ==
@@ -455,7 +455,7 @@ namespace Math_lib
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
 
-            if (p !<= p1)
+            if (p > p1 || p == p1)
             {
                 return true;
             }
@@ -465,7 +465,7 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
 
-            if (p !<= d)
+            if (p > d || p == d)
             {
                 return true;
             }
@@ -475,7 +475,7 @@ namespace Math_lib
         {
             Debug.Assert(IsNaN(p));
 
-            if (d !<= p)
+            if (d > p || d == p)
             {
                 return true;
             }
