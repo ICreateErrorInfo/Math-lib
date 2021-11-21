@@ -12,7 +12,7 @@ namespace Projection
 
         public Vertex Transform(Vertex v)
         {
-            Vertex v1 = new Vertex(Matrix4x4.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane) * v.pos);
+            Vertex v1 = new Vertex(Matrix.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane) * v.pos);
 
             return new(new Point3D((v1.pos.X + 1) * xFactor, (-v1.pos.Y + 1) * yFactor, v1.pos.Z), v.t, v.col, v.n);
         }

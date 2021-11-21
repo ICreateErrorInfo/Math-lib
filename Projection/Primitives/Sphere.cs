@@ -15,10 +15,10 @@ namespace Projection
 
             for (int iLat = 1; iLat < latDiv; iLat++)
             {
-                var latBase = Matrix3x3.RotateXMarix(lattitudeAngle * iLat) * baseP;
+                var latBase = Matrix.RotateXMarix(lattitudeAngle * iLat) * baseP;
                 for (int iLong = 0; iLong < longDiv; iLong++)
                 {
-                    sphere.vertices.Add(new Vertex(Matrix3x3.RotateZMarix(longitudeAngle * iLong) * latBase));
+                    sphere.vertices.Add(new Vertex(Matrix.RotateZMarix(longitudeAngle * iLong) * latBase));
                 }
             }
 

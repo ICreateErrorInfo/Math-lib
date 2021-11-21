@@ -4,7 +4,7 @@ namespace Projection
 {
     class DefaultShader
     {
-            public void BindRotation(Matrix3x3 rot)
+            public void BindRotation(Matrix rot)
             {
                 rotation = rot;
             }
@@ -14,7 +14,7 @@ namespace Projection
                 translation = translate;
             }
 
-            public Matrix3x3 rotation;
+            public Matrix rotation;
             public Vector3D translation;
     }
 }

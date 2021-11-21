@@ -9,7 +9,7 @@ namespace Projection
         //Vertex Shader
         public override Vertex Translate(Vertex vIn)
         {
-            var d = diffuse * Math.Max(0, -Vector3D.Dot(rotation * vIn.n, dir));
+            var d = diffuse * Math.Max(0, -Vector3D.Dot((Vector3D)(rotation * vIn.n), dir));
 
             var c = (color * (d + ambient)).Saturate() * 255;
             return new(rotation * vIn.pos + translation, vIn.t, Color.FromArgb((int)c.X, (int)c.Y, (int)c.Z));

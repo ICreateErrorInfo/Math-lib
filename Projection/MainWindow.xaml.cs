@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -27,10 +28,10 @@ namespace Projection {
 
             InitializeComponent();
 
-            //var solidColor = new SolidColorEffect();
-            //solidColor.SetColor(Color.White);
-            //_effect = solidColor;
-            //_mesh = Cube.GetPlain();
+            var solidColor = new SolidColorEffect();
+            solidColor.SetColor(Color.White);
+            _effect = solidColor;
+            _mesh = Cube.GetPlain();
 
             //Todo TextureBug
 
@@ -54,9 +55,9 @@ namespace Projection {
             //_effect = solidGeoEffect;
             //_mesh = Cube.GetPlain();
 
-            var VertexFlatEffect = new VertexFlatEffect();
-            _effect = VertexFlatEffect;
-            _mesh = Cube.GetIndependentFacesNormals();
+            //var VertexFlatEffect = new VertexFlatEffect();
+            //_effect = VertexFlatEffect;
+            //_mesh = Cube.GetIndependentFacesNormals();
 
             //TODO clipping funktioniert nicht richtig
 
@@ -138,7 +139,7 @@ namespace Projection {
 
             Pipeline p = new Pipeline();
             _effect.BindTranslation(trans);
-            _effect.BindRotation(Matrix3x3.RotateYMarix(_angleY) * Matrix3x3.RotateXMarix(_angleX));
+            _effect.BindRotation(Matrix.RotateYMarix(_angleY) * Matrix.RotateXMarix(_angleX));
 
             p.Draw(_mesh, _effect);
 

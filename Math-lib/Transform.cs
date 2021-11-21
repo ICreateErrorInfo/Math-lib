@@ -3,8 +3,8 @@
     public class Transform
     {
         //Properties
-        public Matrix4x4 m { get; private init;}
-        public Matrix4x4 mInv {get; private init; }
+        public Matrix m { get; private init;}
+        public Matrix mInv {get; private init; }
 
 
         //Ctors
@@ -14,15 +14,15 @@
         }
         public Transform(double[,] mat)
         {
-            Matrix4x4 m1 = new Matrix4x4(mat);
-            mInv = Matrix4x4.Inverse(m1);
+            Matrix m1 = new Matrix(mat);
+            mInv = Matrix.Inverse4x4(m1);
         }
-        public Transform(Matrix4x4 m)
+        public Transform(Matrix m)
         {
             this.m = m;
-            mInv = Matrix4x4.Inverse(m);
+            mInv = Matrix.Inverse4x4(m);
         }
-        public Transform(Matrix4x4 m , Matrix4x4 mInv)
+        public Transform(Matrix m , Matrix mInv)
         {
             this.m = m;
             this.mInv = mInv;
@@ -36,7 +36,7 @@
         }
         public Transform Transpose(Transform t)
         {
-            return new Transform(Matrix4x4.Transpose(t.m), Matrix4x4.Transpose(t.mInv));
+            return new Transform(Matrix.Transpose4x4(t.m), Matrix.Transpose4x4(t.mInv));
         }
         public bool IsIdentity()
         {
