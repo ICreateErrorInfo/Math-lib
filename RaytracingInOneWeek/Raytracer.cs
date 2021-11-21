@@ -80,7 +80,7 @@ namespace RaytracingInOneWeek
             IntersectionData Id = new IntersectionData();
             if (shape.hit(r, 0, ref Id))
             {
-                Point3D target = Id.p + (Point3D)Id.normal + Vector3D.RandomInUnitSphere();
+                Point3D target = Id.p + (Vector3D)Id.normal + Vector3D.RandomInUnitSphere();
                 return 0.5 * RayColor(new Ray(Id.p, target - Id.p), shape, depth - 1);
             }
 

@@ -176,14 +176,6 @@ namespace Math_lib
                                     Y = n.Y,
                                     Z = n.Z };
         }
-        public static explicit operator Point3D(Normal3D n)
-        {
-            Debug.Assert(IsNaN(n));
-
-            return new Point3D() { X = n.X,
-                                   Y = n.Y,
-                                   Z = n.Z };
-        }
 
 
         //overrides +
@@ -245,9 +237,9 @@ namespace Math_lib
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            return new(n.X - d,
-                       n.Y - d,
-                       n.Z - d);
+            return new(d - n.X,
+                       d - n.Y,
+                       d - n.Z);
         }
         public static Normal3D operator -(Normal3D n)
         {
@@ -311,9 +303,9 @@ namespace Math_lib
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            return new(n.X / d,
-                       n.Y / d,
-                       n.Z / d);
+            return new(d / n.X,
+                       d / n.Y,
+                       d / n.Z);
         }
 
         //overrides >
@@ -357,33 +349,21 @@ namespace Math_lib
             Debug.Assert(IsNaN(n));
             Debug.Assert(IsNaN(n1));
 
-            if (n !> n1)
-            {
-                return true;
-            }
-            return false;
+            return !(n > n1);
         }
         public static bool operator <(Normal3D n, double d)
         {
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            if (n !> d)
-            {
-                return true;
-            }
-            return false;
+            return !(n > d);
         }
         public static bool operator <(double d, Normal3D n)
         {
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !> n)
-            {
-                return true;
-            }
-            return false;
+            return !(d > n);
         }
 
         //overrides ==
@@ -497,33 +477,21 @@ namespace Math_lib
             Debug.Assert(IsNaN(n));
             Debug.Assert(IsNaN(n1));
 
-            if (n !<= n1)
-            {
-                return true;
-            }
-            return false;
+            return !(n <= n1);
         }
         public static bool operator >=(Normal3D n, double d)
         {
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            if (n !<= d)
-            {
-                return true;
-            }
-            return false;
+            return !(n <= d);
         }
         public static bool operator >=(double d, Normal3D n)
         {
             Debug.Assert(IsNaN(n));
             Debug.Assert(!double.IsNaN(d));
 
-            if (d !<= n)
-            {
-                return true;
-            }
-            return false;
+            return (d <= n);
         }
 
         //overrides []
