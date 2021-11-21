@@ -37,7 +37,7 @@ namespace Math_lib
         //Methods
         public static bool IsNaN(Vector2D v)
         {
-            if (!double.IsNaN(v.X) || !double.IsNaN(v.Y))
+            if (double.IsNaN(v.X) || double.IsNaN(v.Y))
             {
                 return false;
             }

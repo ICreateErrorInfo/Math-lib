@@ -41,7 +41,7 @@ namespace Math_lib
         //Methods
         public static bool IsNaN(Normal3D n)
         {
-            if (!double.IsNaN(n.X) || !double.IsNaN(n.Y) || !double.IsNaN(n.Z))
+            if (double.IsNaN(n.X) || double.IsNaN(n.Y) || double.IsNaN(n.Z))
             {
                 return false;
                 throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");

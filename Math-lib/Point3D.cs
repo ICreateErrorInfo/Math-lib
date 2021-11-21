@@ -39,7 +39,7 @@ namespace Math_lib
         //Methods
         public static bool IsNaN(Point3D v)
         {
-            if (!double.IsNaN(v.X) || !double.IsNaN(v.Y) || !double.IsNaN(v.Z))
+            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
             {
                 return false;
                 throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
