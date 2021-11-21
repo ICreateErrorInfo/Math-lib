@@ -10,24 +10,16 @@ namespace Math_lib
         {
 
         }
-        private Matrix3x3(double[,] m) : base(m)
+        public Matrix3x3(double[,] m) : base(m)
         {
             if (m.GetLength(0) != 3 || m.GetLength(1) != 3)
             {
-                throw new ArgumentException("Das Array hat nicht die Größe 4x4");
+                throw new ArgumentException("Das Array hat nicht die Größe 3x3");
             }
         }
 
+
         //Methods
-        public static Matrix3x3 Identity()
-        {
-            return new Matrix3x3(new double[,]
-            {
-                {1,0,0 },
-                {0,1,0 },
-                {0,0,1 }
-            });
-        }
         public static Matrix3x3 ScaleMarix(Vector3D v)
         {
             return new(new[,]
@@ -65,30 +57,23 @@ namespace Math_lib
             });
         }      
 
+
         //overrides *
-        public static Point3D operator *(Matrix3x3 m, Point3D i)
+        public static Point3D operator *(Matrix3x3 m, Point3D p)
         {
-            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0];
-            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1];
-            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2];
+            double x = p.X * m[0, 0] + p.Y * m[0, 1] + p.Z * m[0, 2];
+            double y = p.X * m[1, 0] + p.Y * m[1, 1] + p.Z * m[1, 2];
+            double z = p.X * m[2, 0] + p.Y * m[2, 1] + p.Z * m[2, 2];
 
             return new Point3D(x, y, z);
         }
-        public static Vector3D operator *(Matrix3x3 m, Vector3D i)
+        public static Vector3D operator *(Matrix3x3 m, Vector3D v)
         {
-            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0];
-            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1];
-            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2];
+            double x = v.X * m[0, 0] + v.Y * m[0, 1] + v.Z * m[0, 2];
+            double y = v.X * m[1, 0] + v.Y * m[1, 1] + v.Z * m[1, 2];
+            double z = v.X * m[2, 0] + v.Y * m[2, 1] + v.Z * m[2, 2];
 
             return new Vector3D(x, y, z);
-        }
-        public static Vertex operator *(Matrix3x3 m, Vertex i)
-        {
-            double x = i.pos.X * m[0, 0] + i.pos.Y * m[1, 0] + i.pos.Z * m[2, 0];
-            double y = i.pos.X * m[0, 1] + i.pos.Y * m[1, 1] + i.pos.Z * m[2, 1];
-            double z = i.pos.X * m[0, 2] + i.pos.Y * m[1, 2] + i.pos.Z * m[2, 2];
-
-            return new Vertex(new Point3D(x, y, z));
         }
         public static Matrix3x3 operator *(Matrix3x3 m1, Matrix3x3 m2)
         {

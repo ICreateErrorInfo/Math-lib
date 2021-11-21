@@ -19,40 +19,16 @@ namespace Math_lib
         public Matrix4x4(double t00, double t01, double t02, double t03, double t10,
                          double t11, double t12, double t13, double t20, double t21,
                          double t22, double t23, double t30, double t31, double t32,
-                         double t33) : base(4,4)
+                         double t33) : base(t00, t01, t02, t03, t10,
+                                            t11, t12, t13, t20, t21,
+                                            t22, t23, t30, t31, t32,
+                                            t33)
         {
-            double[,] m = new double[4, 4];
 
-            m[0,0] = t00;
-            m[0,1] = t01;
-            m[0,2] = t02;
-            m[0,3] = t03;
-            m[1,0] = t10;
-            m[1,1] = t11;
-            m[1,2] = t12;
-            m[1,3] = t13;
-            m[2,0] = t20;
-            m[2,1] = t21;
-            m[2,2] = t22;
-            m[2,3] = t23;
-            m[3,0] = t30;
-            m[3,1] = t31;
-            m[3,2] = t32;
-            m[3,3] = t33;
         }
 
 
         //Methods
-        public static Matrix4x4 Identity()
-        {
-            return new Matrix4x4(new double[,]
-            {
-                {1,0,0,0 },
-                {0,1,0,0 },
-                {0,0,1,0 },
-                {0,0,0,1 }
-            });
-        }
         public static Matrix4x4 Projection(int width, int height, int fov, double zNear, double zFar)
         {
             double aspectRatio = (double)height / width;
@@ -112,36 +88,6 @@ namespace Math_lib
                 { 0,1,0,0 },
                 { 0,0,1,0 },
                 { x,y,z,1 }
-            });
-        }
-        public static Matrix4x4 RotateXMarix(double a)
-        {
-            return new(new[,]
-            {
-                {  1,                          0,                         0 , 0 },
-                {  0, Math.Round(Math.Cos(a),3) , Math.Round(-Math.Sin(a),3), 0 },
-                {  0, Math.Round(Math.Sin(a),3) , Math.Round( Math.Cos(a),3), 0 },
-                {  0,                          0,                         0 , 1 }              
-            });
-        }
-        public static Matrix4x4 RotateYMarix(double a)
-        {
-            return new(new[,]
-            {
-                {  Math.Round(Math.Cos(a), 3) , 0 , Math.Round(Math.Sin(a), 3) },
-                {                            0, 1 ,                         0  },
-                { Math.Round(-Math.Sin(a), 3) , 0 , Math.Round(Math.Cos(a), 3) },
-                {                            0, 0 ,                         1  }
-            });
-        }
-        public static Matrix4x4 RotateZMarix(double a)
-        {
-            return new(new[,]
-            {
-                {  Math.Round(Math.Cos(a),3), Math.Round(-Math.Sin(a),3), 0, 0 },
-                {  Math.Round(Math.Sin(a),3), Math.Round(Math.Cos(a),3) , 0, 0 },
-                {                          0,                          0, 1, 0 },
-                {                          0,                          0, 0, 1 }
             });
         }
         public static Matrix4x4 Transpose(Matrix4x4 m)
@@ -226,30 +172,30 @@ namespace Math_lib
 
 
         //overrides *
-        public static Point3D operator *(Matrix4x4 m, Point3D i)
+        public static Point3D operator *(Matrix4x4 m, Point3D p)
         {
-            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + m[3, 0];
-            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + m[3, 1];
-            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + m[3, 2];
-            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + m[3, 3];
+            double x = p.X * m[0, 0] + p.Y * m[0, 1] + p.Z * m[0, 2] + m[0, 3];
+            double y = p.X * m[1, 0] + p.Y * m[1, 1] + p.Z * m[1, 2] + m[1, 3];
+            double z = p.X * m[2, 0] + p.Y * m[2, 1] + p.Z * m[2, 2] + m[2, 3];
+            double w = p.X * m[3, 0] + p.Y * m[3, 1] + p.Z * m[3, 2] + m[3, 3];
 
             return new Point3D(x, y, z) / w;
         }
-        public static Vector3D operator *(Matrix4x4 m, Vector3D i)
+        public static Vector3D operator *(Matrix4x4 m, Vector3D v)
         {
-            double x = i.X * m[0, 0] + i.Y * m[1, 0] + i.Z * m[2, 0] + m[3, 0];
-            double y = i.X * m[0, 1] + i.Y * m[1, 1] + i.Z * m[2, 1] + m[3, 1];
-            double z = i.X * m[0, 2] + i.Y * m[1, 2] + i.Z * m[2, 2] + m[3, 2];
-            double w = i.X * m[0, 3] + i.Y * m[1, 3] + i.Z * m[2, 3] + m[3, 3];
+            double x = v.X * m[0, 0] + v.Y * m[0, 1] + v.Z * m[0, 2] + m[0, 3];
+            double y = v.X * m[1, 0] + v.Y * m[1, 1] + v.Z * m[1, 2] + m[1, 3];
+            double z = v.X * m[2, 0] + v.Y * m[2, 1] + v.Z * m[2, 2] + m[2, 3];
+            double w = v.X * m[3, 0] + v.Y * m[3, 1] + v.Z * m[3, 2] + m[3, 3];
 
             return new Vector3D(x, y, z) / w;
         }
         public static Matrix4x4 operator *(Matrix4x4 m1, Matrix4x4 m2)
         {
             Matrix4x4 matrix = new Matrix4x4();
-            for (int c = 0; c < 4; c++)
+            for (int r = 0; r < 4; r++)
             {
-                for (int r = 0; r < 4; r++)
+                for (int c = 0; c < 4; c++)
                 {
                     matrix[r, c] = m1[r, 0] * m2[0, c] + m1[r, 1] * m2[1, c] + m1[r, 2] * m2[2, c] + m1[r, 3] * m2[3, c];
                 }
@@ -261,8 +207,15 @@ namespace Math_lib
         public static bool operator ==(Matrix4x4 m, Matrix4x4 m1)
         {
             for (int i = 0; i < 4; ++i)
+            {
                 for (int j = 0; j < 4; ++j)
-                    if (m[i,j] != m1[i,j]) return false;
+                {
+                    if (m[i, j] != m1[i, j]) 
+                    { 
+                        return false; 
+                    }
+                }
+            }
             return true;
         }
 
