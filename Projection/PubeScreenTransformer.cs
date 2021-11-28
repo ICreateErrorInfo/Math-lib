@@ -6,22 +6,19 @@ namespace Projection
     {
         public PubeScreenTransformer()
         {
-            xFactor = Options.ScreenWidth / 2;
-            yFactor = Options.ScreenHeight / 2;
+            _xFactor = (double)Options.ScreenWidth  / 2;
+            _yFactor = (double)Options.ScreenHeight / 2;
         }
 
-        public Vertex Transform(Vertex v)
-        {
-            Vertex v1 = new Vertex(Matrix.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane) * v.pos);
+        public Vertex Transform(Vertex v) {
+            Matrix projectionMatrix = Matrix.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane);
 
-            return new(new Point3D((v1.pos.X + 1) * xFactor, (-v1.pos.Y + 1) * yFactor, v1.pos.Z), v.t, v.col, v.n);
-        }
-        public Vertex GetTransformed(Vertex p)
-        {
-            return Transform(p);
+            Vertex v1         = new Vertex(projectionMatrix * v.Pos, v.Attributes);
+
+            return new(new Point3D((v1.Pos.X + 1) * _xFactor, (-v1.Pos.Y + 1) * _yFactor, v1.Pos.Z), v.Attributes);
         }
 
-        private readonly double xFactor;
-        private readonly double yFactor;
+        private readonly double _xFactor;
+        private readonly double _yFactor;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
@@ -6,8 +7,11 @@ using System.Windows.Threading;
 
 using Math_lib;
 using Microsoft.Win32;
+using Projection.Effects;
+using Projection.Primitives;
 
-namespace Projection {
+namespace Projection
+{
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -16,54 +20,25 @@ namespace Projection {
 
         readonly DispatcherTimer   _timer;
         readonly Mesh              _mesh;
-        readonly WaveTextureEffect _we;
         readonly Effect            _effect;
 
         double    _angleY;
         double _angleX;
-        Vector3D trans = new Vector3D(0,0,3);
-        double _time;
+        Vector3D _trans = new(0, 0, 3);
 
         public MainWindow() {
 
             InitializeComponent();
 
-            var solidColor = new SolidColorEffect();
-            solidColor.SetColor(Color.White);
-            _effect = solidColor;
+            //var solidColor = new SolidColorEffect();
+            //solidColor.SetColor(Color.Green);
+            //_effect = solidColor;
+            //_mesh = Cube.GetPlain();
+
+            var solidGeoEffect = new SolidGeoEffect();
+            solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
+            _effect = solidGeoEffect;
             _mesh = Cube.GetPlain();
-
-            //Todo TextureBug
-
-            //var textureEffect = new TextureEffect();
-            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string textureFile = Path.Combine(exeDir, "Images", @"sauron-bhole-100x100.png");
-            //textureEffect.BindTexture(textureFile);
-            //_effect = textureEffect;
-            //_mesh = Cube.GetPlain();
-
-            //var waveeffect = new WaveTextureEffect();
-            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
-            //waveeffect.BindTexture(texturefile);
-            //_we = waveeffect;
-            //_effect = waveeffect;
-            //_mesh = Plane.GetSkinned(20);
-
-            //var solidGeoEffect = new SolidGeometryEffect();
-            //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
-            //_effect = solidGeoEffect;
-            //_mesh = Cube.GetPlain();
-
-            //var VertexFlatEffect = new VertexFlatEffect();
-            //_effect = VertexFlatEffect;
-            //_mesh = Cube.GetIndependentFacesNormals();
-
-            //TODO clipping funktioniert nicht richtig
-
-            //var GeometryFlatEffect = new GeometryFlatEffect();
-            //_effect = GeometryFlatEffect;
-            //_mesh = Sphere.GetPlain();
 
             //Load Mesh
             ShowOpenFile();
@@ -71,7 +46,7 @@ namespace Projection {
             //Render
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(1),
+                Interval = TimeSpan.FromMilliseconds(100),
                 IsEnabled = true
             };
 
@@ -98,53 +73,50 @@ namespace Projection {
                 e.Handled = true;
             }
 
-            if (e.Key == Key.A)
-            {
-                _angleY += 0.1;
-            }
-            if (e.Key == Key.D)
+            if (e.Key == Key.Left)
             {
                 _angleY -= 0.1;
             }
-
-            if (e.Key == Key.W)
+            if (e.Key == Key.Right)
             {
-                _angleX += .1;
+                _angleY += 0.1;
             }
-            if (e.Key == Key.S)
+
+            if (e.Key == Key.Up)
             {
                 _angleX -= .1;
             }
-            if(e.Key == Key.Up)
-            {
-                trans += new Vector3D(0, .1, 0);
-            }
             if (e.Key == Key.Down)
             {
-                trans -= new Vector3D(0, .1, 0);
+                _angleX += .1;
             }
-            if (e.Key == Key.Right)
+            if(e.Key == Key.Space)
             {
-                trans += new Vector3D(.1, 0, 0);
+                _trans -= new Vector3D(0, .1, 0);
             }
-            if (e.Key == Key.Left)
+            if (e.Key == Key.LeftCtrl)
             {
-                trans -= new Vector3D(.1, 0, 0);
+                _trans += new Vector3D(0, .1, 0);
+            }
+            if (e.Key == Key.D)
+            {
+                _trans -= new Vector3D(.1, 0, 0);
+            }
+            if (e.Key == Key.A)
+            {
+                _trans += new Vector3D(.1, 0, 0);
             }
         }
 
-        private void OnRenderSzene(object sender, EventArgs e) {
-
-            _we?.SetTime(_time);
-
+        private void OnRenderSzene(object sender, EventArgs e)
+        {
             Pipeline p = new Pipeline();
-            _effect.BindTranslation(trans);
+            _effect.BindTranslation(_trans);
             _effect.BindRotation(Matrix.RotateYMarix(_angleY) * Matrix.RotateXMarix(_angleX));
 
             p.Draw(_mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
-            _time += .05;
         }       
     }
 }

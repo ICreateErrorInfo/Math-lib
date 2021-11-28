@@ -119,6 +119,12 @@ namespace Math_lib
 
             return new Vector3D() { X = a.X, Y = a.Y, Z = a.Z };
         }
+        public static explicit operator Point2D(Point3D a)
+        {
+            Debug.Assert(IsNaN(a));
+
+            return new Point2D() { X = a.X, Y = a.Y};
+        }
 
         //overrides +
         public static Point3D operator +(Point3D p, Point3D p1)

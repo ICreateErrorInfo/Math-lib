@@ -62,7 +62,8 @@ namespace Projection
                 double yT = -y * tDivisionSize;
                 for(int x = 0; x < nVerticesSide; x++, i++)
                 {
-                    itList.vertices[i].t = tBottomLeft + new Point2D(x * tDivisionSize, yT);
+                    //Todo
+                    //itList.vertices[i].t = tBottomLeft + new Point2D(x * tDivisionSize, yT);
                 }
             }
 

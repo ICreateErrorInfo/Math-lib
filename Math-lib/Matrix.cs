@@ -106,11 +106,11 @@ namespace Math_lib
 
             return new Matrix(new[,]
             {
-                {Math.Round(aspectRatio * fovRad,3),  0                   ,  0                                             , 0},
-                {  0                               , Math.Round(fovRad,3) ,  0                                             , 0},
-                {  0                               ,  0                   , Math.Round(zFar / (zFar - zNear),3)            , 1},
-                {  0                               ,  0                   , Math.Round(-zNear * zFar / (zFar - zNear), 3)  , 0}
-            });
+                {Math.Round(fovRad * aspectRatio, 3),  0                    ,  0                                               , 0},
+                {  0                               ,  Math.Round(fovRad,3) ,  0                                               , 0},
+                {  0                               ,  0                    , Math.Round(-((zFar + zNear) / (zFar - zNear)), 3), Math.Round(-((2*zFar*zNear) / (zFar - zNear)), 3)},
+                {  0                               ,  0                    , -1                                               , 0}
+            });                                                                        
         }
         public static Matrix PointAt(Point3D pos, Vector3D target, Vector3D up)
         {

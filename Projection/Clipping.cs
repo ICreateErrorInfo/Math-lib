@@ -9,8 +9,8 @@ namespace Projection
         //calc Intersection Point of two Lines
         public static Vertex IntersectPlane(Point3D planeP, Normal3D planeN, Vertex lineStart1, Vertex lineEnd1)
         {
-            Point3D lineStart = lineStart1.pos;
-            Point3D lineEnd = lineEnd1.pos;
+            Point3D lineStart = lineStart1.Pos;
+            Point3D lineEnd = lineEnd1.Pos;
 
             planeN = Normal3D.Normalize(planeN);
             double planeD = -Normal3D.Dot(planeN, (Vector3D)planeP);
@@ -124,7 +124,7 @@ namespace Projection
 
         static double CalcDistance(Vertex p, Point3D planeP, Normal3D planeN)
         {
-            Vector3D erg = (Vector3D)planeN * (p.pos - planeP);
+            Vector3D erg = (Vector3D)planeN * (p.Pos - planeP);
 
             return erg.X + erg.Y + erg.Z;
         }

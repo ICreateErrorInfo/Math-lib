@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Projection
+namespace Projection.Primitives
 {
     class Cube
     {
@@ -10,28 +10,29 @@ namespace Projection
         {
             double side = size / 2;
 
-            List<Vertex> vertices = new List<Vertex>();
+            List<Vertex> vertices = new List<Vertex>
+            {
+                new Vertex(new Point3D(-side, -side, -side)),
+                new Vertex(new Point3D( side, -side, -side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 0)));
-            vertices.Add(new Vertex(new Point3D(side, -side, -side), ConvertTexCoord(0, 0)));
+                new Vertex(new Point3D(-side,  side, -side)),
+                new Vertex(new Point3D( side,  side, -side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, side, -side), ConvertTexCoord(1, 1)));
-            vertices.Add(new Vertex(new Point3D(side, side, -side), ConvertTexCoord(0, 1)));
+                new Vertex(new Point3D(-side, -side,  side)),
+                new Vertex(new Point3D( side, -side,  side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, -side, side), ConvertTexCoord(1, 3)));
-            vertices.Add(new Vertex(new Point3D(side, -side, side), ConvertTexCoord(0, 3)));
+                new Vertex(new Point3D(-side,  side,  side)),
+                new Vertex(new Point3D( side,  side,  side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, side, side), ConvertTexCoord(1, 2)));
-            vertices.Add(new Vertex(new Point3D(side, side, side), ConvertTexCoord(0, 2)));
+                new Vertex(new Point3D(-side, -side, -side)),
+                new Vertex(new Point3D( side, -side, -side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(1, 4)));
-            vertices.Add(new Vertex(new Point3D(side, -side, -side), ConvertTexCoord(0, 4)));
+                new Vertex(new Point3D(-side, -side, -side)),
+                new Vertex(new Point3D(-side, -side,  side)),
 
-            vertices.Add(new Vertex(new Point3D(-side, -side, -side), ConvertTexCoord(2, 1)));
-            vertices.Add(new Vertex(new Point3D(-side, -side, side), ConvertTexCoord(2, 2)));
-
-            vertices.Add(new Vertex(new Point3D(side, -side, -side), ConvertTexCoord(-1, 1)));
-            vertices.Add(new Vertex(new Point3D(side, -side, side), ConvertTexCoord(-1, 2)));
+                new Vertex(new Point3D( side, -side, -side)),
+                new Vertex(new Point3D( side, -side,  side))
+            };
 
 
             List<int> ind = new List<int>{
@@ -92,49 +93,50 @@ namespace Projection
                 20,23,21, 20,22,23
             };
 
-            Mesh cube= new Mesh(vertices, ind);
+            Mesh cube = new Mesh(vertices, ind);
 
             return cube;
         }
 
-        public static Mesh GetIndependentFacesNormals(double size = 1)
-        {
-            Mesh cube = GetPlainIndependentFaces(size);
 
-            List<Vertex> vertices = new List<Vertex>();
+        //public static Mesh GetIndependentFacesNormals(double size = 1)
+        //{
+        //    Mesh cube = GetPlainIndependentFaces(size);
 
-            vertices.Add(new Vertex(cube.vertices[0].pos, cube.vertices[0].t, cube.vertices[0].col, new Vector3D(0.0f, 0.0f, -1.0f)));
-            vertices.Add(new Vertex(cube.vertices[1].pos, cube.vertices[1].t, cube.vertices[1].col, new Vector3D(0.0f, 0.0f, -1.0f)));
-            vertices.Add(new Vertex(cube.vertices[2].pos, cube.vertices[2].t, cube.vertices[2].col, new Vector3D(0.0f, 0.0f, -1.0f)));
-            vertices.Add(new Vertex(cube.vertices[3].pos, cube.vertices[3].t, cube.vertices[3].col, new Vector3D(0.0f, 0.0f, -1.0f)));
+        //    List<Vertex> vertices = new List<Vertex>();
 
-            vertices.Add(new Vertex(cube.vertices[4].pos, cube.vertices[4].t, cube.vertices[4].col, new Vector3D(0.0f, 0.0f, 1.0f)));
-            vertices.Add(new Vertex(cube.vertices[5].pos, cube.vertices[5].t, cube.vertices[5].col, new Vector3D(0.0f, 0.0f, 1.0f)));
-            vertices.Add(new Vertex(cube.vertices[6].pos, cube.vertices[6].t, cube.vertices[6].col, new Vector3D(0.0f, 0.0f, 1.0f)));
-            vertices.Add(new Vertex(cube.vertices[7].pos, cube.vertices[7].t, cube.vertices[7].col, new Vector3D(0.0f, 0.0f, 1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[0].Pos, cube.vertices[0].t, cube.vertices[0].col, new Vector3D(0.0f, 0.0f, -1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[1].Pos, cube.vertices[1].t, cube.vertices[1].col, new Vector3D(0.0f, 0.0f, -1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[2].Pos, cube.vertices[2].t, cube.vertices[2].col, new Vector3D(0.0f, 0.0f, -1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[3].Pos, cube.vertices[3].t, cube.vertices[3].col, new Vector3D(0.0f, 0.0f, -1.0f)));
 
-            vertices.Add(new Vertex(cube.vertices[8 ].pos, cube.vertices[8 ].t, cube.vertices[8 ].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[9 ].pos, cube.vertices[9 ].t, cube.vertices[9 ].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[10].pos, cube.vertices[10].t, cube.vertices[10].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[11].pos, cube.vertices[11].t, cube.vertices[11].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[4].Pos, cube.vertices[4].t, cube.vertices[4].col, new Vector3D(0.0f, 0.0f, 1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[5].Pos, cube.vertices[5].t, cube.vertices[5].col, new Vector3D(0.0f, 0.0f, 1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[6].Pos, cube.vertices[6].t, cube.vertices[6].col, new Vector3D(0.0f, 0.0f, 1.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[7].Pos, cube.vertices[7].t, cube.vertices[7].col, new Vector3D(0.0f, 0.0f, 1.0f)));
 
-            vertices.Add(new Vertex(cube.vertices[12].pos, cube.vertices[12].t, cube.vertices[12].col, new Vector3D(1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[13].pos, cube.vertices[13].t, cube.vertices[13].col, new Vector3D(1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[14].pos, cube.vertices[14].t, cube.vertices[14].col, new Vector3D(1.0f, 0.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[15].pos, cube.vertices[15].t, cube.vertices[15].col, new Vector3D(1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[8].Pos, cube.vertices[8].t, cube.vertices[8].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[9].Pos, cube.vertices[9].t, cube.vertices[9].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[10].Pos, cube.vertices[10].t, cube.vertices[10].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[11].Pos, cube.vertices[11].t, cube.vertices[11].col, new Vector3D(-1.0f, 0.0f, 0.0f)));
 
-            vertices.Add(new Vertex(cube.vertices[16].pos, cube.vertices[16].t, cube.vertices[16].col, new Vector3D(0.0f, -1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[17].pos, cube.vertices[17].t, cube.vertices[17].col, new Vector3D(0.0f, -1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[18].pos, cube.vertices[18].t, cube.vertices[18].col, new Vector3D(0.0f, -1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[19].pos, cube.vertices[19].t, cube.vertices[19].col, new Vector3D(0.0f, -1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[12].Pos, cube.vertices[12].t, cube.vertices[12].col, new Vector3D(1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[13].Pos, cube.vertices[13].t, cube.vertices[13].col, new Vector3D(1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[14].Pos, cube.vertices[14].t, cube.vertices[14].col, new Vector3D(1.0f, 0.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[15].Pos, cube.vertices[15].t, cube.vertices[15].col, new Vector3D(1.0f, 0.0f, 0.0f)));
 
-            vertices.Add(new Vertex(cube.vertices[20].pos, cube.vertices[20].t, cube.vertices[20].col, new Vector3D(0.0f, 1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[21].pos, cube.vertices[21].t, cube.vertices[21].col, new Vector3D(0.0f, 1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[22].pos, cube.vertices[22].t, cube.vertices[22].col, new Vector3D(0.0f, 1.0f, 0.0f)));
-            vertices.Add(new Vertex(cube.vertices[23].pos, cube.vertices[23].t, cube.vertices[23].col, new Vector3D(0.0f, 1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[16].Pos, cube.vertices[16].t, cube.vertices[16].col, new Vector3D(0.0f, -1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[17].Pos, cube.vertices[17].t, cube.vertices[17].col, new Vector3D(0.0f, -1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[18].Pos, cube.vertices[18].t, cube.vertices[18].col, new Vector3D(0.0f, -1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[19].Pos, cube.vertices[19].t, cube.vertices[19].col, new Vector3D(0.0f, -1.0f, 0.0f)));
 
-            Mesh cube2 = new Mesh(vertices, cube.indices);
-            return cube2;
-        }
+        //    vertices.Add(new Vertex(cube.vertices[20].Pos, cube.vertices[20].t, cube.vertices[20].col, new Vector3D(0.0f, 1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[21].Pos, cube.vertices[21].t, cube.vertices[21].col, new Vector3D(0.0f, 1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[22].Pos, cube.vertices[22].t, cube.vertices[22].col, new Vector3D(0.0f, 1.0f, 0.0f)));
+        //    vertices.Add(new Vertex(cube.vertices[23].Pos, cube.vertices[23].t, cube.vertices[23].col, new Vector3D(0.0f, 1.0f, 0.0f)));
+
+        //    Mesh cube2 = new Mesh(vertices, cube.indices);
+        //    return cube2;
+        //}
     }
 }

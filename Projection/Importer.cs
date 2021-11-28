@@ -70,14 +70,15 @@ namespace Projection
 
                         if (zeile[0] == "f")
                         {
-                            mesh.indices.Add(index);
-                            mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[1]) - 1], vt[Convert.ToInt32(zeile[2]) - 1]));
+                            //Todo
+                            //mesh.indices.Add(index);
+                            //mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[1]) - 1], vt[Convert.ToInt32(zeile[2]) - 1]));
 
-                            mesh.indices.Add(index + 1);
-                            mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[3]) - 1], vt[Convert.ToInt32(zeile[4]) - 1]));
+                            //mesh.indices.Add(index + 1);
+                            //mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[3]) - 1], vt[Convert.ToInt32(zeile[4]) - 1]));
 
-                            mesh.indices.Add(index + 2);
-                            mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[5]) - 1], vt[Convert.ToInt32(zeile[6]) - 1]));
+                            //mesh.indices.Add(index + 2);
+                            //mesh.vertices.Add(new Vertex(v[Convert.ToInt32(zeile[5]) - 1], vt[Convert.ToInt32(zeile[6]) - 1]));
 
                             index += 3;
                         }

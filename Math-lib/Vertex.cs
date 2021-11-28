@@ -1,69 +1,131 @@
-﻿using System.Drawing;
+﻿using Math_lib.VertexAttributes;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace Math_lib
 {
     public class Vertex
     {
-        public Point3D pos { get; init; }
-        public Point2D t;
-        public Vector3D n;
-        public Color col;
+        public Point3D Pos { get; init; }
+        public Dictionary<Type, VertexAttribute> Attributes { get; set; }
 
-        public Vertex(double p1, double p2, double p3)
+        public Vertex(double d): this(new(d), null)
         {
-            this.pos = new(p1, p2, p3);
+
         }
-        public Vertex(Point3D pos)
+        public Vertex(double p1, double p2, double p3) : this(new(p1, p2, p3), null)
         {
-            this.pos = pos;
+
         }
-        public Vertex(Point3D pos, Point2D t)
+        public Vertex(Point3D pos):this(pos, null)
         {
-            this.pos = pos;
-            this.t = t;
+
         }
-        public Vertex(Point3D pos, Point2D t, Color col)
+        public Vertex(Point3D pos, Dictionary<Type, VertexAttribute> attributes = null)
         {
-            this.pos = pos;
-            this.t = t;
-            this.col = col;
-        }
-        public Vertex(Point3D pos, Point2D t, Color col, Vector3D n)
-        {
-            this.pos = pos;
-            this.t = t;
-            this.col = col;
-            this.n = n;
-        }
-        public Vertex(double d)
-        {
-            this.pos = new Point3D(d);
-            this.t = new Point2D(d);
-            this.n = new Vector3D(1);
+            this.Pos = pos;
+            Attributes = attributes??new();
         }
 
 
-        public static Vertex operator +(Vertex v0, Vertex v1)
+        public bool TryGetValue<T>(out T value) where T : VertexAttribute 
         {
-            return new(v0.pos + v1.pos, v0.t + v1.t, v0.col, v0.n + v1.n);
+            if(Attributes.TryGetValue(typeof(T),out var v))
+            {
+                value = (T)v;
+                return true;
+            }
+            value = default(T);
+            return false;
+        }
+        public void AddAttribute(VertexAttribute vertexAttribute) 
+        {
+            Attributes[vertexAttribute.GetType()] = vertexAttribute;
+        }
+
+        public static Vertex operator +(Vertex v0, Vertex v1) 
+        {
+            Vertex vertexOut = new(v0.Pos + v1.Pos);
+
+            foreach (var vaKey in v0.Attributes.Keys) {
+
+                var attr0 = v0.Attributes[vaKey];
+                if(v1.Attributes.TryGetValue(vaKey, out var attr1))
+                {
+                    var attribute = attr0.Add(attr1);
+                    vertexOut.AddAttribute(attribute);
+                }else
+                {
+                    vertexOut.AddAttribute(attr0);
+                }
+            }
+
+            return vertexOut;
         }
         public static Vertex operator -(Vertex v0, Vertex v1)
         {
-            return new((Point3D)(v0.pos - v1.pos), (Point2D)(v0.t - v1.t), v0.col, v0.n - v1.n);
+            Vertex vertexOut = new((Point3D)(v0.Pos - v1.Pos));
+
+            foreach (var vaKey in v0.Attributes.Keys) {
+
+                var attr0 = v0.Attributes[vaKey];
+                if(v1.Attributes.TryGetValue(vaKey, out var attr1))
+                {
+                    var attribute = attr0.Sub(attr1);
+                    vertexOut.AddAttribute(attribute);
+                }else
+                {
+                    vertexOut.AddAttribute(attr0);
+                }
+            }
+
+            return vertexOut;
         }
         public static Vertex operator *(Vertex v0, Vertex v1)
         {
-            return new(v0.pos * v1.pos, v0.t * v1.t, v0.col, v0.n * v1.n);
+            Vertex vertexOut = new(v0.Pos * v1.Pos);
+
+            foreach (var vaKey in v0.Attributes.Keys) {
+
+                var attr0 = v0.Attributes[vaKey];
+                if(v1.Attributes.TryGetValue(vaKey, out var attr1))
+                {
+                    var attribute = attr0.Mul(attr1);
+                    vertexOut.AddAttribute(attribute);
+                }else
+                {
+                    vertexOut.AddAttribute(attr0);
+                }
+                
+            }
+
+            return vertexOut;
         }
         public static Vertex operator /(Vertex v0, Vertex v1)
         {
-            return new(v0.pos / v1.pos, v0.t / v1.t, v0.col, v0.n / v1.n);
+            Vertex vertexOut = new(v0.Pos / v1.Pos);
+
+            foreach (var vaKey in v0.Attributes.Keys) {
+
+                var attr0 = v0.Attributes[vaKey];
+                if(v1.Attributes.TryGetValue(vaKey, out var attr1))
+                {
+                    var attribute = attr0.Div(attr1);
+                    vertexOut.AddAttribute(attribute);
+                }else
+                {
+                    vertexOut.AddAttribute(attr0);
+                }
+            }
+
+            return vertexOut;
         }
 
         //overrides ToString
         public override string ToString()
         {
-            return $"[{pos}]";
+            return $"[{Pos}]";
         }        
     }
 }

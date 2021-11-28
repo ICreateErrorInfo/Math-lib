@@ -8,17 +8,17 @@ namespace Projection
     {
         public void SetColor(Color c)
         {
-            this.c = c;
+            _c = c;
         }
 
         public override Color GetColor(Vertex v)
         {
-            return c;
+            return _c;
         }
 
         public override Vertex Translate(Vertex vIn)
         {
-            return new(rotation * vIn.pos + translation, vIn.t);
+            return new Vertex(rotation * vIn.Pos + translation, vIn.Attributes);
         }
 
         public override Triangle3D ProcessTri(Vertex v0, Vertex v1, Vertex v2, int triangleIndex)
@@ -26,6 +26,6 @@ namespace Projection
             return new(v0, v1, v2);
         }
 
-        Color c = Color.Red;
+        Color _c = Color.Red;
     }
 }
