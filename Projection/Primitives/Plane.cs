@@ -1,5 +1,5 @@
 ﻿using Math_lib;
-
+using Math_lib.VertexAttributes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,8 +62,7 @@ namespace Projection
                 double yT = -y * tDivisionSize;
                 for(int x = 0; x < nVerticesSide; x++, i++)
                 {
-                    //Todo
-                    //itList.vertices[i].t = tBottomLeft + new Point2D(x * tDivisionSize, yT);
+                    itList.vertices[i].AddAttribute(new TextureCoordinateVertexAttribute(tBottomLeft + new Point2D(x * tDivisionSize, yT)));
                 }
             }
 

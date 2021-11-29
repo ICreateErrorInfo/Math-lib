@@ -11,8 +11,10 @@ namespace Projection.Effects
 {
     class SolidGeoEffect : Effect
     {
-        public override Color GetColor(Vertex v) {
-            if (v.TryGetValue<ColorVertexAttribute>(out var color)) {
+        public override Color GetColor(Vertex v)
+        {
+            if (v.TryGetValue<ColorVertexAttribute>(out var color)) 
+            {
                 return color.Color;
             }
 

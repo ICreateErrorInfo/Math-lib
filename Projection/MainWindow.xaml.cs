@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 using Math_lib;
+using Math_lib.VertexAttributes;
 using Microsoft.Win32;
 using Projection.Effects;
 using Projection.Primitives;
@@ -25,6 +27,7 @@ namespace Projection
         double    _angleY;
         double _angleX;
         Vector3D _trans = new(0, 0, 3);
+        double _time;
 
         public MainWindow() {
 
@@ -35,10 +38,32 @@ namespace Projection
             //_effect = solidColor;
             //_mesh = Cube.GetPlain();
 
-            var solidGeoEffect = new SolidGeoEffect();
-            solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
-            _effect = solidGeoEffect;
-            _mesh = Cube.GetPlain();
+            //var solidGeoEffect = new SolidGeoEffect();
+            //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
+            //_effect = solidGeoEffect;
+            //_mesh = Cube.GetPlain();
+
+            var textureEffect = new TextureEffect();
+            var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            string textureFile = Path.Combine(exeDir, "Images", @"office_skin.jpg");
+            textureEffect.BindTexture(textureFile);
+            _effect = textureEffect;
+            _mesh = Cube.GetSkinned();
+
+            //var waveeffect = new WaveTextureEffect();
+            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            //waveeffect.BindTexture(texturefile);
+            //_effect = waveeffect;
+            //_mesh = Plane.GetSkinned(20);
+
+            //var VertexFlatEffect = new VertexFlatEffect();
+            //_effect = VertexFlatEffect;
+            //_mesh = Cube.GetIndependentFacesNormals();
+
+            //var GeometryFlatEffect = new GeometryFlatEffect();
+            //_effect = GeometryFlatEffect;
+            //_mesh = Sphere.GetPlain();
 
             //Load Mesh
             ShowOpenFile();
@@ -110,6 +135,12 @@ namespace Projection
 
         private void OnRenderSzene(object sender, EventArgs e)
         {
+            if(_effect.GetType() == typeof(WaveTextureEffect))
+            {
+                var we = (WaveTextureEffect)_effect;
+                we.SetTime(_time);
+            }
+
             Pipeline p = new Pipeline();
             _effect.BindTranslation(_trans);
             _effect.BindRotation(Matrix.RotateYMarix(_angleY) * Matrix.RotateXMarix(_angleX));
@@ -117,6 +148,7 @@ namespace Projection
             p.Draw(_mesh, _effect);
 
             Image.Source = p.Bmp.ToImageSource();
+            _time += .05;
         }       
     }
 }

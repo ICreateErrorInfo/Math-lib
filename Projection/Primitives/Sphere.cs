@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.VertexAttributes;
 using System;
 
 namespace Projection
@@ -74,8 +75,7 @@ namespace Projection
             var sphere = GetPlain(radius, latDiv, longDiv);
             foreach(var element in sphere.vertices)
             {
-                //Todo
-                //element.n = Vector3D.Normalize(((Vector3D)element.Pos));
+                element.AddAttribute(new NormalVertexAttribute(Vector3D.Normalize(((Vector3D)element.Pos))));
             }
             return sphere;
         }

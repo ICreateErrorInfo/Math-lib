@@ -19,7 +19,7 @@ namespace Projection
             double t = (-planeD - ad) / (bd - ad);
             Vector3D lineStartToEnd = lineEnd - lineStart;
             Vector3D lineToIntersect = lineStartToEnd * t;
-            return new Vertex(lineStart + lineToIntersect);
+            return new Vertex(lineStart + lineToIntersect, lineStart1.Attributes);
         }
 
         public static IEnumerable<Triangle3D> TriangleClipAgainstPlane(Point3D planeP, Normal3D planeN, Triangle3D inTri)

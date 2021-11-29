@@ -13,9 +13,12 @@ namespace Projection
         public Vertex Transform(Vertex v) {
             Matrix projectionMatrix = Matrix.Projection(Options.ScreenWidth, Options.ScreenHeight, Options.Fov, Options.Nplane, Options.Fplane);
 
+            double zInv = 1 / v.Pos.Z;
+            v *= zInv;
+
             Vertex v1         = new Vertex(projectionMatrix * v.Pos, v.Attributes);
 
-            return new(new Point3D((v1.Pos.X + 1) * _xFactor, (-v1.Pos.Y + 1) * _yFactor, v1.Pos.Z), v.Attributes);
+            return new(new Point3D((v1.Pos.X + 1) * _xFactor, (-v1.Pos.Y + 1) * _yFactor, zInv), v.Attributes);
         }
 
         private readonly double _xFactor;

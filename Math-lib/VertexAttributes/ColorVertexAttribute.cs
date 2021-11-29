@@ -9,7 +9,7 @@ namespace Math_lib.VertexAttributes
 {
     public class ColorVertexAttribute : VertexAttribute
     {
-        public Color Color {get; init; }
+        public Color Color {get; private set; }
 
 
         public ColorVertexAttribute(Color color) 
@@ -34,6 +34,36 @@ namespace Math_lib.VertexAttributes
         }
 
         public override VertexAttribute Sub(VertexAttribute vertexAttribute2)
+        {
+            return this;
+        }
+
+        public override void SetValue(double d)
+        {
+            this.Color = Color.FromArgb((int)d, (int)d, (int)d);
+        }
+
+        public override VertexAttribute CopyThis()
+        {
+            return new ColorVertexAttribute(Color);
+        }
+
+        public override VertexAttribute AddDouble(double d)
+        {
+            return this;
+        }
+
+        public override VertexAttribute SubDouble(double d)
+        {
+            return this;
+        }
+
+        public override VertexAttribute MulDouble(double d)
+        {
+            return this;
+        }
+
+        public override VertexAttribute DivDouble(double d)
         {
             return this;
         }
