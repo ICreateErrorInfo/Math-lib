@@ -42,7 +42,6 @@ namespace Math_lib
             if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
             {
                 return false;
-                throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
             }
             return true;
         }

@@ -38,7 +38,6 @@ namespace Math_lib
             if (double.IsNaN(v.X) || double.IsNaN(v.Y))
             {
                 return false;
-                throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
             }
             return true;
         }
@@ -246,7 +245,7 @@ namespace Math_lib
             Debug.Assert(!double.IsNaN(d));
             Debug.Assert(d != 0);
 
-            double inv = (double)1 / d;
+            double inv = 1 / d;
 
             return new Point2D(p.X * inv,
                                p.Y * inv);

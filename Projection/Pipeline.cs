@@ -191,7 +191,6 @@ namespace Projection
 
                     if (zb.TestAndSet(x, y, z))
                     {
-                        //Todo bug
                         var attr = iLine * z;
 
                         Bmp.SetPixel(x, y, _effect.GetColor(attr));
