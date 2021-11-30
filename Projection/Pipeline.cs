@@ -4,6 +4,7 @@ using Rasterizer_lib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Projection
 {
@@ -13,8 +14,15 @@ namespace Projection
         {
 
         }
+        private void Clear()
+        {
+            Bmp = new DirectBitmap(Options.ScreenWidth, Options.ScreenHeight);
+            zb  = new ZBuffer(Options.ScreenWidth, Options.ScreenHeight);
+            pst = new PubeScreenTransformer();
+        }
         public void Draw(Mesh triList, Effect e)
         {
+            Clear();
             _effect = e;
             ProcessVertices(triList.vertices, triList.indices);
         }
@@ -63,44 +71,46 @@ namespace Projection
             var v1 = pst.Transform(triangle.Points[1]);
             var v2 = pst.Transform(triangle.Points[2]);
 
-            var listTriangles = new List<Triangle3D>();
-            listTriangles.Add(new(v0, v1, v2));
-            int nNewTris = 1;
+            //var listTriangles = new List<Triangle3D>();
+            //listTriangles.Add(new(v0, v1, v2));
+            //int nNewTris = 1;
 
-            for (int p = 0; p < 4; p++)
-            {
-                while (nNewTris > 0)
-                {
-                    Triangle3D test = listTriangles[0];
-                    listTriangles.RemoveAt(0);
-                    nNewTris--;
-                    var trisToAdd = p switch
-                    {
-                        //Clipping top
-                        0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
-                        //Clipping bottom
-                        1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.ScreenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
-                        //Clipping left
-                        2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
-                        //Clipping Right
-                        3 => Clipping.TriangleClipAgainstPlane(new(x: Options.ScreenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
-                        _ => Enumerable.Empty<Triangle3D>()
-                    };
+            //for (int p = 0; p < 4; p++)
+            //{
+            //    while (nNewTris > 0)
+            //    {
+            //        Triangle3D test = listTriangles[0];
+            //        listTriangles.RemoveAt(0);
+            //        nNewTris--;
+            //        var trisToAdd = p switch
+            //        {
+            //            //Clipping top
+            //            0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
+            //            //Clipping bottom
+            //            1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.ScreenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
+            //            //Clipping left
+            //            2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
+            //            //Clipping Right
+            //            3 => Clipping.TriangleClipAgainstPlane(new(x: Options.ScreenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
+            //            _ => Enumerable.Empty<Triangle3D>()
+            //        };
 
-                    //Saving new Triangles
-                    foreach (var t in trisToAdd)
-                    {
-                        listTriangles.Add(t);
-                    }
-                }
-                nNewTris = listTriangles.Count;
-            }
+            //        //Saving new Triangles
+            //        foreach (var t in trisToAdd)
+            //        {
+            //            listTriangles.Add(t);
+            //        }
+            //    }
+            //    nNewTris = listTriangles.Count;
+            //}
 
 
-            foreach (Triangle3D t in listTriangles)
-            {
-                DrawTriangle(t.Points[0], t.Points[1], t.Points[2]);
-            }
+            //foreach (Triangle3D t in listTriangles)
+            //{
+            //    DrawTriangle(t.Points[0], t.Points[1], t.Points[2]);
+            //}
+
+            DrawTriangle(v0, v1, v2);
         }
         private void DrawTriangle(Vertex v0, Vertex v1, Vertex v2)
         {
@@ -191,7 +201,6 @@ namespace Projection
 
                     if (zb.TestAndSet(x, y, z))
                     {
-                        //Todo bug
                         var attr = iLine * z;
 
                         Bmp.SetPixel(x, y, _effect.GetColor(attr));
@@ -201,9 +210,9 @@ namespace Projection
         }
 
         private Effect _effect;
-        public DirectBitmap Bmp = new DirectBitmap(Options.ScreenWidth, Options.ScreenHeight);
+        public DirectBitmap Bmp;
 
-        private ZBuffer zb = new ZBuffer(Options.ScreenWidth, Options.ScreenHeight);
-        private PubeScreenTransformer pst = new PubeScreenTransformer();
+        private ZBuffer zb ;
+        private PubeScreenTransformer pst;
     }
 }

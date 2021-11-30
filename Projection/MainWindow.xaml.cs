@@ -23,6 +23,7 @@ namespace Projection
         readonly DispatcherTimer   _timer;
         readonly Mesh              _mesh;
         readonly Effect            _effect;
+        readonly Pipeline          _p;
 
         double    _angleY;
         double _angleX;
@@ -32,6 +33,7 @@ namespace Projection
         public MainWindow() {
 
             InitializeComponent();
+            _p = new Pipeline();
 
             //var solidColor = new SolidColorEffect();
             //solidColor.SetColor(Color.Green);
@@ -43,19 +45,19 @@ namespace Projection
             //_effect = solidGeoEffect;
             //_mesh = Cube.GetPlain();
 
-            var textureEffect = new TextureEffect();
-            var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            string textureFile = Path.Combine(exeDir, "Images", @"office_skin.jpg");
-            textureEffect.BindTexture(textureFile);
-            _effect = textureEffect;
-            _mesh = Cube.GetSkinned();
+            //var textureEffect = new TextureEffect();
+            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string textureFile = Path.Combine(exeDir, "Images", @"office_skin.jpg");
+            //textureEffect.BindTexture(textureFile);
+            //_effect = textureEffect;
+            //_mesh = Cube.GetSkinned();
 
-            //var waveeffect = new WaveTextureEffect();
-            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
-            //waveeffect.BindTexture(texturefile);
-            //_effect = waveeffect;
-            //_mesh = Plane.GetSkinned(20);
+            var waveeffect = new WaveTextureEffect();
+            var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            waveeffect.BindTexture(texturefile);
+            _effect = waveeffect;
+            _mesh = Plane.GetSkinned(20);
 
             //var VertexFlatEffect = new VertexFlatEffect();
             //_effect = VertexFlatEffect;
@@ -141,13 +143,12 @@ namespace Projection
                 we.SetTime(_time);
             }
 
-            Pipeline p = new Pipeline();
             _effect.BindTranslation(_trans);
             _effect.BindRotation(Matrix.RotateYMarix(_angleY) * Matrix.RotateXMarix(_angleX));
 
-            p.Draw(_mesh, _effect);
+            _p.Draw(_mesh, _effect);
 
-            Image.Source = p.Bmp.ToImageSource();
+            Image.Source = _p.Bmp.ToImageSource();
             _time += .05;
         }       
     }
