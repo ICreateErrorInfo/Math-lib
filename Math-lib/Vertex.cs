@@ -1,14 +1,13 @@
 ﻿using Math_lib.VertexAttributes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Math_lib
 {
-    public class Vertex
+    public readonly struct Vertex
     {
         public Point3D Pos { get; init; }
-        public Dictionary<Type, VertexAttribute> Attributes { get; private set; }
+        public Dictionary<Type, VertexAttribute> Attributes { get; }
 
 
         public Vertex(Point3D pos) : this(pos, null)
@@ -29,7 +28,7 @@ namespace Math_lib
                 value = (T)v;
                 return true;
             }
-            value = default(T);
+            value = default;
             return false;
         }
         public void AddAttribute(VertexAttribute vertexAttribute)
