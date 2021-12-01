@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows;
@@ -20,15 +21,17 @@ namespace Projection
     /// </summary>
     public partial class MainWindow: Window {
 
-        readonly DispatcherTimer   _timer;
-        readonly Mesh              _mesh;
-        readonly Effect            _effect;
-        readonly Pipeline          _p;
+        private readonly DispatcherTimer   _timer;
+        private readonly Mesh              _mesh;
+        private readonly Effect            _effect;
+        private readonly Pipeline          _p;
 
-        double    _angleY;
-        double _angleX;
-        Vector3D _trans = new(0, 0, 3);
-        double _time;
+        private double    _angleY;
+        private double _angleX;
+        private Vector3D _trans = new(0, 0, 3);
+        private double _time;
+        private double _maxTime = 0;
+        private double _minTime = double.MaxValue;
 
         public MainWindow() {
 
@@ -46,7 +49,7 @@ namespace Projection
             //_mesh = Cube.GetPlain();
 
             //var textureEffect = new TextureEffect();
-            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //var exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntfasterryAssembly()?.Location) ?? "";
             //string textureFile = Path.Combine(exeDir, "Images", @"office_skin.jpg");
             //textureEffect.BindTexture(textureFile);
             //_effect = textureEffect;
@@ -137,6 +140,8 @@ namespace Projection
 
         private void OnRenderSzene(object sender, EventArgs e)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             if(_effect.GetType() == typeof(WaveTextureEffect))
             {
                 var we = (WaveTextureEffect)_effect;
@@ -150,6 +155,21 @@ namespace Projection
 
             Image.Source = _p.Bmp.ToImageSource();
             _time += .05;
+
+            stopwatch.Stop();
+            if(stopwatch.ElapsedMilliseconds > _maxTime && _time > 0.5)
+            {
+                _maxTime = stopwatch.ElapsedMilliseconds;
+                TimeMax.Text = stopwatch.ElapsedMilliseconds.ToString();
+            }
+
+            if(stopwatch.ElapsedMilliseconds < _minTime)
+            {
+                _minTime = stopwatch.ElapsedMilliseconds;
+                TimeMin.Text = stopwatch.ElapsedMilliseconds.ToString();
+            }
+
+            Time.Text = stopwatch.ElapsedMilliseconds.ToString();
         }       
     }
 }

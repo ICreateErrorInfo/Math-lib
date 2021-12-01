@@ -7,7 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Image x:Name="Image"/>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.RowSpan="5" x:Name="Image" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="Time" Text="" FontSize="18"/>
+        <TextBlock x:Name="TimeMin" Text="" FontSize="18" Grid.Row="1"/>
+        <TextBlock x:Name="TimeMax" Text="" FontSize="18" Grid.Row="2"/>
     </Grid>
 </Window>
