@@ -38,10 +38,10 @@ namespace Projection
             InitializeComponent();
             _p = new Pipeline();
 
-            //var solidColor = new SolidColorEffect();
-            //solidColor.SetColor(Color.Green);
-            //_effect = solidColor;
-            //_mesh = Cube.GetPlain();
+            var solidcolor = new SolidColorEffect();
+            solidcolor.SetColor(Color.Green);
+            _effect = solidcolor;
+            _mesh = Cube.GetPlain();
 
             //var solidGeoEffect = new SolidGeoEffect();
             //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
@@ -55,12 +55,12 @@ namespace Projection
             //_effect = textureEffect;
             //_mesh = Cube.GetSkinned();
 
-            var waveeffect = new WaveTextureEffect();
-            var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
-            string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
-            waveeffect.BindTexture(texturefile);
-            _effect = waveeffect;
-            _mesh = Plane.GetSkinned(20);
+            //var waveeffect = new WaveTextureEffect();
+            //var exedir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? "";
+            //string texturefile = Path.Combine(exedir, "images", @"sauron-bhole-100x100.png");
+            //waveeffect.BindTexture(texturefile);
+            //_effect = waveeffect;
+            //_mesh = Plane.GetSkinned(20);
 
             //var VertexFlatEffect = new VertexFlatEffect();
             //_effect = VertexFlatEffect;
@@ -72,6 +72,7 @@ namespace Projection
 
             //Load Mesh
             ShowOpenFile();
+            _mesh = Importer.mesh;
 
             Vertecies.Text = "Vertecies: " + _mesh.vertices.Count;
 

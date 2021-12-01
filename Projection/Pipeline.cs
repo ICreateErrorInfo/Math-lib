@@ -1,10 +1,6 @@
 ﻿using Math_lib;
-using Math_lib.VertexAttributes;
-using Rasterizer_lib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Projection
 {
