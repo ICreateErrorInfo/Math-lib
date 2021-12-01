@@ -45,13 +45,12 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos + v1.Pos);
 
-            foreach (var vaKey in v0.Attributes.Keys)
-            {
-                var attr0 = v0.Attributes[vaKey];
-                var attr1 = v1.Attributes[vaKey];
+            var attrv0 = v0.Attributes;
+            var attrv1 = v1.Attributes;
 
-                var attribute = attr0.Add(attr1);
-                vertexOut.AddAttribute(attribute);
+            foreach (var vaKey in attrv0.Keys)
+            {
+                vertexOut.AddAttribute(attrv0[vaKey].Add(attrv1[vaKey]));
             }
 
             return vertexOut;
@@ -60,13 +59,12 @@ namespace Math_lib
         {
             Vertex vertexOut = new((Point3D)(v0.Pos - v1.Pos));
 
-            foreach (var vaKey in v0.Attributes.Keys)
-            {
-                var attr0 = v0.Attributes[vaKey];
-                var attr1 = v1.Attributes[vaKey];
+            var attrv0 = v0.Attributes;
+            var attrv1 = v1.Attributes;
 
-                var attribute = attr0.Sub(attr1);
-                vertexOut.AddAttribute(attribute);
+            foreach (var vaKey in attrv0.Keys)
+            {
+                vertexOut.AddAttribute(attrv0[vaKey].Sub(attrv1[vaKey]));
             }
 
             return vertexOut;
@@ -75,13 +73,12 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos * v1.Pos);
 
-            foreach (var vaKey in v0.Attributes.Keys)
-            {
-                var attr0 = v0.Attributes[vaKey];
-                var attr1 = v1.Attributes[vaKey];
+            var attrv0 = v0.Attributes;
+            var attrv1 = v1.Attributes;
 
-                var attribute = attr0.Mul(attr1);
-                vertexOut.AddAttribute(attribute);
+            foreach (var vaKey in attrv0.Keys)
+            {
+                vertexOut.AddAttribute(attrv0[vaKey].Mul(attrv1[vaKey]));
             }
 
             return vertexOut;
@@ -90,13 +87,12 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos / v1.Pos);
 
-            foreach (var vaKey in v0.Attributes.Keys)
-            {
-                var attr0 = v0.Attributes[vaKey];
-                var attr1 = v1.Attributes[vaKey];
+            var attrv0 = v0.Attributes;
+            var attrv1 = v1.Attributes;
 
-                var attribute = attr0.Div(attr1);
-                vertexOut.AddAttribute(attribute);
+            foreach (var vaKey in attrv0.Keys)
+            {
+                vertexOut.AddAttribute(attrv0[vaKey].Div(attrv1[vaKey]));
             }
 
             return vertexOut;
@@ -106,11 +102,9 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos + v1);
 
-            foreach (var vaKey in v0.Attributes.Keys)
+            foreach (var vaVal in v0.Attributes.Values)
             {
-                var attr0 = v0.Attributes[vaKey];
-
-                var attribute = attr0.AddDouble(v1);
+                var attribute = vaVal.AddDouble(v1);
                 vertexOut.AddAttribute(attribute);
             }
 
@@ -120,11 +114,9 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos - v1);
 
-            foreach (var vaKey in v0.Attributes.Keys)
+            foreach (var vaVal in v0.Attributes.Values)
             {
-                var attr0 = v0.Attributes[vaKey];
-
-                var attribute = attr0.SubDouble(v1);
+                var attribute = vaVal.SubDouble(v1);
                 vertexOut.AddAttribute(attribute);
             }
 
@@ -134,11 +126,9 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos * v1);
 
-            foreach (var vaKey in v0.Attributes.Keys)
+            foreach (var vaVal in v0.Attributes.Values)
             {
-                var attr0 = v0.Attributes[vaKey];
-
-                var attribute = attr0.MulDouble(v1);
+                var attribute = vaVal.MulDouble(v1);
                 vertexOut.AddAttribute(attribute);
             }
 
@@ -148,11 +138,9 @@ namespace Math_lib
         {
             Vertex vertexOut = new(v0.Pos / v1);
 
-            foreach (var vaKey in v0.Attributes.Keys)
+            foreach (var vaVal in v0.Attributes.Values)
             {
-                var attr0 = v0.Attributes[vaKey];
-
-                var attribute = attr0.DivDouble(v1);
+                var attribute = vaVal.DivDouble(v1);
                 vertexOut.AddAttribute(attribute);
             }
 
