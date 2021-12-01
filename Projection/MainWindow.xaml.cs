@@ -73,10 +73,12 @@ namespace Projection
             //Load Mesh
             ShowOpenFile();
 
+            Vertecies.Text = "Vertecies: " + _mesh.vertices.Count;
+
             //Render
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(100),
+                Interval = TimeSpan.FromMilliseconds(1),
                 IsEnabled = true
             };
 
@@ -97,6 +99,11 @@ namespace Projection
         }
         protected override void OnKeyDown(KeyEventArgs e) 
         {
+            if(e.Key == Key.Back)
+            {
+                _minTime = double.MaxValue;
+                _maxTime = 0;
+            }
             if (e.Key == Key.P)
             {
                 _timer.IsEnabled ^= true;
@@ -160,13 +167,13 @@ namespace Projection
             if(stopwatch.ElapsedMilliseconds > _maxTime && _time > 0.5)
             {
                 _maxTime = stopwatch.ElapsedMilliseconds;
-                TimeMax.Text = stopwatch.ElapsedMilliseconds.ToString();
+                TimeMax.Text = "MaxTime: " + stopwatch.ElapsedMilliseconds.ToString();
             }
 
             if(stopwatch.ElapsedMilliseconds < _minTime)
             {
                 _minTime = stopwatch.ElapsedMilliseconds;
-                TimeMin.Text = stopwatch.ElapsedMilliseconds.ToString();
+                TimeMin.Text = "MinTime: " + stopwatch.ElapsedMilliseconds.ToString();
             }
 
             Time.Text = stopwatch.ElapsedMilliseconds.ToString();

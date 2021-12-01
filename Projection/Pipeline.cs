@@ -52,12 +52,7 @@ namespace Projection
                 //Backface Culling
                 if ((Vector3D.Dot(Vector3D.Cross(v1.Pos - v0.Pos, v2.Pos - v0.Pos), (Vector3D)v0.Pos) < 0))
                 {
-                    var clippedTris = Clipping.TriangleClipAgainstPlane(new(0, 0, Options.Nplane), new(0, 0, Options.Nplane), new(v0, v1, v2));
-
-                    foreach (var clipped in clippedTris)
-                    {
-                        ProcessTriangle(clipped, i);
-                    }
+                    ProcessTriangle(new(v0, v1, v2), i);
                 }
             }
         }
@@ -71,53 +66,10 @@ namespace Projection
             var v1 = pst.Transform(triangle.Points[1]);
             var v2 = pst.Transform(triangle.Points[2]);
 
-            //var listTriangles = new List<Triangle3D>();
-            //listTriangles.Add(new(v0, v1, v2));
-            //int nNewTris = 1;
-
-            //for (int p = 0; p < 4; p++)
-            //{
-            //    while (nNewTris > 0)
-            //    {
-            //        Triangle3D test = listTriangles[0];
-            //        listTriangles.RemoveAt(0);
-            //        nNewTris--;
-            //        var trisToAdd = p switch
-            //        {
-            //            //Clipping top
-            //            0 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 0, y: 1, z: 0), test),
-            //            //Clipping bottom
-            //            1 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: Options.ScreenHeight - 1, z: 0), new(x: 0, y: -1, z: 0), test),
-            //            //Clipping left
-            //            2 => Clipping.TriangleClipAgainstPlane(new(x: 0, y: 0, z: 0), new(x: 1, y: 0, z: 0), test),
-            //            //Clipping Right
-            //            3 => Clipping.TriangleClipAgainstPlane(new(x: Options.ScreenWidth - 1, y: 0, z: 0), new(x: -1, y: 0, z: 0), test),
-            //            _ => Enumerable.Empty<Triangle3D>()
-            //        };
-
-            //        //Saving new Triangles
-            //        foreach (var t in trisToAdd)
-            //        {
-            //            listTriangles.Add(t);
-            //        }
-            //    }
-            //    nNewTris = listTriangles.Count;
-            //}
-
-
-            //foreach (Triangle3D t in listTriangles)
-            //{
-            //    DrawTriangle(t.Points[0], t.Points[1], t.Points[2]);
-            //}
-
             DrawTriangle(v0, v1, v2);
         }
-        private void DrawTriangle(Vertex v0, Vertex v1, Vertex v2)
+        private void DrawTriangle(Vertex p0, Vertex p1, Vertex p2)
         {
-            Vertex p0 = v0;
-            Vertex p1 = v1;
-            Vertex p2 = v2;
-
             if (p1.Pos.Y < p0.Pos.Y) { (p0, p1) = (p1, p0); }
             if (p2.Pos.Y < p1.Pos.Y) { (p1, p2) = (p2, p1); }
             if (p1.Pos.Y < p0.Pos.Y) { (p0, p1) = (p1, p0); }
@@ -212,7 +164,7 @@ namespace Projection
         private Effect _effect;
         public DirectBitmap Bmp;
 
-        private ZBuffer zb ;
+        private ZBuffer zb;
         private PubeScreenTransformer pst;
     }
 }

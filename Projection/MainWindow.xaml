@@ -15,11 +15,13 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
             <RowDefinition Height="26"/>
+            <RowDefinition Height="26"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Image Grid.RowSpan="5" x:Name="Image" Grid.ColumnSpan="2"/>
+        <Image Grid.RowSpan="6" x:Name="Image" Grid.ColumnSpan="1" Grid.Column="1"/>
         <TextBlock x:Name="Time" Text="" FontSize="18"/>
         <TextBlock x:Name="TimeMin" Text="" FontSize="18" Grid.Row="1"/>
         <TextBlock x:Name="TimeMax" Text="" FontSize="18" Grid.Row="2"/>
+        <TextBlock x:Name="Vertecies" Text="" FontSize="18" Grid.Row="3"/>
     </Grid>
 </Window>
