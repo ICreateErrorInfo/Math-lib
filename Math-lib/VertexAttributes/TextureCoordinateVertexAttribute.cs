@@ -15,29 +15,14 @@ namespace Math_lib.VertexAttributes
             T = t;
         }
 
-        public override VertexAttribute Add(VertexAttribute vertexAttribute2)
-        {
-            var other = (TextureCoordinateVertexAttribute) vertexAttribute2;
-            return new TextureCoordinateVertexAttribute(this.T + other.T);
-        }
+        public override VertexAttribute Add(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T + ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
 
-        public override VertexAttribute Div(VertexAttribute vertexAttribute2)
-        {
-            var other = (TextureCoordinateVertexAttribute)vertexAttribute2;
-            return new TextureCoordinateVertexAttribute(this.T / other.T);
-        }
+        public override VertexAttribute Div(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T / ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
 
-        public override VertexAttribute Mul(VertexAttribute vertexAttribute2)
-        {
-            var other = (TextureCoordinateVertexAttribute)vertexAttribute2;
-            return new TextureCoordinateVertexAttribute(this.T * other.T);
-        }
+        public override VertexAttribute Mul(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T * ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
 
-        public override VertexAttribute Sub(VertexAttribute vertexAttribute2)
-        {
-            var other = (TextureCoordinateVertexAttribute)vertexAttribute2;
-            return new TextureCoordinateVertexAttribute((Point2D)(this.T - other.T));
-        }
+        public override VertexAttribute Sub(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute((Point2D)(T - ((TextureCoordinateVertexAttribute)vertexAttribute2).T));
+
 
         public override void SetValue(double d)
         {
