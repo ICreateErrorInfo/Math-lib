@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,12 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Math-lib">
-      <HintPath>..\Rasterizer-lib\bin\Release\net5.0-windows\Math-lib.dll</HintPath>
-    </Reference>
-    <Reference Include="Rasterizer-lib">
-      <HintPath>..\Rasterizer-lib\bin\Release\net5.0-windows\Rasterizer-lib.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
+    <ProjectReference Include="..\Rasterizer-lib\Rasterizer-lib.csproj" />
   </ItemGroup>
 
 </Project>
