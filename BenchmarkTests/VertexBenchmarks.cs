@@ -16,22 +16,22 @@ namespace BenchmarkTests
             var erg = _vertex + _vertex2;
         }
 
-        [Benchmark]
-        public void VertexSub()
-        {
-            var erg = _vertex - _vertex2;
-        }
+        //[Benchmark]
+        //public void VertexSub()
+        //{
+        //    var erg = _vertex - _vertex2;
+        //}
 
-        [Benchmark]
-        public void VertexMul()
-        {
-            var erg = _vertex * _vertex2;
-        }
+        //[Benchmark]
+        //public void VertexMul()
+        //{
+        //    var erg = _vertex * _vertex2;
+        //}
 
-        [Benchmark]
-        public void VertexDiv()
-        {
-            var erg = _vertex / _vertex2;
-        }
+        //[Benchmark]
+        //public void VertexDiv()
+        //{
+        //    var erg = _vertex / _vertex2;
+        //}
     }
 }

@@ -123,7 +123,7 @@ namespace Projection
         }
         private void DrawFlatTriangle(Vertex it0, Vertex it1, Vertex it2, Vertex dv0, Vertex dv1, Vertex itEdge1)
         {
-            var itEdge0 = new Vertex(it0.Pos, it0.Attributes);
+            var itEdge0 = it0;
 
             int yStart = (int)Math.Ceiling(it0.Pos.Y - 0.5);
             int yEnd = (int)Math.Ceiling(it2.Pos.Y - 0.5);
@@ -136,7 +136,7 @@ namespace Projection
                 int xStart = (int)Math.Ceiling(itEdge0.Pos.X - 0.5);
                 int xEnd = (int)Math.Ceiling(itEdge1.Pos.X - 0.5);
 
-                var iLine = new Vertex(itEdge0.Pos, itEdge0.Attributes);
+                var iLine = itEdge0;
 
                 double dx = itEdge1.Pos.X - itEdge0.Pos.X;
                 var diLine = (itEdge1 - iLine) / dx;

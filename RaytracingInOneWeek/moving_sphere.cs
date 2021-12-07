@@ -1,31 +1,43 @@
 ﻿using System;
 using Math_lib;
+using System.Collections.Generic;
+using System.Text;
 
 namespace RaytracingInOneWeek
 {
-    class sphere : hittable
+    class moving_sphere : hittable
     {
-        public sphere() { }
-        public sphere(Point3D cen, double r, material m)
+        public moving_sphere()
         {
-            center = cen;
+
+        }
+        public moving_sphere(Point3D cen0, Point3D cen1, double _time0, double _time1, double r, material m)
+        {
+            center0 = cen0;
+            center1 = cen1;
+            time0 = _time0;
+            time1 = _time1;
             radius = r;
             mat_ptr = m;
         }
-        Point3D center;
-        double radius;
-        material mat_ptr;
+        public Point3D center0;
+        public Point3D center1;
+        public double time0;
+        public double time1;
+        public double radius;
+        public material mat_ptr;
 
         public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
         {
             zwischenSpeicher zw = new zwischenSpeicher();
-            Vector3D oc = r.o - center;
+
+            Vector3D oc = r.o - center(r.tMax);
             var a = r.d.GetLengthSqrt();
             var half_b = Vector3D.Dot(oc, r.d);
             var c = oc.GetLengthSqrt() - radius * radius;
 
             var discriminant = half_b * half_b - a * c;
-            if (discriminant < 0)
+            if(discriminant < 0)
             {
                 zw.IsTrue = false;
                 return zw;
@@ -45,9 +57,8 @@ namespace RaytracingInOneWeek
 
             rec.t = root;
             rec.p = r.At(rec.t);
-            Normal3D outward_normal = (Normal3D)((rec.p - center) / radius);
+            Normal3D outward_normal = (Normal3D)(Vector3D)((rec.p - center(r.tMax)) / radius);
             rec.set_face_normal(r, outward_normal);
-            (rec.u, rec.v) = get_sphere_uv(outward_normal, rec.u, rec.v);
             rec.mat_ptr = mat_ptr;
 
             zw.rec = rec;
@@ -55,27 +66,21 @@ namespace RaytracingInOneWeek
 
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override zwischenSpeicherAABB bounding_box(double _time0, double _time1, aabb output_box)
         {
             zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = new aabb(center - new Vector3D(radius, radius, radius),
-                                  center + new Vector3D(radius, radius, radius));
+            aabb box0 = new aabb(center(_time0) - new Vector3D(radius, radius, radius),
+                                 center(_time0) + new Vector3D(radius, radius, radius));
+            aabb box1 = new aabb(center(_time1) - new Vector3D(radius, radius, radius),
+                                 center(_time1) + new Vector3D(radius, radius, radius));
+            output_box = aabb.surrounding_box(box0, box1);
             zw.outputBox = output_box;
             zw.isTrue = true;
             return zw;
         }
-        private (double u, double v) get_sphere_uv(Normal3D p, double u, double v)
+        public virtual Point3D center(double time)
         {
-            var theta = Math.Acos(-p.Y);
-            var phi = Math.Atan2(-p.Z, p.X) + Math.PI;
-
-            u = phi / (2 * Math.PI);
-            v = theta / Math.PI;
-
-            return (u, v);
+            return center0 + ((time - time0) / (time1 - time0)) * (center1 - center0);
         }
-
-        private double u;
-        private double v;
     }
 }

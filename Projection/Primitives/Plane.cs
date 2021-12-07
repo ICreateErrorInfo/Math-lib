@@ -68,5 +68,17 @@ namespace Projection
 
             return itList;
         }
+        public static Mesh GetNormals(int divisions = 7, double size = 1)
+        {
+            Mesh meshOut = GetPlain(divisions, size);
+            List<Vertex> vertices = new List<Vertex>();
+
+            foreach (Vertex vertex in meshOut.vertices)
+            {
+                vertices.Add(vertex.GetAddAttribute(new NormalVertexAttribute(new(0, 0, -1))));
+            }
+
+            return new Mesh(vertices, meshOut.indices);
+        }
     }
 }

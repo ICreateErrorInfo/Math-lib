@@ -43,9 +43,9 @@ namespace Projection
             _effect = solidcolor;
             _mesh = Cube.GetPlain();
 
-            //var solidGeoEffect = new SolidGeoEffect();
-            //solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
-            //_effect = solidGeoEffect;
+            var solidGeoEffect = new SolidGeoEffect();
+            solidGeoEffect.BindColors(new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Magenta, Color.Yellow, Color.Cyan });
+            _effect = solidGeoEffect;
             //_mesh = Cube.GetPlain();
 
             //var textureEffect = new TextureEffect();
@@ -64,7 +64,7 @@ namespace Projection
 
             //var VertexFlatEffect = new VertexFlatEffect();
             //_effect = VertexFlatEffect;
-            //_mesh = Cube.GetIndependentFacesNormals();
+            //_mesh = Plane.GetNormals(50);
 
             //var GeometryFlatEffect = new GeometryFlatEffect();
             //_effect = GeometryFlatEffect;

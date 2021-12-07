@@ -228,6 +228,11 @@ namespace Math_lib
                 return p;
             }
         }
+        public bool NearZero()
+        {
+            var s = 1e-8;
+            return (Math.Abs(X) < s) && (Math.Abs(Y) < s) && (Math.Abs(Z) < s);
+        }
         public static explicit operator Point3D(Vector3D a)
         {
             Debug.Assert(IsNaN(a));
