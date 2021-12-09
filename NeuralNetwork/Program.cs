@@ -29,7 +29,7 @@ namespace NeuralNetwork
             int L = neural._layers.Length - 1;
             double learningRate = 0.5;
 
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 100; j++)
             {
                 neural.FeedForward(new double[] { 1, 0, 1 });
                 double[] output = neural.GetOutput();
@@ -49,20 +49,20 @@ namespace NeuralNetwork
                 error[L] = err.ToArray();
 
 
-                for (int i = 1; i < L; i++)
+                for (int i = 0; i < L; i++)
                 {
                     int l = L - i;
                     List<double> err2 = new List<double>();
-                    for (int k = 0; k < neural._neurons[l].Length; k++)
+                    for (int k = 0; k < neural._neurons[l - 1].Length; k++)
                     {
                         double sumW = 0;
-                        for (int u = 0; u < neural._neurons[l + 1].Length; u++)
+                        for (int u = 0; u < neural._neurons[l].Length; u++)
                         {
-                            sumW += neural._weights[i - 1][k][u] * error[l + 1][u];
+                            sumW += neural._weights[l - 1][u][k] * error[l][u];
                         }
-                        err2.Add(sumW * neural.SigmoidPrime(neural._neurons[l][k]));
+                        err2.Add(sumW * neural.SigmoidPrime(neural._neurons[l - 1][k]));
                     }
-                    error[l] = err2.ToArray();
+                    error[l - 1] = err2.ToArray();
                 }
 
                 for (int i = 1; i <= L; i++)
