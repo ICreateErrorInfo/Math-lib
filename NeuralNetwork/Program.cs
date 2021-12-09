@@ -9,6 +9,22 @@ namespace NeuralNetwork
         {
             NeuralNet neural = new NeuralNet(new int[] { 3, 4, 1 });
 
+            double[] input = new double[] { 1, 2, 3 };
+            double[] expectedOutput = new double[] { 0.3 };
+            double learningRate = 0.5;
+
+            for(int i = 0; i < 1000; i++)
+            {
+                neural.Learn(input, expectedOutput, learningRate);
+            }
+
+            neural.FeedForward(input);
+
+            foreach(var element in neural.GetOutput())
+            {
+                Console.WriteLine(element);
+            }
+
             //foreach (var image in MnistReader.ReadTrainingData())
             //{
             //    double[] imageIn1DimArray = new double[image.Data.Length];
@@ -25,59 +41,6 @@ namespace NeuralNetwork
             //    }
             //}
 
-            double[] expectedOutput = new double[] { 0.61249 };
-            int L = neural._layers.Length - 1;
-            double learningRate = 0.5;
-
-            for (int j = 0; j < 100; j++)
-            {
-                neural.FeedForward(new double[] { 1, 0, 1 });
-                double[] output = neural.GetOutput();
-                foreach (var outNeuron in output)
-                {
-                    Console.WriteLine(outNeuron);
-                }
-                Console.WriteLine();
-
-                double[][] error = new double[L + 1][];
-
-                List<double> err = new List<double>();
-                for (int i = 0; i < output.Length; i++)
-                {
-                    err.Add((output[i] - expectedOutput[i]) * neural.SigmoidPrime(output[i]));
-                }
-                error[L] = err.ToArray();
-
-
-                for (int i = 0; i < L; i++)
-                {
-                    int l = L - i;
-                    List<double> err2 = new List<double>();
-                    for (int k = 0; k < neural._neurons[l - 1].Length; k++)
-                    {
-                        double sumW = 0;
-                        for (int u = 0; u < neural._neurons[l].Length; u++)
-                        {
-                            sumW += neural._weights[l - 1][u][k] * error[l][u];
-                        }
-                        err2.Add(sumW * neural.SigmoidPrime(neural._neurons[l - 1][k]));
-                    }
-                    error[l - 1] = err2.ToArray();
-                }
-
-                for (int i = 1; i <= L; i++)
-                {
-                    for (int k = 0; k < neural._neurons[i].Length; k++)
-                    {
-                        neural._biases[i][k] -= error[i][k] * learningRate;
-                        for (int u = 0; u < neural._neurons[i - 1].Length; u++)
-                        {
-                            neural._weights[i - 1][k][u] -= (error[i][k] * neural._neurons[i - 1][u]) * learningRate;
-                        }
-                    }
-                }
-
-            }
         }
         public static double[] ConvertToOneD(float[,] input)
         {
