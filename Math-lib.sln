@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rasterizer-lib", "Rasterize
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BenchmarkTests", "BenchmarkTests\BenchmarkTests.csproj", "{0F3C1EC1-8EAE-425A-96C5-DDFC5C42F849}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetworkWPF", "Neural_Network_WPF\Neural_Network_WPF\NeuralNetworkWPF.csproj", "{86E07547-F0B1-4C9D-80B9-2089C874FC80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

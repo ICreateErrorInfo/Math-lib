@@ -1,0 +1,40 @@
+﻿<Window x:Class="Neural_Network_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Neural_Network_WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="12"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="550"/>
+            <ColumnDefinition Width="61*"/>
+            <ColumnDefinition Width="114*"/>
+            <ColumnDefinition Width="175*"/>
+        </Grid.ColumnDefinitions>
+        <Button Click="VohärigesBild" Content="previous" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2"/>
+        <Button Click="NextButton_Click" Content="next" Grid.Column="3" Grid.Row="4"/>
+
+        <Image x:Name="imageShow" Grid.Column="0" Grid.RowSpan="3" Grid.Row="0" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        <Label x:Name="label"  Content="Correct:" Grid.Row="0" Grid.Column="1" FontSize="30" FontWeight="Bold" Grid.ColumnSpan="2" />
+        <Label x:Name="label2" Content="Ai:" Grid.Row="0" Grid.Column="3" FontSize="30" FontWeight="Bold" />
+        <Canvas Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="1"/>
+
+        <Button Click="TrainAi" Content="Train" Grid.Column="3" Grid.Row="1"/>
+        <Button Click="Clear" Content="Clear" Grid.Column="2" Grid.Row="1"/>
+        <TextBox x:Name="Samples" Grid.Column="1"  Text="10000" FontSize="15" Grid.Row="1"/>
+        
+        <Button Click="ButtonSave" Content="Save" Grid.Column="3" Grid.Row="2"/>
+        <Button Click="ButtonLoad" Content="Load" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"/>
+
+    </Grid>
+</Window>
