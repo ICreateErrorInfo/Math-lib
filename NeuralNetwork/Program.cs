@@ -31,7 +31,7 @@ namespace NeuralNetwork
                     }
                 }
 
-                neural.Learn(imageIn1DimArray, expected, learningRate);
+                neural.Train(imageIn1DimArray, expected, learningRate);
 
                 //double[] output = neural.GetOutput();
 
@@ -53,6 +53,7 @@ namespace NeuralNetwork
 
             Console.WriteLine("Trained with: " + Break + " Samples");
             Console.WriteLine();
+            neural.SaveToFile(@"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Saved\SavedNetwork.txt");
 
             int counter = 0;
             foreach (var image in MnistReader.ReadTestData())

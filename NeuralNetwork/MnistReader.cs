@@ -8,10 +8,10 @@ namespace NeuralNetwork
 {
     public static class MnistReader
     {
-        private const string TrainImages = @"Database\train-images.idx3-ubyte";
-        private const string TrainLabels = @"Database\train-labels.idx1-ubyte";
-        private const string TestImages =  @"Database\t10k-images.idx3-ubyte";
-        private const string TestLabels =  @"Database\t10k-labels.idx1-ubyte";
+        private const string TrainImages = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\train-images.idx3-ubyte";
+        private const string TrainLabels = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\train-labels.idx1-ubyte";
+        private const string TestImages = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\t10k-images.idx3-ubyte";
+        private const string TestLabels = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\t10k-labels.idx1-ubyte";
 
         public static IEnumerable<Image> ReadTrainingData()
         {

@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Saved\" />
+  </ItemGroup>
+
 </Project>
