@@ -34,12 +34,10 @@ namespace RaytracingInOneWeek
         {
             return sides.Hit(r, t_min, t_max, rec);
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            zw.outputBox = new aabb(box_min, box_max);
-            zw.isTrue = true;
-            return zw;
+            bound = new Bounds3D(box_min, box_max);
+            return true;
         }
     }
 }

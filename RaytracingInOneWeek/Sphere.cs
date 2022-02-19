@@ -55,14 +55,11 @@ namespace RaytracingInOneWeek
 
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = new aabb(center - new Vector3D(radius, radius, radius),
-                                  center + new Vector3D(radius, radius, radius));
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            bound = new Bounds3D(center - new Vector3D(radius, radius, radius),
+                                 center + new Vector3D(radius, radius, radius));
+            return true;
         }
         private (double u, double v) get_sphere_uv(Normal3D p, double u, double v)
         {

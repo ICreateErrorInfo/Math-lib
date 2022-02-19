@@ -30,6 +30,46 @@ namespace Math_lib
 
 
         //Mehtods
+        public bool IntersectP(Ray ray, ref double hitt0, ref double hitt1)
+        {
+            double t0 = 0;
+            double t1 = ray.tMax;
+            for(int i = 0; i < 3; i++)
+            {
+                double invRayDir = 1 / ray.d[i];
+                double tNear = (pMin[i] - ray.o[i]) * invRayDir;
+                double tFar = (pMax[i] - ray.o[i]) * invRayDir;
+                if(tNear > tFar)
+                {
+                    Math1.Swap(ref tNear, ref tFar);
+                }
+                t0 = tNear > t0 ? tNear : t0;
+                t1 = tFar  < t1 ? tFar  : t1;
+                if (t0 > t1) return false;
+            }
+            hitt0 = t0;
+            hitt1 = t1;
+            return true;
+        }
+        public bool IntersectP(Ray ray, Vector3D invDir, int[] dirIsNeg)
+        {
+            double tMin =  (this[dirIsNeg[0]].X - ray.o.X) * invDir.X;
+            double tMax =  (this[1 - dirIsNeg[0]].X - ray.o.X) * invDir.X;
+            double tyMin = (this[dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
+            double tyMax = (this[1 - dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
+
+            if (tMin > tyMax || tyMin > tMax) return false;
+            if (tyMin > tMin) tMin = tyMin;
+            if (tyMax < tMax) tMax = tyMax;
+
+            double tzMin = (this[dirIsNeg[2]].Z - ray.o.Z) * invDir.Z;
+            double tzMax = (this[1 - dirIsNeg[2]].Z - ray.o.Z) * invDir.Z;
+
+            if (tMin > tzMax || tzMin > tMax) return false;
+            if (tzMin > tMin) tMin = tzMin;
+            if (tzMax < tMax) tMax = tzMax;
+            return (tMin < ray.tMax) && (tMax > 0);
+        }
         public static bool IsNaN(Bounds3D b)
         {
             if (Point3D.IsNaN(b.pMax) || Point3D.IsNaN(b.pMin))
@@ -86,7 +126,7 @@ namespace Math_lib
 
             return p >= b.pMin && p <= b.pMax;
         }
-        public bool INsideExclusive(Point3D p, Bounds3D b)
+        public bool InsideExclusive(Point3D p, Bounds3D b)
         {
             Debug.Assert(Point3D.IsNaN(p));
             Debug.Assert(IsNaN(b));

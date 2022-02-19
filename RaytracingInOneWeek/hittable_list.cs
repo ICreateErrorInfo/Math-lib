@@ -4,7 +4,7 @@ using Math_lib;
 
 namespace RaytracingInOneWeek
 {
-    class hittable_list : hittable
+    public class hittable_list : hittable
     {
         public hittable_list()
         {
@@ -45,31 +45,26 @@ namespace RaytracingInOneWeek
 
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
             if (!objects.Any())
             {
-                zw.isTrue = false;
-                return zw;
+                return false;
             }
 
-            aabb temp_Box = new aabb();
-            bool first_box = true;
+            Bounds3D currentBoundingBox = new Bounds3D();
+            bool isFirstBox = true;
 
             foreach(var _object in objects)
             {
-                zw = _object.bounding_box(time0, time1, temp_Box);
-                if (!zw.isTrue)
+                if (!_object.bounding_box(time0, time1, ref currentBoundingBox))
                 {
-                    output_box = first_box ? zw.outputBox : aabb.surrounding_box(output_box, zw.outputBox);
-                    first_box = false;
+                    bound = isFirstBox ? currentBoundingBox : Bounds3D.Union(bound, currentBoundingBox);
+                    isFirstBox = false;
                 }
             }
 
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            return true;
         }
     }
 }

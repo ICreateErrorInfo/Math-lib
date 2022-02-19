@@ -26,10 +26,9 @@ namespace RaytracingInOneWeek
             zwischenSpeicher zw = new zwischenSpeicher();
             return zw; 
         }
-        public virtual zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public virtual bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            return zw;
+            return false;
         }
     }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using Math_lib;
-using System.Collections.Generic;
-using System.Text;
+﻿using Math_lib;
 
 namespace RaytracingInOneWeek
 {
@@ -50,13 +47,10 @@ namespace RaytracingInOneWeek
             zw.IsTrue = true;
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = new aabb(new Point3D(x0, y0, k - 0.0001), new Point3D(x1, y1, k + 0.0001));
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            bound = new Bounds3D(new Point3D(x0, y0, k - 0.0001), new Point3D(x1, y1, k + 0.0001));
+            return true;
         }
     }
     class xz_rect : hittable
@@ -106,13 +100,10 @@ namespace RaytracingInOneWeek
             zw.IsTrue = true;
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = new aabb(new Point3D(x0, k - 0.0001, z0), new Point3D(x1, k + 0.0001, z1));
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            bound = new Bounds3D(new Point3D(x0, k - 0.0001, z0), new Point3D(x1, k + 0.0001, z1));
+            return true;
         }
     }
     class yz_rect : hittable
@@ -162,13 +153,10 @@ namespace RaytracingInOneWeek
             zw.IsTrue = true;
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = new aabb(new Point3D(k - 0.0001, y0, z0), new Point3D(k + 0.0001,y1, z1));
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            bound = new Bounds3D(new Point3D(k - 0.0001, y0, z0), new Point3D(k + 0.0001,y1, z1));
+            return true;
         }
     }
 }

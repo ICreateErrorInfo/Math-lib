@@ -63,29 +63,26 @@ namespace RaytracingInOneWeek
                 right = new bvh_node(objekts, mid, end, time0, time1);
             }
 
-            aabb box_left = new aabb();
-            aabb box_right = new aabb();
+            Bounds3D box_left = new Bounds3D();
+            Bounds3D box_right = new Bounds3D();
 
-            if(!left.bounding_box(time0, time1, box_left).isTrue || !right.bounding_box(time0, time1, box_right).isTrue)
+            if(!left.bounding_box(time0, time1, ref box_left) || !right.bounding_box(time0, time1, ref box_right))
             {
                 //geht nicht
-
             }
 
-            box = aabb.surrounding_box(box_left, box_right);
+            box = Bounds3D.Union(box_left, box_right);
         }
         public hittable left;
         public hittable right;
-        aabb box;
+        Bounds3D box;
 
         public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
         {
-            zwischenSpeicherAABB zw = box.hit(r, t_min, t_max);
-            t_min = zw.t_min;
-            t_max = zw.t_max;
+            bool foundHit = box.IntersectP(r, ref t_min, ref t_max);
             zwischenSpeicher zw1 = left.Hit(r, t_min, t_max, rec);
 
-            if (!zw.isTrue)
+            if (!foundHit)
             {
                 zw1.IsTrue = false;
                 return zw1;
@@ -98,32 +95,24 @@ namespace RaytracingInOneWeek
 
             return zw1;
         }
-        public override zwischenSpeicherAABB bounding_box(double time0, double time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            output_box = box;
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            bound = box;
+            return true;
         }
         public static int box_compare(hittable a, hittable b, int axis)
         {
-            aabb box_a = new aabb();
-            aabb box_b = new aabb();
+            Bounds3D box_a = new Bounds3D();
+            Bounds3D box_b = new Bounds3D();
 
-            zwischenSpeicherAABB zwa = new zwischenSpeicherAABB();
-            zwa = a.bounding_box(0, 0, box_a);
-            zwischenSpeicherAABB zwb = new zwischenSpeicherAABB();
-            zwb = a.bounding_box(0, 0, box_b);
-
-            if (!zwa.isTrue || !zwb.isTrue)
+            if (!a.bounding_box(0, 0, ref box_a) || !a.bounding_box(0, 0, ref box_b))
             {
                 //geht nicht
             }
 
             if (axis == 0)
             {
-                if(box_a.minimum.X < box_b.minimum.X)
+                if(box_a.pMin.X < box_b.pMin.X)
                 {
                     return -1;
                 }
@@ -134,7 +123,7 @@ namespace RaytracingInOneWeek
             }
             if (axis == 1)
             {
-                if(box_a.minimum.Y < box_b.minimum.Y)
+                if(box_a.pMin.Y < box_b.pMin.Y)
                 {
                     return -1;
                 }
@@ -145,7 +134,7 @@ namespace RaytracingInOneWeek
             }
             if (axis == 2)
             {
-                if(box_a.minimum.Z < box_b.minimum.Z)
+                if(box_a.pMin.Z < box_b.pMin.Z)
                 {
                     return -1;
                 }

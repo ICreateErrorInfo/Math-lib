@@ -34,6 +34,40 @@ namespace Math_lib
         }
 
         //Methods
+        public bool IntersectP(Ray ray, ref double hitt0, ref double hitt1)
+        {
+            double t0 = 0;
+            double t1 = ray.tMax;
+            for (int i = 0; i < 2; i++)
+            {
+                double invRayDir = 1 / ray.d[i];
+                double tNear = (pMin[i] - ray.o[i]) * invRayDir;
+                double tFar = (pMax[i] - ray.o[i]) * invRayDir;
+                if (tNear > tFar)
+                {
+                    Math1.Swap(ref tNear, ref tFar);
+                }
+                t0 = tNear > t0 ? tNear : t0;
+                t1 = tFar < t1 ? tFar : t1;
+                if (t0 > t1) return false;
+            }
+            hitt0 = t0;
+            hitt1 = t1;
+            return true;
+        }
+        public bool IntersectP(Ray ray, Vector3D invDir, int[] dirIsNeg)
+        {
+            double tMin = (this[dirIsNeg[0]].X - ray.o.X) * invDir.X;
+            double tMax = (this[1 - dirIsNeg[0]].X - ray.o.X) * invDir.X;
+            double tyMin = (this[dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
+            double tyMax = (this[1 - dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
+
+            if (tMin > tyMax || tyMin > tMax) return false;
+            if (tyMin > tMin) tMin = tyMin;
+            if (tyMax < tMax) tMax = tyMax;
+
+            return (tMin < ray.tMax) && (tMax > 0);
+        }
         public static bool IsNaN(Bounds2D b)
         {
             if (Point2D.IsNaN(b.pMax) || Point2D.IsNaN(b.pMin))

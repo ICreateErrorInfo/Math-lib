@@ -66,17 +66,14 @@ namespace RaytracingInOneWeek
 
             return zw;
         }
-        public override zwischenSpeicherAABB bounding_box(double _time0, double _time1, aabb output_box)
+        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
-            zwischenSpeicherAABB zw = new zwischenSpeicherAABB();
-            aabb box0 = new aabb(center(_time0) - new Vector3D(radius, radius, radius),
-                                 center(_time0) + new Vector3D(radius, radius, radius));
-            aabb box1 = new aabb(center(_time1) - new Vector3D(radius, radius, radius),
-                                 center(_time1) + new Vector3D(radius, radius, radius));
-            output_box = aabb.surrounding_box(box0, box1);
-            zw.outputBox = output_box;
-            zw.isTrue = true;
-            return zw;
+            Bounds3D box0 = new Bounds3D(center(time0) - new Vector3D(radius, radius, radius),
+                                         center(time0) + new Vector3D(radius, radius, radius));
+            Bounds3D box1 = new Bounds3D(center(time1) - new Vector3D(radius, radius, radius),
+                                         center(time1) + new Vector3D(radius, radius, radius));
+            bound = Bounds3D.Union(box0, box1);
+            return true;
         }
         public virtual Point3D center(double time)
         {
