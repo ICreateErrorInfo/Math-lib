@@ -19,7 +19,7 @@ namespace Raytracing
         }
         public double x0, x1, y0, y1, k;
         public material mp;
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
             var t = (k - r.o.Z) / r.d.Z;
             if(t < t_min || t > t_max)
@@ -68,7 +68,7 @@ namespace Raytracing
         double x0, x1, z0, z1, k;
         material mp;
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
             var t = (k - r.o.Y) / r.d.Y;
             if (t < t_min || t > t_max)
@@ -118,7 +118,7 @@ namespace Raytracing
         double y0, y1, z0, z1, k;
         material mp;
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
             var t = (k - r.o.X) / r.d.X;
             if (t < t_min || t > t_max)

@@ -62,7 +62,7 @@ namespace Raytracing
 
             //Camera
             Vector3D vup = new Vector3D(0, 1, 0);
-            var dist_to_focus = 20;
+            var dist_to_focus = (lookfrom - lookat).GetLength();
 
             Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, dist_to_focus, 0, 1);
 
@@ -157,36 +157,27 @@ namespace Raytracing
         }
         public static Vector3D ray_color(Ray r, Vector3D background, hittable world, int depth)
         {
-            SurfaceInteraction rec = new SurfaceInteraction();
-            if (world.Hit(r, 0, double.PositiveInfinity, ref rec))
+            SurfaceInteraction isect = new SurfaceInteraction();
+
+            if (depth <= 0)
             {
-                return 0.5 * ((Vector3D)rec.normal + new Vector3D(1, 1, 1));
+                return new Vector3D(0, 0, 0);
             }
-            Vector3D unit_direction = Vector3D.Normalize(r.d);
-            var t = 0.5 * (unit_direction.Y + 1.0);
-            return (1.0 - t) * new Vector3D(1.0, 1.0, 1.0) + t * new Vector3D(0.5, 0.7, 1.0);
 
-            //SurfaceInteraction isect = new SurfaceInteraction();
+            if (!world.TryHit(r, 0.0001, Mathe.infinity, ref isect))
+            {
+                return background;
+            }
+            Ray scattered = new Ray();
+            Vector3D attenuation = new Vector3D();
+            Vector3D emitted = isect.mat_ptr.emitted(isect.u, isect.v, isect.p);
 
-            //if (depth <= 0)
-            //{
-            //    return new Vector3D(0, 0, 0);
-            //}
+            if (!isect.mat_ptr.scatter(r, ref isect, ref attenuation, ref scattered))
+            {
+                return emitted;
+            }
 
-            //if (!world.Hit(r, 0.0001, Mathe.infinity, ref isect))
-            //{
-            //    return background;
-            //}
-            //Ray scattered = new Ray();
-            //Vector3D attenuation = new Vector3D();
-            //Vector3D emitted = isect.mat_ptr.emitted(isect.u, isect.v, isect.p);
-
-            //if (!isect.mat_ptr.scatter(r, ref isect, ref attenuation, ref scattered))
-            //{
-            //    return emitted;
-            //}
-
-            //return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
+            return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
         }
         public static Color toColor(Vector3D pixel_color, int samples_per_pixel)
         {

@@ -27,7 +27,7 @@ namespace Raytracing
         public double radius;
         public material mat_ptr;
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
             Vector3D oc = r.o - center(r.tMax);
             var a = r.d.GetLengthSqrt();

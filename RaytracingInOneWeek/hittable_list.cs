@@ -21,7 +21,7 @@ namespace Raytracing
 
         public List<hittable> objects = new List<hittable>();
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
             SurfaceInteraction temp_rec = new SurfaceInteraction();
             bool hitAnything = false;
@@ -29,7 +29,7 @@ namespace Raytracing
 
             foreach (var Object in objects)
             {
-                if (Object.Hit(r, t_min, closest_so_far, ref temp_rec))
+                if (Object.TryHit(r, t_min, closest_so_far, ref temp_rec))
                 {
                     hitAnything = true;
                     closest_so_far = temp_rec.t;

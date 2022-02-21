@@ -95,7 +95,7 @@ namespace Raytracing
             ret.Add(globe);
 
             Scene scene = new Scene(objs: ret,
-                                    spp: 1,
+                                    spp: 10,
                                     maxD: 50,
                                     lookfrom: new Point3D(13, 2, 3),
                                     lookat: new Point3D(0, 0, 0),

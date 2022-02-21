@@ -20,7 +20,7 @@ namespace Raytracing
             mat_ptr = m;
         }
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
             Vector3D oc = r.o - center;
             var a = r.d.GetLengthSqrt();
@@ -48,7 +48,7 @@ namespace Raytracing
             isect.p = r.At(root);
             Normal3D outward_normal = (Normal3D)((isect.p - center) / radius);
             isect.set_face_normal(r, outward_normal);
-            (isect.u, isect.v) = get_sphere_uv(outward_normal, isect.u, isect.v);
+            (isect.u, isect.v) = get_sphere_uv(outward_normal);
             isect.mat_ptr = mat_ptr;
 
             return true;
@@ -59,13 +59,13 @@ namespace Raytracing
                                  center + new Vector3D(radius, radius, radius));
             return true;
         }
-        private (double u, double v) get_sphere_uv(Normal3D p, double u, double v)
+        private (double u, double v) get_sphere_uv(Normal3D p)
         {
             var theta = Math.Acos(-p.Y);
             var phi = Math.Atan2(-p.Z, p.X) + Math.PI;
 
-            u = phi / (2 * Math.PI);
-            v = theta / Math.PI;
+            var u = phi / (2 * Math.PI);
+            var v = theta / Math.PI;
 
             return (u, v);
         }

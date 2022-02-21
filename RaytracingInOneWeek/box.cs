@@ -30,9 +30,9 @@ namespace Raytracing
         public Point3D box_max;
         public hittable_list sides = new hittable_list();
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
-            return sides.Hit(r, t_min, t_max, ref isect);
+            return sides.TryHit(r, t_min, t_max, ref isect);
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {

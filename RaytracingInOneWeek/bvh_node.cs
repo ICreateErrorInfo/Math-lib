@@ -78,17 +78,17 @@ namespace Raytracing
             box = Bounds3D.Union(box_left, box_right);
         }
 
-        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
             bool foundBoxInsec = box.IntersectP(r, ref t_min, ref t_max);
-            bool hit_left = left.Hit(r, t_min, t_max, ref isect);
+            bool hit_left = left.TryHit(r, t_min, t_max, ref isect);
 
             if (!foundBoxInsec)
             {
                 return false;
             }
 
-            bool hit_right = right.Hit(r, t_min, hit_left ? isect.t : t_max, ref isect);
+            bool hit_right = right.TryHit(r, t_min, hit_left ? isect.t : t_max, ref isect);
 
             return hit_left || hit_right;
         }
