@@ -3,7 +3,7 @@ using Math_lib;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class moving_sphere : hittable
     {
@@ -27,10 +27,8 @@ namespace RaytracingInOneWeek
         public double radius;
         public material mat_ptr;
 
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
-
             Vector3D oc = r.o - center(r.tMax);
             var a = r.d.GetLengthSqrt();
             var half_b = Vector3D.Dot(oc, r.d);
@@ -39,8 +37,7 @@ namespace RaytracingInOneWeek
             var discriminant = half_b * half_b - a * c;
             if(discriminant < 0)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
             var sqrtd = Math.Sqrt(discriminant);
 
@@ -50,21 +47,17 @@ namespace RaytracingInOneWeek
                 root = (-half_b + sqrtd) / a;
                 if (root < t_min || t_max < root)
                 {
-                    zw.IsTrue = false;
-                    return zw;
+                    return false;
                 }
             }
 
-            rec.t = root;
-            rec.p = r.At(rec.t);
-            Normal3D outward_normal = (Normal3D)(Vector3D)((rec.p - center(r.tMax)) / radius);
-            rec.set_face_normal(r, outward_normal);
-            rec.mat_ptr = mat_ptr;
+            isect.t = root;
+            isect.p = r.At(isect.t);
+            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.p - center(r.tMax)) / radius);
+            isect.set_face_normal(r, outward_normal);
+            isect.mat_ptr = mat_ptr;
 
-            zw.rec = rec;
-            zw.IsTrue = true;
-
-            return zw;
+            return true;
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {

@@ -1,11 +1,13 @@
 ﻿using System;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
 
     static class Mathe {
         public static double ToRad(double deg) => deg * Math.PI / 180;
         public static double infinity = 9999999999999999999;
+        private readonly static Random _random = new System.Random();
+
         public static double random_double()
         {
             Random random = new Random();
@@ -28,8 +30,7 @@ namespace RaytracingInOneWeek
         }
         public static double random(double min, double max, double durch)
         {
-            Random random = new System.Random();
-            double rand_num = random.Next(Convert.ToInt32(min * durch), Convert.ToInt32(max * durch));
+            double rand_num = _random.Next(Convert.ToInt32(min * durch), Convert.ToInt32(max * durch));
             rand_num -= durch;
             return Convert.ToDouble((double)rand_num / (double)durch);
         }

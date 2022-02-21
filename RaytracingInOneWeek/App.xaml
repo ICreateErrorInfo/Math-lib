@@ -1,7 +1,7 @@
-﻿<Application x:Class="RaytracingInOneWeek.App"
+﻿<Application x:Class="Raytracing.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RaytracingInOneWeek"
+             xmlns:local="clr-namespace:Raytracing"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

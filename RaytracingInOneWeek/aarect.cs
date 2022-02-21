@@ -1,6 +1,6 @@
 ﻿using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class xy_rect : hittable
     {
@@ -19,33 +19,30 @@ namespace RaytracingInOneWeek
         }
         public double x0, x1, y0, y1, k;
         public material mp;
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
             var t = (k - r.o.Z) / r.d.Z;
             if(t < t_min || t > t_max)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
             var x = r.o.X + t * r.d.X;
             var y = r.o.Y + t * r.d.Y;
             if(x < x0 || x > x1 || y < y0 || y > y1)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
-            zw.rec.u = (x - x0) / (x1 - x0);
-            zw.rec.v = (y - y0) / (y1 - y0);
-            rec.t = t;
+            insec.u = (x - x0) / (x1 - x0);
+            insec.v = (y - y0) / (y1 - y0);
+            insec.t = t;
             var outward_normal = new Normal3D(0,0,1);
-            zw.rec.set_face_normal(r, outward_normal);
-            zw.rec.mat_ptr = mp;
-            zw.rec.p = r.At(t);
-            zw.IsTrue = true;
-            return zw;
+            insec.set_face_normal(r, outward_normal);
+            insec.mat_ptr = mp;
+            insec.p = r.At(t);
+
+            return true;
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
@@ -71,14 +68,12 @@ namespace RaytracingInOneWeek
         double x0, x1, z0, z1, k;
         material mp;
 
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
             var t = (k - r.o.Y) / r.d.Y;
             if (t < t_min || t > t_max)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
             var x = r.o.X + t * r.d.X;
@@ -86,19 +81,18 @@ namespace RaytracingInOneWeek
 
             if (x < x0 || x > x1 || z < z0 || z > z1)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
-            zw.rec.u = (x - x0) / (x1 - x0);
-            zw.rec.v = (z - z0) / (z1 - z0);
-            rec.t = t;
+            insec.u = (x - x0) / (x1 - x0);
+            insec.v = (z - z0) / (z1 - z0);
+            insec.t = t;
             var outward_normal = new Normal3D(0, 1, 0);
-            zw.rec.set_face_normal(r, outward_normal);
-            zw.rec.mat_ptr = mp;
-            zw.rec.p = r.At(t);
-            zw.IsTrue = true;
-            return zw;
+            insec.set_face_normal(r, outward_normal);
+            insec.mat_ptr = mp;
+            insec.p = r.At(t);
+
+            return true;
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
@@ -124,14 +118,12 @@ namespace RaytracingInOneWeek
         double y0, y1, z0, z1, k;
         material mp;
 
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
             var t = (k - r.o.X) / r.d.X;
             if (t < t_min || t > t_max)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
             var y = r.o.Y + t * r.d.Y;
@@ -139,19 +131,18 @@ namespace RaytracingInOneWeek
 
             if (y < y0 || y > y1 || z < z0 || z > z1)
             {
-                zw.IsTrue = false;
-                return zw;
+                return false;
             }
 
-            zw.rec.u = (y - y0) / (y1 - y0);
-            zw.rec.v = (z - z0) / (z1 - z0);
-            rec.t = t;
+            insec.u = (y - y0) / (y1 - y0);
+            insec.v = (z - z0) / (z1 - z0);
+            insec.t = t;
             var outward_normal = new Normal3D(1, 0, 0);
-            zw.rec.set_face_normal(r, outward_normal);
-            zw.rec.mat_ptr = mp;
-            zw.rec.p = r.At(t);
-            zw.IsTrue = true;
-            return zw;
+            insec.set_face_normal(r, outward_normal);
+            insec.mat_ptr = mp;
+            insec.p = r.At(t);
+
+            return true;
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {

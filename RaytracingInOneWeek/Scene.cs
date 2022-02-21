@@ -1,6 +1,6 @@
 ﻿using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     public struct Scene
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
-    class Perlin
+    public class Perlin
     {
         public Perlin()
         {

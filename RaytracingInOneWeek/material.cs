@@ -1,6 +1,6 @@
 ﻿using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     public class material
     {
@@ -8,10 +8,9 @@ namespace RaytracingInOneWeek
         {
             return new Vector3D(0,0,0);
         }
-        public virtual zwischenSpeicher scatter(Ray r_in, hit_record rec, Vector3D attenuation, Ray scattered)
+        public virtual bool scatter(Ray r_in, ref SurfaceInteraction rec, ref Vector3D attenuation, ref Ray scattered)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
-            return zw;
+            return false;
         }
     }
 }

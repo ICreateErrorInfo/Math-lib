@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Math-lib.Tests", "Math-lib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection", "Projection\Projection.csproj", "{48F639F6-2261-487B-AF0C-B683A211896D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaytracingInOneWeek", "RaytracingInOneWeek\RaytracingInOneWeek.csproj", "{6A59690D-B3C5-48CE-A463-5FD5DE4882AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracing", "RaytracingInOneWeek\Raytracing.csproj", "{6A59690D-B3C5-48CE-A463-5FD5DE4882AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RasterizerTest", "RasterizerTest\RasterizerTest.csproj", "{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetworkWPF", "Neural_Network_WPF\Neural_Network_WPF\NeuralNetworkWPF.csproj", "{86E07547-F0B1-4C9D-80B9-2089C874FC80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracing.Tests", "Raytracer.Tests\Raytracing.Tests.csproj", "{FD16A15E-2109-4811-B405-C7DD79160348}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86E07547-F0B1-4C9D-80B9-2089C874FC80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD16A15E-2109-4811-B405-C7DD79160348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD16A15E-2109-4811-B405-C7DD79160348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD16A15E-2109-4811-B405-C7DD79160348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD16A15E-2109-4811-B405-C7DD79160348}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

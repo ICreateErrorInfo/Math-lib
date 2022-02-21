@@ -3,7 +3,7 @@ using Math_lib;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class box : hittable
     {
@@ -30,9 +30,9 @@ namespace RaytracingInOneWeek
         public Point3D box_max;
         public hittable_list sides = new hittable_list();
 
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
-            return sides.Hit(r, t_min, t_max, rec);
+            return sides.Hit(r, t_min, t_max, ref isect);
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {

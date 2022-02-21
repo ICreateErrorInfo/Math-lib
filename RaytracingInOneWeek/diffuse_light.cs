@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class diffuse_light : material
     {
@@ -17,11 +17,9 @@ namespace RaytracingInOneWeek
         }
         public Texture emit;
 
-        public override zwischenSpeicher scatter(Ray r_in, hit_record rec, Vector3D attenuation, Ray scattered)
+        public override bool scatter(Ray r_in, ref SurfaceInteraction isect, ref  Vector3D attenuation, ref Ray scattered)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
-            zw.IsTrue = false;
-            return zw;
+            return false;
         }
 
         public override Vector3D emitted(double u, double v, Point3D p)

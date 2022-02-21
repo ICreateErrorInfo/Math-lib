@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     public class Raytracer
     {
@@ -157,29 +157,36 @@ namespace RaytracingInOneWeek
         }
         public static Vector3D ray_color(Ray r, Vector3D background, hittable world, int depth)
         {
-            hit_record rec = new hit_record();
-
-            if (depth <= 0)
+            SurfaceInteraction rec = new SurfaceInteraction();
+            if (world.Hit(r, 0, double.PositiveInfinity, ref rec))
             {
-                return new Vector3D(0, 0, 0);
+                return 0.5 * ((Vector3D)rec.normal + new Vector3D(1, 1, 1));
             }
+            Vector3D unit_direction = Vector3D.Normalize(r.d);
+            var t = 0.5 * (unit_direction.Y + 1.0);
+            return (1.0 - t) * new Vector3D(1.0, 1.0, 1.0) + t * new Vector3D(0.5, 0.7, 1.0);
 
-            zwischenSpeicher zw = world.Hit(r, 0.0001, Mathe.infinity, rec);
-            if (!zw.IsTrue)
-            {
-                return background;
-            }
-            Ray scattered = new Ray();
-            Vector3D attenuation = new Vector3D();
-            Vector3D emitted = zw.rec.mat_ptr.emitted(zw.rec.u, zw.rec.v, zw.rec.p);
+            //SurfaceInteraction isect = new SurfaceInteraction();
 
-            zw = zw.rec.mat_ptr.scatter(r, zw.rec, attenuation, scattered);
-            if (!zw.IsTrue)
-            {
-                return emitted;
-            }
+            //if (depth <= 0)
+            //{
+            //    return new Vector3D(0, 0, 0);
+            //}
 
-            return emitted + zw.attenuation * ray_color(zw.scattered, background, world, depth - 1);
+            //if (!world.Hit(r, 0.0001, Mathe.infinity, ref isect))
+            //{
+            //    return background;
+            //}
+            //Ray scattered = new Ray();
+            //Vector3D attenuation = new Vector3D();
+            //Vector3D emitted = isect.mat_ptr.emitted(isect.u, isect.v, isect.p);
+
+            //if (!isect.mat_ptr.scatter(r, ref isect, ref attenuation, ref scattered))
+            //{
+            //    return emitted;
+            //}
+
+            //return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
         }
         public static Color toColor(Vector3D pixel_color, int samples_per_pixel)
         {
@@ -189,9 +196,9 @@ namespace RaytracingInOneWeek
 
             var scale = (double)1 / (double)samples_per_pixel;
 
-            r = Math.Sqrt(scale * r);
-            g = Math.Sqrt(scale * g);
-            b = Math.Sqrt(scale * b);
+            r *= scale;
+            g *= scale;
+            b *= scale;
 
             return Color.FromArgb(Convert.ToInt32(255 * Mathe.clamp(r, 0, 0.999)),
                                   Convert.ToInt32(255 * Mathe.clamp(g, 0, 0.999)),

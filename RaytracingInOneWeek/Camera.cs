@@ -1,7 +1,7 @@
 ﻿using Math_lib;
 using System;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class Camera
     {
@@ -33,7 +33,7 @@ namespace RaytracingInOneWeek
 
             return new Ray(origin + offset,
                            lower_left_corner + s * horizontal + t * vertical - origin - offset,
-                           Mathe.random(time0, time1, 10000));
+                           Mathe.random(time0, time1, 1));
         }
 
         Point3D origin;

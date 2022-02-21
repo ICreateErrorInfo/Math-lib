@@ -4,10 +4,14 @@ using System.Text;
 using Math_lib;
 using System.Diagnostics.CodeAnalysis;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     class bvh_node : hittable
     {
+        public hittable left;
+        public hittable right;
+        Bounds3D box;
+
         public bvh_node()
         {
 
@@ -73,27 +77,20 @@ namespace RaytracingInOneWeek
 
             box = Bounds3D.Union(box_left, box_right);
         }
-        public hittable left;
-        public hittable right;
-        Bounds3D box;
 
-        public override zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public override bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
         {
-            bool foundHit = box.IntersectP(r, ref t_min, ref t_max);
-            zwischenSpeicher zw1 = left.Hit(r, t_min, t_max, rec);
+            bool foundBoxInsec = box.IntersectP(r, ref t_min, ref t_max);
+            bool hit_left = left.Hit(r, t_min, t_max, ref isect);
 
-            if (!foundHit)
+            if (!foundBoxInsec)
             {
-                zw1.IsTrue = false;
-                return zw1;
+                return false;
             }
 
-            bool hit_left = zw1.IsTrue;
-            bool hit_right = right.Hit(r, t_min, hit_left ? zw1.rec.t : t_max, zw1.rec).IsTrue;
+            bool hit_right = right.Hit(r, t_min, hit_left ? isect.t : t_max, ref isect);
 
-            zw1.IsTrue = hit_left || hit_right;
-
-            return zw1;
+            return hit_left || hit_right;
         }
         public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
@@ -147,6 +144,7 @@ namespace RaytracingInOneWeek
             return 0;
         }
     }
+
     public class XComparator : IComparer<hittable>
     {
         public int Compare([AllowNull] hittable x, [AllowNull] hittable y)
@@ -154,7 +152,6 @@ namespace RaytracingInOneWeek
             return bvh_node.box_compare(x, y, 0);
         }
     }
-
     public class YComparator : IComparer<hittable>
     {
         public int Compare([AllowNull] hittable x, [AllowNull] hittable y)
@@ -162,7 +159,6 @@ namespace RaytracingInOneWeek
             return bvh_node.box_compare(x, y, 1);
         }
     }
-
     public class ZComparator : IComparer<hittable>
     {
         public int Compare([AllowNull] hittable x, [AllowNull] hittable y)

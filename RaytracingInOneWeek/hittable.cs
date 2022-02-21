@@ -1,9 +1,11 @@
 ﻿using Math_lib;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
-    public struct hit_record
+    public struct SurfaceInteraction
     {
+        public Ray scattered;
+        public Vector3D attenuation;
         public Point3D p;
         public Normal3D normal;
         public material mat_ptr;
@@ -21,22 +23,13 @@ namespace RaytracingInOneWeek
 
     public class hittable
     {
-        public virtual zwischenSpeicher Hit(Ray r, double t_min, double t_max, hit_record rec)
+        public virtual bool Hit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
         {
-            zwischenSpeicher zw = new zwischenSpeicher();
-            return zw; 
+            return false;
         }
         public virtual bool bounding_box(double time0, double time1, ref Bounds3D bound)
         {
             return false;
         }
-    }
-
-    public struct zwischenSpeicher
-    {
-        public bool IsTrue;
-        public hit_record rec;
-        public Ray scattered;
-        public Vector3D attenuation;
     }
 }

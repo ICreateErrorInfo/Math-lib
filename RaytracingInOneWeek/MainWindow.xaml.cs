@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace RaytracingInOneWeek
+namespace Raytracing
 {
     public partial class MainWindow : Window
     {
@@ -18,10 +18,10 @@ namespace RaytracingInOneWeek
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(firstScene());
+            r.RenderScene(Earth());
         }
 
-        Scene firstScene()
+        Scene FirstScene()
         {
             hittable_list world = new hittable_list();
 
@@ -45,7 +45,7 @@ namespace RaytracingInOneWeek
 
             return scene;
         }
-        Scene two_spheres()
+        Scene TwoSpheres()
         {
             hittable_list objects = new hittable_list();
 
@@ -65,7 +65,7 @@ namespace RaytracingInOneWeek
 
             return scene;
         }
-        Scene two_perlin_spheres()
+        Scene TwoPerlinSpheres()
         {
             hittable_list objects = new hittable_list();
 
@@ -85,7 +85,7 @@ namespace RaytracingInOneWeek
 
             return scene;
         }
-        Scene earth()
+        Scene Earth()
         {
             var earthTexture = new image_texture("C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
 
@@ -101,11 +101,13 @@ namespace RaytracingInOneWeek
                                     lookat: new Point3D(0, 0, 0),
                                     vfov: 20,
                                     aperture: 0.1,
-                                    background: new Vector3D(.7, .8, 1));
+                                    background: new Vector3D(.7, .8, 1),
+                                    1920,
+                                    1080);
 
             return scene;
         }
-        Scene simple_light()
+        Scene SimpleLight()
         {
             hittable_list objekts = new hittable_list();
 
@@ -127,7 +129,7 @@ namespace RaytracingInOneWeek
 
             return scene;
         }
-        Scene cornell_box()
+        Scene CornellBox()
         {
             hittable_list objects = new hittable_list();
 
