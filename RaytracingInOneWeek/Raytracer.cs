@@ -187,9 +187,9 @@ namespace Raytracing
 
             var scale = (double)1 / (double)samples_per_pixel;
 
-            r *= scale;
-            g *= scale;
-            b *= scale;
+            r = Math.Sqrt(scale*r);
+            g = Math.Sqrt(scale*g);
+            b = Math.Sqrt(scale*b);
 
             return Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
                                   Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),

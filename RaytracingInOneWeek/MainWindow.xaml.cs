@@ -18,7 +18,7 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TwoSpheres());
+            r.RenderScene(Earth());
         }
 
         Scene FirstScene()
@@ -62,7 +62,7 @@ namespace Raytracing
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(1, 1, 1),
-                                    10);
+                                    focusDistance: 10);
 
             return scene;
         }
@@ -103,8 +103,9 @@ namespace Raytracing
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(.7, .8, 1),
-                                    1920,
-                                    1080);
+                                    focusDistance: 0,
+                                    imageWidth: 1920,
+                                    imageHeight: 1080);
 
             return scene;
         }
@@ -120,7 +121,7 @@ namespace Raytracing
             objekts.Add(new XYRect(3, 5, 1, 3, -2, difflight));
 
             Scene scene = new Scene(objs: objekts,
-                                    spp: 100,
+                                    spp: 400,
                                     maxD: 50,
                                     lookfrom: new Point3D(26, 3, 6),
                                     lookat: new Point3D(0, 2, 0),
