@@ -3,37 +3,36 @@
     public class Ray
     {
         //properties
-        public Point3D o { get; init; }
-        public Vector3D d { get; init; }
-        public double tMax;
-        public double time;
-
+        public readonly Point3D O;
+        public readonly Vector3D D;
+        public double TMax;
+        public double Time;
 
         //Ctors
         public Ray()
         {
-            tMax = double.PositiveInfinity;
-            time = 0;
+            TMax = double.PositiveInfinity;
+            Time = 0;
         }
         public Ray(Point3D o, Vector3D d, double tMax = double.PositiveInfinity, double time = 0)
         {
-            this.o = o;
-            this.d = d;
-            this.tMax = tMax;
-            this.time = time;
+            O = o;
+            D = d;
+            TMax = tMax;
+            Time = time;
         }
         
 
         //Methods
         public Point3D At(double t)
         {
-            return o + d * t;
+            return O + D * t;
         }
 
 
         public override string ToString()
         {
-            return $"[o={o}, d={d}, tMax={tMax}, time={time}]";
+            return $"[o={O}, d={D}, tMax={TMax}, time={Time}]";
         }
     }
 }

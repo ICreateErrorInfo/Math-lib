@@ -2,13 +2,13 @@
 
 namespace Raytracing
 {
-    public class material
+    public class Material
     {
-        public virtual Vector3D emitted(double u, double v, Point3D p)
+        public virtual Vector3D Emitted(double u, double v, Point3D p)
         {
             return new Vector3D(0,0,0);
         }
-        public virtual bool scatter(Ray r_in, ref SurfaceInteraction rec, ref Vector3D attenuation, ref Ray scattered)
+        public virtual bool Scatter(Ray rIn, ref SurfaceInteraction rec, ref Vector3D attenuation, ref Ray scattered)
         {
             return false;
         }

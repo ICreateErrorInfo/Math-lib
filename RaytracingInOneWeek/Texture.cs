@@ -7,78 +7,80 @@ namespace Raytracing
 {
     abstract class Texture
     {
-        public abstract Vector3D value(double u, double v, Point3D p);
+        public abstract Vector3D Value(double u, double v, Point3D p);
     }
-    class solid_color : Texture
+    class SolidColor : Texture
     {
-        public solid_color()
+        private readonly Vector3D _colorValue;
+
+        public SolidColor()
         {
 
         }
-        public solid_color(Vector3D c)
+        public SolidColor(Vector3D c)
         {
-            color_value = c;
+            _colorValue = c;
+        }
+        public SolidColor(double red, double green, double blue)
+        {
+            _colorValue = new Vector3D(red, green, blue);
         }
 
-        public solid_color(double red, double green, double blue)
+        public override Vector3D Value(double u, double v, Point3D p)
         {
-            color_value = new Vector3D(red, green, blue);
-        }
-        private Vector3D color_value;
-
-        public override Vector3D value(double u, double v, Point3D p)
-        {
-            return color_value;
+            return _colorValue;
         }
     }
-    class checker_texture : Texture
+    class CheckerTexture : Texture
     {
-        public checker_texture()
+        private readonly Texture _odd;
+        private readonly Texture _even;
+
+        public CheckerTexture()
         {
 
         }
-        public checker_texture(Texture _even, Texture _odd)
+        public CheckerTexture(Texture even, Texture odd)
         {
-            even = _even;
-            odd = _odd;
+            _even = even;
+            _odd = odd;
         }
-        public checker_texture(Vector3D c1, Vector3D c2)
+        public CheckerTexture(Vector3D c1, Vector3D c2)
         {
-            even = new solid_color(c1);
-            odd = new solid_color(c2);
+            _even = new SolidColor(c1);
+            _odd = new SolidColor(c2);
         }
-        public Texture odd;
-        public Texture even;
 
-        public override Vector3D value(double u, double v, Point3D p)
+        public override Vector3D Value(double u, double v, Point3D p)
         {
             var sines = Math.Sin(10 * p.X) * Math.Sin(10 * p.Y) * Math.Sin(10 * p.Z);
             if(sines < 0)
             {
-                return odd.value(u, v, p);
+                return _odd.Value(u, v, p);
             }
             else
             {
-                return even.value(u, v, p);
+                return _even.Value(u, v, p);
             }
         }
     }
-    class noise_texture : Texture
+    class NoiseTexture : Texture
     {
-        public noise_texture()
+        readonly public Perlin _noise = new Perlin();
+        private readonly double _scale;
+
+        public NoiseTexture()
         {
 
         }
-        public noise_texture(double sc)
+        public NoiseTexture(double scale)
         {
-            scale = sc;
-        }
-        public override Vector3D value(double u, double v, Point3D p)
-        {
-            return new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(scale * p.Z + 10*noise.turb(scale * (Vector3D)p)));
+            _scale = scale;
         }
 
-        public Perlin noise = new Perlin();
-        double scale;
+        public override Vector3D Value(double u, double v, Point3D p)
+        {
+            return new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * (Vector3D)p)));
+        }
     }
 }

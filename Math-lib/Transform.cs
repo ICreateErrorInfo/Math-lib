@@ -82,15 +82,15 @@
         }
         public Ray Trans(Ray r)
         {
-            Point3D o = Trans(r.o);
-            Vector3D d = Trans(r.d);
+            Point3D o = Trans(r.O);
+            Vector3D d = Trans(r.D);
 
-            return new Ray(o, d, r.tMax, r.time);
+            return new Ray(o, d, r.TMax, r.Time);
         }
         public RayDifferential Trans(RayDifferential r)
         {
             Ray tr = Trans(r);
-            RayDifferential ret = new RayDifferential(tr.o, tr.d, tr.time);
+            RayDifferential ret = new RayDifferential(tr.O, tr.D, tr.Time);
             ret.hasDifferentials = r.hasDifferentials;
             ret.rxOrigin = Trans(r.rxOrigin);
             ret.ryOrigin = Trans(r.ryOrigin);

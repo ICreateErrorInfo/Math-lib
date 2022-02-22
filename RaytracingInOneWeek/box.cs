@@ -5,38 +5,39 @@ using System.Text;
 
 namespace Raytracing
 {
-    class box : hittable
+    class Box : Hittable
     {
-        public box()
+        private Point3D boxMin;
+        private Point3D boxMax;
+        public readonly HittableList Sides = new HittableList();
+
+        public Box()
         {
 
         }
-        public box(Point3D p0, Point3D p1, material ptr)
+        public Box(Point3D p0, Point3D p1, Material material)
         {
-            box_min = p0;
-            box_max = p1;
+            boxMin = p0;
+            boxMax = p1;
 
-            sides.Add(new xy_rect(p0.X, p1.X, p0.Y, p1.Y, p1.Z, ptr));
-            sides.Add(new xy_rect(p0.X, p1.X, p0.Y, p1.Y, p0.Z, ptr));
+            Sides.Add(new XYRect(p0.X, p1.X, p0.Y, p1.Y, p1.Z, material));
+            Sides.Add(new XYRect(p0.X, p1.X, p0.Y, p1.Y, p0.Z, material));
                                  
-            sides.Add(new xz_rect(p0.X, p1.X, p0.Z, p1.Z, p1.Y, ptr));
-            sides.Add(new xz_rect(p0.X, p1.X, p0.Z, p1.Z, p0.Y, ptr));
+            Sides.Add(new XZRect(p0.X, p1.X, p0.Z, p1.Z, p1.Y, material));
+            Sides.Add(new XZRect(p0.X, p1.X, p0.Z, p1.Z, p0.Y, material));
                                    
-            sides.Add(new yz_rect(p0.Y, p1.Y, p0.Z, p1.Z, p1.X, ptr));
-            sides.Add(new yz_rect(p0.Y, p1.Y, p0.Z, p1.Z, p0.X, ptr));
+            Sides.Add(new YZRect(p0.Y, p1.Y, p0.Z, p1.Z, p1.X, material));
+            Sides.Add(new YZRect(p0.Y, p1.Y, p0.Z, p1.Z, p0.X, material));
 
         }
-        public Point3D box_min;
-        public Point3D box_max;
-        public hittable_list sides = new hittable_list();
 
-        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double tMin, double tMax, ref SurfaceInteraction isect)
         {
-            return sides.TryHit(r, t_min, t_max, ref isect);
+            return Sides.TryHit(r, tMin, tMax, ref isect);
         }
-        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
+        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {
-            bound = new Bounds3D(box_min, box_max);
+            bound = new Bounds3D(boxMin, boxMax);
             return true;
         }
     }

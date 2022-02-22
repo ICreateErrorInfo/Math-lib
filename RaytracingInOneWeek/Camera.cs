@@ -5,46 +5,54 @@ namespace Raytracing
 {
     class Camera
     {
-        public Camera(Point3D lookfrom, Point3D lookat, Vector3D vup, double vfov, double aspect_ratio, double aperture, double focus_dist, double _time0 = 0, double _time1 = 0)
+        readonly Point3D  _origin;
+        readonly Point3D  _lowerLeftCorner;
+        readonly Vector3D _horizontal;
+        readonly Vector3D _vertical;
+        readonly Vector3D _u;
+        readonly Vector3D _v;
+        readonly Vector3D _w;
+        readonly double _lensRadius;
+        readonly double _time0;
+        readonly double _time1;
+
+        public Camera(Point3D  lookFrom,
+                      Point3D  lookAt,
+                      Vector3D vup, 
+                      double   vFov, 
+                      double   aspectRatio, 
+                      double   aperture,
+                      double   focusDist, 
+                      double   time0 = 0,
+                      double   time1 = 0)
         {
-            var theta = Mathe.ToRad(vfov);
+            var theta = Mathe.ToRad(vFov);
             var h = Math.Tan(theta / 2);
-            var viewport_height = 2 * h;
-            var viewport_width = aspect_ratio * viewport_height;
+            var viewportHeight = 2 * h;
+            var viewportWidth = aspectRatio * viewportHeight;
 
-            w = Vector3D.Normalize(lookfrom - lookat);
-            u = Vector3D.Normalize(Vector3D.Cross(vup, w));
-            v = Vector3D.Cross(w, u);
+            _w = Vector3D.Normalize(lookFrom - lookAt);
+            _u = Vector3D.Normalize(Vector3D.Cross(vup, _w));
+            _v = Vector3D.Cross(_w, _u);
 
-            origin = lookfrom;
-            horizontal = focus_dist * viewport_width * u;
-            vertical = focus_dist * viewport_height * v;
-            lower_left_corner = origin - horizontal / 2 - vertical / 2 - focus_dist * w;
+            _origin = lookFrom;
+            _horizontal = focusDist * viewportWidth * _u;
+            _vertical = focusDist * viewportHeight * _v;
+            _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDist * _w;
 
-            lens_radius = aperture / 2;
-            time0 = _time0;
-            time1 = _time1;
+            _lensRadius = aperture / 2;
+            this._time0 = time0;
+            this._time1 = time1;
         }
 
         public Ray get_ray(double s, double t)
         {
-            Vector3D rd = lens_radius * Vector3D.RandomInUnitSphere();
-            Vector3D offset = u * rd.X + v * rd.Y;
+            Vector3D rd = _lensRadius * Vector3D.RandomInUnitSphere();
+            Vector3D offset = _u * rd.X + _v * rd.Y;
 
-            return new Ray(origin + offset,
-                           lower_left_corner + s * horizontal + t * vertical - origin - offset,
-                           Mathe.random(time0, time1, 1));
+            return new Ray(_origin + offset,
+                           _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset,
+                           Mathe.GetRandomDouble(_time0, _time1));
         }
-
-        Point3D origin;
-        Point3D lower_left_corner;
-        Vector3D horizontal;
-        Vector3D vertical;
-        Vector3D u;
-        Vector3D v;
-        Vector3D w;
-        double lens_radius;
-        double time0;
-        double time1;
     }
 }

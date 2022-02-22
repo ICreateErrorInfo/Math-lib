@@ -33,15 +33,15 @@ namespace Math_lib
         public bool IntersectP(Ray ray, ref double hitt0, ref double hitt1)
         {
             double t0 = 0;
-            double t1 = ray.tMax;
+            double t1 = ray.TMax;
             for(int i = 0; i < 3; i++)
             {
-                double invRayDir = 1 / ray.d[i];
-                double tNear = (pMin[i] - ray.o[i]) * invRayDir;
-                double tFar = (pMax[i] - ray.o[i]) * invRayDir;
+                double invRayDir = 1 / ray.D[i];
+                double tNear = (pMin[i] - ray.O[i]) * invRayDir;
+                double tFar = (pMax[i] - ray.O[i]) * invRayDir;
                 if(tNear > tFar)
                 {
-                    Math1.Swap(ref tNear, ref tFar);
+                    Mathe.Swap(ref tNear, ref tFar);
                 }
                 t0 = tNear > t0 ? tNear : t0;
                 t1 = tFar  < t1 ? tFar  : t1;
@@ -53,22 +53,22 @@ namespace Math_lib
         }
         public bool IntersectP(Ray ray, Vector3D invDir, int[] dirIsNeg)
         {
-            double tMin =  (this[dirIsNeg[0]].X - ray.o.X) * invDir.X;
-            double tMax =  (this[1 - dirIsNeg[0]].X - ray.o.X) * invDir.X;
-            double tyMin = (this[dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
-            double tyMax = (this[1 - dirIsNeg[1]].Y - ray.o.Y) * invDir.Y;
+            double tMin =  (this[dirIsNeg[0]].X - ray.O.X) * invDir.X;
+            double tMax =  (this[1 - dirIsNeg[0]].X - ray.O.X) * invDir.X;
+            double tyMin = (this[dirIsNeg[1]].Y - ray.O.Y) * invDir.Y;
+            double tyMax = (this[1 - dirIsNeg[1]].Y - ray.O.Y) * invDir.Y;
 
             if (tMin > tyMax || tyMin > tMax) return false;
             if (tyMin > tMin) tMin = tyMin;
             if (tyMax < tMax) tMax = tyMax;
 
-            double tzMin = (this[dirIsNeg[2]].Z - ray.o.Z) * invDir.Z;
-            double tzMax = (this[1 - dirIsNeg[2]].Z - ray.o.Z) * invDir.Z;
+            double tzMin = (this[dirIsNeg[2]].Z - ray.O.Z) * invDir.Z;
+            double tzMax = (this[1 - dirIsNeg[2]].Z - ray.O.Z) * invDir.Z;
 
             if (tMin > tzMax || tzMin > tMax) return false;
             if (tzMin > tMin) tMin = tzMin;
             if (tzMax < tMax) tMax = tzMax;
-            return (tMin < ray.tMax) && (tMax > 0);
+            return (tMin < ray.TMax) && (tMax > 0);
         }
         public static bool IsNaN(Bounds3D b)
         {
@@ -179,9 +179,9 @@ namespace Math_lib
             Debug.Assert(Point3D.IsNaN(p));
 
 
-            return new Point3D(Math1.Lerp(p.X, pMin.X, pMax.X),
-                               Math1.Lerp(p.Y, pMin.Y, pMax.Y),
-                               Math1.Lerp(p.Z, pMin.Z, pMax.Z));
+            return new Point3D(Mathe.Lerp(p.X, pMin.X, pMax.X),
+                               Mathe.Lerp(p.Y, pMin.Y, pMax.Y),
+                               Mathe.Lerp(p.Z, pMin.Z, pMax.Z));
         }
         public Vector3D Offset(Point3D p)
         {

@@ -2,30 +2,30 @@
 
 namespace Raytracing
 {
-    class lambertian : material
+    class Lambertian : Material
     {
-        public Texture albedo;
+        private readonly Texture _albedo;
 
-        public lambertian(Vector3D a)
+        public Lambertian(Vector3D a)
         {
-            albedo = new solid_color(a);
+            _albedo = new SolidColor(a);
         }
-        public lambertian(Texture a)
+        public Lambertian(Texture a)
         {
-            albedo = a;
+            _albedo = a;
         }
 
-        public override bool scatter(Ray r_in, ref SurfaceInteraction isect, ref Vector3D attenuation, ref Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, ref Vector3D attenuation, ref Ray scattered)
         {
-            var scatter_direction = (Vector3D)isect.normal + Vector3D.RandomInUnitSphere();
+            var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
 
-            if (scatter_direction.NearZero())
+            if (scatterDirection.NearZero())
             {
-                scatter_direction = (Vector3D)isect.normal;
+                scatterDirection = (Vector3D)isect.Normal;
             }
 
-            scattered = new Ray(isect.p, scatter_direction, r_in.tMax);
-            attenuation = albedo.value(isect.u, isect.v, isect.p);
+            scattered = new Ray(isect.P, scatterDirection, rIn.TMax);
+            attenuation = _albedo.Value(isect.U, isect.V, isect.P);
                 
             return true;
         }

@@ -45,26 +45,26 @@ namespace Raytracing
         }
         private ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
         {
-            int samplesPerPixel = scene.samplesPerPixel;
-            int maxDepth        = scene.maxDepth;
+            int samplesPerPixel = scene.SamplesPerPixel;
+            int maxDepth        = scene.MaxDepth;
             var world           = scene.Objects;
 
-            Point3D lookfrom    = scene.lookfrom;
-            Point3D lookat      = scene.lookat;
-            var vfov            = scene.vfov;
-            double aperture     = scene.aperture;
-            Vector3D background = scene.background;
+            Point3D lookfrom    = scene.Lookfrom;
+            Point3D lookat      = scene.Lookat;
+            var vfov            = scene.VFov;
+            double aperture     = scene.Aperture;
+            Vector3D background = scene.Background;
 
-            int imageWidth      = scene.imageWidth;
-            int imageHeight     = scene.imageHeight;
+            int imageWidth      = scene.ImageWidth;
+            int imageHeight     = scene.ImageHeight;
 
             double aspectRatio = imageWidth / (double)imageHeight;
 
             //Camera
             Vector3D vup = new Vector3D(0, 1, 0);
-            var dist_to_focus = (lookfrom - lookat).GetLength();
+            var distToFocus = scene.FocusDistance;
 
-            Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, dist_to_focus, 0, 1);
+            Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distToFocus, 0, 1);
 
             Vector3D[,] vArr = new Vector3D[imageHeight, imageWidth];
 
@@ -155,7 +155,7 @@ namespace Raytracing
 
             return bmp;
         }
-        public static Vector3D ray_color(Ray r, Vector3D background, hittable world, int depth)
+        public static Vector3D ray_color(Ray r, Vector3D background, Hittable world, int depth)
         {
             SurfaceInteraction isect = new SurfaceInteraction();
 
@@ -170,9 +170,9 @@ namespace Raytracing
             }
             Ray scattered = new Ray();
             Vector3D attenuation = new Vector3D();
-            Vector3D emitted = isect.mat_ptr.emitted(isect.u, isect.v, isect.p);
+            Vector3D emitted = isect.Material.Emitted(isect.U, isect.V, isect.P);
 
-            if (!isect.mat_ptr.scatter(r, ref isect, ref attenuation, ref scattered))
+            if (!isect.Material.Scatter(r, ref isect, ref attenuation, ref scattered))
             {
                 return emitted;
             }
@@ -191,9 +191,9 @@ namespace Raytracing
             g *= scale;
             b *= scale;
 
-            return Color.FromArgb(Convert.ToInt32(255 * Mathe.clamp(r, 0, 0.999)),
-                                  Convert.ToInt32(255 * Mathe.clamp(g, 0, 0.999)),
-                                  Convert.ToInt32(255 * Mathe.clamp(b, 0, 0.999)));
+            return Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
+                                  Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),
+                                  Convert.ToInt32(255 * Math.Clamp(b, 0, 0.999)));
         }
         BitmapImage BitmapToImageSource(Bitmap bitmap)
         {

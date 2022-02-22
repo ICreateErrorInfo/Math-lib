@@ -2,13 +2,13 @@
 
 namespace Raytracing
 {
-    public class hittable
+    public class Hittable
     {
-        public virtual bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction insec)
+        public virtual bool TryHit(Ray r, double tMin, double tMax, ref SurfaceInteraction insec)
         {
             return false;
         }
-        public virtual bool bounding_box(double time0, double time1, ref Bounds3D bound)
+        public virtual bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {
             return false;
         }

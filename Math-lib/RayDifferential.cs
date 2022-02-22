@@ -9,36 +9,28 @@
 
         //Ctors
         public RayDifferential() { hasDifferentials = false; }
-        public RayDifferential(Point3D o, Vector3D d, double tMax = double.PositiveInfinity, double time = 0)
+        public RayDifferential(Point3D o, Vector3D d, double tMax = double.PositiveInfinity, double time = 0) : base(o, d, tMax, time)
         {
-            this.o = o;
-            this.d = d;
-            this.tMax = tMax;
-            this.time = time;
             hasDifferentials = false;
         }
-        public RayDifferential(Ray r) 
+        public RayDifferential(Ray r) :base(r.O, r.D, r.TMax, r.Time)
         {
-            o = r.o;
-            d = r.d;
-            tMax = r.tMax;
-            time = r.time;
             hasDifferentials = false;
         }
 
         //Methods
         public void ScaleDifferentials(double s)
         {
-            rxOrigin = o + (rxOrigin - o) * s;
-            ryOrigin = o + (ryOrigin - o) * s;
-            rxDirection = d + (rxDirection - d) * s;
-            ryDirection = d + (ryDirection - d) * s;
+            rxOrigin = O + (rxOrigin - O) * s;
+            ryOrigin = O + (ryOrigin - O) * s;
+            rxDirection = D + (rxDirection - D) * s;
+            ryDirection = D + (ryDirection - D) * s;
         }
 
 
         public override string ToString()
         {
-            return $"[o={o}, d={d}, tMax={tMax}, time={time}, has differentials:{hasDifferentials}, xo={rxOrigin}, xd={rxDirection}, yo={ryOrigin}, yd={ryDirection}]";
+            return $"[o={O}, d={D}, tMax={TMax}, time={Time}, has differentials:{hasDifferentials}, xo={rxOrigin}, xd={rxDirection}, yo={ryOrigin}, yd={ryDirection}]";
         }
     }
 }

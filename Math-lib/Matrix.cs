@@ -231,7 +231,7 @@ namespace Math_lib
                     // Swap rows _irow_ and _icol_ for pivot
                     if (irow != icol)
                     {
-                        for (int k = 0; k < 4; ++k) Math1.Swap(ref minv[irow, k], ref minv[icol, k]);
+                        for (int k = 0; k < 4; ++k) Mathe.Swap(ref minv[irow, k], ref minv[icol, k]);
                     }
                     indxr[i] = irow;
                     indxc[i] = icol;
@@ -259,7 +259,7 @@ namespace Math_lib
                     if (indxr[j] != indxc[j])
                     {
                         for (int k = 0; k < 4; k++)
-                            Math1.Swap(ref minv[k, indxr[j]], ref minv[k, indxc[j]]);
+                            Mathe.Swap(ref minv[k, indxr[j]], ref minv[k, indxc[j]]);
                     }
                 }
                 return new Matrix(minv);

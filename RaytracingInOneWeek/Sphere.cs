@@ -3,30 +3,30 @@ using Math_lib;
 
 namespace Raytracing
 {
-    public class sphere : hittable
+    public class sphere : Hittable
     {
-        readonly Point3D center;
-        readonly double radius;
-        readonly material mat_ptr;
-        public double Radius => radius;
-        public Point3D Center => center;
-        public material MatPtr => mat_ptr;
+        private readonly Point3D  _center;
+        private readonly double   _radius;
+        private readonly Material _material;
+        public double Radius => _radius;
+        public Point3D Center => _center;
+        public Material MatPtr => _material;
 
         public sphere() { }
-        public sphere(Point3D cen, double r, material m)
+        public sphere(Point3D center, double radius, Material material)
         {
-            center = cen;
-            radius = r;
-            mat_ptr = m;
+            _center = center;
+            _radius = radius;
+            _material = material;
         }
 
-        public override bool TryHit(Ray r, double t_min, double t_max, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double tMin, double tMax, ref SurfaceInteraction isect)
         {
-            Vector3D oc = r.o - center;
-            var a = r.d.GetLengthSqrt();
-            var half_b = Vector3D.Dot(oc, r.d);
-            var c = oc.GetLengthSqrt() - radius * radius;
-            var discriminant = half_b * half_b - a * c;
+            Vector3D oc = r.O - _center;
+            var a = r.D.GetLengthSqrt();
+            var halfB = Vector3D.Dot(oc, r.D);
+            var c = oc.GetLengthSqrt() - _radius * _radius;
+            var discriminant = halfB * halfB - a * c;
 
             if (discriminant < 0)
             {
@@ -34,32 +34,32 @@ namespace Raytracing
             }
             var sqrtd = Math.Sqrt(discriminant);
 
-            var root = (-half_b - sqrtd) / a;
-            if (root < t_min || t_max < root)
+            var root = (-halfB - sqrtd) / a;
+            if (root < tMin || tMax < root)
             {
-                root = (-half_b + sqrtd) / a;
-                if (root < t_min || t_max < root)
+                root = (-halfB + sqrtd) / a;
+                if (root < tMin || tMax < root)
                 {
                     return false;
                 }
             }
 
-            isect.t = root;
-            isect.p = r.At(root);
-            Normal3D outward_normal = (Normal3D)((isect.p - center) / radius);
-            isect.set_face_normal(r, outward_normal);
-            (isect.u, isect.v) = get_sphere_uv(outward_normal);
-            isect.mat_ptr = mat_ptr;
+            isect.T = root;
+            isect.P = r.At(root);
+            Normal3D outwardNormal = (Normal3D)((isect.P - _center) / _radius);
+            isect.SetFaceNormal(r, outwardNormal);
+            (isect.U, isect.V) = GetSphereUV(outwardNormal);
+            isect.Material = _material;
 
             return true;
         }
-        public override bool bounding_box(double time0, double time1, ref Bounds3D bound)
+        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {
-            bound = new Bounds3D(center - new Vector3D(radius, radius, radius),
-                                 center + new Vector3D(radius, radius, radius));
+            bound = new Bounds3D(_center - new Vector3D(_radius, _radius, _radius),
+                                 _center + new Vector3D(_radius, _radius, _radius));
             return true;
         }
-        private (double u, double v) get_sphere_uv(Normal3D p)
+        private (double u, double v) GetSphereUV(Normal3D p)
         {
             var theta = Math.Acos(-p.Y);
             var phi = Math.Atan2(-p.Z, p.X) + Math.PI;
