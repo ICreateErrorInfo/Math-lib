@@ -18,8 +18,10 @@ namespace Raytracing
             _emit = new SolidColor(c);
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, ref  Vector3D attenuation, ref Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out  Vector3D attenuation, out Ray scattered)
         {
+            attenuation = new Vector3D();
+            scattered = new Ray();
             return false;
         }
 

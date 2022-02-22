@@ -13,7 +13,7 @@ namespace Raytracing
             _fuzz = f < 1 ? f : 1;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, ref Vector3D attenuation, ref Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out Vector3D attenuation, out Ray scattered)
         {
             Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rIn.D), (Vector3D)isect.Normal);
 

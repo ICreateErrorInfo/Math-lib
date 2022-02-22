@@ -31,9 +31,10 @@ namespace Raytracing
 
         }
 
-        public override bool TryHit(Ray r, double tMin, double tMax, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
         {
-            return Sides.TryHit(r, tMin, tMax, ref isect);
+            isect = new SurfaceInteraction();
+            return Sides.TryHit(r, tMin, tMax, out isect);
         }
         public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {

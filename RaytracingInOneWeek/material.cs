@@ -8,8 +8,10 @@ namespace Raytracing
         {
             return new Vector3D(0,0,0);
         }
-        public virtual bool Scatter(Ray rIn, ref SurfaceInteraction rec, ref Vector3D attenuation, ref Ray scattered)
+        public virtual bool Scatter(Ray rIn, ref SurfaceInteraction rec, out Vector3D attenuation, out Ray scattered)
         {
+            attenuation = new Vector3D();
+            scattered = new Ray();
             return false;
         }
     }

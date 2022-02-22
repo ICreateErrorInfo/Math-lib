@@ -12,7 +12,7 @@ namespace Raytracing
             _ir = indexOfRefraction;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, ref Vector3D attenuation, ref Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out Vector3D attenuation, out Ray scattered)
         {
             attenuation = new Vector3D(1, 1, 1);
             double refractionRatio = isect.FrontFace ? (1 / _ir) : _ir;

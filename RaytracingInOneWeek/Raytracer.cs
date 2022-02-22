@@ -164,7 +164,7 @@ namespace Raytracing
                 return new Vector3D(0, 0, 0);
             }
 
-            if (!world.TryHit(r, 0.0001, Mathe.infinity, ref isect))
+            if (!world.TryHit(r, 0.0001, Mathe.infinity, out isect))
             {
                 return background;
             }
@@ -172,7 +172,7 @@ namespace Raytracing
             Vector3D attenuation = new Vector3D();
             Vector3D emitted = isect.Material.Emitted(isect.U, isect.V, isect.P);
 
-            if (!isect.Material.Scatter(r, ref isect, ref attenuation, ref scattered))
+            if (!isect.Material.Scatter(r, ref isect, out attenuation, out scattered))
             {
                 return emitted;
             }

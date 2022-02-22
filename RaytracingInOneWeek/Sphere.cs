@@ -20,8 +20,10 @@ namespace Raytracing
             _material = material;
         }
 
-        public override bool TryHit(Ray r, double tMin, double tMax, ref SurfaceInteraction isect)
+        public override bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
         {
+            isect = new SurfaceInteraction();
+
             Vector3D oc = r.O - _center;
             var a = r.D.GetLengthSqrt();
             var halfB = Vector3D.Dot(oc, r.D);

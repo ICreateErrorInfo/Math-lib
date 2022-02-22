@@ -15,7 +15,7 @@ namespace Raytracing
             _albedo = a;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, ref Vector3D attenuation, ref Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out Vector3D attenuation, out Ray scattered)
         {
             var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
 
