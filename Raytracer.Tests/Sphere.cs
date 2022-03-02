@@ -9,7 +9,7 @@ namespace Raytracing.Tests
         [Test]
         public void Ctor()
         {
-            var s = new sphere(new(0, 0, 0), 12, new Metal(new(0, 0, 0), 1));
+            var s = new Sphere(new(0, 0, 0), 12, new Metal(new(0, 0, 0), 1));
             Assert.That(s.Radius, Is.EqualTo(12));
         }
     }

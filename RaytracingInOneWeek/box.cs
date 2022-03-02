@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Raytracing
 {
-    class Box : Hittable
+    class Box : Shape
     {
         private Point3D boxMin;
         private Point3D boxMax;

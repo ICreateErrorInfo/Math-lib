@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Raytracing
 {
-    class MovingSphere : Hittable
+    class MovingSphere : Shape
     {
         private readonly Point3D  _center0;
         private readonly Point3D  _center1;

@@ -2,7 +2,7 @@
 
 namespace Raytracing
 {
-    class XYRect : Hittable
+    class XYRect : Shape
     {
         double _x0, _x1, _y0, _y1, _k;
         Material _material;
@@ -56,7 +56,7 @@ namespace Raytracing
             return true;
         }
     }
-    class XZRect : Hittable
+    class XZRect : Shape
     {
         double _x0, _x1, _z0, _z1, _k;
         Material _material;
@@ -109,7 +109,7 @@ namespace Raytracing
             return true;
         }
     }
-    class YZRect : Hittable
+    class YZRect : Shape
     {
         double _y0, _y1, _z0, _z1, _k;
         Material _material;

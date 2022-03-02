@@ -2,7 +2,7 @@
 
 namespace Raytracing
 {
-    public class Hittable
+    public class Shape
     {
         public virtual bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
         {

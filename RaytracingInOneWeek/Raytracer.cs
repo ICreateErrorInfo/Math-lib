@@ -155,7 +155,7 @@ namespace Raytracing
 
             return bmp;
         }
-        public static Vector3D ray_color(Ray r, Vector3D background, Hittable world, int depth)
+        public static Vector3D ray_color(Ray r, Vector3D background, Shape world, int depth)
         {
             SurfaceInteraction isect = new SurfaceInteraction();
 

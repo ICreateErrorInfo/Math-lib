@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Raytracing
 {
-    public class Triangle : Hittable
+    public class Triangle : Shape
     {
 
     }

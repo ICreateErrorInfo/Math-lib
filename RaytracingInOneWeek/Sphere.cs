@@ -3,17 +3,17 @@ using Math_lib;
 
 namespace Raytracing
 {
-    public class sphere : Hittable
+    public class Sphere : Shape
     {
         private readonly Point3D  _center;
         private readonly double   _radius;
         private readonly Material _material;
         public double Radius => _radius;
         public Point3D Center => _center;
-        public Material MatPtr => _material;
+        public Material Material => _material;
 
-        public sphere() { }
-        public sphere(Point3D center, double radius, Material material)
+        public Sphere() { }
+        public Sphere(Point3D center, double radius, Material material)
         {
             _center = center;
             _radius = radius;

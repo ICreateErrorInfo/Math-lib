@@ -35,11 +35,11 @@ namespace Raytracing
 
             var center2 = new Point3D(0, 0, -20) + new Vector3D(0, Mathe.GetRandomDouble(0, .5), 0);
 
-            world.Add(new sphere(new Point3D(0.0, -10004, -20), 10000, new Lambertian(checker)));
+            world.Add(new Sphere(new Point3D(0.0, -10004, -20), 10000, new Lambertian(checker)));
             world.Add(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4, material1));
-            world.Add(new sphere(new Point3D(5, -1, -15), 2, material2));
-            world.Add(new sphere(new Point3D(5, 0, -25), 3, material3));
-            world.Add(new sphere(new Point3D(-5.5, 0, -15), 3, material4));
+            world.Add(new Sphere(new Point3D(5, -1, -15), 2, material2));
+            world.Add(new Sphere(new Point3D(5, 0, -25), 3, material3));
+            world.Add(new Sphere(new Point3D(-5.5, 0, -15), 3, material4));
 
             Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), 50, 0.1, new Vector3D(.7, .8, 1), 20);
 
@@ -51,8 +51,8 @@ namespace Raytracing
 
             var checker = new CheckerTexture(new Vector3D(0.2, 0.3, 0.1), new Vector3D(0.9, 0.9, 0.9));
 
-            objects.Add(new sphere(new Point3D(0, -10, 0), 10, new Lambertian(checker)));
-            objects.Add(new sphere(new Point3D(0, 10, 0), 10, new Lambertian(checker)));
+            objects.Add(new Sphere(new Point3D(0, -10, 0), 10, new Lambertian(checker)));
+            objects.Add(new Sphere(new Point3D(0, 10, 0), 10, new Lambertian(checker)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 100,
@@ -72,8 +72,8 @@ namespace Raytracing
 
             var pertext = new NoiseTexture(4);
 
-            objects.Add(new sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
-            objects.Add(new sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
+            objects.Add(new Sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
+            objects.Add(new Sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 1000,
@@ -91,7 +91,7 @@ namespace Raytracing
             var earthTexture = new ImageTexture("C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
 
             var earthSurface = new Lambertian(earthTexture);
-            var globe = new sphere(new Point3D(0, 0, 0), 2, earthSurface);
+            var globe = new Sphere(new Point3D(0, 0, 0), 2, earthSurface);
             var ret = new HittableList();
             ret.Add(globe);
 
@@ -114,8 +114,8 @@ namespace Raytracing
             HittableList objekts = new HittableList();
 
             var pertext = new NoiseTexture(4);
-            objekts.Add(new sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
-            objekts.Add(new sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
+            objekts.Add(new Sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
+            objekts.Add(new Sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
 
             var difflight = new DiffuseLight(new Vector3D(4, 4, 4));
             objekts.Add(new XYRect(3, 5, 1, 3, -2, difflight));

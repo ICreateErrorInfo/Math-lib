@@ -4,19 +4,19 @@ using Math_lib;
 
 namespace Raytracing
 {
-    public class HittableList : Hittable
+    public class HittableList : Shape
     {
-        public List<Hittable> Objects = new List<Hittable>();
+        public List<Shape> Objects = new List<Shape>();
 
         public HittableList()
         {
 
         }
-        public HittableList(Hittable obj)
+        public HittableList(Shape obj)
         {
             Objects.Add(obj);
         }
-        public void Add(Hittable obj)
+        public void Add(Shape obj)
         {
             Objects.Add(obj);
         }

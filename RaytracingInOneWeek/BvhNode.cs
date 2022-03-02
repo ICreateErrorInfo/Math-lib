@@ -6,10 +6,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Raytracing
 {
-    class BvhNode : Hittable
+    class BvhNode : Shape
     {
-        private Hittable _left;
-        private Hittable _right;
+        private Shape _left;
+        private Shape _right;
         private Bounds3D _box;
 
         public BvhNode()
@@ -20,11 +20,11 @@ namespace Raytracing
         {
             new BvhNode(list.Objects, 0, list.Objects.Count, time0, time1);
         }
-        public BvhNode(List<Hittable> objects, int start, int end, double time0, double time1)
+        public BvhNode(List<Shape> objects, int start, int end, double time0, double time1)
         {
             var axis = Mathe.GetRandomDouble(0, 2);
 
-            IComparer<Hittable> comparator;
+            IComparer<Shape> comparator;
             if (axis == 0)
             {
                 comparator = new XComparator();
@@ -46,7 +46,7 @@ namespace Raytracing
             }
             else if (objectSpan == 2)
             {
-                if(comparator.Compare((Hittable)objects[(int)start], (Hittable)objects[(int)start + 1]) <= 0)
+                if(comparator.Compare((Shape)objects[(int)start], (Shape)objects[(int)start + 1]) <= 0)
                 {
                     _left = objects[start];
                     _right = objects[start + 1];
@@ -97,7 +97,7 @@ namespace Raytracing
             bound = _box;
             return true;
         }
-        public static int box_compare(Hittable a, Hittable b, int axis)
+        public static int box_compare(Shape a, Shape b, int axis)
         {
             Bounds3D boxA = new Bounds3D();
             Bounds3D boxB = new Bounds3D();
@@ -145,23 +145,23 @@ namespace Raytracing
         }
     }
 
-    public class XComparator : IComparer<Hittable>
+    public class XComparator : IComparer<Shape>
     {
-        public int Compare([AllowNull] Hittable x, [AllowNull] Hittable y)
+        public int Compare([AllowNull] Shape x, [AllowNull] Shape y)
         {
             return BvhNode.box_compare(x, y, 0);
         }
     }
-    public class YComparator : IComparer<Hittable>
+    public class YComparator : IComparer<Shape>
     {
-        public int Compare([AllowNull] Hittable x, [AllowNull] Hittable y)
+        public int Compare([AllowNull] Shape x, [AllowNull] Shape y)
         {
             return BvhNode.box_compare(x, y, 1);
         }
     }
-    public class ZComparator : IComparer<Hittable>
+    public class ZComparator : IComparer<Shape>
     {
-        public int Compare([AllowNull] Hittable x, [AllowNull] Hittable y)
+        public int Compare([AllowNull] Shape x, [AllowNull] Shape y)
         {
             return BvhNode.box_compare(x, y, 2);
         }
