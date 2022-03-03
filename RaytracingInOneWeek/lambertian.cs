@@ -24,7 +24,7 @@ namespace Raytracing
                 scatterDirection = (Vector3D)isect.Normal;
             }
 
-            scattered = new Ray(isect.P, scatterDirection, rIn.TMax);
+            scattered = new Ray(isect.P, scatterDirection, rIn.TMax, rIn.Time);
             attenuation = _albedo.Value(isect.U, isect.V, isect.P);
                 
             return true;

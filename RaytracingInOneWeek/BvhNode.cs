@@ -22,7 +22,7 @@ namespace Raytracing
         }
         public BvhNode(List<Shape> objects, int start, int end, double time0, double time1)
         {
-            var axis = Mathe.GetRandomDouble(0, 2);
+            var axis = Mathe.GetRandomInt(0, 2);
 
             IComparer<Shape> comparator;
             if (axis == 0)
@@ -80,15 +80,27 @@ namespace Raytracing
         public override bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
-            bool foundBoxInsec = _box.IntersectP(r, ref tMin, ref tMax);
-            bool hitLeft = _left.TryHit(r, tMin, tMax, out isect);
+            double a = 0, b = 0;
+            bool foundBoxInsec = _box.IntersectP(r, ref a, ref b);
 
             if (!foundBoxInsec)
             {
                 return false;
             }
 
-            bool hitRight = _right.TryHit(r, tMin, hitLeft ? isect.T : tMax, out isect);
+            var isectLeft = new SurfaceInteraction();
+            bool hitLeft = _left.TryHit(r, tMin, tMax, out isectLeft);
+            var isectRight = new SurfaceInteraction();
+            bool hitRight = _right.TryHit(r, tMin, hitLeft ? isect.T : tMax, out isectRight);
+
+            if(hitLeft && hitRight && isectRight.T < isectLeft.T || !hitLeft && hitRight)
+            {
+                isect = isectRight;
+            }
+            else
+            {
+                isect = isectLeft;
+            }
 
             return hitLeft || hitRight;
         }

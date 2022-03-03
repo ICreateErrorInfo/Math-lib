@@ -41,8 +41,8 @@ namespace Raytracing
             _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDist * _w;
 
             _lensRadius = aperture / 2;
-            this._time0 = time0;
-            this._time1 = time1;
+            _time0 = time0;
+            _time1 = time1;
         }
 
         public Ray get_ray(double s, double t)
@@ -51,7 +51,7 @@ namespace Raytracing
             Vector3D offset = _u * rd.X + _v * rd.Y;
 
             return new Ray(_origin + offset,
-                           _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset,
+                           _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset, double.PositiveInfinity,
                            Mathe.GetRandomDouble(_time0, _time1));
         }
     }

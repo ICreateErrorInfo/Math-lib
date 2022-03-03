@@ -17,7 +17,7 @@ namespace Raytracing
         {
             Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rIn.D), (Vector3D)isect.Normal);
 
-            scattered   = new Ray(isect.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(), rIn.TMax);
+            scattered   = new Ray(isect.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),rIn.TMax, rIn.Time);
             attenuation = _albedo;
 
             return (Vector3D.Dot(scattered.D, (Vector3D)isect.Normal) > 0.0);

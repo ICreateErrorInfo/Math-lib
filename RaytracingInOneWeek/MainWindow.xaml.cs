@@ -21,6 +21,15 @@ namespace Raytracing
             r.RenderScene(FirstScene());
         }
 
+        Scene TestSphere()
+        {
+            var material = new Metal(new Vector3D(.7, .7, .7), 0.7);
+            Sphere s = new Sphere(new(0), 0.1, -0.08, 0.08, 150, material); //Bug Phi
+
+            Scene scene = new Scene(new(s), 100, 50, new Point3D(1, 0, -1), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
         Scene FirstScene()
         {
             HittableList world = new HittableList();
@@ -33,15 +42,15 @@ namespace Raytracing
             var material3 = new Metal(new Vector3D(0.65, 0.77, 0.97), 0);
             var material4 = new Metal(new Vector3D(0.90, 0.90, 0.90), 0);
 
-            var center2 = new Point3D(0, 0, -20) + new Vector3D(0, Mathe.GetRandomDouble(0, .5), 0);
+            var center2 = new Point3D(0, 0, -20) + new Vector3D(0, Mathe.GetRandomDouble(0, 0.5), 0);
 
             world.Add(new Sphere(new Point3D(0.0, -10004, -20), 10000, new Lambertian(checker)));
-            world.Add(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4, material1));
+            world.Add(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 0.5, 4, material1));
             world.Add(new Sphere(new Point3D(5, -1, -15), 2, material2));
             world.Add(new Sphere(new Point3D(5, 0, -25), 3, material3));
             world.Add(new Sphere(new Point3D(-5.5, 0, -15), 3, material4));
 
-            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), 50, 0.1, new Vector3D(.7, .8, 1), 20);
+            Scene scene = new Scene(world, 10, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), 50, 0.1, new Vector3D(.7, .8, 1), 20);
 
             return scene;
         }

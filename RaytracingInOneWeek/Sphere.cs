@@ -5,6 +5,8 @@ namespace Raytracing
 {
     public class Sphere : Shape
     {
+        private readonly double _zMin, _zMax;
+        private readonly double _thetaMin, _thetaMax, _phiMax;
         private readonly Point3D  _center;
         private readonly double   _radius;
         private readonly Material _material;
@@ -17,6 +19,22 @@ namespace Raytracing
         {
             _center = center;
             _radius = radius;
+            _material = material;
+            _zMin = -radius;
+            _zMax = radius;
+            _thetaMax = 1;
+            _thetaMin = -1;
+            _phiMax = 360;
+        }
+        public Sphere(Point3D center, double radius, double zMin, double zMax, double phiMax, Material material) 
+        {
+            _center = center;
+            _radius = radius;
+            _zMin = Math.Clamp(Math.Min(zMin, zMax), -radius, radius);
+            _zMax = Math.Clamp(Math.Max(zMin, zMax), -radius, radius);
+            _thetaMin = Math.Acos(Math.Clamp(zMin / radius, -1, 1));
+            _thetaMax = Math.Acos(Math.Clamp(zMax / radius, -1, 1));
+            _phiMax = Mathe.ToRad(Math.Clamp(phiMax, 0, 360));
             _material = material;
         }
 
@@ -44,6 +62,23 @@ namespace Raytracing
                 {
                     return false;
                 }
+            }
+
+            var pHit = r.At(root);
+
+            //if (pHit.X == 0 && pHit.Y == 0) pHit = new(1e-5f * Radius, pHit.Y, pHit.Z);
+            var phi = Math.Atan2(pHit.Y, pHit.X);
+            //if (phi < 0) phi += 2 * Math.PI;
+
+            if ((_zMin > -Radius && pHit.Z < _zMin) ||
+                (_zMax <  Radius && pHit.Z > _zMax) || phi > _phiMax)
+            {
+                if (root == tMax) return false;
+                root = tMax;
+
+                if ((_zMin > -Radius && pHit.Z < _zMin) ||
+                    (_zMax <  Radius && pHit.Z > _zMax) || phi > _phiMax)
+                    return false;
             }
 
             isect.T = root;

@@ -25,5 +25,9 @@ namespace Math_lib
         {
             return _random.NextDouble() * (maximum - minimum) + minimum;
         }
+        public static int GetRandomInt(int minimum, int maximum)
+        {
+            return _random.Next(minimum, maximum);
+        }
     }
 }

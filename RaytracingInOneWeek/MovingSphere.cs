@@ -32,13 +32,13 @@ namespace Raytracing
         {
             isect = new SurfaceInteraction();
 
-            Vector3D oc = r.O - Center(r.TMax);
+            Vector3D oc = r.O - Center(r.Time);
             var a = r.D.GetLengthSqrt();
             var halfB = Vector3D.Dot(oc, r.D);
             var c = oc.GetLengthSqrt() - _radius * _radius;
-
             var discriminant = halfB * halfB - a * c;
-            if(discriminant < 0)
+
+            if (discriminant < 0)
             {
                 return false;
             }
@@ -56,7 +56,7 @@ namespace Raytracing
 
             isect.T = root;
             isect.P = r.At(isect.T);
-            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(r.TMax)) / _radius);
+            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(r.Time)) / _radius);
             isect.SetFaceNormal(r, outward_normal);
             isect.Material = _material;
 
@@ -73,7 +73,7 @@ namespace Raytracing
         }
         public virtual Point3D Center(double time)
         {
-            return _center0 + ((time - _time0) / (_time1 - _time0)) * (_center1 - _center0);
+            return _center0 + (time - _time0) / (_time1 - _time0) * (_center1 - _center0);
         }
     }
 }
