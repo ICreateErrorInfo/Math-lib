@@ -46,17 +46,17 @@ namespace Raytracing
         private ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
         {
             int samplesPerPixel = scene.SamplesPerPixel;
-            int maxDepth        = scene.MaxDepth;
-            var world           = scene.Objects;
+            int maxDepth = scene.MaxDepth;
+            var world = scene.Objects;
 
-            Point3D lookfrom    = scene.Lookfrom;
-            Point3D lookat      = scene.Lookat;
-            var vfov            = scene.VFov;
-            double aperture     = scene.Aperture;
+            Point3D lookfrom = scene.Lookfrom;
+            Point3D lookat = scene.Lookat;
+            var vfov = scene.VFov;
+            double aperture = scene.Aperture;
             Vector3D background = scene.Background;
 
-            int imageWidth      = scene.ImageWidth;
-            int imageHeight     = scene.ImageHeight;
+            int imageWidth = scene.ImageWidth;
+            int imageHeight = scene.ImageHeight;
 
             double aspectRatio = imageWidth / (double)imageHeight;
 
@@ -91,6 +91,7 @@ namespace Raytracing
                         var u = (i + ((double)RandX[s] / byte.MaxValue)) / (imageWidth - 1);
                         var v = (j + ((double)RandX[s] / byte.MaxValue)) / (imageHeight - 1);
                         Ray r = cam.get_ray(u, v);
+
                         pixelColor += ray_color(r, background, world, maxDepth);
                     }
 
@@ -187,9 +188,9 @@ namespace Raytracing
 
             var scale = (double)1 / (double)samples_per_pixel;
 
-            r = Math.Sqrt(scale*r);
-            g = Math.Sqrt(scale*g);
-            b = Math.Sqrt(scale*b);
+            r = Math.Sqrt(scale * r);
+            g = Math.Sqrt(scale * g);
+            b = Math.Sqrt(scale * b);
 
             return Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
                                   Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),

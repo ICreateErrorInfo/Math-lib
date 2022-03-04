@@ -5,7 +5,20 @@ namespace Math_lib
     public static class Mathe
     {
         public static double infinity = double.PositiveInfinity;
-        private readonly static Random _random = new System.Random();
+        [ThreadStatic]
+        private static Random _random;
+
+        public static Random Random
+        {
+            get
+            {
+                if (_random == null)
+                {
+                    _random = new System.Random();
+                }
+                return _random;
+            }
+        }
 
         public static double ToRad(double deg) => deg * Math.PI / 180;
         public static double Lerp(double t, double v1, double v2)
@@ -19,15 +32,15 @@ namespace Math_lib
 
         public static double Random1Tom1()
         {
-            return GetRandomDouble(-1,1);
+            return GetRandomDouble(-1, 1);
         }
         public static double GetRandomDouble(double minimum, double maximum)
         {
-            return _random.NextDouble() * (maximum - minimum) + minimum;
+            return Random.NextDouble() * (maximum - minimum) + minimum;
         }
         public static int GetRandomInt(int minimum, int maximum)
         {
-            return _random.Next(minimum, maximum);
+            return Random.Next(minimum, maximum);
         }
     }
 }

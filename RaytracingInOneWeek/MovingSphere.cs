@@ -32,6 +32,11 @@ namespace Raytracing
         {
             isect = new SurfaceInteraction();
 
+            if(r.Time == 0 || r.Time == 1)
+            {
+
+            }
+
             Vector3D oc = r.O - Center(r.Time);
             var a = r.D.GetLengthSqrt();
             var halfB = Vector3D.Dot(oc, r.D);
@@ -73,7 +78,7 @@ namespace Raytracing
         }
         public virtual Point3D Center(double time)
         {
-            return _center0 + (time - _time0) / (_time1 - _time0) * (_center1 - _center0);
+            return _center0 + ((time - _time0) / (_time1 - _time0)) * (_center1 - _center0);
         }
     }
 }

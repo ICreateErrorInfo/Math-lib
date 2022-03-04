@@ -16,6 +16,8 @@ namespace Raytracing
         readonly double _time0;
         readonly double _time1;
 
+        Random random = new Random();
+
         public Camera(Point3D  lookFrom,
                       Point3D  lookAt,
                       Vector3D vup, 
