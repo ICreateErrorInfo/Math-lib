@@ -18,7 +18,10 @@ namespace Raytracing
         }
         public BvhNode(HittableList list, double time0, double time1)
         {
-            new BvhNode(list.Objects, 0, list.Objects.Count, time0, time1);
+            BvhNode node = new BvhNode(list.Objects, 0, list.Objects.Count, time0, time1);
+            _left = node._left;
+            _right = node._right;
+            _box = node._box;
         }
         public BvhNode(List<Shape> objects, int start, int end, double time0, double time1)
         {
@@ -59,7 +62,7 @@ namespace Raytracing
             }
             else
             {
-                objects.Sort(start, end, comparator);
+                objects.Sort(start, objectSpan, comparator);
 
                 var mid = start + objectSpan / 2;
                 _left = new BvhNode(objects, start, mid, time0, time1);
@@ -81,7 +84,7 @@ namespace Raytracing
         {
             isect = new SurfaceInteraction();
             double a = 0, b = 0;
-            bool foundBoxInsec = _box.IntersectP(r, ref a, ref b);
+            bool foundBoxInsec = _box.IntersectP(r, ref a, ref tMax);
 
             if (!foundBoxInsec)
             {
@@ -91,9 +94,9 @@ namespace Raytracing
             var isectLeft = new SurfaceInteraction();
             bool hitLeft = _left.TryHit(r, tMin, tMax, out isectLeft);
             var isectRight = new SurfaceInteraction();
-            bool hitRight = _right.TryHit(r, tMin, hitLeft ? isect.T : tMax, out isectRight);
+            bool hitRight = _right.TryHit(r, tMin, hitLeft ? isectLeft.T : tMax, out isectRight);
 
-            if(hitLeft && hitRight && isectRight.T < isectLeft.T || !hitLeft && hitRight)
+            if(hitRight)
             {
                 isect = isectRight;
             }

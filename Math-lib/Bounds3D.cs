@@ -70,9 +70,9 @@ namespace Math_lib
             if (tzMax < tMax) tMax = tzMax;
             return (tMin < ray.TMax) && (tMax > 0);
         }
-        public static bool IsNaN(Bounds3D b)
+        public static bool IsNotNaN(Bounds3D b)
         {
-            if (Point3D.IsNaN(b.pMax) || Point3D.IsNaN(b.pMin))
+            if (!Point3D.IsNaN(b.pMax) || !Point3D.IsNaN(b.pMin))
             {
                 return false;
                 throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
@@ -91,51 +91,51 @@ namespace Math_lib
         public static  Bounds3D Union(Bounds3D b, Point3D p)
         {
             Debug.Assert(Point3D.IsNaN(p));
-            Debug.Assert(IsNaN(b));
+            Debug.Assert(IsNotNaN(b));
 
             return new Bounds3D(Point3D.Min(b.pMin, p),
                                 Point3D.Max(b.pMax, p));
         }
         public static Bounds3D Union(Bounds3D b, Bounds3D b1)
         {
-            Debug.Assert(IsNaN(b));
-            Debug.Assert(IsNaN(b1));
+            Debug.Assert(IsNotNaN(b));
+            Debug.Assert(IsNotNaN(b1));
 
             return new Bounds3D(Point3D.Min(b.pMin, b1.pMin),
                                 Point3D.Max(b.pMax, b1.pMax));
         }
         public Bounds3D Intersect(Bounds3D b, Bounds3D b1)
         {
-            Debug.Assert(IsNaN(b));
-            Debug.Assert(IsNaN(b1));
+            Debug.Assert(IsNotNaN(b));
+            Debug.Assert(IsNotNaN(b1));
 
             return new Bounds3D(Point3D.Max(b.pMin, b1.pMin),
                                 Point3D.Min(b.pMax, b1.pMax));
         }
         public bool Overlaps(Bounds3D b, Bounds3D b1)
         {
-            Debug.Assert(IsNaN(b));
-            Debug.Assert(IsNaN(b1));
+            Debug.Assert(IsNotNaN(b));
+            Debug.Assert(IsNotNaN(b1));
 
             return b.pMax >= b1.pMin && b.pMin <= b1.pMax;
         }
         public bool Inside(Point3D p, Bounds3D b)
         {
             Debug.Assert(Point3D.IsNaN(p));
-            Debug.Assert(IsNaN(b));
+            Debug.Assert(IsNotNaN(b));
 
             return p >= b.pMin && p <= b.pMax;
         }
         public bool InsideExclusive(Point3D p, Bounds3D b)
         {
             Debug.Assert(Point3D.IsNaN(p));
-            Debug.Assert(IsNaN(b));
+            Debug.Assert(IsNotNaN(b));
 
             return p >= pMin && p < b.pMax;
         }
         public Bounds3D Expand(Bounds3D b, double delta)
         {
-            Debug.Assert(IsNaN(b));
+            Debug.Assert(IsNotNaN(b));
             Debug.Assert(!double.IsNaN(delta));
 
             return new Bounds3D(b.pMin - delta,
@@ -143,7 +143,7 @@ namespace Math_lib
         }
         public Vector3D Diagonal()
         {
-            Debug.Assert(IsNaN(this));
+            Debug.Assert(IsNotNaN(this));
 
             return pMax - pMin;
         }
@@ -175,7 +175,7 @@ namespace Math_lib
         }
         public Point3D Lerp(Point3D p)
         {
-            Debug.Assert(IsNaN(this));
+            Debug.Assert(IsNotNaN(this));
             Debug.Assert(Point3D.IsNaN(p));
 
 
@@ -185,7 +185,7 @@ namespace Math_lib
         }
         public Vector3D Offset(Point3D p)
         {
-            Debug.Assert(IsNaN(this));
+            Debug.Assert(IsNotNaN(this));
             Debug.Assert(Point3D.IsNaN(p));
 
             Vector3D o = p - pMin;
@@ -200,7 +200,7 @@ namespace Math_lib
         {
             Debug.Assert(Point3D.IsNaN(center));
             Debug.Assert(!double.IsNaN(radius));
-            Debug.Assert(IsNaN(this));
+            Debug.Assert(IsNotNaN(this));
 
             center = (pMin + pMax) / 2;
             radius = Inside(center, this) ? Point3D.Distance(center, pMax) : 0;
