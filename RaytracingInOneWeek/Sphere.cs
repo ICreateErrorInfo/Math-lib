@@ -66,9 +66,8 @@ namespace Raytracing
 
             var pHit = r.At(root);
 
-            //if (pHit.X == 0 && pHit.Y == 0) pHit = new(1e-5f * Radius, pHit.Y, pHit.Z);
             var phi = Math.Atan2(pHit.Y, pHit.X);
-            //if (phi < 0) phi += 2 * Math.PI;
+            if (phi < 0) phi += 2 * Math.PI;
 
             if ((_zMin > -Radius && pHit.Z < _zMin) ||
                 (_zMax <  Radius && pHit.Z > _zMax) || phi > _phiMax)
