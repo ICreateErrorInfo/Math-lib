@@ -4,7 +4,7 @@ using System;
 namespace Math_lib.Tests
 {
     [TestFixture]
-    public class Normal3DTest
+    public class Normal3DTests
     {
         [Test]
         public void TestSyntax()

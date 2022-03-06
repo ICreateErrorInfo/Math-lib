@@ -19,7 +19,7 @@ namespace Math_lib
         }
         public Bounds2D(Point2D p)
         {
-            Debug.Assert(IsNaN(this));
+            Debug.Assert(Point2D.IsNaN(p));
 
             pMin = p;
             pMax = p;
@@ -70,10 +70,9 @@ namespace Math_lib
         }
         public static bool IsNaN(Bounds2D b)
         {
-            if (Point2D.IsNaN(b.pMax) || Point2D.IsNaN(b.pMin))
+            if (!Point2D.IsNaN(b.pMax) || !Point2D.IsNaN(b.pMin))
             {
                 return false;
-                throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
             }
             return true;
         }
@@ -119,7 +118,7 @@ namespace Math_lib
 
             return o;
         }
-        public Bounds2D Union(Bounds2D b, Bounds2D b2)
+        public static Bounds2D Union(Bounds2D b, Bounds2D b2)
         {
             Debug.Assert(IsNaN(b));
             Debug.Assert(IsNaN(b2));
@@ -127,7 +126,7 @@ namespace Math_lib
             return new Bounds2D(Point2D.Min(b.pMin, b2.pMin),
                                 Point2D.Max(b.pMax, b2.pMax));
         }
-        public Bounds2D Union(Bounds2D b, Point2D p)
+        public static Bounds2D Union(Bounds2D b, Point2D p)
         {
             Debug.Assert(IsNaN(b));
             Debug.Assert(Point2D.IsNaN(p));
@@ -135,7 +134,7 @@ namespace Math_lib
             return new Bounds2D(Point2D.Min(b.pMin, p),
                                 Point2D.Max(b.pMax, p));
         }
-        public Bounds2D Intersect(Bounds2D b1, Bounds2D b2)
+        public static Bounds2D Intersect(Bounds2D b1, Bounds2D b2)
         {
             Debug.Assert(IsNaN(b1));
             Debug.Assert(IsNaN(b2));
@@ -143,14 +142,14 @@ namespace Math_lib
             return new Bounds2D(Point2D.Max(b1.pMin, b2.pMin),
                                 Point2D.Min(b1.pMax, b2.pMax));
         }
-        public bool Overlaps(Bounds2D b1, Bounds2D b2)
+        public static bool Overlaps(Bounds2D b1, Bounds2D b2)
         {
             Debug.Assert(IsNaN(b1));
             Debug.Assert(IsNaN(b2));
 
             return b1.pMax >= b2.pMin && b1.pMin <= b2.pMax;
         }
-        public bool Inside(Point2D p, Bounds2D b)
+        public static bool Inside(Point2D p, Bounds2D b)
         {
             Debug.Assert(Point2D.IsNaN(p));
             Debug.Assert(IsNaN(b));
@@ -164,7 +163,7 @@ namespace Math_lib
 
             return p >= pMin && p < b.pMax;
         }
-        public Bounds2D Expand(Bounds2D b, double delta)
+        public static Bounds2D Expand(Bounds2D b, double delta)
         {
             Debug.Assert(IsNaN(b));
             Debug.Assert(!double.IsNaN(delta));

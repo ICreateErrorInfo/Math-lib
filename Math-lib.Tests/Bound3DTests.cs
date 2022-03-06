@@ -1,10 +1,9 @@
 ﻿using NUnit.Framework;
-using System;
 
 namespace Math_lib.Tests
 {
     [TestFixture]
-    public class Bound3DTest
+    public class Bound3DTests
     {
         [Test]
         public void TestSyntax()

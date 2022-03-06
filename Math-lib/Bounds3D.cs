@@ -35,7 +35,6 @@ namespace Math_lib
             if (!Point3D.IsNaN(b.pMax) || !Point3D.IsNaN(b.pMin))
             {
                 return false;
-                throw new ArgumentOutOfRangeException("NaN", "Number cant be NaN");
             }
             return true;
         }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Math_lib.Tests
 {
     [TestFixture]
-    public class MatrixTest
+    public class MatrixTests
     {
         [Test]
         public void TestCtor1()

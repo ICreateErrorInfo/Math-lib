@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Math_lib.Tests
 {
     [TestFixture]
-    public class Point2DTest
+    public class Point2DTests
     {
         [Test]
         public void TestSyntax()
