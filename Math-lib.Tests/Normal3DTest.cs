@@ -43,6 +43,13 @@ namespace Math_lib.Tests
 
 
         [Test]
+        public void TestIsNaN()
+        {
+            Normal3D n = new Normal3D { X = double.NaN };
+
+            Assert.That(Normal3D.IsNaN(n), Is.True);
+        }
+        [Test]
         public void TestGetLength()
         {
             var v4 = new Normal3D(3, 4, 5);

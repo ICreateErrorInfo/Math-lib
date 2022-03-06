@@ -41,11 +41,11 @@ namespace Math_lib
         //Mehods
         public static bool IsNaN(Vector3D v)
         {
-            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
+            if (!double.IsNaN(v.X) || !double.IsNaN(v.Y) || !double.IsNaN(v.Z))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
         public double GetLength()
         {
@@ -61,7 +61,7 @@ namespace Math_lib
         }
         public static Vector3D Normalize(Vector3D v)
         {
-            //Debug.Assert(IsNaN(v));
+            Debug.Assert(IsNaN(v));
 
             return v / v.GetLength();
         }

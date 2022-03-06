@@ -1,5 +1,4 @@
 ﻿using System;
-
 using NUnit.Framework;
 
 namespace Math_lib.Tests {
@@ -9,15 +8,15 @@ namespace Math_lib.Tests {
 
         [Test]
         public void TestSyntax() {
-            var v = new Vector3D {X = 3, Y = 2, Z = 1};
+            var v = new Vector3D { X = 3, Y = 2, Z = 1 };
 
             Assert.That(v.X, Is.EqualTo(3));
             Assert.That(v.Y, Is.EqualTo(2));
             Assert.That(v.Z, Is.EqualTo(1));
         }
         [Test]
-        public void TestEmptyVector() {
-
+        public void TestEmptyVector3D()
+        {
             var v = new Vector3D();
             Assert.That(v.X, Is.EqualTo(0));
             Assert.That(v.Y, Is.EqualTo(0));
@@ -39,6 +38,13 @@ namespace Math_lib.Tests {
         }
 
 
+        [Test]
+        public void TestIsNaN()
+        {
+            Vector3D v = new Vector3D { X = double.NaN };
+
+            Assert.That(Vector3D.IsNaN(v), Is.True);
+        }
         [Test]
         public void TestGetLength() {
             var v4 = new Vector3D(3, 4, 5);

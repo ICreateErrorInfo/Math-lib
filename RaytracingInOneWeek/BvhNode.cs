@@ -84,7 +84,7 @@ namespace Raytracing
         {
             isect = new SurfaceInteraction();
             double a = 0, b = 0;
-            bool foundBoxInsec = _box.IntersectP(r, ref a, ref tMax);
+            bool foundBoxInsec = _box.IntersectP(r, out a, out tMax);
 
             if (!foundBoxInsec)
             {

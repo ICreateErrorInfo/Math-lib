@@ -39,11 +39,11 @@ namespace Math_lib
         //Methods
         public static bool IsNaN(Point3D v)
         {
-            if (double.IsNaN(v.X) || double.IsNaN(v.Y) || double.IsNaN(v.Z))
+            if (!double.IsNaN(v.X) || !double.IsNaN(v.Y) || !double.IsNaN(v.Z))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
         public static double Distance(Point3D p, Point3D p1)
         {

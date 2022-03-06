@@ -42,6 +42,13 @@ namespace Math_lib.Tests
 
 
         [Test]
+        public void TestIsNaN()
+        {
+            Vector2D v = new Vector2D { X = double.NaN};
+
+            Assert.That(Vector2D.IsNaN(v), Is.True);
+        }
+        [Test]
         public void TestGetLength()
         {
             var v4 = new Vector2D(3, 4);
