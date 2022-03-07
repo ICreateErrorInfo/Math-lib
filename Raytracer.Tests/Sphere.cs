@@ -1,5 +1,5 @@
 using NUnit.Framework;
-
+using Raytracing.Shapes;
 
 namespace Raytracing.Tests
 {

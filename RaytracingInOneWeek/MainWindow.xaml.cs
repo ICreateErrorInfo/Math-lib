@@ -1,13 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using Math_lib;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Math_lib;
+using Raytracing.Shapes;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace Raytracing
 {
@@ -18,18 +11,16 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(FirstScene());
+            r.RenderScene(TestSphere());
         }
 
         Scene TestSphere()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Sphere s = new Sphere(new(0), 0.1, -0.1, 0.1, 150, material);
-            Sphere s1 = new Sphere(new(0.1,0,0),0.1, material);
-            Sphere s2 = new Sphere(new(-0.1,0,0),0.1, material);
+            Sphere s = new Sphere(new(0,0.1,0), 0.1, -0.1, 0.1, 150, material);
+            Sphere s1 = new Sphere(new(0.2,0,0), 0.1, -0.08, 0.08, 360, material);
             HittableList h = new(s);
             h.Add(s1);
-            h.Add(s2);
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1)); //bug
 

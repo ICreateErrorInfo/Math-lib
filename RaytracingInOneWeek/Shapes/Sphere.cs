@@ -1,7 +1,7 @@
 ﻿using System;
 using Math_lib;
 
-namespace Raytracing
+namespace Raytracing.Shapes
 {
     public class Sphere : Shape
     {
@@ -66,7 +66,7 @@ namespace Raytracing
 
             var pHit = r.At(root);
 
-            var phi = Math.Atan2(pHit.Y, pHit.X);
+            var phi = Math.Atan2(pHit.Y - _center.Y, pHit.X - _center.X);
             if (phi < 0) phi += 2 * Math.PI;
 
             if ((_zMin > -Radius && pHit.Z < _zMin) ||
