@@ -11,9 +11,19 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestSphere());
+            r.RenderScene(TestCylinder());
         }
 
+        Scene TestCylinder()
+        {
+            var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
+            Cylinder s = new Cylinder(new(0), 0.1, -0.1, 0.1, 360, material);
+            HittableList h = new(s);
+
+            Scene scene = new Scene(h, 100, 50, new Point3D(1, 0, 0), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
         Scene TestSphere()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
@@ -22,7 +32,7 @@ namespace Raytracing
             HittableList h = new(s);
             h.Add(s1);
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1)); //bug
+            Scene scene = new Scene(h, 1, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1));
 
             return scene;
         }

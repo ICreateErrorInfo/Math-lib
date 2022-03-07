@@ -28,7 +28,7 @@ namespace Raytracing
             _material = material;
         }
 
-        public override bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
 

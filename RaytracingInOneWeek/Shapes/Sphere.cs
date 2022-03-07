@@ -38,9 +38,9 @@ namespace Raytracing.Shapes
             _material = material;
         }
 
-        public override bool TryHit(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
         {
-            isect = new SurfaceInteraction();
+            insec = new SurfaceInteraction();
 
             Vector3D oc = r.O - _center;
             var a = r.D.GetLengthSqrt();
@@ -80,12 +80,12 @@ namespace Raytracing.Shapes
                     return false;
             }
 
-            isect.T = root;
-            isect.P = r.At(root);
-            Normal3D outwardNormal = (Normal3D)((isect.P - _center) / _radius);
-            isect.SetFaceNormal(r, outwardNormal);
-            (isect.U, isect.V) = GetSphereUV(outwardNormal);
-            isect.Material = _material;
+            insec.T = root;
+            insec.P = r.At(root);
+            Normal3D outwardNormal = (Normal3D)((insec.P - _center) / _radius);
+            insec.SetFaceNormal(r, outwardNormal);
+            (insec.U, insec.V) = GetSphereUV(outwardNormal);
+            insec.Material = _material;
 
             return true;
         }
