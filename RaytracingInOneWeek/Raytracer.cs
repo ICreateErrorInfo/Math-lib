@@ -61,7 +61,7 @@ namespace Raytracing
             double aspectRatio = imageWidth / (double)imageHeight;
 
             //Camera
-            Vector3D vup = new Vector3D(0, 1, 0);
+            Vector3D vup = scene.VUp;
             var distToFocus = scene.FocusDistance;
 
             Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distToFocus, 0, 1);

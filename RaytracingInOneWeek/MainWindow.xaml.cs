@@ -11,16 +11,26 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestCylinder());
+            r.RenderScene(TestDisk());
         }
 
+        Scene TestDisk()
+        {
+            var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
+            Disk d = new Disk(new(0.1, 0, 0), 0, 0.1, 0.05, 180, material);
+            HittableList h = new(d);
+
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
         Scene TestCylinder()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
             Cylinder s = new Cylinder(new(0), 0.1, -0.1, 0.1, 360, material);
             HittableList h = new(s);
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(1, 0, 0), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0,0,1), 20, 0.1, new Vector3D(.7, .8, 1));
 
             return scene;
         }
@@ -32,7 +42,7 @@ namespace Raytracing
             HittableList h = new(s);
             h.Add(s1);
 
-            Scene scene = new Scene(h, 1, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 1, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
 
             return scene;
         }
@@ -56,7 +66,7 @@ namespace Raytracing
             world.Add(new Sphere(new Point3D(5, 0, -25), 3, material3));
             world.Add(new Sphere(new Point3D(-5.5, 0, -15), 3, material4));
 
-            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), 50, 0.1, new Vector3D(.7, .8, 1), 20);
+            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, new Vector3D(.7, .8, 1), 20);
 
             return scene;
         }
@@ -74,6 +84,7 @@ namespace Raytracing
                                     maxD: 50,
                                     lookfrom: new Point3D(13, 2, 3),
                                     lookat: new Point3D(0, 0, 0),
+                                    new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(1, 1, 1),
@@ -95,6 +106,7 @@ namespace Raytracing
                                     maxD: 50,
                                     lookfrom: new Point3D(13, 2, 3),
                                     lookat: new Point3D(0, 0, 0),
+                                    new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(.7, .8, 1));
@@ -115,6 +127,7 @@ namespace Raytracing
                                     maxD: 50,
                                     lookfrom: new Point3D(13, 2, 3),
                                     lookat: new Point3D(0, 0, 0),
+                                    new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(.7, .8, 1),
@@ -140,6 +153,7 @@ namespace Raytracing
                                     maxD: 50,
                                     lookfrom: new Point3D(26, 3, 6),
                                     lookat: new Point3D(0, 2, 0),
+                                    new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: new Vector3D(0, 0, 0));
@@ -174,6 +188,7 @@ namespace Raytracing
                                     maxD: 50,
                                     lookfrom: new Point3D(278, 278, -800),
                                     lookat: new Point3D(278, 278, 0),
+                                    new(0, 1, 0),
                                     vFov: 40,
                                     aperture: 0.1,
                                     background: new Vector3D(0, 0, 0),

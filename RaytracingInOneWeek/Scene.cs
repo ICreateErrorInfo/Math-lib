@@ -9,6 +9,7 @@ namespace Raytracing
         public int MaxDepth;
         public Point3D Lookfrom;
         public Point3D Lookat;
+        public Vector3D VUp;
         public int VFov;
         public double Aperture;
         public Vector3D Background;
@@ -21,6 +22,7 @@ namespace Raytracing
                      int            maxD,
                      Point3D        lookfrom,
                      Point3D        lookat,
+                     Vector3D       vUp,
                      int            vFov,
                      double         aperture,
                      Vector3D       background,
@@ -47,6 +49,7 @@ namespace Raytracing
             Background = background;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
+            VUp = vUp;
         }
     }
 }
