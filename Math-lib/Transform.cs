@@ -1,16 +1,19 @@
-﻿namespace Math_lib
+﻿using System;
+
+namespace Math_lib
 {
     public class Transform
     {
         //Properties
-        public Matrix m { get; private init;}
-        public Matrix mInv {get; private init; }
+        public Matrix m { get; private set; }
+        public Matrix mInv { get; private set; }
 
 
         //Ctors
         public Transform()
         {
-
+            m.Identity();
+            mInv = Matrix.Inverse4x4(m);
         }
         public Transform(double[,] mat)
         {
@@ -22,7 +25,7 @@
             this.m = m;
             mInv = Matrix.Inverse4x4(m);
         }
-        public Transform(Matrix m , Matrix mInv)
+        public Transform(Matrix m, Matrix mInv)
         {
             this.m = m;
             this.mInv = mInv;
@@ -40,76 +43,106 @@
         }
         public bool IsIdentity()
         {
-            return (m[0,0] == 1 && m[0,1] == 0 && m[0,2] == 0 &&
-                    m[0,3] == 0 && m[1,0] == 0 && m[1,1] == 1 &&
-                    m[1,2] == 0 && m[1,3] == 0 && m[2,0] == 0 &&
-                    m[2,1] == 0 && m[2,2] == 1 && m[2,3] == 0 &&
-                    m[3,0] == 0 && m[3,1] == 0 && m[3,2] == 0 &&
-                    m[3,3] == 1);
+            return (m[0, 0] == 1 && m[0, 1] == 0 && m[0, 2] == 0 &&
+                    m[0, 3] == 0 && m[1, 0] == 0 && m[1, 1] == 1 &&
+                    m[1, 2] == 0 && m[1, 3] == 0 && m[2, 0] == 0 &&
+                    m[2, 1] == 0 && m[2, 2] == 1 && m[2, 3] == 0 &&
+                    m[3, 0] == 0 && m[3, 1] == 0 && m[3, 2] == 0 &&
+                    m[3, 3] == 1);
         }
-        public Point3D Trans(Point3D p)
+        public static Transform Translate(Vector3D delta)
         {
-            double x = p.X, y = p.Y, z = p.Z;
-
-            double xp = m[0,0] * x + m[0,1] * y + m[0,2] * z + m[0,3];
-            double yp = m[1,0] * x + m[1,1] * y + m[1,2] * z + m[1,3];
-            double zp = m[2,0] * x + m[2,1] * y + m[2,2] * z + m[2,3];
-            double wp = m[3,0] * x + m[3,1] * y + m[3,2] * z + m[3,3];
-
-            if (wp == 1)
+            Matrix m = new Matrix(new[,]
             {
-                return new Point3D(xp, yp, zp);
-            }
-            else
+                { 1, 0, 0, delta.X },
+                { 0, 1, 0, delta.Y },
+                { 0, 0, 1, delta.Z },
+                { 0, 0, 0, 1       }
+            });
+
+            Matrix minv = new Matrix(new[,]
             {
-                return new Point3D(xp, yp, zp) / wp;
-            }
-        }
-        public Vector3D Trans(Vector3D v)
-        {
-            double x = v.X, y = v.Y, z = v.Z;
+                { 1, 0, 0, -delta.X },
+                { 0, 1, 0, -delta.Y },
+                { 0, 0, 1, -delta.Z },
+                { 0, 0, 0,        1 }
+            });
 
-            return new Vector3D(m[0,0] * x + m[0,1] * y + m[0,2] * z,
-                                m[1,0] * x + m[1,1] * y + m[1,2] * z,
-                                m[2,0] * x + m[2,1] * y + m[2,2] * z);
+            return new Transform(m, minv);
         }
-        public Normal3D Trans(Normal3D n)
+        public static Transform Scale(double x, double y, double z)
         {
-            double x = n.X, y = n.Y, z = n.Z;
-            return new Normal3D(mInv[0,0] * x + mInv[1,0] * y + mInv[2,0] * z,
-                                mInv[0,1] * x + mInv[1,1] * y + mInv[2,1] * z,
-                                mInv[0,2] * x + mInv[1,2] * y + mInv[2,2] * z);
-        }
-        public Ray Trans(Ray r)
-        {
-            Point3D o = Trans(r.O);
-            Vector3D d = Trans(r.D);
+            Matrix m = new Matrix(new[,]
+               {{ x, 0, 0, 0},
+                { 0, y, 0, 0},
+                { 0, 0, z, 0},
+                { 0, 0, 0, 1}});
 
-            return new Ray(o, d, r.TMax, r.Time);
-        }
-        public RayDifferential Trans(RayDifferential r)
-        {
-            Ray tr = Trans(r);
-            RayDifferential ret = new RayDifferential(tr.O, tr.D, tr.Time);
-            ret.hasDifferentials = r.hasDifferentials;
-            ret.rxOrigin = Trans(r.rxOrigin);
-            ret.ryOrigin = Trans(r.ryOrigin);
-            ret.rxDirection = Trans(r.rxDirection);
-            ret.ryDirection = Trans(r.ryDirection);
+            Matrix minv = new Matrix(new[,]
+               {{ 1/x, 0,  0,  0},
+                { 0,  1/y, 0,  0},
+                { 0,   0, 1/z, 0},
+                { 0,   0,  0,  1}});
 
-            return ret;
+            return new Transform(m, minv);
         }
-        public Bounds3D Trans(Bounds3D b)
+        public static Transform RotateX(double a)
         {
-            Bounds3D ret = new(Trans(new Point3D(b.pMin.X, b.pMin.Y, b.pMin.Z)));
-            ret = Bounds3D.Union(ret, Trans(new Point3D(b.pMin.X + b.Diagonal().X, b.pMin.Y + b.Diagonal().Y, b.pMin.Z + b.Diagonal().Z)));
-            return ret;
+            return new(new[,]
+            {
+                {  1,            0,           0  },
+                {  0, Math.Cos(a) , -Math.Sin(a) },
+                {  0, Math.Sin(a) ,  Math.Cos(a) },
+            });
+        }
+        public static Transform RotateY(double a)
+        {
+            return new(new[,]
+            {
+                {  Math.Cos(a) , 0 , Math.Sin(a) },
+                {             0, 1 ,          0  },
+                { -Math.Sin(a) , 0 , Math.Cos(a) },
+            });
+        }
+        public static Transform RotateZ(double a)
+        {
+            return new(new[,]
+            {
+                {  Math.Cos(a), -Math.Sin(a), 0 },
+                {  Math.Sin(a), Math.Cos(a) , 0 },
+                {            0,            0, 1 },
+            });
+        }
+        public static Transform Rotate(double theta, Vector3D axis)
+        {
+            Vector3D a = Vector3D.Normalize(axis);
+            double sinTheta = Math.Sin(Mathe.ToRad(theta));
+            double cosTheta = Math.Cos(Mathe.ToRad(theta));
+            Matrix m = new Matrix(4,4);
+
+            m[0,0] = a.X * a.X + (1 - a.X * a.X) * cosTheta;
+            m[0,1] = a.X * a.Y * (1 - cosTheta) - a.Z * sinTheta;
+            m[0,2] = a.X * a.Z * (1 - cosTheta) + a.Y * sinTheta;
+            m[0,3] = 0;
+
+            m[1,0] = a.X * a.Y * (1 - cosTheta) + a.Z * sinTheta;
+            m[1,1] = a.Y * a.Y + (1 - a.Y * a.Y) * cosTheta;
+            m[1,2] = a.Y * a.Z * (1 - cosTheta) - a.X * sinTheta;
+            m[1,3] = 0;
+               
+            m[2,0] = a.X * a.Z * (1 - cosTheta) - a.Y * sinTheta;
+            m[2,1] = a.Y * a.Z * (1 - cosTheta) + a.X * sinTheta;
+            m[2,2] = a.Z * a.Z + (1 - a.Z * a.Z) * cosTheta;
+            m[2,3] = 0;
+
+            return new Transform(m, Matrix.Transpose4x4(m));
+
         }
         public bool SwapsHandness()
         {
-            double det = m[0,0] * (m[1,1] * m[2,2] - m[1,2] * m[2,1]) -
-                         m[0,1] * (m[1,0] * m[2,2] - m[1,2] * m[2,0]) +
-                         m[0,2] * (m[1,0] * m[2,1] - m[1,1] * m[2,0]);
+            double det = m[0, 0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) -
+                         m[0, 1] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0]) +
+                         m[0, 2] * (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0]);
             return det < 0;
         }
 
@@ -132,8 +165,8 @@
             for (int i = 0; i < 4; ++i)
                 for (int j = 0; j < 4; ++j)
                 {
-                    if (t.m[i,j] < t1.m[i,j]) return true;
-                    if (t.m[i,j] > t1.m[i,j]) return false;
+                    if (t.m[i, j] < t1.m[i, j]) return true;
+                    if (t.m[i, j] > t1.m[i, j]) return false;
                 }
             return false;
         }
