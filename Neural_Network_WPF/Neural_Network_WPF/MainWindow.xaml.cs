@@ -13,7 +13,7 @@ namespace Neural_Network_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        NeuralNet neural = new NeuralNet(new int[] { 784, 16, 16, 10 });
+        NeuralNet neural = new NeuralNet(new int[] { 784,16, 16, 16, 10 });
 
         public MainWindow()
         {

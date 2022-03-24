@@ -330,6 +330,12 @@ namespace Math_lib
                 throw new ArgumentException("The Matrix is not 4x4 or 3x3");
             }
         }
+        public static Ray operator *(Matrix m, Ray r)
+        {
+            Ray r1 = new Ray(m * r.O, r.D, r.TMax, r.Time);
+
+            return r1;
+        }
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
             Matrix matrix = new Matrix(m1._row, m2._col);

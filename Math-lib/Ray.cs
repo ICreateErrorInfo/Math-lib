@@ -28,7 +28,10 @@
         {
             return O + D * t;
         }
-
+        public Ray Copy()
+        {
+            return new Ray(O, D, TMax, Time);
+        }
 
         public override string ToString()
         {

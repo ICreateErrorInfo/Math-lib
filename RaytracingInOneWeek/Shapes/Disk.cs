@@ -14,7 +14,8 @@ namespace Raytracing.Shapes
         private readonly double _innerRadius;
         private readonly double _phiMax;
         private readonly Material _material;
-        private readonly Point3D _center;
+        private readonly Transform _worldToObject;
+        private readonly Transform _objectToWorld;
 
         public Disk(Point3D center, double height, double radius, double innerRadius, double phiMax, Material material)
         {
@@ -23,7 +24,8 @@ namespace Raytracing.Shapes
             _innerRadius = innerRadius;
             _material = material;
             _phiMax = Mathe.ToRad(Math.Clamp(phiMax, 0, 360));
-            _center = center;
+            _worldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
+            _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
         public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
@@ -37,15 +39,15 @@ namespace Raytracing.Shapes
         {
             isect = new SurfaceInteraction();
 
-            Vector3D oc = r.O - _center;
+            Ray rTransformed = _worldToObject.m * r;
 
-            double tShapeHit = (_height - oc.Z) / r.D.Z;
-            if(tShapeHit <= 0 || tShapeHit >= r.TMax || r.D.Z == 0)
+            double t0 = (_height - rTransformed.O.Z) / rTransformed.D.Z;
+            if(t0 <= 0 || t0 >= rTransformed.TMax || rTransformed.D.Z == 0)
             {
                 return false;
             }
 
-            Point3D pHit = r.At(tShapeHit);
+            Point3D pHit = rTransformed.At(t0);
             double dist2 = pHit.X * pHit.X + pHit.Y * pHit.Y;
             if(dist2 > _radius * _radius || dist2 < _innerRadius * _innerRadius)
             {
@@ -56,8 +58,8 @@ namespace Raytracing.Shapes
             if(phi < 0) phi += 2 * Math.PI;
             if (phi > _phiMax) return false;
 
-            isect.T = tShapeHit;
-            isect.P = pHit;
+            isect.T = t0;
+            isect.P = r.At(t0);
             Normal3D outwardNormal = new(pHit.X,pHit.Y,_height + 1);
             isect.SetFaceNormal(r, outwardNormal);
             isect.Material = _material;

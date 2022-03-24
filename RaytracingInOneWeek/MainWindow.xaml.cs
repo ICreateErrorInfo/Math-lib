@@ -17,7 +17,7 @@ namespace Raytracing
         Scene TestDisk()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Disk d = new Disk(new(0.1, 0, 0), 0, 0.1, 0.05, 180, material);
+            Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180, material);
             HittableList h = new(d);
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
@@ -27,7 +27,7 @@ namespace Raytracing
         Scene TestCylinder()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Cylinder s = new Cylinder(new(0), 0.1, -0.1, 0.1, 360, material);
+            Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360, material);
             HittableList h = new(s);
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0,0,1), 20, 0.1, new Vector3D(.7, .8, 1));
@@ -37,12 +37,12 @@ namespace Raytracing
         Scene TestSphere()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Sphere s = new Sphere(new(0,0.1,0), 0.1, -0.1, 0.1, 150, material);
-            Sphere s1 = new Sphere(new(0.2,0,0), 0.1, -0.08, 0.08, 360, material);
+            Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360, material);
+            Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360, material);
             HittableList h = new(s);
             h.Add(s1);
 
-            Scene scene = new Scene(h, 1, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 10, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
 
             return scene;
         }

@@ -103,6 +103,10 @@ namespace Math_lib
                              Math.Abs(p.Y),
                              Math.Abs(p.Z));
         }
+        public static Point3D Round(Point3D p, int decimals)
+        {
+            return new((double)Math.Round((decimal)p.X, decimals), (double)Math.Round((decimal)p.Y, decimals), (double)Math.Round((decimal)p.Z, decimals));
+        }
         public static Point3D Permute(Point3D p, int x, int y, int z)
         {
             Debug.Assert(IsNaN(p));

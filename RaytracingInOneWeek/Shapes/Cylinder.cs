@@ -5,7 +5,8 @@ namespace Raytracing.Shapes
 {
     public class Cylinder : Shape
     {
-        private readonly Point3D _center;
+        private readonly Transform _worldToObject;
+        private readonly Transform _objectToWorld;
         private readonly double _radius;
         private readonly double _zMin;
         private readonly double _zMax;
@@ -14,7 +15,8 @@ namespace Raytracing.Shapes
 
         public Cylinder(Point3D center, double radius, double zMin, double zMax, double phiMax, Material material)
         {
-            _center = center;
+            _worldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
+            _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
             _radius = radius;
             _zMin = Math.Min(zMin, zMax);
             _zMax = Math.Max(zMin, zMax);
@@ -24,8 +26,8 @@ namespace Raytracing.Shapes
 
         public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {
-            bound = new Bounds3D(_center + new Point3D(-_radius, -_radius, _zMin),
-                                 _center + new Point3D( _radius,  _radius, _zMax));
+            bound = new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
+                                 new Point3D( _radius,  _radius, _zMax));
             return true;
         }
 
@@ -33,43 +35,35 @@ namespace Raytracing.Shapes
         {
             insec = new SurfaceInteraction();
 
-            Vector3D oc = r.O - _center;
-            double a = Math.Pow(r.D.X, 2) + Math.Pow(r.D.Y, 2);
-            double b = r.D.X * oc.X + r.D.Y * oc.Y;
-            double c = Math.Pow(oc.X, 2) + Math.Pow(oc.Y, 2) - Math.Pow(_radius, 2);
-            double discriminant = Math.Pow(b, 2) - a * c;
+            Ray rTransformed = _worldToObject.m * r;
 
-            if (discriminant < 0)
+            double a = Math.Pow(rTransformed.D.X, 2) + Math.Pow(rTransformed.D.Y, 2);
+            double b = rTransformed.D.X * rTransformed.O.X + rTransformed.D.Y * rTransformed.O.Y;
+            double c = Math.Pow(rTransformed.O.X, 2) + Math.Pow(rTransformed.O.Y, 2) - Math.Pow(_radius, 2);
+
+            double t0, t1;
+            if (!Mathe.SolveQuadratic(a, b, c, out t0, tMin, tMax))
             {
                 return false;
             }
 
-            var sqrtd = Math.Sqrt(discriminant);
+            var pHit = rTransformed.At(t0);
 
-            var root = (-b - sqrtd) / a;
-            if (root < tMin || tMax < root)
-            {
-                root = (-b + sqrtd) / a;
-                if (root < tMin || tMax < root)
-                {
-                    return false;
-                }
-            }
+            var phi = Math.Atan2(pHit.Y, pHit.X);
 
-            var pHit = r.At(root);
-            var phi = Math.Atan2(pHit.Y - _center.Y, pHit.X - _center.X);
             if (phi < 0) phi += 2 * Math.PI;
 
-            if (pHit.Z < _zMin ||  pHit.Z > _zMax || phi > _phiMax)
+            if (pHit.Z < _zMin || pHit.Z > _zMax || phi > _phiMax)
             {
                 if (pHit.Z < _zMin ||
                     pHit.Z > _zMax || phi > _phiMax)
                     return false;
             }
 
-            insec.T = root;
-            insec.P = r.At(root);
-            Normal3D outwardNormal = new((insec.P.X - _center.X) / _radius, (insec.P.Y - _center.X) / _radius, insec.P.Z);
+            insec.T = t0;
+            insec.P = r.At(t0);
+            Point3D intersectionPointTransformed = rTransformed.At(t0);
+            Normal3D outwardNormal = new((intersectionPointTransformed.X) / _radius, (intersectionPointTransformed.Y) / _radius, 0);
             insec.SetFaceNormal(r, outwardNormal);
             insec.Material = _material;
 

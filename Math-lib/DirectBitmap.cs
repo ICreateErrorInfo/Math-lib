@@ -8,7 +8,7 @@ namespace Math_lib
 
     public class DirectBitmap {
 
-        const int BytesPerPixel = 3;
+        int BytesPerPixel = 3;
 
         public DirectBitmap(int width, int height) {
             Width  = width;
@@ -21,6 +21,13 @@ namespace Math_lib
             Height = height;
             Bits = b;
         }
+        public DirectBitmap(int width, int height, byte[] b, int bytesPerPixel)
+        {
+            Width = width;
+            Height = height;
+            Bits = b;
+            BytesPerPixel = bytesPerPixel; ;
+        }
 
         public byte[] Bits { get; }
 
@@ -32,7 +39,6 @@ namespace Math_lib
         public void Clear() {
             Array.Clear(Bits, 0, Bits.Length);
         }
-
         public void FloodFill(int x, int y, Color newColor) {
 
             newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...
@@ -45,7 +51,6 @@ namespace Math_lib
             FloodFillmpl(x, y, newColor, replaceColor);
 
         }
-
         void FloodFillmpl(int x1, int y1, Color newColor, Color replaceColor) {
 
             Stack<(int X, int Y)> stack = new();
@@ -83,7 +88,6 @@ namespace Math_lib
                 return GetPixel(x, y);
             }
         }
-
         public void SetPixel(int x, int y, Color color) {
 
             int index = GetIndex(x, y);
@@ -93,12 +97,15 @@ namespace Math_lib
             Bits[index + 2] = color.R;
 
         }
+        public static DirectBitmap FromArray(byte[] data, int width, int height)
+        {
+            return new DirectBitmap(width, height, data, 1);
+        }
 
         public Color this[int x, int y] {
             get => GetPixel(x, y);
             set => SetPixel(x, y, value);
         }
-
         public Color GetPixel(int x, int y) {
 
             int index = GetIndex(x, y);
