@@ -60,7 +60,9 @@ namespace Raytracing.Shapes
             isect.T = t0;
             isect.P = r.At(t0);
             Point3D intersectionPointTransformed = rTransformed.At(t0);
-            Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(new((intersectionPointTransformed.X) / _radius, (intersectionPointTransformed.Y) / _radius, _radius)); //wrong Normal
+            double hNew = _height - intersectionPointTransformed.Z;
+            double XY = Math.Sqrt((hNew * hNew)/2);
+            Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(new Vector3D(XY, XY, Math.Sqrt(intersectionPointTransformed.X * intersectionPointTransformed.X + intersectionPointTransformed.Y * intersectionPointTransformed.Y)));
             isect.SetFaceNormal(r, outwardNormal);
             isect.Material = _material;
 

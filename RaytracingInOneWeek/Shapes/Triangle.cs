@@ -63,7 +63,6 @@ namespace Raytracing.Shapes
             bound = Bounds3D.Union(new Bounds3D(p0, p1), p2);
             return true;
         }
-
         public override bool Intersect(Ray ray, double tMin, double tMax, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
@@ -139,6 +138,15 @@ namespace Raytracing.Shapes
             isect.Material = _mesh.Material;
 
             return true;
+        }
+
+        public double Area()
+        {
+            Point3D p0 = _mesh.Point[_firstVertexIndex];
+            Point3D p1 = _mesh.Point[_firstVertexIndex + 1];
+            Point3D p2 = _mesh.Point[_firstVertexIndex + 2];
+
+            return 0.5 * Vector3D.Cross(p1 - p0, p2 - p0).GetLength();
         }
     }
 }

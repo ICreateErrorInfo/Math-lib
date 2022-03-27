@@ -12,12 +12,12 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestTriangle());
+            r.RenderScene(TestCone());
         }
 
         Scene TestTriangle()
         {
-            var material = new Metal(new Vector3D(.65, .7, .46), 0);
+            var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0,1,2 };
@@ -39,11 +39,14 @@ namespace Raytracing
         }
         Scene TestCone()
         {
-            var material = new Metal(new Vector3D(.65, .7, .46), 0);
-            Cone c = new Cone(new(0, 0, 0), 0.1, 0.2, 360, material);
+            var material = new Metal(new Vector3D(1, 0.32, 0.36), 0);
+            var material2 = new Metal(new Vector3D(0.90, 0.76, 0.46), 1);
+            Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360, material);
+            Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360, material2);
             HittableList h = new(c);
+            h.Add(s);
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, 1), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1), 18);
 
             return scene;
         }

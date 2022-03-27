@@ -79,10 +79,10 @@ namespace Raytracing
             crypto.GetBytes(RandX);
             crypto.GetBytes(RandY);
 
-            //Parallel.For(0, imageHeight, j =>
-            //{
-            for (int j = 0; j < imageHeight; j++)
+            Parallel.For(0, imageHeight, j =>
             {
+            //    for (int j = 0; j < imageHeight; j++)
+            //{
                 Interlocked.Increment(ref current);
                 progress.Report(new ProgressData(totalCount, current));
                 for (int i = 0; i < imageWidth; i++)
@@ -100,7 +100,7 @@ namespace Raytracing
                     vArr[j, i] = pixelColor;
                 }
             }
-            //);
+            );
             return new ImageData(
                 data: vArr,
                 width: imageWidth,
