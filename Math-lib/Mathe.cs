@@ -73,6 +73,32 @@ namespace Math_lib
 
             return true;
         }
+        public static bool SolveQuadratic(double a, double b, double c, out double t0, out double t1, double tMin, double tMax)
+        {
+            t0 = 0;
+            t1 = 0;
+
+            var discriminant = b * b - 4 * a * c;
+
+            if (discriminant < 0)
+            {
+                return false;
+            }
+            var sqrtd = Math.Sqrt(discriminant);
+
+            t0 = (-b - sqrtd) / (2 * a);
+            if (t0 < tMin || tMax < t0)
+            {
+                t0 = (-b + sqrtd) / (2 * a);
+                if (t0 < tMin || tMax < t0)
+                {
+                    return false;
+                }
+            }
+            //makes sure there is no self intersection can be fixed with rounding error
+
+            return true;
+        }
 
         public static double Random1Tom1()
         {

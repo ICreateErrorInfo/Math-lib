@@ -3,7 +3,7 @@ using Math_lib;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Raytracing
+namespace Raytracing.Shapes
 {
     class MovingSphere : Shape
     {
@@ -31,11 +31,6 @@ namespace Raytracing
         public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
-
-            if(r.Time == 0 || r.Time == 1)
-            {
-
-            }
 
             Vector3D oc = r.O - Center(r.Time);
             var a = r.D.GetLengthSqrt();

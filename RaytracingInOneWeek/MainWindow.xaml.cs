@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Raytracing.Shapes;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Raytracing
@@ -11,9 +12,41 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestDisk());
+            r.RenderScene(TestTriangle());
         }
 
+        Scene TestTriangle()
+        {
+            var material = new Metal(new Vector3D(.65, .7, .46), 0);
+
+            int nTri = 1;
+            List<int> indices = new List<int>() { 0,1,2 };
+            int nVert = 3;
+            List<Point3D> Points = new List<Point3D>() { new(-2,0,0), new(2,0,0), new(0,2,0) };
+
+            Transform objToWorld = Transform.Translate(new Vector3D(0));
+            Transform worldToObj = Transform.Translate(new Vector3D(0));
+
+            TriangleMesh mesh = new TriangleMesh(objToWorld, nTri, indices, nVert, Points, material);
+
+            Triangle tri = new Triangle(objToWorld, worldToObj, mesh, 0);
+
+            HittableList h = new(tri);
+
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
+        Scene TestCone()
+        {
+            var material = new Metal(new Vector3D(.65, .7, .46), 0);
+            Cone c = new Cone(new(0, 0, 0), 0.1, 0.2, 360, material);
+            HittableList h = new(c);
+
+            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, 1), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
         Scene TestDisk()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
@@ -184,7 +217,7 @@ namespace Raytracing
             objects.Add(new XZRect(213, 343, 227, 332, 554, light));
 
             Scene scene = new Scene(objs: objects,
-                                    spp: 400,
+                                    spp: 100,
                                     maxD: 50,
                                     lookfrom: new Point3D(278, 278, -800),
                                     lookat: new Point3D(278, 278, 0),

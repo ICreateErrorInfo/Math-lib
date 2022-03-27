@@ -301,7 +301,7 @@ namespace Math_lib
                 throw new ArgumentException("The Matrix is not 4x4 or 3x3");
             }
         }
-        public static Point3D operator *(Matrix m, Vector3D p)
+        public static Vector3D operator *(Matrix m, Vector3D p)
         {
             if (m._row == 4 && m._col == 4)
             {
@@ -312,7 +312,7 @@ namespace Math_lib
                     return p.X * m[row, 0] + p.Y * m[row, 1] + p.Z * m[row, 2] + m[row, 3];
                 });
 
-                return new Point3D(mOut[0, 0] / mOut[3, 0], mOut[1, 0] / mOut[3, 0], mOut[2, 0] / mOut[3, 0]);
+                return new Vector3D(mOut[0, 0] / mOut[3, 0], mOut[1, 0] / mOut[3, 0], mOut[2, 0] / mOut[3, 0]);
             }
             else if (m._row == 3 && m._col == 3)
             {
@@ -323,7 +323,36 @@ namespace Math_lib
                     return p.X * m[row, 0] + p.Y * m[row, 1] + p.Z * m[row, 2];
                 });
 
-                return new Point3D(mOut[0, 0], mOut[1, 0], mOut[2, 0]);
+                return new Vector3D(mOut[0, 0], mOut[1, 0], mOut[2, 0]);
+            }
+            else
+            {
+                throw new ArgumentException("The Matrix is not 4x4 or 3x3");
+            }
+        }
+        public static Normal3D operator *(Matrix m, Normal3D n)
+        {
+            if (m._row == 4 && m._col == 4)
+            {
+                Matrix mOut = new Matrix(4, 1);
+
+                mOut.SetCells((row, col) =>
+                {
+                    return n.X * m[row, 0] + n.Y * m[row, 1] + n.Z * m[row, 2] + m[row, 3];
+                });
+
+                return new Normal3D(mOut[0, 0] / mOut[3, 0], mOut[1, 0] / mOut[3, 0], mOut[2, 0] / mOut[3, 0]);
+            }
+            else if (m._row == 3 && m._col == 3)
+            {
+                Matrix mOut = new Matrix(3, 1);
+
+                mOut.SetCells((row, col) =>
+                {
+                    return n.X * m[row, 0] + n.Y * m[row, 1] + n.Z * m[row, 2];
+                });
+
+                return new Normal3D(mOut[0, 0], mOut[1, 0], mOut[2, 0]);
             }
             else
             {

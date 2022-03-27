@@ -92,7 +92,7 @@ namespace Math_lib
                                this[(corner & 2) == 2 ? 1 : 0].Y,
                                this[(corner & 4) == 4 ? 1 : 0].Z);
         }
-        public static  Bounds3D Union(Bounds3D b, Point3D p)
+        public static Bounds3D Union(Bounds3D b, Point3D p)
         {
             Debug.Assert(Point3D.IsNaN(p));
             Debug.Assert(IsNaN(b));
