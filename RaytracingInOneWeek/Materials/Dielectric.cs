@@ -1,7 +1,7 @@
 ﻿using System;
 using Math_lib;
 
-namespace Raytracing
+namespace Raytracing.Materials
 {
     class Dielectric : Material
     {

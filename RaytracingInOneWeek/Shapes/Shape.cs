@@ -1,6 +1,6 @@
 ﻿using Math_lib;
 
-namespace Raytracing
+namespace Raytracing.Shapes
 {
     public abstract class Shape
     {

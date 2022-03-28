@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Microsoft.Win32;
+using Raytracing.Materials;
 using Raytracing.Shapes;
 using System.Collections.Generic;
 using System.Windows;

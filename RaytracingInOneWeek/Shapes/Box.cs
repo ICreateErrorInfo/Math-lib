@@ -2,8 +2,9 @@
 using Math_lib;
 using System.Collections.Generic;
 using System.Text;
+using Raytracing.Materials;
 
-namespace Raytracing
+namespace Raytracing.Shapes
 {
     class Box : Shape
     {

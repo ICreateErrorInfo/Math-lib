@@ -1,6 +1,7 @@
 ﻿using Math_lib;
+using Raytracing.Materials;
 
-namespace Raytracing
+namespace Raytracing.Shapes
 {
     class XYRect : Shape
     {

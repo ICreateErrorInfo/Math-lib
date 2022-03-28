@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace Raytracing
+namespace Raytracing.Materials
 {
     class ImageTexture : Texture
     {

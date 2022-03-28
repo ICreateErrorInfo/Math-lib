@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using NUnit.Framework;
+using Raytracing.Materials;
 using Raytracing.Shapes;
 using System.Collections.Generic;
 

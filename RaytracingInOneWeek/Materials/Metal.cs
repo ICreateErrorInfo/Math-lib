@@ -1,6 +1,6 @@
 ﻿using Math_lib;
 
-namespace Raytracing
+namespace Raytracing.Materials
 {
     public class Metal : Material
     {

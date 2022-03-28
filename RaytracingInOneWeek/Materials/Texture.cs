@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Math_lib;
 
-namespace Raytracing
+namespace Raytracing.Materials
 {
     abstract class Texture
     {
