@@ -23,16 +23,25 @@ namespace Raytracing
                 NumberDecimalSeparator = "."
             };
 
-            char[] charsForSplit = new char[] { ' ', '/' };
             for (int i = 1; i < stringList.Length; i++)
             {
-                string[] zeile = stringList[i].Split(charsForSplit);
+                string[] zeile = stringList[i].Split(' ');
 
                 if (zeile[0] == "f")
                 {
-                    indices.Add(Convert.ToInt32(zeile[1]) - 1);
-                    indices.Add(Convert.ToInt32(zeile[3]) - 1);
-                    indices.Add(Convert.ToInt32(zeile[5]) - 1);
+                    if (zeile[1].Contains('/'))
+                    {
+                        string[] splittedWithSlash = stringList[i].Split(new char[] {' ', '/'});
+                        indices.Add(Convert.ToInt32(splittedWithSlash[1]) - 1);
+                        indices.Add(Convert.ToInt32(splittedWithSlash[3]) - 1);
+                        indices.Add(Convert.ToInt32(splittedWithSlash[5]) - 1);
+                    }
+                    else
+                    {
+                        indices.Add(Convert.ToInt32(zeile[1]) - 1);
+                        indices.Add(Convert.ToInt32(zeile[2]) - 1);
+                        indices.Add(Convert.ToInt32(zeile[3]) - 1);
+                    }
                     nTriangles++;
                 }
                 if (zeile[0] == "v")
