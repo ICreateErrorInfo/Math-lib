@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Microsoft.Win32;
 using Raytracing.Shapes;
 using System.Collections.Generic;
 using System.Windows;
@@ -12,9 +13,22 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestCone());
+            r.RenderScene(TestImporter());
         }
 
+        Scene TestImporter()
+        {
+            TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile());
+            HittableList h = new();
+
+            for(int i = 0; i < mesh.NTriangles; i++)
+            {
+                h.Add(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i));
+            }
+
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            return scene;
+        }
         Scene TestTriangle()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
@@ -232,6 +246,19 @@ namespace Raytracing
                                     imageHeight: 300);
 
             return scene;
+        }
+
+        private string ShowOpenFile()
+        {
+            var ofn = new OpenFileDialog
+            {
+                Filter = "Object files (*.obj)|*.obj",
+            };
+            if (ofn.ShowDialog() == true)
+            {
+                return ofn.FileName;
+            }
+            throw new System.Exception();
         }
     }
 }

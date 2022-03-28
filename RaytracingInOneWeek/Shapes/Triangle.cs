@@ -1,43 +1,8 @@
 ﻿using Math_lib;
 using System;
-using System.Collections.Generic;
 
 namespace Raytracing.Shapes
 {
-    public struct TriangleMesh
-    {
-        public int NTriangles, NVertices;
-        public List<int> VertexIndices;
-        public List<Point3D> Point;
-        public List<Normal3D> Normal;
-        public List<Point2D> UV;
-        public Material Material;
-
-        public TriangleMesh(Transform ObjectToWorld, int nTriangles, List<int> vertexIndices, int nVertices, List<Point3D> points, Material material, List<Normal3D> normal = null, List<Point2D> uv = null)
-        {
-            NTriangles = nTriangles;
-            NVertices = nVertices;
-            VertexIndices = vertexIndices;
-            Material = material;
-
-            Point = new List<Point3D>();
-            for (int i = 0; i < nVertices; i++)
-            {
-                Point.Add(ObjectToWorld.m * points[i]);
-            }
-
-            UV = uv;
-            Normal = null;
-
-            if(normal != null)
-            {
-                for(int i = 0; i < nVertices; i++)
-                {
-                    Normal.Add(ObjectToWorld.m * Normal[i]);
-                }
-            }
-        }
-    }
     public class Triangle : Shape
     {
         private readonly TriangleMesh _mesh;
@@ -51,7 +16,7 @@ namespace Raytracing.Shapes
             _worldToObject = worldToObject;
             _mesh = mesh;
 
-            _firstVertexIndex = mesh.VertexIndices[3 * triangleNumber];
+            _firstVertexIndex = 3 * triangleNumber;
         }
 
         public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
@@ -68,9 +33,9 @@ namespace Raytracing.Shapes
             isect = new SurfaceInteraction();
 
             //Get Triangle Points
-            Point3D p0 = _mesh.Point[_firstVertexIndex];
-            Point3D p1 = _mesh.Point[_firstVertexIndex + 1];
-            Point3D p2 = _mesh.Point[_firstVertexIndex + 2];
+            Point3D p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+            Point3D p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+            Point3D p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
             //Translate
             Point3D p0t = p0 - (Vector3D)ray.O;
@@ -116,11 +81,11 @@ namespace Raytracing.Shapes
             p1t *= new Point3D(1, 1, sz);
             p2t *= new Point3D(1, 1, sz);
             double tScaled = e0 * p0t.Z + e1 * p1t.Z + e2 * p2t.Z;
-            if(det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
+            if(det < 0 && (tScaled >= 0 || tScaled < tMax * det))
             {
                 return false;
             }
-            else if (det > 0 && (tScaled <= 0 || tScaled > ray.TMax * det))
+            else if (det > 0 && (tScaled <= 0 || tScaled > tMax * det))
             {
                 return false;
             }
