@@ -16,7 +16,7 @@ namespace Raytracing.Tests
             Ray r = new Ray(new(-8,0,0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
 
-            Assert.That(s.Intersect(r, 0, double.PositiveInfinity, out insec), Is.True);
+            Assert.That(s.Intersect(r, 0, out insec), Is.True);
         }
         [Test]
         public void IntersectionTest2()
@@ -25,7 +25,7 @@ namespace Raytracing.Tests
 
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
-            s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            s.Intersect(r, 0, out insec);
 
             Assert.That(Point3D.Round((Point3D)(Vector3D)insec.Normal, 6), Is.EqualTo(Point3D.Round((Point3D)Vector3D.Normalize(new Vector3D(-0.5, 1.9364916731037, 0)), 6)));
         }
@@ -37,7 +37,7 @@ namespace Raytracing.Tests
 
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
-            s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            s.Intersect(r, 0, out insec);
 
             Assert.That(Math.Round(insec.T, 6), Is.EqualTo(1));
         }
@@ -49,7 +49,7 @@ namespace Raytracing.Tests
 
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
-            s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            s.Intersect(r, 0, out insec);
 
             Assert.That(insec.Material, Is.EqualTo(m));
         }
@@ -61,7 +61,7 @@ namespace Raytracing.Tests
 
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
-            s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            s.Intersect(r, 0, out insec);
 
             Assert.That(Point3D.Round(insec.P, 6), Is.EqualTo(Point3D.Round(new Point3D(-0.5, 1.9364916731, 0), 6)));
         }
@@ -73,7 +73,7 @@ namespace Raytracing.Tests
 
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
-            s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            s.Intersect(r, 0, out insec);
 
             Assert.That(r.O, Is.EqualTo(new Point3D(-8, 0, 0)));
             Assert.That(r.D, Is.EqualTo(new Vector3D(7.5, 1.9364916731037, 0)));
@@ -87,7 +87,7 @@ namespace Raytracing.Tests
             Ray r = new Ray(new(-8, 0, 0), new(7.5, 1.9364916731037, 0));
             SurfaceInteraction insec;
 
-            bool intersectionIsFound = s.Intersect(r, 0, double.PositiveInfinity, out insec);
+            bool intersectionIsFound = s.Intersect(r, 0, out insec);
 
             Assert.That(intersectionIsFound, Is.True);
         }

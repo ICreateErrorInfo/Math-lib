@@ -40,18 +40,18 @@ namespace Raytracing.Shapes
             _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
 
-            Ray rTransformed = _worldToObject.m * r;
+            Ray rTransformed = _worldToObject.m * ray;
 
             var a = rTransformed.D.GetLengthSqrt();
             var halfB = Vector3D.Dot((Vector3D)rTransformed.O, rTransformed.D);
             var c = ((Vector3D)rTransformed.O).GetLengthSqrt() - _radius * _radius;
 
             double t0;
-            if(!Mathe.SolveQuadratic(a, halfB, c, out t0, tMin, tMax))
+            if(!Mathe.SolveQuadratic(a, halfB, c, out t0, tMin, ray.TMax))
             {
                 return false;
             }
@@ -64,19 +64,20 @@ namespace Raytracing.Shapes
             if ((_zMin > -Radius && pHit.Z < _zMin) ||
                 (_zMax < Radius && pHit.Z > _zMax) || phi > _phiMax)
             {
-                if (t0 == tMax) return false;
-                t0 = tMax;
+                if (t0 == ray.TMax) return false;
+                t0 = ray.TMax;
 
                 if ((_zMin > -Radius && pHit.Z < _zMin) ||
                     (_zMax < Radius && pHit.Z > _zMax) || phi > _phiMax)
                     return false;
             }
 
+            ray.TMax = t0;
             insec.T = t0;
-            insec.P = r.At(t0);
+            insec.P = ray.At(t0);
             Point3D _center = _objectToWorld.m * new Point3D(0,0,0);
             Normal3D outwardNormal = (Normal3D)((insec.P - _center) / Radius);
-            insec.SetFaceNormal(r, outwardNormal);
+            insec.SetFaceNormal(ray, outwardNormal);
             (insec.U, insec.V) = GetSphereUV(outwardNormal);
             insec.Material = _material;
 

@@ -28,13 +28,13 @@ namespace Raytracing.Shapes
             _material = material;
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
 
-            Vector3D oc = r.O - Center(r.Time);
-            var a = r.D.GetLengthSqrt();
-            var halfB = Vector3D.Dot(oc, r.D);
+            Vector3D oc = ray.O - Center(ray.Time);
+            var a = ray.D.GetLengthSqrt();
+            var halfB = Vector3D.Dot(oc, ray.D);
             var c = oc.GetLengthSqrt() - _radius * _radius;
             var discriminant = halfB * halfB - a * c;
 
@@ -45,19 +45,20 @@ namespace Raytracing.Shapes
             var sqrtd = Math.Sqrt(discriminant);
 
             var root = (-halfB - sqrtd) / a;
-            if (root < tMin || tMax < root)
+            if (root < tMin || ray.TMax < root)
             {
                 root = (-halfB + sqrtd) / a;
-                if (root < tMin || tMax < root)
+                if (root < tMin || ray.TMax < root)
                 {
                     return false;
                 }
             }
 
+            ray.TMax = root;
             isect.T = root;
-            isect.P = r.At(isect.T);
-            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(r.Time)) / _radius);
-            isect.SetFaceNormal(r, outward_normal);
+            isect.P = ray.At(isect.T);
+            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(ray.Time)) / _radius);
+            isect.SetFaceNormal(ray, outward_normal);
             isect.Material = _material;
 
             return true;

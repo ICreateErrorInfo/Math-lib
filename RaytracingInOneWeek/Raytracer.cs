@@ -168,7 +168,7 @@ namespace Raytracing
                 return new Vector3D(0, 0, 0);
             }
 
-            if (!world.Intersect(r, 0.1, Mathe.infinity, out isect))
+            if (!world.Intersect(r, 0.1, out isect))
             {
                 return background;
             }

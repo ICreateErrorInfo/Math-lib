@@ -31,18 +31,18 @@ namespace Raytracing.Shapes
             return true;
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
 
-            Ray rTransformed = _worldToObject.m * r;
+            Ray rTransformed = _worldToObject.m * ray;
 
             double a = Math.Pow(rTransformed.D.X, 2) + Math.Pow(rTransformed.D.Y, 2);
             double b = rTransformed.D.X * rTransformed.O.X + rTransformed.D.Y * rTransformed.O.Y;
             double c = Math.Pow(rTransformed.O.X, 2) + Math.Pow(rTransformed.O.Y, 2) - Math.Pow(_radius, 2);
 
             double t0, t1;
-            if (!Mathe.SolveQuadratic(a, b, c, out t0, tMin, tMax))
+            if (!Mathe.SolveQuadratic(a, b, c, out t0, tMin, ray.TMax))
             {
                 return false;
             }
@@ -60,11 +60,12 @@ namespace Raytracing.Shapes
                     return false;
             }
 
+            ray.TMax = t0;
             insec.T = t0;
-            insec.P = r.At(t0);
+            insec.P = ray.At(t0);
             Point3D intersectionPointTransformed = rTransformed.At(t0);
             Normal3D outwardNormal = new((intersectionPointTransformed.X) / _radius, (intersectionPointTransformed.Y) / _radius, 0);
-            insec.SetFaceNormal(r, outwardNormal);
+            insec.SetFaceNormal(ray, outwardNormal);
             insec.Material = _material;
 
             return true;

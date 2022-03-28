@@ -31,10 +31,10 @@ namespace Raytracing
 
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray r, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
-            return Sides.Intersect(r, tMin, tMax, out isect);
+            return Sides.Intersect(r, tMin, out isect);
         }
         public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
         {

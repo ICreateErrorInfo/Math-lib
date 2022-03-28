@@ -21,18 +21,18 @@ namespace Raytracing
             _material = material;
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
-            var t = (_k - r.O.Z) / r.D.Z;
+            var t = (_k - ray.O.Z) / ray.D.Z;
 
-            if(t < tMin || t > tMax)
+            if(t < tMin || t > ray.TMax)
             {
                 return false;
             }
 
-            var x = r.O.X + t * r.D.X;
-            var y = r.O.Y + t * r.D.Y;
+            var x = ray.O.X + t * ray.D.X;
+            var y = ray.O.Y + t * ray.D.Y;
 
             if(x < _x0 || x > _x1 || y < _y0 || y > _y1)
             {
@@ -44,9 +44,9 @@ namespace Raytracing
             insec.T = t;
 
             var outwardNormal = new Normal3D(0,0,1);
-            insec.SetFaceNormal(r, outwardNormal);
+            insec.SetFaceNormal(ray, outwardNormal);
             insec.Material = _material;
-            insec.P = r.At(t);
+            insec.P = ray.At(t);
 
             return true;
         }
@@ -75,18 +75,18 @@ namespace Raytracing
             _material = material;
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
-            var t = (_k - r.O.Y) / r.D.Y;
+            var t = (_k - ray.O.Y) / ray.D.Y;
 
-            if (t < tMin || t > tMax)
+            if (t < tMin || t > ray.TMax)
             {
                 return false;
             }
 
-            var x = r.O.X + t * r.D.X;
-            var z = r.O.Z + t * r.D.Z;
+            var x = ray.O.X + t * ray.D.X;
+            var z = ray.O.Z + t * ray.D.Z;
 
             if (x < _x0 || x > _x1 || z < _z0 || z > _z1)
             {
@@ -97,9 +97,9 @@ namespace Raytracing
             insec.V = (z - _z0) / (_z1 - _z0);
             insec.T = t;
             var outwardNormal = new Normal3D(0, 1, 0);
-            insec.SetFaceNormal(r, outwardNormal);
+            insec.SetFaceNormal(ray, outwardNormal);
             insec.Material = _material;
-            insec.P = r.At(t);
+            insec.P = ray.At(t);
 
             return true;
         }
@@ -128,17 +128,17 @@ namespace Raytracing
             _material = material;
         }
 
-        public override bool Intersect(Ray r, double t_min, double t_max, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
-            var t = (_k - r.O.X) / r.D.X;
-            if (t < t_min || t > t_max)
+            var t = (_k - ray.O.X) / ray.D.X;
+            if (t < tMin || t > ray.TMax)
             {
                 return false;
             }
 
-            var y = r.O.Y + t * r.D.Y;
-            var z = r.O.Z + t * r.D.Z;
+            var y = ray.O.Y + t * ray.D.Y;
+            var z = ray.O.Z + t * ray.D.Z;
 
             if (y < _y0 || y > _y1 || z < _z0 || z > _z1)
             {
@@ -149,9 +149,9 @@ namespace Raytracing
             insec.V = (z - _z0) / (_z1 - _z0);
             insec.T = t;
             var outwardNormal = new Normal3D(1, 0, 0);
-            insec.SetFaceNormal(r, outwardNormal);
+            insec.SetFaceNormal(ray, outwardNormal);
             insec.Material = _material;
-            insec.P = r.At(t);
+            insec.P = ray.At(t);
 
             return true;
         }

@@ -28,7 +28,7 @@ namespace Raytracing.Shapes
             bound = Bounds3D.Union(new Bounds3D(p0, p1), p2);
             return true;
         }
-        public override bool Intersect(Ray ray, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
 
@@ -81,11 +81,11 @@ namespace Raytracing.Shapes
             p1t *= new Point3D(1, 1, sz);
             p2t *= new Point3D(1, 1, sz);
             double tScaled = e0 * p0t.Z + e1 * p1t.Z + e2 * p2t.Z;
-            if(det < 0 && (tScaled >= 0 || tScaled < tMax * det))
+            if(det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
             {
                 return false;
             }
-            else if (det > 0 && (tScaled <= 0 || tScaled > tMax * det))
+            else if (det > 0 && (tScaled <= 0 || tScaled > ray.TMax * det))
             {
                 return false;
             }
@@ -96,6 +96,7 @@ namespace Raytracing.Shapes
             double b2 = e2 * invDet;
             double t = tScaled * invDet;
 
+            ray.TMax = t;
             isect.T = t;
             isect.P = b0 * p0 + b1 * p1 + b2 * p2;
             Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(Vector3D.Cross(p1 - p0, p2 - p0));

@@ -21,20 +21,18 @@ namespace Raytracing
             Objects.Add(obj);
         }
 
-        public override bool Intersect(Ray r, double tMin, double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray r, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
 
             SurfaceInteraction tempIsect = new SurfaceInteraction();
             bool hitAnything = false;
-            var closestSoFar = tMax;
 
             foreach (var Object in Objects)
             {
-                if (Object.Intersect(r, tMin, closestSoFar, out tempIsect))
+                if (Object.Intersect(r, tMin, out tempIsect))
                 {
                     hitAnything = true;
-                    closestSoFar = tempIsect.T;
                     isect = tempIsect;
                 }
             }
