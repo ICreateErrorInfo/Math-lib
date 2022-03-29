@@ -51,10 +51,9 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(_x0, _y0, _k - 0.0001), new Point3D(_x1, _y1, _k + 0.0001));
-            return true;
+            return new Bounds3D(new Point3D(_x0, _y0, _k - 0.0001), new Point3D(_x1, _y1, _k + 0.0001));
         }
     }
     class XZRect : Shape
@@ -104,10 +103,9 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(_x0, _k - 0.0001, _z0), new Point3D(_x1, _k + 0.0001, _z1));
-            return true;
+            return new Bounds3D(new Point3D(_x0, _k - 0.0001, _z0), new Point3D(_x1, _k + 0.0001, _z1));
         }
     }
     class YZRect : Shape
@@ -156,10 +154,9 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(_k - 0.0001, _y0, _z0), new Point3D(_k + 0.0001,_y1, _z1));
-            return true;
+            return new Bounds3D(new Point3D(_k - 0.0001, _y0, _z0), new Point3D(_k + 0.0001,_y1, _z1));
         }
     }
 }

@@ -64,14 +64,13 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            Bounds3D box0 = new Bounds3D(Center(time0) - new Vector3D(_radius, _radius, _radius),
-                                         Center(time0) + new Vector3D(_radius, _radius, _radius));
-            Bounds3D box1 = new Bounds3D(Center(time1) - new Vector3D(_radius, _radius, _radius),
-                                         Center(time1) + new Vector3D(_radius, _radius, _radius));
-            bound = Bounds3D.Union(box0, box1);
-            return true;
+            Bounds3D box0 = new Bounds3D(Center(_time0) - new Vector3D(_radius, _radius, _radius),
+                                         Center(_time0) + new Vector3D(_radius, _radius, _radius));
+            Bounds3D box1 = new Bounds3D(Center(_time1) - new Vector3D(_radius, _radius, _radius),
+                                         Center(_time1) + new Vector3D(_radius, _radius, _radius));
+            return Bounds3D.Union(box0, box1);
         }
         public virtual Point3D Center(double time)
         {

@@ -2,7 +2,7 @@
 using Raytracing.Materials;
 using System.Collections.Generic;
 
-namespace Raytracing.Shapes
+namespace Raytracing
 {
     public struct TriangleMesh
     {

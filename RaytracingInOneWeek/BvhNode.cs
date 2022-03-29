@@ -73,10 +73,8 @@ namespace Raytracing
             Bounds3D boxLeft = new Bounds3D();
             Bounds3D boxRight = new Bounds3D();
 
-            if(!_left.BoundingBox(time0, time1, ref boxLeft) || !_right.BoundingBox(time0, time1, ref boxRight))
-            {
-                //geht nicht
-            }
+            boxLeft = _left.GetBoundingBox();
+            boxRight = _right.GetBoundingBox();
 
             _box = Bounds3D.Union(boxLeft, boxRight);
         }
@@ -110,20 +108,17 @@ namespace Raytracing
 
             return hitLeft || hitRight;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = _box;
-            return true;
+            return _box;
         }
         public static int box_compare(Shape a, Shape b, int axis)
         {
             Bounds3D boxA = new Bounds3D();
             Bounds3D boxB = new Bounds3D();
 
-            if (!a.BoundingBox(0, 0, ref boxA) || !a.BoundingBox(0, 0, ref boxB))
-            {
-                //geht nicht
-            }
+            boxA = a.GetBoundingBox();
+            boxB = b.GetBoundingBox();
 
             if (axis == 0)
             {

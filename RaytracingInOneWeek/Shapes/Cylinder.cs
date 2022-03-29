@@ -25,11 +25,10 @@ namespace Raytracing.Shapes
             _material = material;
         }
 
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
+            return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
                                  new Point3D( _radius,  _radius, _zMax));
-            return true;
         }
 
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)

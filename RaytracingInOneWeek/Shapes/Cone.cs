@@ -71,11 +71,10 @@ namespace Raytracing.Shapes
             return true;
         }
 
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(-_radius, -_radius, 0),
+            return new Bounds3D(new Point3D(-_radius, -_radius, 0),
                                  new Point3D(_radius, _radius, _height));
-            return true;
         }
     }
 }

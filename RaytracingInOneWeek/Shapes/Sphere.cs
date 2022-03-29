@@ -84,11 +84,10 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new Point3D(_radius, _radius, _radius),
+            return new Bounds3D(new Point3D(_radius, _radius, _radius),
                                  new Point3D(_radius, _radius, _radius));
-            return true;
         }
         private (double u, double v) GetSphereUV(Normal3D p)
         {

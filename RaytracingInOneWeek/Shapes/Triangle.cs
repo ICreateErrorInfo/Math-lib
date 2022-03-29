@@ -19,14 +19,13 @@ namespace Raytracing.Shapes
             _firstVertexIndex = 3 * triangleNumber;
         }
 
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
             Point3D p0 = _worldToObject.m * _mesh.Point[_firstVertexIndex];
             Point3D p1 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 1];
             Point3D p2 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 2];
 
-            bound = Bounds3D.Union(new Bounds3D(p0, p1), p2);
-            return true;
+            return Bounds3D.Union(new Bounds3D(p0, p1), p2);
         }
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
         {

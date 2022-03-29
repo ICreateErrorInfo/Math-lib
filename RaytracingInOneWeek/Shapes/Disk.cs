@@ -29,11 +29,10 @@ namespace Raytracing.Shapes
             _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override bool BoundingBox(double time0, double time1, ref Bounds3D bound)
+        public override Bounds3D GetBoundingBox()
         {
-            bound = new Bounds3D(new(-_radius, -_radius, _height),
+            return new Bounds3D(new(-_radius, -_radius, _height),
                                  new(_radius, _radius, _height));
-            return true;
         }
 
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
