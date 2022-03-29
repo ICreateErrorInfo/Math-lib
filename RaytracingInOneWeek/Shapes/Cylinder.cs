@@ -25,7 +25,7 @@ namespace Raytracing.Shapes
             _material = material;
         }
 
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
                                  new Point3D( _radius,  _radius, _zMax));

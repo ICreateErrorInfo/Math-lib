@@ -19,7 +19,7 @@ namespace Raytracing.Shapes
             _firstVertexIndex = 3 * triangleNumber;
         }
 
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             Point3D p0 = _worldToObject.m * _mesh.Point[_firstVertexIndex];
             Point3D p1 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 1];

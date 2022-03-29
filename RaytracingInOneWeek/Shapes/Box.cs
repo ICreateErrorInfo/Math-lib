@@ -37,7 +37,7 @@ namespace Raytracing.Shapes
             isect = new SurfaceInteraction();
             return Sides.Intersect(r, tMin, out isect);
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(boxMin, boxMax);
         }

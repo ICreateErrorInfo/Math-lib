@@ -64,7 +64,7 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             Bounds3D box0 = new Bounds3D(Center(_time0) - new Vector3D(_radius, _radius, _radius),
                                          Center(_time0) + new Vector3D(_radius, _radius, _radius));

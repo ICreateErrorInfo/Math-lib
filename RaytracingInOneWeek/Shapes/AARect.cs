@@ -51,7 +51,7 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new Point3D(_x0, _y0, _k - 0.0001), new Point3D(_x1, _y1, _k + 0.0001));
         }
@@ -103,7 +103,7 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new Point3D(_x0, _k - 0.0001, _z0), new Point3D(_x1, _k + 0.0001, _z1));
         }
@@ -154,7 +154,7 @@ namespace Raytracing.Shapes
 
             return true;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new Point3D(_k - 0.0001, _y0, _z0), new Point3D(_k + 0.0001,_y1, _z1));
         }

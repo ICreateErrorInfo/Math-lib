@@ -29,7 +29,7 @@ namespace Raytracing.Shapes
             _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new(-_radius, -_radius, _height),
                                  new(_radius, _radius, _height));

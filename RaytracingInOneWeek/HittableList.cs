@@ -40,7 +40,7 @@ namespace Raytracing
 
             return hitAnything;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             Bounds3D bound = new Bounds3D();
             if (!Objects.Any())
@@ -53,7 +53,7 @@ namespace Raytracing
 
             foreach(var _object in Objects)
             {
-                currentBoundingBox = _object.GetBoundingBox();
+                currentBoundingBox = _object.GetObjectBound();
                 bound = isFirstBox ? currentBoundingBox : Bounds3D.Union(bound, currentBoundingBox);
                 isFirstBox = false;
                 

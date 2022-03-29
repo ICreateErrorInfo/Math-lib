@@ -73,8 +73,8 @@ namespace Raytracing
             Bounds3D boxLeft = new Bounds3D();
             Bounds3D boxRight = new Bounds3D();
 
-            boxLeft = _left.GetBoundingBox();
-            boxRight = _right.GetBoundingBox();
+            boxLeft = _left.GetObjectBound();
+            boxRight = _right.GetObjectBound();
 
             _box = Bounds3D.Union(boxLeft, boxRight);
         }
@@ -108,7 +108,7 @@ namespace Raytracing
 
             return hitLeft || hitRight;
         }
-        public override Bounds3D GetBoundingBox()
+        public override Bounds3D GetObjectBound()
         {
             return _box;
         }
@@ -117,8 +117,8 @@ namespace Raytracing
             Bounds3D boxA = new Bounds3D();
             Bounds3D boxB = new Bounds3D();
 
-            boxA = a.GetBoundingBox();
-            boxB = b.GetBoundingBox();
+            boxA = a.GetObjectBound();
+            boxB = b.GetObjectBound();
 
             if (axis == 0)
             {

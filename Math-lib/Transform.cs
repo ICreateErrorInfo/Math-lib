@@ -88,30 +88,36 @@ namespace Math_lib
         }
         public static Transform RotateX(double a)
         {
-            return new(new[,]
+            a = Mathe.ToRad(a);
+            return new(new Matrix(new[,]
             {
-                {  1,            0,           0  },
-                {  0, Math.Cos(a) , -Math.Sin(a) },
-                {  0, Math.Sin(a) ,  Math.Cos(a) },
-            });
+                {  1,            0,           0 , 0 },
+                {  0, Math.Cos(a) , -Math.Sin(a), 0 },
+                {  0, Math.Sin(a) ,  Math.Cos(a), 0 },
+                {  0,            0,            0, 1 }
+            }), new Matrix(4,4));
         }
         public static Transform RotateY(double a)
         {
-            return new(new[,]
+            a = Mathe.ToRad(a);
+            return new(new Matrix(new[,]
             {
-                {  Math.Cos(a) , 0 , Math.Sin(a) },
-                {             0, 1 ,          0  },
-                { -Math.Sin(a) , 0 , Math.Cos(a) },
-            });
+                {  Math.Cos(a) , 0 , Math.Sin(a), 0 },
+                {             0, 1 ,          0 , 0 },
+                { -Math.Sin(a) , 0 , Math.Cos(a), 0 },
+                {             0, 0 ,           0, 1 }
+            }), new Matrix(4, 4));
         }
         public static Transform RotateZ(double a)
         {
-            return new(new[,]
+            a = Mathe.ToRad(a);
+            return new(new Matrix(new[,]
             {
-                {  Math.Cos(a), -Math.Sin(a), 0 },
-                {  Math.Sin(a), Math.Cos(a) , 0 },
-                {            0,            0, 1 },
-            });
+                {  Math.Cos(a), -Math.Sin(a), 0, 0 },
+                {  Math.Sin(a), Math.Cos(a) , 0, 0 },
+                {            0,            0, 1, 0 },
+                {            0,            0, 0, 1 }
+            }), new Matrix(4, 4));
         }
         public static Transform Rotate(double theta, Vector3D axis)
         {
@@ -136,7 +142,6 @@ namespace Math_lib
             m[2,3] = 0;
 
             return new Transform(m, Matrix.Transpose4x4(m));
-
         }
         public bool SwapsHandness()
         {
