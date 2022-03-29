@@ -171,6 +171,18 @@ namespace Math_lib.Tests {
 
             Assert.That(v.GetLengthSqrt() < 1, Is.EqualTo(true));
         }
+        [Test]
+        public void ReflectTest()
+        {
+            Vector3D u = new(4, -4, 0);
+            Vector3D n = new(0, 1, 0);
+
+            Assert.That(Vector3D.Reflect(u, n), Is.EqualTo(new Vector3D(4, 4, 0)));
+
+            Vector3D u1 = new(4, 0, 0);
+
+            Assert.That(Vector3D.Reflect(u1, n), Is.EqualTo(new Vector3D(4, 0, 0)));
+        }
 
 
         //+

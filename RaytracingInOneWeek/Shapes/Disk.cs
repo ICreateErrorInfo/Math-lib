@@ -29,12 +29,6 @@ namespace Raytracing.Shapes
             _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override Bounds3D GetObjectBound()
-        {
-            return new Bounds3D(new(-_radius, -_radius, _height),
-                                 new(_radius, _radius, _height));
-        }
-
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
@@ -66,6 +60,11 @@ namespace Raytracing.Shapes
             isect.Material = _material;
 
             return true;
+        }
+        public override Bounds3D GetObjectBound()
+        {
+            return new Bounds3D(new(-_radius, -_radius, _height),
+                                 new(_radius, _radius, _height));
         }
     }
 }

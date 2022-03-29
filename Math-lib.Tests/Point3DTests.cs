@@ -17,7 +17,7 @@ namespace Math_lib.Tests
             Assert.That(v.Z, Is.EqualTo(1));
         }
         [Test]
-        public void TestEmptyVector()
+        public void TestEmptyPoint()
         {
 
             var v = new Point3D();

@@ -74,7 +74,7 @@ namespace Raytracing.Shapes
         public override Bounds3D GetObjectBound()
         {
             return new Bounds3D(new Point3D(-_radius, -_radius, 0),
-                                 new Point3D(_radius, _radius, _height));
+                                new Point3D( _radius,  _radius, _height));
         }
     }
 }

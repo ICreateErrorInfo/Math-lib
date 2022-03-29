@@ -12,8 +12,6 @@ namespace Raytracing.Shapes
         private readonly Material _material;
         private readonly Transform _worldToObject;
         private readonly Transform _objectToWorld;
-        public double Radius => _radius;
-        public Material Material => _material;
 
         public Sphere() { }
         public Sphere(Point3D center, double radius, Material material)
@@ -62,14 +60,14 @@ namespace Raytracing.Shapes
             var phi = Math.Atan2(pHit.Y, pHit.X);
             if (phi < 0) phi += 2 * Math.PI;
 
-            if ((_zMin > -Radius && pHit.Z < _zMin) ||
-                (_zMax < Radius && pHit.Z > _zMax) || phi > _phiMax)
+            if ((_zMin > -_radius && pHit.Z < _zMin) ||
+                (_zMax < _radius && pHit.Z > _zMax) || phi > _phiMax)
             {
                 if (t0 == ray.TMax) return false;
                 t0 = ray.TMax;
 
-                if ((_zMin > -Radius && pHit.Z < _zMin) ||
-                    (_zMax < Radius && pHit.Z > _zMax) || phi > _phiMax)
+                if ((_zMin > -_radius && pHit.Z < _zMin) ||
+                    (_zMax < _radius && pHit.Z > _zMax) || phi > _phiMax)
                     return false;
             }
 
@@ -77,7 +75,7 @@ namespace Raytracing.Shapes
             insec.T = t0;
             insec.P = ray.At(t0);
             Point3D _center = _objectToWorld.m * new Point3D(0,0,0);
-            Normal3D outwardNormal = (Normal3D)((insec.P - _center) / Radius);
+            Normal3D outwardNormal = (Normal3D)((insec.P - _center) / _radius);
             insec.SetFaceNormal(ray, outwardNormal);
             (insec.U, insec.V) = GetSphereUV(outwardNormal);
             insec.Material = _material;
@@ -86,8 +84,8 @@ namespace Raytracing.Shapes
         }
         public override Bounds3D GetObjectBound()
         {
-            return new Bounds3D(new Point3D(_radius, _radius, _radius),
-                                 new Point3D(_radius, _radius, _radius));
+            return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
+                                new Point3D( _radius,  _radius, _zMax));
         }
         private (double u, double v) GetSphereUV(Normal3D p)
         {

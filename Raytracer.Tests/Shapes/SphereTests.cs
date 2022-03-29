@@ -4,11 +4,24 @@ using Raytracing.Materials;
 using Raytracing.Shapes;
 using System;
 
-namespace Raytracing.Tests
+namespace Raytracing.Tests.Shapes
 {
     [TestFixture]
-    public class Tests
+    public class SphereTests
     {
+        [Test]
+        public void TestCtor1()
+        {
+            var s = new Sphere(new(0,2,1), 1, new Metal(new(0, 0, 0), 1));
+            Assert.That(s, Is.Not.Null);
+        }
+        [Test]
+        public void TestCtor2()
+        {
+            var s = new Sphere(new(0, 2, 1), 1, -1, 1, 360, new Metal(new(0, 0, 0), 1));
+            Assert.That(s, Is.Not.Null);
+        }
+
         [Test]
         public void IntersectionTest()
         {
@@ -79,7 +92,6 @@ namespace Raytracing.Tests
             Assert.That(r.O, Is.EqualTo(new Point3D(-8, 0, 0)));
             Assert.That(r.D, Is.EqualTo(new Vector3D(7.5, 1.9364916731037, 0)));
         }
-
         [Test]
         public void IntersectionTestTranslated()
         {
@@ -92,18 +104,22 @@ namespace Raytracing.Tests
 
             Assert.That(intersectionIsFound, Is.True);
         }
-
         [Test]
-        public void IntersectionTest8()
+        public void TestObjectBound()
         {
-            Vector3D u = new(4,-4, 0);
-            Vector3D n = new(0, 1, 0);
+            var s = new Sphere(new(0, 1, 0), 2, new Metal(new(0, 0, 0), 1));
 
-            Assert.That(Vector3D.Reflect(u, n), Is.EqualTo(new Vector3D(4, 4, 0)));
-
-            Vector3D u1 = new(4, 0, 0);
-
-            Assert.That(Vector3D.Reflect(u1, n), Is.EqualTo(new Vector3D(4, 0, 0)));
+            Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2,-2,-2)));
+            Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D(2,2,2)));
         }
+        [Test]
+        public void TestObjectBound2()
+        {
+            var s = new Sphere(new(0, 1, 0), 2, -1, 1, 360, new Metal(new(0, 0, 0), 1));
+
+            Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2, -2, -1)));
+            Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D(2, 2, 1)));
+        }
+
     }
 }

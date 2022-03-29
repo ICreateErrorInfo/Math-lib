@@ -4,11 +4,18 @@ using Raytracing.Materials;
 using Raytracing.Shapes;
 using System.Collections.Generic;
 
-namespace Raytracing.Tests
+namespace Raytracing.Tests.Shapes
 {
     [TestFixture]
-    public class TriangleTest
+    public class TriangleTests
     {
+        [Test]
+        public void TestCtor1()
+        {
+            var s = new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), new TriangleMesh(), 1);
+            Assert.That(s, Is.Not.Null);
+        }
+
         [Test]
         public void IntersectionTest()
         {
@@ -78,6 +85,25 @@ namespace Raytracing.Tests
             bool hit = tri.Intersect(ray, 0, out surfaceInteraction);
 
             Assert.That(hit, Is.True);
+        }
+
+        [Test]
+        public void TestObjectBound()
+        {
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new(0, 0, 0), 1));
+            var t = new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, 0);
+
+            Assert.That(t.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2, -1, 0)));
+            Assert.That(t.GetObjectBound().pMax, Is.EqualTo(new Point3D(2, 3, 1)));
+        }
+        [Test]
+        public void TestObjectBound2()
+        {
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new(0, 0, 0), 1));
+            var t = new Triangle(Transform.Translate(new(1)), Transform.Translate(new(-1)), mesh, 0);
+
+            Assert.That(t.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2, -1, 0)));
+            Assert.That(t.GetObjectBound().pMax, Is.EqualTo(new Point3D(2, 3, 1)));
         }
     }
 }

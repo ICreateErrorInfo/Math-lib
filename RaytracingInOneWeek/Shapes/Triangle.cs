@@ -19,14 +19,6 @@ namespace Raytracing.Shapes
             _firstVertexIndex = 3 * triangleNumber;
         }
 
-        public override Bounds3D GetObjectBound()
-        {
-            Point3D p0 = _worldToObject.m * _mesh.Point[_firstVertexIndex];
-            Point3D p1 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 1];
-            Point3D p2 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 2];
-
-            return Bounds3D.Union(new Bounds3D(p0, p1), p2);
-        }
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
         {
             isect = new SurfaceInteraction();
@@ -53,7 +45,7 @@ namespace Raytracing.Shapes
             //Shear
             double sx = -d.X / d.Z;
             double sy = -d.Y / d.Z;
-            double sz = 1.0  / d.Z;
+            double sz = 1.0 / d.Z;
             p0t += new Point3D(sx * p0t.Z,
                                sy * p0t.Z, 0);
             p1t += new Point3D(sx * p1t.Z,
@@ -66,12 +58,12 @@ namespace Raytracing.Shapes
             double e1 = p2t.X * p0t.Y - p2t.Y * p0t.X;
             double e2 = p0t.X * p1t.Y - p0t.Y * p1t.X;
 
-            if((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0))
+            if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0))
             {
                 return false;
             }
             double det = e0 + e1 + e2;
-            if(det == 0)
+            if (det == 0)
             {
                 return false;
             }
@@ -80,7 +72,7 @@ namespace Raytracing.Shapes
             p1t *= new Point3D(1, 1, sz);
             p2t *= new Point3D(1, 1, sz);
             double tScaled = e0 * p0t.Z + e1 * p1t.Z + e2 * p2t.Z;
-            if(det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
+            if (det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
             {
                 return false;
             }
@@ -103,6 +95,14 @@ namespace Raytracing.Shapes
             isect.Material = _mesh.Material;
 
             return true;
+        }
+        public override Bounds3D GetObjectBound()
+        {
+            Point3D p0 = _worldToObject.m * _mesh.Point[_firstVertexIndex];
+            Point3D p1 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 1];
+            Point3D p2 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 2];
+
+            return Bounds3D.Union(new Bounds3D(p0, p1), p2);
         }
 
         public double Area()

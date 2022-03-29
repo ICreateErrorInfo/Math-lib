@@ -25,12 +25,6 @@ namespace Raytracing.Shapes
             _material = material;
         }
 
-        public override Bounds3D GetObjectBound()
-        {
-            return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
-                                 new Point3D( _radius,  _radius, _zMax));
-        }
-
         public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
         {
             insec = new SurfaceInteraction();
@@ -69,6 +63,11 @@ namespace Raytracing.Shapes
             insec.Material = _material;
 
             return true;
+        }
+        public override Bounds3D GetObjectBound()
+        {
+            return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
+                                 new Point3D(_radius, _radius, _zMax));
         }
     }
 }
