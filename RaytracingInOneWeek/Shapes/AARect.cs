@@ -6,28 +6,27 @@ namespace Raytracing.Shapes
     class XYRect : Shape
     {
         double _x0, _x1, _y0, _y1, _k;
-        Material _material;
 
         public XYRect()
         {
 
         }
-        public XYRect(double x0, double x1, double y0, double y1, double k, Material material)
+        public XYRect(double x0, double x1, double y0, double y1, double k)
         {
             _x0 = x0;
             _x1 = x1;
             _y0 = y0;
             _y1 = y1;
             _k = k;
-            _material = material;
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
-            insec = new SurfaceInteraction();
+            tMax = 0;
+            isect = new SurfaceInteraction();
             var t = (_k - ray.O.Z) / ray.D.Z;
 
-            if(t < tMin || t > ray.TMax)
+            if(t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
@@ -40,14 +39,13 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            insec.U = (x - _x0) / (_x1 - _x0);
-            insec.V = (y - _y0) / (_y1 - _y0);
-            insec.T = t;
+            isect.U = (x - _x0) / (_x1 - _x0);
+            isect.V = (y - _y0) / (_y1 - _y0);
+            tMax = t;
 
             var outwardNormal = new Normal3D(0,0,1);
-            insec.SetFaceNormal(ray, outwardNormal);
-            insec.Material = _material;
-            insec.P = ray.At(t);
+            isect.SetFaceNormal(ray, outwardNormal);
+            isect.P = ray.At(t);
 
             return true;
         }
@@ -59,28 +57,27 @@ namespace Raytracing.Shapes
     class XZRect : Shape
     {
         double _x0, _x1, _z0, _z1, _k;
-        Material _material;
 
         public XZRect()
         {
 
         }
-        public XZRect(double x0, double x1, double z0, double z1, double k, Material material)
+        public XZRect(double x0, double x1, double z0, double z1, double k)
         {
             _x0 = x0;
             _x1 = x1;
             _z0 = z0;
             _z1 = z1;
             _k = k;
-            _material = material;
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
-            insec = new SurfaceInteraction();
+            tMax = 0;
+            isect = new SurfaceInteraction();
             var t = (_k - ray.O.Y) / ray.D.Y;
 
-            if (t < tMin || t > ray.TMax)
+            if (t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
@@ -93,13 +90,12 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            insec.U = (x - _x0) / (_x1 - _x0);
-            insec.V = (z - _z0) / (_z1 - _z0);
-            insec.T = t;
+            isect.U = (x - _x0) / (_x1 - _x0);
+            isect.V = (z - _z0) / (_z1 - _z0);
+            tMax = t;
             var outwardNormal = new Normal3D(0, 1, 0);
-            insec.SetFaceNormal(ray, outwardNormal);
-            insec.Material = _material;
-            insec.P = ray.At(t);
+            isect.SetFaceNormal(ray, outwardNormal);
+            isect.P = ray.At(t);
 
             return true;
         }
@@ -111,27 +107,26 @@ namespace Raytracing.Shapes
     class YZRect : Shape
     {
         double _y0, _y1, _z0, _z1, _k;
-        Material _material;
 
         public YZRect()
         {
 
         }
-        public YZRect(double y0, double y1, double z0, double z1, double k, Material material)
+        public YZRect(double y0, double y1, double z0, double z1, double k)
         {
             _y0 = y0;
             _y1 = y1;
             _z0 = z0;
             _z1 = z1;
             _k = k;
-            _material = material;
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
-            insec = new SurfaceInteraction();
+            tMax = 0;
+            isect = new SurfaceInteraction();
             var t = (_k - ray.O.X) / ray.D.X;
-            if (t < tMin || t > ray.TMax)
+            if (t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
@@ -144,13 +139,12 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            insec.U = (y - _y0) / (_y1 - _y0);
-            insec.V = (z - _z0) / (_z1 - _z0);
-            insec.T = t;
+            isect.U = (y - _y0) / (_y1 - _y0);
+            isect.V = (z - _z0) / (_z1 - _z0);
+            tMax = t;
             var outwardNormal = new Normal3D(1, 0, 0);
-            insec.SetFaceNormal(ray, outwardNormal);
-            insec.Material = _material;
-            insec.P = ray.At(t);
+            isect.SetFaceNormal(ray, outwardNormal);
+            isect.P = ray.At(t);
 
             return true;
         }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Raytracing.Shapes;
+using Raytracing.Materials;
 
 namespace Raytracing
 {
@@ -160,7 +161,7 @@ namespace Raytracing
 
             return bmp;
         }
-        public static Vector3D ray_color(Ray r, Vector3D background, Shape world, int depth)
+        public static Vector3D ray_color(Ray r, Vector3D background, Primitive world, int depth)
         {
             SurfaceInteraction isect = new SurfaceInteraction();
 
@@ -169,15 +170,15 @@ namespace Raytracing
                 return new Vector3D(0, 0, 0);
             }
 
-            if (!world.Intersect(r, 0.1, out isect))
+            if (!world.Intersect(r, out isect))
             {
                 return background;
             }
             Ray scattered = new Ray();
             Vector3D attenuation = new Vector3D();
-            Vector3D emitted = isect.Material.Emitted(isect.U, isect.V, isect.P);
+            Vector3D emitted = isect.Primitive.GetMaterial().Emitted(isect.U, isect.V, isect.P);
 
-            if (!isect.Material.Scatter(r, ref isect, out attenuation, out scattered))
+            if (!isect.Primitive.GetMaterial().Scatter(r, ref isect, out attenuation, out scattered))
             {
                 return emitted;
             }

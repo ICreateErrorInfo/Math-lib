@@ -1,46 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Math_lib;
+using Raytracing.Materials;
 using Raytracing.Shapes;
 
 namespace Raytracing
 {
-    public class HittableList : Shape
+    public class HittableList : Primitive
     {
-        public List<Shape> Objects = new List<Shape>();
+        public List<Primitive> Objects = new List<Primitive>();
 
         public HittableList()
         {
 
         }
-        public HittableList(Shape obj)
+        public HittableList(Primitive obj)
         {
             Objects.Add(obj);
         }
-        public void Add(Shape obj)
+        public void Add(Primitive obj)
         {
             Objects.Add(obj);
         }
 
-        public override bool Intersect(Ray r, double tMin, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out SurfaceInteraction intersection)
         {
-            isect = new SurfaceInteraction();
+            intersection = new SurfaceInteraction();
 
             SurfaceInteraction tempIsect = new SurfaceInteraction();
             bool hitAnything = false;
 
             foreach (var Object in Objects)
             {
-                if (Object.Intersect(r, tMin, out tempIsect))
+                if (Object.Intersect(ray, out tempIsect))
                 {
                     hitAnything = true;
-                    isect = tempIsect;
+                    intersection = tempIsect;
                 }
             }
 
             return hitAnything;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D GetWorldBound()
         {
             Bounds3D bound = new Bounds3D();
             if (!Objects.Any())
@@ -53,13 +54,18 @@ namespace Raytracing
 
             foreach(var _object in Objects)
             {
-                currentBoundingBox = _object.GetObjectBound();
+                currentBoundingBox = _object.GetWorldBound();
                 bound = isFirstBox ? currentBoundingBox : Bounds3D.Union(bound, currentBoundingBox);
                 isFirstBox = false;
                 
             }
 
             return bound;
+        }
+
+        public override Material GetMaterial()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

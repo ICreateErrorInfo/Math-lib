@@ -9,24 +9,20 @@ namespace Raytracing.Shapes
         private readonly double _zMin, _zMax;
         private readonly double _thetaMin, _thetaMax, _phiMax;
         private readonly double   _radius;
-        private readonly Material _material;
-        private readonly Transform _worldToObject;
-        private readonly Transform _objectToWorld;
 
         public Sphere() { }
-        public Sphere(Point3D center, double radius, Material material)
+        public Sphere(Point3D center, double radius)
         {
             _radius = radius;
-            _material = material;
             _zMin = -radius;
             _zMax = radius;
             _thetaMax = 1;
             _thetaMin = -1;
             _phiMax = 360;
-            _worldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
-            _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
+            WorldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
+            ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
-        public Sphere(Point3D center, double radius, double zMin, double zMax, double phiMax, Material material) 
+        public Sphere(Point3D center, double radius, double zMin, double zMax, double phiMax) 
         {
             _radius = radius;
             _zMin = Math.Clamp(Math.Min(zMin, zMax), -radius, radius);
@@ -34,23 +30,23 @@ namespace Raytracing.Shapes
             _thetaMin = Math.Acos(Math.Clamp(zMin / radius, -1, 1));
             _thetaMax = Math.Acos(Math.Clamp(zMax / radius, -1, 1));
             _phiMax = Mathe.ToRad(Math.Clamp(phiMax, 0, 360));
-            _material = material;
-            _worldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
-            _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
+            WorldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
+            ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction insec)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
-            insec = new SurfaceInteraction();
+            tMax = 0;
+            isect = new SurfaceInteraction();
 
-            Ray rTransformed = _worldToObject.m * ray;
+            Ray rTransformed = WorldToObject.m * ray;
 
             var a = rTransformed.D.GetLengthSqrt();
             var halfB = Vector3D.Dot((Vector3D)rTransformed.O, rTransformed.D);
             var c = ((Vector3D)rTransformed.O).GetLengthSqrt() - _radius * _radius;
 
             double t0;
-            if(!Mathe.SolveQuadratic(a, halfB, c, out t0, tMin, ray.TMax))
+            if(!Mathe.SolveQuadratic(a, halfB, c, out t0, 0.01, ray.TMax))
             {
                 return false;
             }
@@ -71,14 +67,12 @@ namespace Raytracing.Shapes
                     return false;
             }
 
-            ray.TMax = t0;
-            insec.T = t0;
-            insec.P = ray.At(t0);
-            Point3D _center = _objectToWorld.m * new Point3D(0,0,0);
-            Normal3D outwardNormal = (Normal3D)((insec.P - _center) / _radius);
-            insec.SetFaceNormal(ray, outwardNormal);
-            (insec.U, insec.V) = GetSphereUV(outwardNormal);
-            insec.Material = _material;
+            tMax = t0;
+            isect.P = ray.At(t0);
+            Point3D _center = ObjectToWorld.m * new Point3D(0,0,0);
+            Normal3D outwardNormal = (Normal3D)((isect.P - _center) / _radius);
+            isect.SetFaceNormal(ray, outwardNormal);
+            (isect.U, isect.V) = GetSphereUV(outwardNormal);
 
             return true;
         }

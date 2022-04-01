@@ -5,12 +5,11 @@ namespace Raytracing
 {
     public struct SurfaceInteraction
     {
+        public Primitive Primitive;
         public Ray Scattered;
         public Vector3D Attenuation;
         public Point3D P;
         public Normal3D Normal;
-        public Material Material;
-        public double T;
         public double U;
         public double V;
         public bool FrontFace;

@@ -14,26 +14,23 @@ namespace Raytracing.Shapes
         private readonly double _radius;
         private readonly double _innerRadius;
         private readonly double _phiMax;
-        private readonly Material _material;
-        private readonly Transform _worldToObject;
-        private readonly Transform _objectToWorld;
 
-        public Disk(Point3D center, double height, double radius, double innerRadius, double phiMax, Material material)
+        public Disk(Point3D center, double height, double radius, double innerRadius, double phiMax)
         {
             _height = height;
             _radius = radius;
             _innerRadius = innerRadius;
-            _material = material;
             _phiMax = Mathe.ToRad(Math.Clamp(phiMax, 0, 360));
-            _worldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
-            _objectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
+            WorldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
+            ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
+            tMax = 0;
             isect = new SurfaceInteraction();
 
-            Ray rTransformed = _worldToObject.m * ray;
+            Ray rTransformed = WorldToObject.m * ray;
 
             double t0 = (_height - rTransformed.O.Z) / rTransformed.D.Z;
             if(t0 <= 0 || t0 >= rTransformed.TMax || rTransformed.D.Z == 0)
@@ -52,12 +49,10 @@ namespace Raytracing.Shapes
             if(phi < 0) phi += 2 * Math.PI;
             if (phi > _phiMax) return false;
 
-            ray.TMax = t0;
-            isect.T = t0;
+            tMax = t0;
             isect.P = ray.At(t0);
             Normal3D outwardNormal = new(pHit.X,pHit.Y,_height + 1);
             isect.SetFaceNormal(ray, outwardNormal);
-            isect.Material = _material;
 
             return true;
         }

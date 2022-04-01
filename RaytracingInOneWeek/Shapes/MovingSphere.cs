@@ -13,24 +13,23 @@ namespace Raytracing.Shapes
         private readonly double   _time0;
         private readonly double   _time1;
         private readonly double   _radius;
-        private readonly Material _material;
 
         public MovingSphere()
         {
 
         }
-        public MovingSphere(Point3D center0, Point3D center1, double time0, double time1, double radius, Material material)
+        public MovingSphere(Point3D center0, Point3D center1, double time0, double time1, double radius)
         {
             _center0 = center0;
             _center1 = center1;
             _time0 = time0;
             _time1 = time1;
             _radius = radius;
-            _material = material;
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
+            tMax = 0;
             isect = new SurfaceInteraction();
 
             Vector3D oc = ray.O - Center(ray.Time);
@@ -46,21 +45,19 @@ namespace Raytracing.Shapes
             var sqrtd = Math.Sqrt(discriminant);
 
             var root = (-halfB - sqrtd) / a;
-            if (root < tMin || ray.TMax < root)
+            if (root < 0.01 || ray.TMax < root)
             {
                 root = (-halfB + sqrtd) / a;
-                if (root < tMin || ray.TMax < root)
+                if (root < 0.01 || ray.TMax < root)
                 {
                     return false;
                 }
             }
 
-            ray.TMax = root;
-            isect.T = root;
-            isect.P = ray.At(isect.T);
+            tMax = root;
+            isect.P = ray.At(root);
             Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(ray.Time)) / _radius);
             isect.SetFaceNormal(ray, outward_normal);
-            isect.Material = _material;
 
             return true;
         }

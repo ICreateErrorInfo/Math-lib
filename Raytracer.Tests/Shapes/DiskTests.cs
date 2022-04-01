@@ -16,37 +16,39 @@ namespace Raytracing.Tests.Shapes
         [Test]
         public void TestCtor1()
         {
-            var s = new Disk(new(0), 1, 1,0, 360, new Metal(new(0, 0, 0), 1));
+            var s = new Disk(new(0), 1, 1,0, 360);
             Assert.That(s, Is.Not.Null);
         }
 
         [Test]
         public void IntersectionTest()
         {
-            var s = new Disk(new(0), 1, 1, 0, 360, new Metal(new(0, 0, 0), 1));
+            var s = new Disk(new(0), 1, 1, 0, 360);
 
             Ray r = new Ray(new(0, 0, 0.5), new(0, 0, 1));
 
             SurfaceInteraction isect = new SurfaceInteraction();
+            double tMax;
 
-            Assert.That(s.Intersect(r, 0.1, out isect), Is.True);
+            Assert.That(s.Intersect(r, out tMax, out isect), Is.True);
         }
         [Test]
         public void IntersectionTest1()
         {
-            var s = new Disk(new(0), 1, 1, 0, 360, new Metal(new(0, 0, 0), 1));
+            var s = new Disk(new(0), 1, 1, 0, 360);
 
             Ray r = new Ray(new(0, 1, 0.5), new(0, 1, 0));
 
             SurfaceInteraction isect = new SurfaceInteraction();
+            double tMax;
 
-            Assert.That(s.Intersect(r, 0.1, out isect), Is.False);
+            Assert.That(s.Intersect(r, out tMax, out isect), Is.False);
         }
 
         [Test]
         public void TestObjectBound()
         {
-            var s = new Disk(new(0), 1, 1, 0, 360, new Metal(new(0, 0, 0), 1));
+            var s = new Disk(new(0), 1, 1, 0, 360);
 
             Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-1, -1, 1)));
             Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D(1, 1, 1)));
@@ -54,7 +56,7 @@ namespace Raytracing.Tests.Shapes
         [Test]
         public void TestObjectBound2()
         {
-            var s = new Disk(new(0), 1, 1, 0, 360, new Metal(new(0, 0, 0), 1));
+            var s = new Disk(new(0), 1, 1, 0, 360);
 
             Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-1, -1, 1)));
             Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D(1, 1, 1)));

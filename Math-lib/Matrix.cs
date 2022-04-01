@@ -365,6 +365,10 @@ namespace Math_lib
 
             return r1;
         }
+        public static Bounds3D operator *(Matrix m, Bounds3D b)
+        {
+            return new Bounds3D(m * b.pMin, m * b.pMax);
+        }
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
             Matrix matrix = new Matrix(m1._row, m2._col);

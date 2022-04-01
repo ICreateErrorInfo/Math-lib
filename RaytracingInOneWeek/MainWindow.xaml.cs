@@ -14,9 +14,22 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestImporter());
+            r.RenderScene(FirstScene());
         }
 
+        Scene TestSphere()
+        {
+            var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
+            Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360);
+            Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360);
+            HittableList h = new();
+            h.Add(new GeometricPrimitive(s, material));
+            h.Add(new GeometricPrimitive(s1, material));
+
+            Scene scene = new Scene(h, 100, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+
+            return scene;
+        }
         Scene TestImporter()
         {
             Vector3D v = new Vector3D(1, 0, 0);
@@ -25,9 +38,9 @@ namespace Raytracing
             TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile());
             HittableList h = new();
 
-            for(int i = 0; i < mesh.NTriangles; i++)
+            for (int i = 0; i < mesh.NTriangles; i++)
             {
-                h.Add(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i));
+                h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
@@ -38,9 +51,9 @@ namespace Raytracing
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
 
             int nTri = 1;
-            List<int> indices = new List<int>() { 0,1,2 };
+            List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
-            List<Point3D> Points = new List<Point3D>() { new(-2,0,0), new(2,0,0), new(0,2,0) };
+            List<Point3D> Points = new List<Point3D>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
 
             Transform objToWorld = Transform.Translate(new Vector3D(0));
             Transform worldToObj = Transform.Translate(new Vector3D(0));
@@ -49,7 +62,7 @@ namespace Raytracing
 
             Triangle tri = new Triangle(objToWorld, worldToObj, mesh, 0);
 
-            HittableList h = new(tri);
+            HittableList h = new(new GeometricPrimitive(tri, mesh.Material));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
 
@@ -59,10 +72,10 @@ namespace Raytracing
         {
             var material = new Metal(new Vector3D(1, 0.32, 0.36), 0);
             var material2 = new Metal(new Vector3D(0.90, 0.76, 0.46), 1);
-            Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360, material);
-            Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360, material2);
-            HittableList h = new(c);
-            h.Add(s);
+            Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360);
+            Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360);
+            HittableList h = new(new GeometricPrimitive(c, material));
+            h.Add(new GeometricPrimitive(s, material2));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1), 18);
 
@@ -71,8 +84,8 @@ namespace Raytracing
         Scene TestDisk()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180, material);
-            HittableList h = new(d);
+            Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180);
+            HittableList h = new(new GeometricPrimitive( d, material));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
 
@@ -81,22 +94,10 @@ namespace Raytracing
         Scene TestCylinder()
         {
             var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360, material);
-            HittableList h = new(s);
+            Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
+            HittableList h = new(new GeometricPrimitive(s,material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0,0,1), 20, 0.1, new Vector3D(.7, .8, 1));
-
-            return scene;
-        }
-        Scene TestSphere()
-        {
-            var material = new Metal(new Vector3D(.65, .7, .46), 0.7);
-            Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360, material);
-            Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360, material);
-            HittableList h = new(s);
-            h.Add(s1);
-
-            Scene scene = new Scene(h, 10, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1));
 
             return scene;
         }
@@ -114,11 +115,11 @@ namespace Raytracing
 
             var center2 = new Point3D(0, 0, -20) + new Vector3D(0, 0.5, 0);
 
-            world.Add(new Sphere(new Point3D(0.0, -10004, -20), 10000, new Lambertian(checker)));
-            world.Add(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4, material1));
-            world.Add(new Sphere(new Point3D(5, -1, -15), 2, material2));
-            world.Add(new Sphere(new Point3D(5, 0, -25), 3, material3));
-            world.Add(new Sphere(new Point3D(-5.5, 0, -15), 3, material4));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
+            world.Add(new GeometricPrimitive(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4), material1));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, -1, -15), 2), material2));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
             Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, new Vector3D(.7, .8, 1), 20);
 
@@ -130,8 +131,8 @@ namespace Raytracing
 
             var checker = new CheckerTexture(new Vector3D(0.2, 0.3, 0.1), new Vector3D(0.9, 0.9, 0.9));
 
-            objects.Add(new Sphere(new Point3D(0, -10, 0), 10, new Lambertian(checker)));
-            objects.Add(new Sphere(new Point3D(0, 10, 0), 10, new Lambertian(checker)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -10, 0), 10), new Lambertian(checker)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 10, 0), 10), new Lambertian(checker)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 100,
@@ -152,8 +153,8 @@ namespace Raytracing
 
             var pertext = new NoiseTexture(4);
 
-            objects.Add(new Sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
-            objects.Add(new Sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 1000,
@@ -172,7 +173,7 @@ namespace Raytracing
             var earthTexture = new ImageTexture("C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
 
             var earthSurface = new Lambertian(earthTexture);
-            var globe = new Sphere(new Point3D(0, 0, 0), 2, earthSurface);
+            var globe = new GeometricPrimitive(new Sphere(new Point3D(0, 0, 0), 2), earthSurface);
             var ret = new HittableList();
             ret.Add(globe);
 
@@ -196,11 +197,11 @@ namespace Raytracing
             HittableList objekts = new HittableList();
 
             var pertext = new NoiseTexture(4);
-            objekts.Add(new Sphere(new Point3D(0, -1000, 0), 1000, new Lambertian(pertext)));
-            objekts.Add(new Sphere(new Point3D(0, 2, 0), 2, new Lambertian(pertext)));
+            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
+            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
 
             var difflight = new DiffuseLight(new Vector3D(4, 4, 4));
-            objekts.Add(new XYRect(3, 5, 1, 3, -2, difflight));
+            objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
 
             Scene scene = new Scene(objs: objekts,
                                     spp: 400,
@@ -223,19 +224,19 @@ namespace Raytracing
             var green = new Lambertian(new Vector3D(.12, .45, .15));
             var light = new DiffuseLight(new Vector3D(15, 15, 15));
 
-            Box box1 = new Box(new Point3D(130, 0, 65), new Point3D(295, 165, 230), white);
-            Box box2 = new Box(new Point3D(265, 0, 295), new Point3D(430, 330, 460), white);
+            //Box box1 = new Box(new Point3D(130, 0, 65), new Point3D(295, 165, 230), white);
+            //Box box2 = new Box(new Point3D(265, 0, 295), new Point3D(430, 330, 460), white);
 
-            objects.Add(box1.Sides);
-            objects.Add(box2.Sides);
+            //objects.Add(box1.Sides);
+            //objects.Add(box2.Sides);
 
-            objects.Add(new YZRect(0, 555, 0, 555, 555, green));
-            objects.Add(new YZRect(0, 555, 0, 555, 0, red));
-            objects.Add(new XZRect(0, 555, 0, 555, 0, white));
-            objects.Add(new XZRect(0, 555, 0, 555, 555, white));
-            objects.Add(new XYRect(0, 555, 0, 555, 555, white));
+            objects.Add(new GeometricPrimitive(new YZRect(0, 555, 0, 555, 555), green));
+            objects.Add(new GeometricPrimitive(new YZRect(0, 555, 0, 555, 0), red));
+            objects.Add(new GeometricPrimitive(new XZRect(0, 555, 0, 555, 0), white));
+            objects.Add(new GeometricPrimitive(new XZRect(0, 555, 0, 555, 555), white));
+            objects.Add(new GeometricPrimitive(new XYRect(0, 555, 0, 555, 555), white));
 
-            objects.Add(new XZRect(213, 343, 227, 332, 554, light));
+            objects.Add(new GeometricPrimitive(new XZRect(213, 343, 227, 332, 554), light));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 100,

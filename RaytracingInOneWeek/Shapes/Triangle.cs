@@ -7,20 +7,19 @@ namespace Raytracing.Shapes
     {
         private readonly TriangleMesh _mesh;
         private readonly int _firstVertexIndex;
-        private readonly Transform _worldToObject;
-        private readonly Transform _objectToWorld;
 
         public Triangle(Transform objectToWorld, Transform worldToObject, TriangleMesh mesh, int triangleNumber)
         {
-            _objectToWorld = objectToWorld;
-            _worldToObject = worldToObject;
+            ObjectToWorld = objectToWorld;
+            WorldToObject = worldToObject;
             _mesh = mesh;
 
             _firstVertexIndex = 3 * triangleNumber;
         }
 
-        public override bool Intersect(Ray ray, double tMin, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
         {
+            tMax = 0;
             isect = new SurfaceInteraction();
 
             //Get Triangle Points
@@ -87,20 +86,18 @@ namespace Raytracing.Shapes
             double b2 = e2 * invDet;
             double t = tScaled * invDet;
 
-            ray.TMax = t;
-            isect.T = t;
+            tMax = t;
             isect.P = b0 * p0 + b1 * p1 + b2 * p2;
             Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(Vector3D.Cross(p1 - p0, p2 - p0));
             isect.SetFaceNormal(ray, outwardNormal);
-            isect.Material = _mesh.Material;
 
             return true;
         }
         public override Bounds3D GetObjectBound()
         {
-            Point3D p0 = _worldToObject.m * _mesh.Point[_firstVertexIndex];
-            Point3D p1 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 1];
-            Point3D p2 = _worldToObject.m * _mesh.Point[_firstVertexIndex + 2];
+            Point3D p0 = WorldToObject.m * _mesh.Point[_firstVertexIndex];
+            Point3D p1 = WorldToObject.m * _mesh.Point[_firstVertexIndex + 1];
+            Point3D p2 = WorldToObject.m * _mesh.Point[_firstVertexIndex + 2];
 
             return Bounds3D.Union(new Bounds3D(p0, p1), p2);
         }

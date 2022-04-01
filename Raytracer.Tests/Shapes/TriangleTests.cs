@@ -58,7 +58,8 @@ namespace Raytracing.Tests.Shapes
             Ray ray = new Ray(new(0,1,3), new(0,0,-1));
 
             SurfaceInteraction surfaceInteraction = new SurfaceInteraction();
-            bool hit = tri.Intersect(ray, 0, out surfaceInteraction);
+            double tMax;
+            bool hit = tri.Intersect(ray, out tMax, out surfaceInteraction);
 
             Assert.That(hit, Is.True);
         }
@@ -82,7 +83,8 @@ namespace Raytracing.Tests.Shapes
             Ray ray = new Ray(new(0, 0, -0.5), new(-0.69, 0.84, 0.5));
 
             SurfaceInteraction surfaceInteraction = new SurfaceInteraction();
-            bool hit = tri.Intersect(ray, 0, out surfaceInteraction);
+            double tMax;
+            bool hit = tri.Intersect(ray, out tMax, out surfaceInteraction);
 
             Assert.That(hit, Is.True);
         }
