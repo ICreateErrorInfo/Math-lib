@@ -14,7 +14,7 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(FirstScene());
+            r.RenderScene(CornellBox());
         }
 
         Scene TestSphere()
@@ -239,7 +239,7 @@ namespace Raytracing
             objects.Add(new GeometricPrimitive(new XZRect(213, 343, 227, 332, 554), light));
 
             Scene scene = new Scene(objs: objects,
-                                    spp: 100,
+                                    spp: 10,
                                     maxD: 50,
                                     lookfrom: new Point3D(278, 278, -800),
                                     lookat: new Point3D(278, 278, 0),

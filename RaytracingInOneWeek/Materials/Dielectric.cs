@@ -33,7 +33,7 @@ namespace Raytracing.Materials
                 direction = Vector3D.Refract(unitDirection, (Vector3D)isect.Normal, refractionRatio);
             }
 
-            scattered = new Ray(isect.P, direction, rIn.TMax, rIn.Time);
+            scattered = new Ray(isect.P, direction, double.PositiveInfinity, rIn.Time);
 
             isect.Attenuation = attenuation;
             isect.Scattered = scattered;
