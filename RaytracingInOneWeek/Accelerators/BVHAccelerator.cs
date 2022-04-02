@@ -24,24 +24,24 @@ namespace Raytracing.Accelerators
         }
         struct BVHBuildNode
         {
-            Bounds3D bounds;
-            BVHBuildNode?[] children;
-            int splitAxis, firstPrimOffset, nPrimitives;
+            Bounds3D _bounds;
+            BVHBuildNode?[] _children;
+            int _splitAxis, _firstPrimOffset, _nPrimitives;
 
             void InitLeaf(int first, int n, Bounds3D b)
             {
-                firstPrimOffset = first;
-                nPrimitives = n;
-                bounds = b;
-                children[0] = children[1] = null;
+                _firstPrimOffset = first;
+                _nPrimitives = n;
+                _bounds = b;
+                _children[0] = _children[1] = null;
             }
             void InitInterior(int axis, BVHBuildNode c0, BVHBuildNode c1)
             {
-                children[0] = c0;
-                children[1] = c1;
-                bounds = Bounds3D.Union(c0.bounds, c1.bounds);
-                splitAxis = axis;
-                nPrimitives = 0;
+                _children[0] = c0;
+                _children[1] = c1;
+                _bounds = Bounds3D.Union(c0._bounds, c1._bounds);
+                _splitAxis = axis;
+                _nPrimitives = 0;
             }
         }
 
