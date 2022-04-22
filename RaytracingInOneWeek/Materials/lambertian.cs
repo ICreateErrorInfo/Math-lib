@@ -2,7 +2,7 @@
 
 namespace Raytracing.Materials
 {
-    class Lambertian : Material
+    public class Lambertian : Material
     {
         private readonly Texture _albedo;
 

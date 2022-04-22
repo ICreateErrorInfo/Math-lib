@@ -6,7 +6,7 @@ using Raytracing.Materials;
 
 namespace Raytracing.Shapes
 {
-    class MovingSphere : Shape
+    public class MovingSphere : Shape
     {
         private readonly Point3D  _center0;
         private readonly Point3D  _center1;

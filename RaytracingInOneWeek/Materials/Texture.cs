@@ -5,7 +5,7 @@ using Math_lib;
 
 namespace Raytracing.Materials
 {
-    abstract class Texture
+    public abstract class Texture
     {
         public abstract Vector3D Value(double u, double v, Point3D p);
     }
@@ -31,7 +31,7 @@ namespace Raytracing.Materials
             return _colorValue;
         }
     }
-    class CheckerTexture : Texture
+    public class CheckerTexture : Texture
     {
         private readonly Texture _odd;
         private readonly Texture _even;
