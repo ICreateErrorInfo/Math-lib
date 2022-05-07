@@ -14,7 +14,7 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(CornellBox());
+            r.RenderScene(FirstScene());
         }
 
         Scene TestSphere()
@@ -116,7 +116,7 @@ namespace Raytracing
             var center2 = new Point3D(0, 0, -20) + new Vector3D(0, 0.5, 0);
 
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
-            world.Add(new GeometricPrimitive(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4), material1));
+            //world.Add(new GeometricPrimitive(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4), material1));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, -1, -15), 2), material2));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));

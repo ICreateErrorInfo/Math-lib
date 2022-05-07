@@ -44,11 +44,17 @@ namespace Raytracing.Accelerators
                 NPrimitives = 0;
             }
         }
+        struct BucketInfo
+        {
+            public int Count;
+            public Bounds3D Bounds;
+        }
 
         public enum SplitMethod { SAH, HLBVH, Middle, EqualCounts }
         private int _maxPrimitivesInNode;
         SplitMethod _splitMethod;
         List<Primitive> _primitives;
+        int nBuckets = 12;
 
         public BVHAccelerator(List<Primitive> primitives, int maxPrimitivesInNode, SplitMethod splitMethod)
         {
@@ -186,6 +192,106 @@ namespace Raytracing.Accelerators
                                     {
                                         newPrimitiveInfos.Add(info);
                                     }
+                                }
+
+                                break;
+                            }
+                        case SplitMethod.SAH:
+                            {
+                                BucketInfo[] buckets = new BucketInfo[nBuckets];
+
+                                for(int i = 0; i < buckets.Length; i++)
+                                {
+                                    buckets[i].Bounds = new Bounds3D(new(0));
+                                }
+
+                                for (int i = start; i < end; ++i)
+                                {
+                                    int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
+                                    if (b == nBuckets) b = nBuckets - 1;
+                                    buckets[b].Count++;
+                                    buckets[b].Bounds = Bounds3D.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
+                                }
+
+                                double[] cost = new double[nBuckets - 1];
+                                for (int i = 0; i < nBuckets - 1; ++i)
+                                {
+                                    Bounds3D b0 = new Bounds3D();
+                                    Bounds3D b1 = new Bounds3D();
+
+                                    int count0 = 0, count1 = 0;
+                                    for (int j = 0; j <= i; ++j)
+                                    {
+                                        b0 = Bounds3D.Union(b0, buckets[j].Bounds);
+                                        count0 += buckets[j].Count;
+                                    }
+
+                                    for (int j = i + 1; j < nBuckets; ++j)
+                                    {
+                                        b1 = Bounds3D.Union(b1, buckets[j].Bounds);
+                                        count1 += buckets[j].Count;
+                                    }
+
+                                    cost[i] = .125f + (count0 * b0.SurfaceArea() +
+                                                       count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
+                                }
+
+                                double minCost = cost[0];
+                                int minCostSplitBucket = 0;
+                                for (int i = 1; i < nBuckets - 1; ++i)
+                                {
+                                    if (cost[i] < minCost)
+                                    {
+                                        minCost = cost[i];
+                                        minCostSplitBucket = i;
+                                    }
+                                }
+
+                                double leafCost = nPrimitives;
+                                if(nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
+                                {
+                                    var midGrouped = primitiveInfos.GroupBy(primitiveInfos =>
+                                    {
+                                        int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos.Centroid)[dim]);
+                                        if (b == nBuckets) b = nBuckets - 1;
+                                        return b <= minCostSplitBucket;
+                                    });
+
+                                    List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
+                                    mid = 0;
+                                    int counter = 0;
+                                    foreach (var group in midGrouped)
+                                    {
+                                        foreach (var info in group)
+                                        {
+                                            if (counter >= start && counter <= end)
+                                            {
+                                                newPrimitiveInfos.Add(info);
+                                            }
+                                            else
+                                            {
+                                                newPrimitiveInfos.Add(primitiveInfos[counter]);
+                                            }
+                                            if (group.Key == true)
+                                            {
+                                                mid++;
+                                            }
+                                            counter++;
+                                        }
+                                    }
+                                    primitiveInfos = newPrimitiveInfos;
+                                    mid = mid + start;
+                                }
+                                else
+                                {
+                                    int firstPrimOffset = orderedPrimitives.Count();
+                                    for (int i = start; i < end; ++i)
+                                    {
+                                        int primNum = primitiveInfos[i].PrimitiveNumber;
+                                        orderedPrimitives.Add(_primitives[primNum]);
+                                    }
+                                    node.InitLeaf(firstPrimOffset, nPrimitives, bounds);
+                                    return node;
                                 }
 
                                 break;

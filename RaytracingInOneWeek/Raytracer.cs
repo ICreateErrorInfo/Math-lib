@@ -49,7 +49,7 @@ namespace Raytracing
         {
             int samplesPerPixel = scene.SamplesPerPixel;
             int maxDepth = scene.MaxDepth;
-            var world = scene.Objects;
+            var world = scene.Accel;
 
             Point3D lookfrom = scene.Lookfrom;
             Point3D lookat = scene.Lookat;

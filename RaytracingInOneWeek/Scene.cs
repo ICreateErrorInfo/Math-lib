@@ -1,10 +1,11 @@
 ﻿using Math_lib;
+using Raytracing.Accelerators;
 
 namespace Raytracing
 {
     public struct Scene
     {
-        public HittableList Objects;
+        public BVHAccelerator Accel;
         public int SamplesPerPixel;
         public int MaxDepth;
         public Point3D Lookfrom;
@@ -39,7 +40,7 @@ namespace Raytracing
                 FocusDistance = focusDistance;
             }
 
-            Objects = objs;
+            Accel = new(objs.Objects, 2, BVHAccelerator.SplitMethod.Middle);
             SamplesPerPixel = spp;
             MaxDepth = maxD;
             Lookfrom = lookfrom;
