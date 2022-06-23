@@ -25,14 +25,13 @@ namespace Raytracing.Tests
 
             var center2 = new Point3D(0, 0, -20) + new Vector3D(0, 0.5, 0);
 
-            //primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
-            //primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -15), 2), material2));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -15), 2), material2));
             primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(2, 0, -18), 3), material3));
             primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-
-            BVHAccelerator BVH = new BVHAccelerator(primitives, 0, BVHAccelerator.SplitMethod.SAH);
+            BVHAccelerator BVH = new BVHAccelerator(primitives, 4, BVHAccelerator.SplitMethod.SAH);
         }
     }
 }

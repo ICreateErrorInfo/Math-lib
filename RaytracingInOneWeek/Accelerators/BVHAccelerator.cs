@@ -49,6 +49,27 @@ namespace Raytracing.Accelerators
             public int Count;
             public Bounds3D Bounds;
         }
+        struct MortonPrimitive
+        {
+            public int primitiveIndex;
+            public Int32 mortonCode;
+        }
+        struct LBVHTreelet
+        {
+            public LBVHTreelet(int startIndex, int nPrimitives, BVHBuildNode buildNodes)
+            {
+                StartIndex = startIndex;
+                NPrimitives = nPrimitives;
+                BuildNodes = buildNodes;
+            }
+            public int StartIndex, NPrimitives;
+            public BVHBuildNode BuildNodes;
+        };
+        struct LinearBVHNode
+        {
+            Bounds3D bounds;
+            //TODO
+        }
 
         public enum SplitMethod { SAH, HLBVH, Middle, EqualCounts }
         private int _maxPrimitivesInNode;
@@ -78,11 +99,11 @@ namespace Raytracing.Accelerators
             BVHBuildNode root;
             if (splitMethod == SplitMethod.HLBVH)
             {
-
+                throw new NotImplementedException();
             }
             else
             {
-                BVHBuildNode node = RecursiveBuild(primitiveInfos, 0, primitives.Count, ref totalNodes, ref orderedPrims);
+                root = RecursiveBuild(primitiveInfos, 0, primitives.Count, ref totalNodes, ref orderedPrims);
             }
             primitives = orderedPrims;
         }
@@ -200,7 +221,7 @@ namespace Raytracing.Accelerators
                             {
                                 BucketInfo[] buckets = new BucketInfo[nBuckets];
 
-                                for(int i = 0; i < buckets.Length; i++)
+                                for (int i = 0; i < buckets.Length; i++)
                                 {
                                     buckets[i].Bounds = new Bounds3D(new(0));
                                 }
@@ -248,7 +269,7 @@ namespace Raytracing.Accelerators
                                 }
 
                                 double leafCost = nPrimitives;
-                                if(nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
+                                if (nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
                                 {
                                     var midGrouped = primitiveInfos.GroupBy(primitiveInfos =>
                                     {
@@ -298,10 +319,126 @@ namespace Raytracing.Accelerators
                             }
                     }
                     node.InitInterior(dim, RecursiveBuild(primitiveInfos, start, mid, ref totalNodes, ref orderedPrimitives),
-                                           RecursiveBuild(primitiveInfos, mid  , end, ref totalNodes, ref orderedPrimitives));
+                                           RecursiveBuild(primitiveInfos, mid, end, ref totalNodes, ref orderedPrimitives));
                 }
             }
             return node;
+        }
+
+        //for HLBVH not needed now
+        private BVHBuildNode EmitLBVH(BVHBuildNode buildNodes,
+                                      List<BVHPrimitiveInfo> primitiveInfo,
+                                      MortonPrimitive[] mortonPrims, int nPrimitives, int totalNodes,
+                                      List<Primitive> orderedPrims,
+                                      int orderedPrimsOffset, int bitIndex)
+        {
+            if (bitIndex == -1 || nPrimitives < _maxPrimitivesInNode)
+            {
+                totalNodes++;
+                BVHBuildNode node = buildNodes;
+                Bounds3D bounds = new Bounds3D();
+                int firstPrimOffset = orderedPrimsOffset + nPrimitives;
+                for (int i = 0; i < nPrimitives; i++)
+                {
+                    int primitiveIndex = mortonPrims[i].primitiveIndex;
+                    orderedPrims[firstPrimOffset + i] = _primitives[primitiveIndex];
+                    bounds = Bounds3D.Union(bounds, primitiveInfo[primitiveIndex].Bounds);
+                }
+                node.InitLeaf(firstPrimOffset, nPrimitives, bounds);
+                return node;
+            }
+            else
+            {
+                int mask = 1 << bitIndex;
+                if ((mortonPrims[0].mortonCode & mask) ==
+                    (mortonPrims[nPrimitives - 1].mortonCode & mask))
+                    return EmitLBVH(buildNodes, primitiveInfo, mortonPrims, nPrimitives,
+                                    totalNodes, orderedPrims, orderedPrimsOffset,
+                                    bitIndex - 1);
+
+                int searchStart = 0, searchEnd = nPrimitives - 1;
+                while (searchStart + 1 != searchEnd)
+                {
+                    int mid = (searchStart + searchEnd) / 2;
+                    if ((mortonPrims[searchStart].mortonCode & mask) ==
+                        (mortonPrims[mid].mortonCode & mask))
+                        searchStart = mid;
+                    else
+                        searchEnd = mid;
+                }
+                int splitOffset = searchEnd;
+
+                totalNodes++;
+                BVHBuildNode node = buildNodes;
+                BVHBuildNode[] lbvh = {
+                    EmitLBVH(buildNodes, primitiveInfo, mortonPrims, splitOffset,
+                             totalNodes, orderedPrims, orderedPrimsOffset, bitIndex - 1),
+                    EmitLBVH(buildNodes, primitiveInfo, mortonPrims,
+                             nPrimitives - splitOffset, totalNodes, orderedPrims,
+                             orderedPrimsOffset, bitIndex - 1)
+                };
+
+                int axis = bitIndex % 3;
+                node.InitInterior(axis, lbvh[0], lbvh[1]);
+                return node;
+            }
+
+        }
+        private Int32 LeftShift3(Int32 x)
+        {
+            if (x == (1 << 10)) --x;
+            x = (x | (x << 16)) & 0b00000011000000000000000011111111;
+            x = (x | (x << 8)) & 0b00000011000000001111000000001111;
+            x = (x | (x << 4)) & 0b00000011000011000011000011000011;
+            x = (x | (x << 2)) & 0b00001001001001001001001001001001;
+            return x;
+        }
+        private Int32 EncodeMorton3(Vector3D v)
+        {
+            return (LeftShift3((Int32)v.Z) << 2 |
+                   (LeftShift3((Int32)v.Y) << 1) |
+                    LeftShift3((Int32)v.X));
+        }
+        private static void RadixSort(ref MortonPrimitive[] v)
+        {
+            MortonPrimitive[] tempList = new MortonPrimitive[v.Length];
+            int bitsPerPass = 6;
+            int nBits = 30;
+            int nPasses = nBits / bitsPerPass;
+            for (int pass = 0; pass < nPasses; ++pass)
+            {
+                int lowBit = pass * bitsPerPass;
+                MortonPrimitive[] VIn = (pass >= 1 & true) ? tempList : v;
+                MortonPrimitive[] VOut = (pass >= 1 & true) ? v : tempList;
+
+                //Count in each Bucket
+                int nBuckets = 1 << bitsPerPass;
+                int[] bucketCount = new int[nBuckets];
+                int bitMask = (1 << bitsPerPass) - 1;
+                foreach (MortonPrimitive mp in VIn)
+                {
+                    int bucket = (mp.mortonCode >> lowBit) & bitMask;
+                    ++bucketCount[bucket];
+                }
+
+                int[] outIndex = new int[nBuckets];
+                outIndex[0] = 0;
+                for (int i = 1; i < nBuckets; ++i)
+                {
+                    outIndex[i] = outIndex[i - 1] + bucketCount[i - 1];
+                }
+
+                foreach (MortonPrimitive mp in VIn)
+                {
+                    int bucket = (mp.mortonCode >> lowBit) & bitMask;
+                    VOut[outIndex[bucket]++] = mp;
+                }
+
+                if (nPasses % 2 == 0)
+                {
+                    (v, tempList) = (tempList, v);
+                }
+            }
         }
 
         public override Bounds3D GetWorldBound()
