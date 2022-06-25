@@ -84,7 +84,7 @@ namespace Math_lib.Tests
             Ray r = new Ray(origin, direction);
 
             Vector3D invDir = 1 / r.D;
-            int[] dirIsNeg = new int[] { 0, 0, 0 };
+            bool[] dirIsNeg = new bool[] { false, false, false };
 
             bool hitFound = b.IntersectP(r, invDir, dirIsNeg);
 

@@ -473,12 +473,58 @@ namespace Raytracing.Accelerators
 
         public override Bounds3D GetWorldBound()
         {
-            throw new NotImplementedException();
+            return nodes.Count() == 1 ? nodes[0].bounds : new Bounds3D();
         }
 
-        public override bool Intersect(Ray r, out SurfaceInteraction intersection)
+        public override bool Intersect(Ray ray, out SurfaceInteraction intersection)
         {
-            throw new NotImplementedException();
+            intersection = new SurfaceInteraction();
+
+            bool hit = false;
+            Vector3D invDir = new Vector3D(1 / ray.D.X, 1 / ray.D.Y, 1 / ray.D.Z);
+            bool[] dirIsNeg = new bool[] { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+            int toVisitOffset = 0, currentNodeIndex = 0;
+            int[] nodesToVisit = new int[64];
+            while (true)
+            {
+                LinearBVHNode node = nodes[currentNodeIndex];
+                if(node.bounds.IntersectP(ray, invDir, dirIsNeg))
+                {
+                    if(node.nPrimitives > 0)
+                    {
+                        for(int i = 0; i < node.nPrimitives; i++)
+                        {
+                            if (_primitives[node.primitivesOffset + i].Intersect(ray, out intersection))
+                            {
+                                hit = true;
+                            }
+                        }
+                        if (toVisitOffset == 0) break;
+                        currentNodeIndex = nodesToVisit[--toVisitOffset];
+                    }
+                    else
+                    {
+                        if (dirIsNeg[node.axis])
+                        {
+                            nodesToVisit[toVisitOffset++] = currentNodeIndex + 1;
+                            currentNodeIndex = node.secondChildOffset;
+                        }
+                        else
+                        {
+                            nodesToVisit[toVisitOffset++] = node.secondChildOffset;
+                            currentNodeIndex = currentNodeIndex + 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (toVisitOffset == 0) break;
+                    currentNodeIndex = nodesToVisit[--toVisitOffset];
+                }
+            }
+
+            return hit;
         }
     }
 }

@@ -64,8 +64,12 @@ namespace Math_lib
             hitt1 = t1;
             return true;
         }
-        public bool IntersectP(Ray ray, Vector3D invDir, int[] dirIsNeg)
+        public bool IntersectP(Ray ray, Vector3D invDir, bool[] dirIsNegBool)
         {
+            int[] dirIsNeg = { dirIsNegBool[0] == true ? 1 : 0,
+                               dirIsNegBool[1] == true ? 1 : 0,
+                               dirIsNegBool[2] == true ? 1 : 0 };
+
             double tMin =  (this[dirIsNeg[0]].X - ray.O.X) * invDir.X;
             double tMax =  (this[1 - dirIsNeg[0]].X - ray.O.X) * invDir.X;
             double tyMin = (this[dirIsNeg[1]].Y - ray.O.Y) * invDir.Y;
