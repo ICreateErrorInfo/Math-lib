@@ -495,9 +495,14 @@ namespace Raytracing.Accelerators
                     {
                         for(int i = 0; i < node.nPrimitives; i++)
                         {
+                            SurfaceInteraction oldSurfaceInteraction = intersection;
                             if (_primitives[node.primitivesOffset + i].Intersect(ray, out intersection))
                             {
                                 hit = true;
+                            }
+                            if (intersection.Primitive == null)
+                            {
+                                intersection = oldSurfaceInteraction;
                             }
                         }
                         if (toVisitOffset == 0) break;

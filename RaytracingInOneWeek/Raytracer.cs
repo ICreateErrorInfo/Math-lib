@@ -83,8 +83,8 @@ namespace Raytracing
 
             Parallel.For(0, imageHeight, j =>
             {
-            //    for (int j = 0; j < imageHeight; j++)
-            //{
+                //for (int j = 0; j < imageHeight; j++)
+                //{
                 Interlocked.Increment(ref current);
                 progress.Report(new ProgressData(totalCount, current));
                 for (int i = 0; i < imageWidth; i++)
