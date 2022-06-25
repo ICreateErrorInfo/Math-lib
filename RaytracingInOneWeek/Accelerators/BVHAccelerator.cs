@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -67,8 +68,11 @@ namespace Raytracing.Accelerators
         };
         struct LinearBVHNode
         {
-            Bounds3D bounds;
-            //TODO
+             public Bounds3D bounds;
+             public int primitivesOffset;
+             public int secondChildOffset;
+             public Int16 nPrimitives;
+             public Int16 axis;
         }
 
         public enum SplitMethod { SAH, HLBVH, Middle, EqualCounts }
@@ -76,6 +80,7 @@ namespace Raytracing.Accelerators
         SplitMethod _splitMethod;
         List<Primitive> _primitives;
         int nBuckets = 12;
+        LinearBVHNode[] nodes;
 
         public BVHAccelerator(List<Primitive> primitives, int maxPrimitivesInNode, SplitMethod splitMethod)
         {
@@ -106,6 +111,9 @@ namespace Raytracing.Accelerators
                 root = RecursiveBuild(primitiveInfos, 0, primitives.Count, ref totalNodes, ref orderedPrims);
             }
             primitives = orderedPrims;
+            nodes = new LinearBVHNode[totalNodes];
+            int offset = 0;
+            FlattenBVHTree(root, ref offset);
         }
 
         private BVHBuildNode RecursiveBuild(List<BVHPrimitiveInfo> primitiveInfos, int start, int end, ref int totalNodes, ref List<Primitive> orderedPrimitives)
@@ -324,8 +332,29 @@ namespace Raytracing.Accelerators
             }
             return node;
         }
+        private int FlattenBVHTree(BVHBuildNode node, ref int offset)
+        {
+            LinearBVHNode linearNode = nodes[offset];
+            linearNode.bounds = node.Bounds;
+            int myOffset = offset++;
+            if(node.NPrimitives > 0)
+            {
+                linearNode.primitivesOffset = node.FirstPrimOffset;
+                linearNode.nPrimitives = (Int16)node.NPrimitives;
+            }
+            else
+            {
+                linearNode.axis = (Int16)node.SplitAxis;
+                linearNode.nPrimitives = 0;
+                FlattenBVHTree(node.Children[0], ref offset);
+                linearNode.secondChildOffset = FlattenBVHTree(node.Children[1], ref offset);
+            }
+            nodes[myOffset] = linearNode;
+            return myOffset;
+        }
 
         //for HLBVH not needed now
+        /*
         private BVHBuildNode EmitLBVH(BVHBuildNode buildNodes,
                                       List<BVHPrimitiveInfo> primitiveInfo,
                                       MortonPrimitive[] mortonPrims, int nPrimitives, int totalNodes,
@@ -440,6 +469,7 @@ namespace Raytracing.Accelerators
                 }
             }
         }
+        */
 
         public override Bounds3D GetWorldBound()
         {
