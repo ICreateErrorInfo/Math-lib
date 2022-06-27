@@ -95,18 +95,18 @@ namespace Raytracing.Shapes
         }
         public override Bounds3D GetObjectBound()
         {
-            Point3D p0 = WorldToObject.m * _mesh.Point[_firstVertexIndex];
-            Point3D p1 = WorldToObject.m * _mesh.Point[_firstVertexIndex + 1];
-            Point3D p2 = WorldToObject.m * _mesh.Point[_firstVertexIndex + 2];
+            Point3D p0 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+            Point3D p1 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+            Point3D p2 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
             return Bounds3D.Union(new Bounds3D(p0, p1), p2);
         }
 
         public double Area()
         {
-            Point3D p0 = _mesh.Point[_firstVertexIndex];
-            Point3D p1 = _mesh.Point[_firstVertexIndex + 1];
-            Point3D p2 = _mesh.Point[_firstVertexIndex + 2];
+            Point3D p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+            Point3D p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+            Point3D p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
             return 0.5 * Vector3D.Cross(p1 - p0, p2 - p0).GetLength();
         }

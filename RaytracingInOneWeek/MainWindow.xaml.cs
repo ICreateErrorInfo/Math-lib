@@ -32,9 +32,6 @@ namespace Raytracing
         }
         Scene TestImporter()
         {
-            Vector3D v = new Vector3D(1, 0, 0);
-            var v1 = Transform.RotateY(90).m * v;
-
             TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile());
             HittableList h = new();
 

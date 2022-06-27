@@ -110,7 +110,7 @@ namespace Raytracing.Accelerators
             {
                 root = RecursiveBuild(primitiveInfos, 0, primitives.Count, ref totalNodes, ref orderedPrims);
             }
-            primitives = orderedPrims;
+            _primitives = orderedPrims;
             nodes = new LinearBVHNode[totalNodes];
             int offset = 0;
             FlattenBVHTree(root, ref offset);
@@ -167,60 +167,36 @@ namespace Raytracing.Accelerators
                         case SplitMethod.Middle:
                             {
                                 double pmid = (centroidBounds.pMin[dim] + centroidBounds.pMax[dim]) / 2;
-                                var midGrouped = primitiveInfos.GroupBy(primitiveInfos =>
-                                {
-                                    return primitiveInfos.Centroid[dim] < pmid;
-                                });
 
-                                List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                mid = 0;
-                                int counter = 0;
-                                foreach (var group in midGrouped)
-                                {
-                                    foreach (var info in group)
-                                    {
-                                        if (counter >= start && counter <= end)
-                                        {
-                                            newPrimitiveInfos.Add(info);
-                                        }
-                                        else
-                                        {
-                                            newPrimitiveInfos.Add(primitiveInfos[counter]);
-                                        }
-                                        if (group.Key == true)
-                                        {
-                                            mid++;
-                                        }
-                                        counter++;
-                                    }
-                                }
-                                primitiveInfos = newPrimitiveInfos;
-                                mid = mid + start;
+                                primitiveInfos = Partition(primitiveInfos, start, end, pi => pi.Centroid[dim] < pmid, out mid);
 
                                 if (mid != start && mid != end)
                                 {
                                     break;
                                 }
-
                                 goto case SplitMethod.EqualCounts;
                             }
                         case SplitMethod.EqualCounts:
                             {
                                 mid = (start + end) / 2;
+                                int primitveLenght = primitiveInfos.Count();
 
-                                var primitiveMid = primitiveInfos[mid];
-                                var midGrouped = primitiveInfos.GroupBy(primitiveInfo =>
-                                {
-                                    return primitiveInfo.Centroid[dim] < primitiveMid.Centroid[dim];
-                                });
+                                BVHPrimitiveInfo primitiveInfoMid = primitiveInfos[mid];
+                                List<BVHPrimitiveInfo> sortedPrimitiveInfos = new List<BVHPrimitiveInfo>();
+                                sortedPrimitiveInfos = primitiveInfos.OrderBy(pi => pi.Centroid[dim] <= primitiveInfoMid.Centroid[dim]).ToList();
 
                                 List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                foreach (var group in midGrouped)
+                                for (int i = 0; i < start; i++)
                                 {
-                                    foreach (var info in group)
-                                    {
-                                        newPrimitiveInfos.Add(info);
-                                    }
+                                    newPrimitiveInfos.Add(primitiveInfos[i]);
+                                }
+                                for(int i = start; i < end; i++)
+                                {
+                                    newPrimitiveInfos.Add(sortedPrimitiveInfos[i]);
+                                }
+                                for (int i = primitveLenght - 1; i > end - 1; i--)
+                                {
+                                    newPrimitiveInfos.Add(primitiveInfos[i]);
                                 }
 
                                 break;
@@ -352,6 +328,51 @@ namespace Raytracing.Accelerators
             nodes[myOffset] = linearNode;
             return myOffset;
         }
+        private List<BVHPrimitiveInfo> Partition(List<BVHPrimitiveInfo> primitiveInfos, int start, int end, Func<BVHPrimitiveInfo, bool> predicate, out int mid)
+        {
+            IEnumerable<IGrouping<bool, BVHPrimitiveInfo>> midGrouped = primitiveInfos.GroupBy(predicate);
+
+            List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
+            List<BVHPrimitiveInfo> primitevesTrue = new List<BVHPrimitiveInfo>();
+            List<BVHPrimitiveInfo> primitevesfalse = new List<BVHPrimitiveInfo>();
+            int counter = 0;
+            mid = start;
+            foreach (var group in midGrouped)
+            {
+                foreach (var info in group)
+                {
+                    if (group.Key == true && counter >= start && counter <= end)
+                    {
+                        mid++;
+                        primitevesTrue.Add(info);
+                    }
+                    if (group.Key == false && counter <= end && counter >= start)
+                    {
+                        primitevesfalse.Add(info);
+                    }
+                    counter++;
+                }
+            }
+            for (int i = 0; i < start; i++)
+            {
+                newPrimitiveInfos.Add(primitiveInfos[i]);
+            }
+            foreach (var info in primitevesTrue)
+            {
+                newPrimitiveInfos.Add(info);
+            }
+            foreach (var info in primitevesfalse)
+            {
+                newPrimitiveInfos.Add(info);
+            }
+            for (int i = counter - 1; i > end; i--)
+            {
+                newPrimitiveInfos.Add(primitiveInfos[i]);
+            }
+
+            return newPrimitiveInfos;
+        }
+
 
         //for HLBVH not needed now
         /*
