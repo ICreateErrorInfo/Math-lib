@@ -33,6 +33,33 @@ namespace Raytracing.Accelerators
                 throw new NullReferenceException("value can't be null");
             }
         }
+        class PartitionSort : IComparer<BVHPrimitiveInfo>
+        {
+            int _dim = 0;
+            public int Mid = 0;
+            double _pmid;
+
+            public PartitionSort(int dim, double pmid)
+            {
+                _dim = dim;
+                _pmid = pmid;
+            }
+
+            public int Compare(BVHPrimitiveInfo x, BVHPrimitiveInfo y)
+            {
+                bool value = x.Centroid[_dim] < _pmid || y.Centroid[_dim] < _pmid;
+                if (value == true)
+                {
+                    Mid++;
+                    return -1;
+                }
+                if (value == false)
+                {
+                    return 1;
+                }
+                throw new NullReferenceException("value can't be null");
+            }
+        }
         struct BVHPrimitiveInfo
         {
             public int PrimitiveNumber;
@@ -201,9 +228,7 @@ namespace Raytracing.Accelerators
                             }
                         case SplitMethod.EqualCounts:
                             {
-                                // TODO BUG
                                 mid = (start + end) / 2;
-                                int primitveLenght = primitiveInfos.Count();
 
                                 Sort sort = new Sort(dim);
                                 primitiveInfos.Sort(start, end - start, sort);
@@ -212,31 +237,12 @@ namespace Raytracing.Accelerators
                             }
                         case SplitMethod.SAH:
                             {
-                                if (nPrimitives < 4)
+                                if (nPrimitives <= 2)
                                 {
-                                    //TODO EQUAL BUG
                                     mid = (start + end) / 2;
-                                    int primitveLenght = primitiveInfos.Count();
 
-                                    BVHPrimitiveInfo primitiveInfoMid = primitiveInfos[mid];
-                                    List<BVHPrimitiveInfo> sortedPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                    sortedPrimitiveInfos = primitiveInfos.OrderBy(pi => pi.Centroid[dim] <= primitiveInfoMid.Centroid[dim]).ToList();
-
-                                    List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                    for (int i = 0; i < start; i++)
-                                    {
-                                        newPrimitiveInfos.Add(primitiveInfos[i]);
-                                    }
-                                    for (int i = start; i < end; i++)
-                                    {
-                                        newPrimitiveInfos.Add(sortedPrimitiveInfos[i]);
-                                    }
-                                    for (int i = primitveLenght - 1; i > end - 1; i--)
-                                    {
-                                        newPrimitiveInfos.Add(primitiveInfos[i]);
-                                    }
-
-                                    primitiveInfos = newPrimitiveInfos;
+                                    Sort sort = new Sort(dim);
+                                    primitiveInfos.Sort(start, end - start, sort);
                                 }
                                 else
                                 {
@@ -273,8 +279,8 @@ namespace Raytracing.Accelerators
                                             count1 += buckets[j].Count;
                                         }
 
-                                        cost[i] = .125f + (count0 * b0.SurfaceArea() +
-                                                           count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
+                                        cost[i] = 1 + (count0 * b0.SurfaceArea() +
+                                                       count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
                                     }
 
                                     double minCost = cost[0];
@@ -341,27 +347,31 @@ namespace Raytracing.Accelerators
         }
         private List<BVHPrimitiveInfo> Partition(List<BVHPrimitiveInfo> primitiveInfos, int start, int end, Func<BVHPrimitiveInfo, bool> predicate, out int mid)
         {
-            IEnumerable<IGrouping<bool, BVHPrimitiveInfo>> midGrouped = primitiveInfos.GroupBy(predicate);
+            List<BVHPrimitiveInfo> elementsToSort = new List<BVHPrimitiveInfo>();
+            for(int i = start; i < end; i++)
+            {
+                elementsToSort.Add(primitiveInfos[i]);
+            }
+
+            IEnumerable<IGrouping<bool, BVHPrimitiveInfo>> sortedElements = elementsToSort.GroupBy(predicate);
 
             List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
             List<BVHPrimitiveInfo> primitevesTrue = new List<BVHPrimitiveInfo>();
             List<BVHPrimitiveInfo> primitevesfalse = new List<BVHPrimitiveInfo>();
-            int counter = 0;
             mid = start;
-            foreach (var group in midGrouped)
+            foreach (var group in sortedElements)
             {
                 foreach (var info in group)
                 {
-                    if (group.Key == true && counter >= start && counter <= end)
+                    if (group.Key == true )
                     {
                         mid++;
                         primitevesTrue.Add(info);
                     }
-                    if (group.Key == false && counter <= end && counter >= start)
+                    if (group.Key == false )
                     {
                         primitevesfalse.Add(info);
                     }
-                    counter++;
                 }
             }
             for (int i = 0; i < start; i++)
@@ -376,7 +386,7 @@ namespace Raytracing.Accelerators
             {
                 newPrimitiveInfos.Add(info);
             }
-            for (int i = counter - 1; i > end; i--)
+            for (int i = primitiveInfos.Count - 1; i > end; i--)
             {
                 newPrimitiveInfos.Add(primitiveInfos[i]);
             }

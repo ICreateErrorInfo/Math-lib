@@ -40,7 +40,7 @@ namespace Raytracing
                 FocusDistance = focusDistance;
             }
 
-            Accel = new(objs.Objects, 2, BVHAccelerator.SplitMethod.EqualCounts);
+            Accel = new(objs.Objects, 2, BVHAccelerator.SplitMethod.SAH);
             SamplesPerPixel = spp;
             MaxDepth = maxD;
             Lookfrom = lookfrom;
