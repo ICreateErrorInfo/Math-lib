@@ -10,6 +10,29 @@ namespace Raytracing.Accelerators
 {
     public class BVHAccelerator : Aggregate
     {
+        class Sort : IComparer<BVHPrimitiveInfo>
+        {
+            int _dim = 0;
+
+            public Sort(int dim)
+            {
+                _dim = dim;
+            }
+
+            public int Compare(BVHPrimitiveInfo x, BVHPrimitiveInfo y)
+            {
+                bool value = x.Centroid[_dim] < y.Centroid[_dim];
+                if(value == true)
+                {
+                    return -1;
+                }
+                if (value == false)
+                {
+                    return 1;
+                }
+                throw new NullReferenceException("value can't be null");
+            }
+        }
         struct BVHPrimitiveInfo
         {
             public int PrimitiveNumber;
@@ -68,18 +91,18 @@ namespace Raytracing.Accelerators
         };
         struct LinearBVHNode
         {
-             public Bounds3D bounds;
-             public int primitivesOffset;
-             public int secondChildOffset;
-             public Int16 nPrimitives;
-             public Int16 axis;
+            public Bounds3D bounds;
+            public int primitivesOffset;
+            public int secondChildOffset;
+            public Int16 nPrimitives;
+            public Int16 axis;
         }
 
         public enum SplitMethod { SAH, HLBVH, Middle, EqualCounts }
         private int _maxPrimitivesInNode;
         SplitMethod _splitMethod;
         List<Primitive> _primitives;
-        int nBuckets = 12;
+        const int nBuckets = 12;
         LinearBVHNode[] nodes;
 
         public BVHAccelerator(List<Primitive> primitives, int maxPrimitivesInNode, SplitMethod splitMethod)
@@ -178,127 +201,115 @@ namespace Raytracing.Accelerators
                             }
                         case SplitMethod.EqualCounts:
                             {
+                                // TODO BUG
                                 mid = (start + end) / 2;
                                 int primitveLenght = primitiveInfos.Count();
 
-                                BVHPrimitiveInfo primitiveInfoMid = primitiveInfos[mid];
-                                List<BVHPrimitiveInfo> sortedPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                sortedPrimitiveInfos = primitiveInfos.OrderBy(pi => pi.Centroid[dim] <= primitiveInfoMid.Centroid[dim]).ToList();
-
-                                List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                for (int i = 0; i < start; i++)
-                                {
-                                    newPrimitiveInfos.Add(primitiveInfos[i]);
-                                }
-                                for(int i = start; i < end; i++)
-                                {
-                                    newPrimitiveInfos.Add(sortedPrimitiveInfos[i]);
-                                }
-                                for (int i = primitveLenght - 1; i > end - 1; i--)
-                                {
-                                    newPrimitiveInfos.Add(primitiveInfos[i]);
-                                }
+                                Sort sort = new Sort(dim);
+                                primitiveInfos.Sort(start, end - start, sort);
 
                                 break;
                             }
                         case SplitMethod.SAH:
                             {
-                                BucketInfo[] buckets = new BucketInfo[nBuckets];
-
-                                for (int i = 0; i < buckets.Length; i++)
+                                if (nPrimitives < 4)
                                 {
-                                    buckets[i].Bounds = new Bounds3D(new(0));
-                                }
+                                    //TODO EQUAL BUG
+                                    mid = (start + end) / 2;
+                                    int primitveLenght = primitiveInfos.Count();
 
-                                for (int i = start; i < end; ++i)
-                                {
-                                    int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
-                                    if (b == nBuckets) b = nBuckets - 1;
-                                    buckets[b].Count++;
-                                    buckets[b].Bounds = Bounds3D.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
-                                }
-
-                                double[] cost = new double[nBuckets - 1];
-                                for (int i = 0; i < nBuckets - 1; ++i)
-                                {
-                                    Bounds3D b0 = new Bounds3D();
-                                    Bounds3D b1 = new Bounds3D();
-
-                                    int count0 = 0, count1 = 0;
-                                    for (int j = 0; j <= i; ++j)
-                                    {
-                                        b0 = Bounds3D.Union(b0, buckets[j].Bounds);
-                                        count0 += buckets[j].Count;
-                                    }
-
-                                    for (int j = i + 1; j < nBuckets; ++j)
-                                    {
-                                        b1 = Bounds3D.Union(b1, buckets[j].Bounds);
-                                        count1 += buckets[j].Count;
-                                    }
-
-                                    cost[i] = .125f + (count0 * b0.SurfaceArea() +
-                                                       count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
-                                }
-
-                                double minCost = cost[0];
-                                int minCostSplitBucket = 0;
-                                for (int i = 1; i < nBuckets - 1; ++i)
-                                {
-                                    if (cost[i] < minCost)
-                                    {
-                                        minCost = cost[i];
-                                        minCostSplitBucket = i;
-                                    }
-                                }
-
-                                double leafCost = nPrimitives;
-                                if (nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
-                                {
-                                    var midGrouped = primitiveInfos.GroupBy(primitiveInfos =>
-                                    {
-                                        int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos.Centroid)[dim]);
-                                        if (b == nBuckets) b = nBuckets - 1;
-                                        return b <= minCostSplitBucket;
-                                    });
+                                    BVHPrimitiveInfo primitiveInfoMid = primitiveInfos[mid];
+                                    List<BVHPrimitiveInfo> sortedPrimitiveInfos = new List<BVHPrimitiveInfo>();
+                                    sortedPrimitiveInfos = primitiveInfos.OrderBy(pi => pi.Centroid[dim] <= primitiveInfoMid.Centroid[dim]).ToList();
 
                                     List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-                                    mid = 0;
-                                    int counter = 0;
-                                    foreach (var group in midGrouped)
+                                    for (int i = 0; i < start; i++)
                                     {
-                                        foreach (var info in group)
-                                        {
-                                            if (counter >= start && counter <= end)
-                                            {
-                                                newPrimitiveInfos.Add(info);
-                                            }
-                                            else
-                                            {
-                                                newPrimitiveInfos.Add(primitiveInfos[counter]);
-                                            }
-                                            if (group.Key == true)
-                                            {
-                                                mid++;
-                                            }
-                                            counter++;
-                                        }
+                                        newPrimitiveInfos.Add(primitiveInfos[i]);
                                     }
+                                    for (int i = start; i < end; i++)
+                                    {
+                                        newPrimitiveInfos.Add(sortedPrimitiveInfos[i]);
+                                    }
+                                    for (int i = primitveLenght - 1; i > end - 1; i--)
+                                    {
+                                        newPrimitiveInfos.Add(primitiveInfos[i]);
+                                    }
+
                                     primitiveInfos = newPrimitiveInfos;
-                                    mid = mid + start;
                                 }
                                 else
                                 {
-                                    int firstPrimOffset = orderedPrimitives.Count();
+                                    BucketInfo[] buckets = new BucketInfo[nBuckets];
+                                    for (int i = 0; i < buckets.Length; i++)
+                                    {
+                                        buckets[i].Bounds = new Bounds3D(new(0));
+                                    }
+
                                     for (int i = start; i < end; ++i)
                                     {
-                                        int primNum = primitiveInfos[i].PrimitiveNumber;
-                                        orderedPrimitives.Add(_primitives[primNum]);
+                                        int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
+                                        if (b == nBuckets) b = nBuckets - 1;
+                                        buckets[b].Count++;
+                                        buckets[b].Bounds = Bounds3D.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
                                     }
-                                    node.InitLeaf(firstPrimOffset, nPrimitives, bounds);
-                                    return node;
-                                }
 
+                                    double[] cost = new double[nBuckets - 1];
+                                    for (int i = 0; i < nBuckets - 1; ++i)
+                                    {
+                                        Bounds3D b0 = new Bounds3D();
+                                        Bounds3D b1 = new Bounds3D();
+
+                                        int count0 = 0, count1 = 0;
+                                        for (int j = 0; j <= i; ++j)
+                                        {
+                                            b0 = Bounds3D.Union(b0, buckets[j].Bounds);
+                                            count0 += buckets[j].Count;
+                                        }
+
+                                        for (int j = i + 1; j < nBuckets; ++j)
+                                        {
+                                            b1 = Bounds3D.Union(b1, buckets[j].Bounds);
+                                            count1 += buckets[j].Count;
+                                        }
+
+                                        cost[i] = .125f + (count0 * b0.SurfaceArea() +
+                                                           count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
+                                    }
+
+                                    double minCost = cost[0];
+                                    int minCostSplitBucket = 0;
+                                    for (int i = 1; i < nBuckets - 1; ++i)
+                                    {
+                                        if (cost[i] < minCost)
+                                        {
+                                            minCost = cost[i];
+                                            minCostSplitBucket = i;
+                                        }
+                                    }
+
+                                    double leafCost = nPrimitives;
+                                    if (nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
+                                    {
+                                        primitiveInfos = Partition(primitiveInfos, start, end, pi =>
+                                        {
+                                            int b = (int)(nBuckets * centroidBounds.Offset(pi.Centroid)[dim]);
+                                            if (b == nBuckets) b = nBuckets - 1;
+                                            return b <= minCostSplitBucket;
+                                        }, out mid);
+                                    }
+                                    else
+                                    {
+                                        int firstPrimOffset = orderedPrimitives.Count();
+                                        for (int i = start; i < end; ++i)
+                                        {
+                                            int primNum = primitiveInfos[i].PrimitiveNumber;
+                                            orderedPrimitives.Add(_primitives[primNum]);
+                                        }
+                                        node.InitLeaf(firstPrimOffset, nPrimitives, bounds);
+                                        return node;
+                                    }
+                                }
                                 break;
                             }
                     }
@@ -313,7 +324,7 @@ namespace Raytracing.Accelerators
             LinearBVHNode linearNode = nodes[offset];
             linearNode.bounds = node.Bounds;
             int myOffset = offset++;
-            if(node.NPrimitives > 0)
+            if (node.NPrimitives > 0)
             {
                 linearNode.primitivesOffset = node.FirstPrimOffset;
                 linearNode.nPrimitives = (Int16)node.NPrimitives;
@@ -510,11 +521,11 @@ namespace Raytracing.Accelerators
             while (true)
             {
                 LinearBVHNode node = nodes[currentNodeIndex];
-                if(node.bounds.IntersectP(ray, invDir, dirIsNeg))
+                if (node.bounds.IntersectP(ray, invDir, dirIsNeg))
                 {
-                    if(node.nPrimitives > 0)
+                    if (node.nPrimitives > 0)
                     {
-                        for(int i = 0; i < node.nPrimitives; i++)
+                        for (int i = 0; i < node.nPrimitives; i++)
                         {
                             SurfaceInteraction oldSurfaceInteraction = intersection;
                             if (_primitives[node.primitivesOffset + i].Intersect(ray, out intersection))
