@@ -14,7 +14,7 @@ namespace Raytracing
             InitializeComponent();
 
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(TestImporter());
+            r.RenderScene(Earth());
         }
 
         Scene TestSphere()

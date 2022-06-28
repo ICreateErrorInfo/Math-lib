@@ -33,33 +33,7 @@ namespace Raytracing.Accelerators
                 throw new NullReferenceException("value can't be null");
             }
         }
-        class PartitionSort : IComparer<BVHPrimitiveInfo>
-        {
-            int _dim = 0;
-            public int Mid = 0;
-            double _pmid;
 
-            public PartitionSort(int dim, double pmid)
-            {
-                _dim = dim;
-                _pmid = pmid;
-            }
-
-            public int Compare(BVHPrimitiveInfo x, BVHPrimitiveInfo y)
-            {
-                bool value = x.Centroid[_dim] < _pmid || y.Centroid[_dim] < _pmid;
-                if (value == true)
-                {
-                    Mid++;
-                    return -1;
-                }
-                if (value == false)
-                {
-                    return 1;
-                }
-                throw new NullReferenceException("value can't be null");
-            }
-        }
         struct BVHPrimitiveInfo
         {
             public int PrimitiveNumber;
@@ -102,35 +76,35 @@ namespace Raytracing.Accelerators
         }
         struct MortonPrimitive
         {
-            public int primitiveIndex;
-            public Int32 mortonCode;
+            public int PrimitiveIndex;
+            public Int32 MortonCode;
         }
         struct LBVHTreelet
         {
+            public int StartIndex, NPrimitives;
+            public BVHBuildNode BuildNodes;
             public LBVHTreelet(int startIndex, int nPrimitives, BVHBuildNode buildNodes)
             {
                 StartIndex = startIndex;
                 NPrimitives = nPrimitives;
                 BuildNodes = buildNodes;
             }
-            public int StartIndex, NPrimitives;
-            public BVHBuildNode BuildNodes;
-        };
+        }
         struct LinearBVHNode
         {
-            public Bounds3D bounds;
-            public int primitivesOffset;
-            public int secondChildOffset;
-            public Int16 nPrimitives;
-            public Int16 axis;
+            public Bounds3D Bounds;
+            public int PrimitivesOffset;
+            public int SecondChildOffset;
+            public Int16 NPrimitives;
+            public Int16 Axis;
         }
 
         public enum SplitMethod { SAH, HLBVH, Middle, EqualCounts }
         private int _maxPrimitivesInNode;
-        SplitMethod _splitMethod;
-        List<Primitive> _primitives;
-        const int nBuckets = 12;
-        LinearBVHNode[] nodes;
+        private SplitMethod _splitMethod;
+        private List<Primitive> _primitives;
+        private const int _nBuckets = 12;
+        private LinearBVHNode[] _nodes;
 
         public BVHAccelerator(List<Primitive> primitives, int maxPrimitivesInNode, SplitMethod splitMethod)
         {
@@ -161,7 +135,7 @@ namespace Raytracing.Accelerators
                 root = RecursiveBuild(primitiveInfos, 0, primitives.Count, ref totalNodes, ref orderedPrims);
             }
             _primitives = orderedPrims;
-            nodes = new LinearBVHNode[totalNodes];
+            _nodes = new LinearBVHNode[totalNodes];
             int offset = 0;
             FlattenBVHTree(root, ref offset);
         }
@@ -246,7 +220,7 @@ namespace Raytracing.Accelerators
                                 }
                                 else
                                 {
-                                    BucketInfo[] buckets = new BucketInfo[nBuckets];
+                                    BucketInfo[] buckets = new BucketInfo[_nBuckets];
                                     for (int i = 0; i < buckets.Length; i++)
                                     {
                                         buckets[i].Bounds = new Bounds3D(new(0));
@@ -254,14 +228,14 @@ namespace Raytracing.Accelerators
 
                                     for (int i = start; i < end; ++i)
                                     {
-                                        int b = (int)(nBuckets * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
-                                        if (b == nBuckets) b = nBuckets - 1;
+                                        int b = (int)(_nBuckets * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
+                                        if (b == _nBuckets) b = _nBuckets - 1;
                                         buckets[b].Count++;
                                         buckets[b].Bounds = Bounds3D.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
                                     }
 
-                                    double[] cost = new double[nBuckets - 1];
-                                    for (int i = 0; i < nBuckets - 1; ++i)
+                                    double[] cost = new double[_nBuckets - 1];
+                                    for (int i = 0; i < _nBuckets - 1; ++i)
                                     {
                                         Bounds3D b0 = new Bounds3D();
                                         Bounds3D b1 = new Bounds3D();
@@ -273,19 +247,19 @@ namespace Raytracing.Accelerators
                                             count0 += buckets[j].Count;
                                         }
 
-                                        for (int j = i + 1; j < nBuckets; ++j)
+                                        for (int j = i + 1; j < _nBuckets; ++j)
                                         {
                                             b1 = Bounds3D.Union(b1, buckets[j].Bounds);
                                             count1 += buckets[j].Count;
                                         }
 
-                                        cost[i] = 1 + (count0 * b0.SurfaceArea() +
+                                        cost[i] = 0.1 + (count0 * b0.SurfaceArea() +
                                                        count1 * b1.SurfaceArea()) / bounds.SurfaceArea();
                                     }
 
                                     double minCost = cost[0];
                                     int minCostSplitBucket = 0;
-                                    for (int i = 1; i < nBuckets - 1; ++i)
+                                    for (int i = 1; i < _nBuckets - 1; ++i)
                                     {
                                         if (cost[i] < minCost)
                                         {
@@ -299,8 +273,8 @@ namespace Raytracing.Accelerators
                                     {
                                         primitiveInfos = Partition(primitiveInfos, start, end, pi =>
                                         {
-                                            int b = (int)(nBuckets * centroidBounds.Offset(pi.Centroid)[dim]);
-                                            if (b == nBuckets) b = nBuckets - 1;
+                                            int b = (int)(_nBuckets * centroidBounds.Offset(pi.Centroid)[dim]);
+                                            if (b == _nBuckets) b = _nBuckets - 1;
                                             return b <= minCostSplitBucket;
                                         }, out mid);
                                     }
@@ -327,22 +301,22 @@ namespace Raytracing.Accelerators
         }
         private int FlattenBVHTree(BVHBuildNode node, ref int offset)
         {
-            LinearBVHNode linearNode = nodes[offset];
-            linearNode.bounds = node.Bounds;
+            LinearBVHNode linearNode = _nodes[offset];
+            linearNode.Bounds = node.Bounds;
             int myOffset = offset++;
             if (node.NPrimitives > 0)
             {
-                linearNode.primitivesOffset = node.FirstPrimOffset;
-                linearNode.nPrimitives = (Int16)node.NPrimitives;
+                linearNode.PrimitivesOffset = node.FirstPrimOffset;
+                linearNode.NPrimitives = (Int16)node.NPrimitives;
             }
             else
             {
-                linearNode.axis = (Int16)node.SplitAxis;
-                linearNode.nPrimitives = 0;
+                linearNode.Axis = (Int16)node.SplitAxis;
+                linearNode.NPrimitives = 0;
                 FlattenBVHTree(node.Children[0], ref offset);
-                linearNode.secondChildOffset = FlattenBVHTree(node.Children[1], ref offset);
+                linearNode.SecondChildOffset = FlattenBVHTree(node.Children[1], ref offset);
             }
-            nodes[myOffset] = linearNode;
+            _nodes[myOffset] = linearNode;
             return myOffset;
         }
         private List<BVHPrimitiveInfo> Partition(List<BVHPrimitiveInfo> primitiveInfos, int start, int end, Func<BVHPrimitiveInfo, bool> predicate, out int mid)
@@ -515,7 +489,7 @@ namespace Raytracing.Accelerators
 
         public override Bounds3D GetWorldBound()
         {
-            return nodes.Count() == 1 ? nodes[0].bounds : new Bounds3D();
+            return _nodes.Count() == 1 ? _nodes[0].Bounds : new Bounds3D();
         }
 
         public override bool Intersect(Ray ray, out SurfaceInteraction intersection)
@@ -530,15 +504,15 @@ namespace Raytracing.Accelerators
             int[] nodesToVisit = new int[64];
             while (true)
             {
-                LinearBVHNode node = nodes[currentNodeIndex];
-                if (node.bounds.IntersectP(ray, invDir, dirIsNeg))
+                LinearBVHNode node = _nodes[currentNodeIndex];
+                if (node.Bounds.IntersectP(ray, invDir, dirIsNeg))
                 {
-                    if (node.nPrimitives > 0)
+                    if (node.NPrimitives > 0)
                     {
-                        for (int i = 0; i < node.nPrimitives; i++)
+                        for (int i = 0; i < node.NPrimitives; i++)
                         {
                             SurfaceInteraction oldSurfaceInteraction = intersection;
-                            if (_primitives[node.primitivesOffset + i].Intersect(ray, out intersection))
+                            if (_primitives[node.PrimitivesOffset + i].Intersect(ray, out intersection))
                             {
                                 hit = true;
                             }
@@ -552,14 +526,14 @@ namespace Raytracing.Accelerators
                     }
                     else
                     {
-                        if (dirIsNeg[node.axis])
+                        if (dirIsNeg[node.Axis])
                         {
                             nodesToVisit[toVisitOffset++] = currentNodeIndex + 1;
-                            currentNodeIndex = node.secondChildOffset;
+                            currentNodeIndex = node.SecondChildOffset;
                         }
                         else
                         {
-                            nodesToVisit[toVisitOffset++] = node.secondChildOffset;
+                            nodesToVisit[toVisitOffset++] = node.SecondChildOffset;
                             currentNodeIndex = currentNodeIndex + 1;
                         }
                     }
