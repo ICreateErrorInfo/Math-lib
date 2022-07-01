@@ -1,5 +1,4 @@
 ﻿using Math_lib;
-using Raytracing.Materials;
 
 namespace Raytracing.Shapes
 {

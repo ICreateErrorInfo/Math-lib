@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Math_lib;
+﻿using Math_lib;
 
 namespace Raytracing.Materials
 {

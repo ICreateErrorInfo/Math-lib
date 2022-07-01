@@ -1,8 +1,5 @@
 ﻿using System;
 using Math_lib;
-using System.Collections.Generic;
-using System.Text;
-using Raytracing.Materials;
 
 namespace Raytracing.Shapes
 {

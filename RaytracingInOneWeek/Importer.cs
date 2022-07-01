@@ -1,6 +1,5 @@
 ﻿using Math_lib;
 using Raytracing.Materials;
-using Raytracing.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

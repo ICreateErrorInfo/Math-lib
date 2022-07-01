@@ -27,7 +27,7 @@ namespace Raytracing.Tests
             primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(2, 0, -18), 3), material3));
             primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-            BVHAccelerator BVH = new BVHAccelerator(primitives, 4, BVHAccelerator.SplitMethod.SAH);
+            BVHAccelerator BVH = new BVHAccelerator(primitives, 4, BVHSplitMethod.SAH);
         }
         [Test]
         public void TestRecusive()
@@ -40,7 +40,7 @@ namespace Raytracing.Tests
                 h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
-            BVHAccelerator BVH = new BVHAccelerator(h, 4, BVHAccelerator.SplitMethod.Middle);
+            BVHAccelerator BVH = new BVHAccelerator(h, 4, BVHSplitMethod.Middle);
         }
     }
 }

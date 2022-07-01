@@ -1,7 +1,6 @@
 ﻿using Math_lib;
 using System;
 using System.Drawing;
-using System.IO;
 
 namespace Raytracing.Materials
 {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Math_lib;
 using System.Diagnostics.CodeAnalysis;
-using Raytracing.Shapes;
 using Raytracing.Materials;
 
 namespace Raytracing

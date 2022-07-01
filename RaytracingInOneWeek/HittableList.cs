@@ -2,7 +2,6 @@
 using System.Linq;
 using Math_lib;
 using Raytracing.Materials;
-using Raytracing.Shapes;
 
 namespace Raytracing
 {
