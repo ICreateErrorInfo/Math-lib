@@ -192,7 +192,7 @@ namespace Raytracing.Accelerators
                             {
                                 double pmid = (centroidBounds.pMin[dim] + centroidBounds.pMax[dim]) / 2;
 
-                                primitiveInfos = Partition(primitiveInfos, start, end, pi => pi.Centroid[dim] < pmid, out mid);
+                                primitiveInfos = Mathe.Partition(primitiveInfos, start, end, pi => pi.Centroid[dim] < pmid, out mid);
 
                                 if (mid != start && mid != end)
                                 {
@@ -271,7 +271,7 @@ namespace Raytracing.Accelerators
                                     double leafCost = nPrimitives;
                                     if (nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
                                     {
-                                        primitiveInfos = Partition(primitiveInfos, start, end, pi =>
+                                        primitiveInfos = Mathe.Partition(primitiveInfos, start, end, pi =>
                                         {
                                             int b = (int)(_nBuckets * centroidBounds.Offset(pi.Centroid)[dim]);
                                             if (b == _nBuckets) b = _nBuckets - 1;
@@ -318,54 +318,6 @@ namespace Raytracing.Accelerators
             }
             _nodes[myOffset] = linearNode;
             return myOffset;
-        }
-        private List<BVHPrimitiveInfo> Partition(List<BVHPrimitiveInfo> primitiveInfos, int start, int end, Func<BVHPrimitiveInfo, bool> predicate, out int mid)
-        {
-            List<BVHPrimitiveInfo> elementsToSort = new List<BVHPrimitiveInfo>();
-            for(int i = start; i < end; i++)
-            {
-                elementsToSort.Add(primitiveInfos[i]);
-            }
-
-            IEnumerable<IGrouping<bool, BVHPrimitiveInfo>> sortedElements = elementsToSort.GroupBy(predicate);
-
-            List<BVHPrimitiveInfo> newPrimitiveInfos = new List<BVHPrimitiveInfo>();
-            List<BVHPrimitiveInfo> primitevesTrue = new List<BVHPrimitiveInfo>();
-            List<BVHPrimitiveInfo> primitevesfalse = new List<BVHPrimitiveInfo>();
-            mid = start;
-            foreach (var group in sortedElements)
-            {
-                foreach (var info in group)
-                {
-                    if (group.Key == true )
-                    {
-                        mid++;
-                        primitevesTrue.Add(info);
-                    }
-                    if (group.Key == false )
-                    {
-                        primitevesfalse.Add(info);
-                    }
-                }
-            }
-            for (int i = 0; i < start; i++)
-            {
-                newPrimitiveInfos.Add(primitiveInfos[i]);
-            }
-            foreach (var info in primitevesTrue)
-            {
-                newPrimitiveInfos.Add(info);
-            }
-            foreach (var info in primitevesfalse)
-            {
-                newPrimitiveInfos.Add(info);
-            }
-            for (int i = primitiveInfos.Count - 1; i > end; i--)
-            {
-                newPrimitiveInfos.Add(primitiveInfos[i]);
-            }
-
-            return newPrimitiveInfos;
         }
 
 

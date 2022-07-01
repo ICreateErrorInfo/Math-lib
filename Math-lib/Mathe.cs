@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Math_lib
 {
@@ -98,6 +100,54 @@ namespace Math_lib
             //makes sure there is no self intersection can be fixed with rounding error
 
             return true;
+        }
+        public static List<T> Partition<T>(List<T> primitiveInfos, int start, int end, Func<T, bool> predicate, out int mid)
+        {
+            List<T> elementsToSort = new List<T>();
+            for (int i = start; i < end; i++)
+            {
+                elementsToSort.Add(primitiveInfos[i]);
+            }
+
+            IEnumerable<IGrouping<bool, T>> sortedElements = elementsToSort.GroupBy(predicate);
+
+            List<T> newPrimitiveInfos = new List<T>();
+            List<T> primitevesTrue = new List<T>();
+            List<T> primitevesfalse = new List<T>();
+            mid = start;
+            foreach (var group in sortedElements)
+            {
+                foreach (var info in group)
+                {
+                    if (group.Key == true)
+                    {
+                        mid++;
+                        primitevesTrue.Add(info);
+                    }
+                    if (group.Key == false)
+                    {
+                        primitevesfalse.Add(info);
+                    }
+                }
+            }
+            for (int i = 0; i < start; i++)
+            {
+                newPrimitiveInfos.Add(primitiveInfos[i]);
+            }
+            foreach (var info in primitevesTrue)
+            {
+                newPrimitiveInfos.Add(info);
+            }
+            foreach (var info in primitevesfalse)
+            {
+                newPrimitiveInfos.Add(info);
+            }
+            for (int i = primitiveInfos.Count - 1; i > end; i--)
+            {
+                newPrimitiveInfos.Add(primitiveInfos[i]);
+            }
+
+            return newPrimitiveInfos;
         }
 
         public static double Random1Tom1()
