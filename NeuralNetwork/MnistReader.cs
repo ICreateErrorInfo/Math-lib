@@ -51,16 +51,29 @@ namespace NeuralNetwork
 
                 yield return new Image()
                 {
-                    Data = arr,
+                    Data = ConvertToOneD(arr),
                     Label = labels.ReadByte()
                 };
             }
+        }
+        public static double[] ConvertToOneD(float[,] input)
+        {
+            double[] my1DArray = new double[28 * 28];
+
+            for (int y = 0; y < input.GetLength(1); y++)
+            {
+                for (int x = 0; input.GetLength(0) > x; x++)
+                {
+                    my1DArray[y * input.GetLength(0) + x] = input[x, y] / 255;
+                }
+            }
+            return my1DArray;
         }
     }
     public class Image
     {
         public byte Label { get; set; }
-        public float[,] Data { get; set; }
+        public double[] Data { get; set; }
     }
     public static class Extensions
     {

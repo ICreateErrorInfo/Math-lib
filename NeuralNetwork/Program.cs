@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace NeuralNetwork
 {
@@ -6,100 +9,71 @@ namespace NeuralNetwork
     {
         static void Main(string[] args)
         {
-            NeuralNet neural = new NeuralNet(new int[] { 784, 16, 16, 10 });
-            double learningRate = 0.5;
-            double Break = 10000;
+            List<List<DataPoint>> Batches = new List<List<DataPoint>>();
+            NeuralNetwork network = new NeuralNetwork(new[] { 784, 16, 16, 10 });
 
-            int breakCounter = 0;
-            foreach (var image in MnistReader.ReadTrainingData())
-            {
-                double[] imageIn1DimArray = new double[image.Data.Length];
-                imageIn1DimArray = ConvertToOneD(image.Data);
-
-                double[] expected = new double[10];
-
-                for(int i = 0; i< 10; i++)
-                {
-                    if(i != image.Label)
-                    {
-                        expected[i] = 0;
-                    }
-                    else
-                    {
-                        expected[i] = 1;
-                    }
-                }
-
-                neural.Train(imageIn1DimArray, expected, learningRate);
-
-                //double[] output = neural.GetOutput();
-
-                //Console.WriteLine();
-                //int j = 0;
-                //foreach (var percent in output)
-                //{
-                //    Console.WriteLine(j + ": " + Math.Round(percent, 2).ToString());
-                //    j++;
-                //}
-                //Console.WriteLine("Right: " + image.Label);
-
-                if(breakCounter == Break)
-                {
-                    break;
-                }
-                breakCounter++;
-            }
-
-            Console.WriteLine("Trained with: " + Break + " Samples");
-            Console.WriteLine();
-            neural.SaveToFile(@"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Saved\SavedNetwork.txt");
+            int miniBatchSize = 1;
+            List<DataPoint> miniBatch = new List<DataPoint>();
 
             int counter = 0;
+            foreach (var image in MnistReader.ReadTrainingData())
+            {
+                double[] expected = new double[10];
+                expected[image.Label] = 1;
+
+                miniBatch.Add(new DataPoint(image.Data, expected));
+
+                counter++;
+                if (counter == miniBatchSize)
+                {
+                    Batches.Add(miniBatch);
+                    miniBatch = new List<DataPoint>();
+                    counter = 0;
+                }
+            }
+
+            double learningRate = 0.1;
+            int evolutions = 5;
+
+            for (int j = 0; j < evolutions; j++)
+            {
+                for (int i = 0; i < Batches.Count; i++)
+                {
+                    network.Learn(Batches[i].ToArray(), learningRate);
+                }
+                Console.WriteLine(j);
+            }
+
+            counter = 0;
             foreach (var image in MnistReader.ReadTestData())
             {
-                double[] imageIn1DimArray = new double[image.Data.Length];
-                imageIn1DimArray = ConvertToOneD(image.Data);
-
-                neural.FeedForward(imageIn1DimArray);
-
-                int zahl = 0;
-                double biggest = 0;
-                int biggestNumber = 0;
-                foreach (var element in neural.GetOutput())
-                {
-                    Console.WriteLine(zahl + ": " + Math.Round(element, 2).ToString());
-
-                    if (element > biggest)
-                    {
-                        biggest = element;
-                        biggestNumber = zahl;
-                    }
-                    zahl++;
-                }
-
-                Console.WriteLine("Correct: " + image.Label);
-                Console.WriteLine("Ai: " + biggestNumber);
                 Console.WriteLine();
+                double[] output = network.CalculateOutputs(image.Data);
 
-                if (counter == 10)
+                foreach (double value in output)
+                {
+                    Console.WriteLine(Math.Round(value, 4));
+                }
+                Console.WriteLine();
+                Console.WriteLine(FindIndexOfHighestValue(output));
+                Console.WriteLine(image.Label);
+
+                if(counter == 3)
                 {
                     break;
                 }
+
                 counter++;
             }
         }
-        public static double[] ConvertToOneD(float[,] input)
-        {
-            double[] my1DArray = new double[28 * 28];
 
-            for (int y = 0; y < input.GetLength(1); y++)
-            {
-                for (int x = 0; input.GetLength(0) > x; x++)
-                {
-                    my1DArray[y * input.GetLength(0) + x] = input[x, y] / 255;
-                }
-            }
-            return my1DArray;
+        public static int FindIndexOfHighestValue(double[] input)
+        {
+            double maxValue = input.Max();
+            int maxIndex = input.ToList().IndexOf(maxValue);
+
+            return maxIndex;
         }
+
     }
 }

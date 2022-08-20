@@ -8,6 +8,7 @@ namespace Math_lib.Spectrum
 {
     public class SampledSpectrum : CoefficientSpectrum
     {
+        //TODO
         const int nCIESamples = 471;
         static readonly double[] CIEX = new double[]
         {
