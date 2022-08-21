@@ -9,6 +9,8 @@ namespace NeuralNetwork
     {
         static void Main(string[] args)
         {
+            List<DataPoint> TestBatch = new List<DataPoint>();
+
             List<List<DataPoint>> Batches = new List<List<DataPoint>>();
             NeuralNetwork network = new NeuralNetwork(new[] { 784, 16, 16, 10 });
 
@@ -16,12 +18,9 @@ namespace NeuralNetwork
             List<DataPoint> miniBatch = new List<DataPoint>();
 
             int counter = 0;
-            foreach (var image in MnistReader.ReadTrainingData())
+            foreach (var dataPoint in MnistReader.ReadTrainingData())
             {
-                double[] expected = new double[10];
-                expected[image.Label] = 1;
-
-                miniBatch.Add(new DataPoint(image.Data, expected));
+                miniBatch.Add(dataPoint);
 
                 counter++;
                 if (counter == miniBatchSize)
@@ -30,10 +29,11 @@ namespace NeuralNetwork
                     miniBatch = new List<DataPoint>();
                     counter = 0;
                 }
+                TestBatch.Add(dataPoint);
             }
 
             double learningRate = 0.1;
-            int evolutions = 5;
+            int evolutions = 6;
 
             for (int j = 0; j < evolutions; j++)
             {
@@ -42,13 +42,14 @@ namespace NeuralNetwork
                     network.Learn(Batches[i].ToArray(), learningRate);
                 }
                 Console.WriteLine(j);
+                Console.WriteLine(network.Cost(TestBatch.ToArray()));
             }
 
             counter = 0;
-            foreach (var image in MnistReader.ReadTestData())
+            foreach (var dataPoint in MnistReader.ReadTestData())
             {
                 Console.WriteLine();
-                double[] output = network.CalculateOutputs(image.Data);
+                double[] output = network.CalculateOutputs(dataPoint.inputs);
 
                 foreach (double value in output)
                 {
@@ -56,7 +57,7 @@ namespace NeuralNetwork
                 }
                 Console.WriteLine();
                 Console.WriteLine(FindIndexOfHighestValue(output));
-                Console.WriteLine(image.Label);
+                Console.WriteLine(dataPoint.label);
 
                 if(counter == 3)
                 {

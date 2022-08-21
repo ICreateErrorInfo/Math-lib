@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
@@ -13,7 +14,7 @@ namespace NeuralNetwork
         private const string TestImages = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\t10k-images.idx3-ubyte";
         private const string TestLabels = @"C:\Users\Moritz\source\repos\Math-lib\NeuralNetwork\Database\t10k-labels.idx1-ubyte";
 
-        public static IEnumerable<Image> ReadTrainingData()
+        public static IEnumerable<DataPoint> ReadTrainingData()
         {
             foreach (var item in Read(TrainImages, TrainLabels))
             {
@@ -21,7 +22,7 @@ namespace NeuralNetwork
             }
         }
 
-        public static IEnumerable<Image> ReadTestData()
+        public static IEnumerable<DataPoint> ReadTestData()
         {
             foreach (var item in Read(TestImages, TestLabels))
             {
@@ -29,7 +30,7 @@ namespace NeuralNetwork
             }
         }
 
-        private static IEnumerable<Image> Read(string imagesPath, string labelsPath)
+        private static IEnumerable<DataPoint> Read(string imagesPath, string labelsPath)
         {
             using BinaryReader labels = new BinaryReader(new FileStream(labelsPath, FileMode.Open));
             using BinaryReader images = new BinaryReader(new FileStream(imagesPath, FileMode.Open));
@@ -49,10 +50,16 @@ namespace NeuralNetwork
 
                 arr.ForEach((j, k) => arr[j, k] = bytes[j * height + k]);
 
-                yield return new Image()
+                int label = labels.ReadByte();
+
+                double[] expected = new double[10];
+                expected[label] = 1;
+
+                yield return new DataPoint()
                 {
-                    Data = ConvertToOneD(arr),
-                    Label = labels.ReadByte()
+                    inputs = ConvertToOneD(arr),
+                    expectedOutputs = expected,
+                    label = label
                 };
             }
         }
@@ -69,11 +76,6 @@ namespace NeuralNetwork
             }
             return my1DArray;
         }
-    }
-    public class Image
-    {
-        public byte Label { get; set; }
-        public double[] Data { get; set; }
     }
     public static class Extensions
     {
