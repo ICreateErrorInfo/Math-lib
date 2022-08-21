@@ -13,7 +13,7 @@ namespace Neural_Network_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        NeuralNet neural = new NeuralNet(new int[] { 784,16, 16, 16, 10 });
+        NeuralNetwork.NeuralNetwork neural = new NeuralNetwork.NeuralNetwork(new int[] { 784, 16, 16, 10 });
 
         public MainWindow()
         {
@@ -38,7 +38,7 @@ namespace Neural_Network_WPF
         {
             int number = 0;
 
-            foreach (var image in MnistReader.ReadTestData())
+            foreach (var dataPoint in MnistReader.ReadTestData())
             {
                 if (number == imageNumber)
                 {
@@ -47,20 +47,16 @@ namespace Neural_Network_WPF
                     {
                         for (int x = 0; x < 28; x++)
                         {
-                            Color col = Color.FromArgb(255, Convert.ToInt32(image.Data[y, x]), Convert.ToInt32(image.Data[y, x]), Convert.ToInt32(image.Data[y, x]));
-                            Bmp.SetPixel(y, x, col);
+                            Color col = Color.FromArgb(255, Convert.ToInt32(dataPoint.inputs[(x + y * 28)] * 255), Convert.ToInt32(dataPoint.inputs[(x + y * 28)] * 255), Convert.ToInt32(dataPoint.inputs[(x + y * 28)] * 255));
+                            Bmp.SetPixel(x, y, col);
                         }
                     }
 
                     Bmp.RotateFlip(RotateFlipType.Rotate90FlipX);
                     imageShow.Source = BitmapToImageSource(Bmp);
-                    label.Content = "Correct: " + image.Label;
+                    label.Content = "Correct: " + dataPoint.label;
 
-                    double[] imageIn1DimArray = new double[image.Data.Length];
-                    imageIn1DimArray = Program.ConvertToOneD(image.Data);
-
-                    neural.FeedForward(imageIn1DimArray);
-                    label2.Content = "Ai: " + neural.GetBiggestNumber();
+                    label2.Content = "Ai: " + Program.FindIndexOfHighestValue(neural.CalculateOutputs(dataPoint.inputs));
 
                     break;
                 }
@@ -88,52 +84,25 @@ namespace Neural_Network_WPF
 
         private void TrainAi(object sender, RoutedEventArgs e)
         {
-            double learningRate = 0.5;
+            double learningRate = 0.1;
             int Break = Convert.ToInt32(Samples.Text);
+            int evolution = 1;
 
-            int breakCounter = 0;
-            foreach (var image in MnistReader.ReadTrainingData())
+            for (int i = 0; i < evolution; i++)
             {
-                double[] imageIn1DimArray = new double[image.Data.Length];
-                imageIn1DimArray = Program.ConvertToOneD(image.Data);
-
-                double[] expected = new double[10];
-
-                for (int i = 0; i < 10; i++)
+                foreach (var dataPoint in MnistReader.ReadTrainingData())
                 {
-                    if (i != image.Label)
-                    {
-                        expected[i] = 0;
-                    }
-                    else
-                    {
-                        expected[i] = 1;
-                    }
-                }
+                    DataPoint[] dataPoints = new DataPoint[] { dataPoint };
+                    neural.Learn(dataPoints, learningRate);
 
-                neural.Train(imageIn1DimArray, expected, learningRate);
-
-                if (breakCounter == Break)
-                {
-                    break;
+                    if (Break <= 0)
+                    {
+                        break;
+                    }
+                    Break--;
                 }
-                breakCounter++;
+                Break = Convert.ToInt32(Samples.Text);
             }
-        }
-
-        private void ButtonLoad(object sender, RoutedEventArgs e)
-        {
-            neural.LoadFromFile(@"C:\Users\Moritz\source\repos\Math-lib\Neural_Network_WPF\Neural_Network_WPF\Saved\NeuralNetwork.txt");
-        }
-
-        private void ButtonSave(object sender, RoutedEventArgs e)
-        {
-            neural.SaveToFile(@"C:\Users\Moritz\source\repos\Math-lib\Neural_Network_WPF\Neural_Network_WPF\Saved\NeuralNetwork.txt");
-        }
-
-        private void Clear(object sender, RoutedEventArgs e)
-        {
-            neural = new NeuralNet(new int[] { 784, 16, 16, 10 });
         }
     }
 }
