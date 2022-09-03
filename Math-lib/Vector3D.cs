@@ -89,7 +89,7 @@ namespace Math_lib
 
             return new(Math.Abs(v.X),
                        Math.Abs(v.Y),
-                       Math.Abs(v.Z));
+                       Math.Abs(v.Z) );
         }
         public static Vector3D Ceiling(Vector3D v)
         {
