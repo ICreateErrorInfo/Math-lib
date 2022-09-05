@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetworkWPF", "Neural_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracing.Tests", "Raytracer.Tests\Raytracing.Tests.csproj", "{FD16A15E-2109-4811-B405-C7DD79160348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoarxMath", "MoarxMath\MoarxMath.csproj", "{CF0207B7-5572-49AF-B720-753739A628AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Math", "MoarxMath\Moarx.Math.csproj", "{698D5451-49DC-474D-81DC-A7B5864757C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,10 @@ Global
 		{FD16A15E-2109-4811-B405-C7DD79160348}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD16A15E-2109-4811-B405-C7DD79160348}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD16A15E-2109-4811-B405-C7DD79160348}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF0207B7-5572-49AF-B720-753739A628AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF0207B7-5572-49AF-B720-753739A628AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF0207B7-5572-49AF-B720-753739A628AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF0207B7-5572-49AF-B720-753739A628AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698D5451-49DC-474D-81DC-A7B5864757C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698D5451-49DC-474D-81DC-A7B5864757C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698D5451-49DC-474D-81DC-A7B5864757C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698D5451-49DC-474D-81DC-A7B5864757C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

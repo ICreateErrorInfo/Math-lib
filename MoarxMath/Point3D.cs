@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MoarxMath; 
+namespace Moarx.Math; 
 
 public readonly record struct Point3D<T>(T X, T Y, T Z) 
     where T :
