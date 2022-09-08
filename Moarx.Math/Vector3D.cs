@@ -48,7 +48,7 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
     {
         while (true)
         {
-            Vector3D<double> p = Random(-1, 1);
+            Vector3D<double> p = GetRandomVector(-1, 1);
             if (p.GetLengthSquared() >= 1) continue;
             return p;
         }
