@@ -4,6 +4,10 @@ namespace Moarx.Math {
 
     public static class Vector3DExtensions{
 
+        public static Vector3D<T> ToNormalized<T>(this Vector3D<T> v) where T : INumber<T>, IRootFunctions<T> {
+            return v / v.GetLength();
+        }
+
         public static T GetLength<T>(this Vector3D<T> v) where T : INumber<T>, IRootFunctions<T> {
             return T.Sqrt(v.GetLengthSquared());
         }
