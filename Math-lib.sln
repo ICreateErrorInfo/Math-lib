@@ -28,6 +28,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Math", "Moarx.Math\Moarx.Math.csproj", "{BBBBC7CA-F4F3-4469-A758-10C8C6E8DC18}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C95E7814-B8FD-43C9-BE7B-55F71D8FF97B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moarx.Math.Tests", "Moarx.Math.Tests\Moarx.Math.Tests.csproj", "{78E1775D-BEC6-45DA-BF7E-028692B2FCF6}"
 EndProject

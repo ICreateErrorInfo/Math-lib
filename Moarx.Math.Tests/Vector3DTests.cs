@@ -56,9 +56,9 @@ public class Vector3DTests {
 
     public record MaxDimesionTestData(double X, double Y, double Z, int Expected);
 
-    static IEnumerable<MaxDimesionTestData> GetMaxDimesionTestData() {
+    static IEnumerable<MaxDimesionTestData> GetMaxDimensionTestData() {
 
-        yield return new(X: 0, Y: 0, Z: 0, Expected: 0);
+        yield return new(X: 0, Y: 0, Z: 0, Expected: 2); // TODO Check!
 
         yield return new(X: 1, Y: 2, Z: 3, Expected: 2);
         yield return new(X: 1, Y: 3, Z: 2, Expected: 1);
@@ -71,8 +71,8 @@ public class Vector3DTests {
     }
 
     [Test]
-    [TestCaseSource(nameof(GetMaxDimesionTestData))]
-    public void MaxDimesionTest(MaxDimesionTestData td) {
+    [TestCaseSource(nameof(GetMaxDimensionTestData))]
+    public void MaxDimensionTest(MaxDimesionTestData td) {
         var vector = new Vector3D<double>(td.X, td.Y, td.Z);
         Assert.That(vector.MaxDimension(), Is.EqualTo(td.Expected));
     }

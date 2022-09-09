@@ -9,10 +9,14 @@ public class PointTests {
     public void TestCtor() {
 
         var p = new Point3D<double>();
-
         Assert.That(p.X, Is.Zero);
         Assert.That(p.Y, Is.Zero);
         Assert.That(p.Z, Is.Zero);
+
+        var p2 = new Point3D<int>();
+        Assert.That(p2.X, Is.Zero);
+        Assert.That(p2.Y, Is.Zero);
+        Assert.That(p2.Z, Is.Zero);
     }
 
     [Test]

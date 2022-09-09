@@ -4,8 +4,7 @@ namespace Moarx.Math;
 
 public readonly record struct Point3D<T>(T X, T Y, T Z)
     where T :
-    INumber<T>,
-    IRootFunctions<T>
+    INumber<T>
 {
     public static Point3D<T> Min(Point3D<T> p, Point3D<T> p1) => new()
     {
