@@ -48,10 +48,7 @@ public class Vector3DTests {
     [Test]
     [TestCaseSource(nameof(GetAbsTestData))]
     public void AbsTest(AbsTestData td) {
-
-        var v = td.Vector.Abs();
-
-        Assert.That(v, Is.EqualTo(td.Expect));
+        Assert.That(td.Vector.Abs(), Is.EqualTo(td.Expect));
     }
 
     public record MaxDimesionTestData(double X, double Y, double Z, int Expected);
