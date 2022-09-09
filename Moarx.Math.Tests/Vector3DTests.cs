@@ -55,7 +55,7 @@ public class Vector3DTests {
 
     static IEnumerable<MaxDimesionTestData> GetMaxDimensionTestData() {
 
-        yield return new(X: 0, Y: 0, Z: 0, Expected: 2); // TODO Check!
+        yield return new(X: 0, Y: 0, Z: 0, Expected: 2); // TODO hm Check!
 
         yield return new(X: 1, Y: 2, Z: 3, Expected: 2);
         yield return new(X: 1, Y: 3, Z: 2, Expected: 1);
