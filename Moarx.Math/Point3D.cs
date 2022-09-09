@@ -1,13 +1,9 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Moarx.Math;
 
 public readonly record struct Point3D<T>(T X, T Y, T Z)
     where T :
-    IAdditionOperators<T, T, T>,
-    ISubtractionOperators<T, T, T>,
-    IMultiplyOperators<T, T, T>,
     INumber<T>,
     IRootFunctions<T>
 {

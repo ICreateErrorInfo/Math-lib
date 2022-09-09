@@ -1,49 +1,50 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Moarx.Math; 
 
 public readonly record struct Vector3D<T>(T X, T Y, T Z) 
     where T : 
-    IAdditionOperators<T, T, T>, 
-    ISubtractionOperators<T, T, T>, 
-    IMultiplyOperators<T, T, T>,
     INumber<T>, 
     IRootFunctions<T>
 {
-    public static Vector3D<T> CrossProduct(Vector3D<T> vector1, Vector3D<T> vector2) => new() {
-        X = (vector1.Y * vector2.Z) - (vector1.Z * vector2.Y),
-        Y = (vector1.Z * vector2.X) - (vector1.X * vector2.Z),
-        Z = (vector1.X * vector2.Y) - (vector1.Y * vector2.X)
+    public Vector3D<T> CrossProduct(Vector3D<T> vector2) => new() {
+        X = (Y * vector2.Z) - (Z * vector2.Y),
+        Y = (Z * vector2.X) - (X * vector2.Z),
+        Z = (X * vector2.Y) - (Y * vector2.X)
     };
+
     public Vector3D<T> ToNormalized() => this / GetLength();
     public T GetLength() => T.Sqrt(GetLengthSquared());
     public T GetLengthSquared() => this * this;
-    public static Vector3D<T> Abs(Vector3D<T> vector) => new Vector3D<T>
+    public Vector3D<T> Abs() => new() 
     {
-        X = T.Abs(vector.X),
-        Y = T.Abs(vector.Y),
-        Z = T.Abs(vector.Z)
+        X = T.Abs(X),
+        Y = T.Abs(Y),
+        Z = T.Abs(Z)
     };
-    public static int MaxDimension(Vector3D<T> v) => (v.X > v.Y) ? ((v.X > v.Z) ? 0 : 2) : ((v.Y > v.Z) ? 1 : 2);
-    public static Vector3D<T> Permute(Vector3D<T> p, int x, int y, int z)
-    {
-        return new Vector3D<T>(p[x], p[y], p[z]);
-    }
-    public static Vector3D<T> GetReflectionVector(Vector3D<T> v, Vector3D<T> v1) => v - T.CreateChecked(2) * v * v1 * v1;
-    public Vector3D<T> Saturate()
-    {
-        T x = T.Min(T.CreateChecked(1), T.Max(T.CreateChecked(0), X));
-        T y = T.Min(T.CreateChecked(1), T.Max(T.CreateChecked(0), Y));
-        T z = T.Min(T.CreateChecked(1), T.Max(T.CreateChecked(0), Z));
 
-        return new Vector3D<T>(x, y, z);
+    //public int MaxDimension() => (X > Y) ? ((X > Z) ? 0 : 2) : ((Y > Z) ? 1 : 2);
+    public int MaxDimension() => (Z > Y) ? ((Z > X) ? 2 : 0) : ((Y > X) ? 1 : 0);
+
+    public Vector3D<T> Permute(int x, int y, int z) => new(X: this[x], Y: this[y], Z: this[z]);
+
+    public static Vector3D<T> GetReflectionVector(Vector3D<T> v, Vector3D<T> v1) => v - T.CreateChecked(2) * v * v1 * v1;
+    
+    public Vector3D<T> Saturate() => Clamp(min: T.CreateChecked(0), max: T.CreateChecked(1));
+
+    public Vector3D<T> Clamp(T min, T max) {
+        return new (
+            X: T.Clamp(X, min: min, max: max), 
+            Y: T.Clamp(Y, min: min, max: max), 
+            Z: T.Clamp(Z, min: min, max: max));
     }
+
     public static Vector3D<double> GetRandomVector(int min, int max)
     {
         Random r = new Random();
         return new Vector3D<double>(r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min);
     }
+
     public static Vector3D<double> GetRandomVectorInUnitSphere()
     {
         while (true)
