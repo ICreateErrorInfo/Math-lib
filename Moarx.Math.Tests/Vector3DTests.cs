@@ -1,8 +1,5 @@
 ﻿using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using System.Runtime.Intrinsics;
-using static Moarx.Math.Tests.Vector3DTests;
 
 namespace Moarx.Math.Tests;
 
