@@ -24,15 +24,15 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
 
     public Vector3D<T> Permute(int x, int y, int z) => new(X: this[x], Y: this[y], Z: this[z]);
 
-    // TODO Evtl. in eigene Extension class verschiebenn
-    public static Vector3D<T> GetReflectionVector(Vector3D<T> v, Vector3D<T> v1) => v - T.CreateChecked(2) * v * v1 * v1;
-
     public Vector3D<T> Clamp(T min, T max) {
         return new(
             X: T.Clamp(X, min: min, max: max),
             Y: T.Clamp(Y, min: min, max: max),
             Z: T.Clamp(Z, min: min, max: max));
     }
+
+    // TODO Evtl. in eigene Extension class verschiebenn
+    public static Vector3D<T> GetReflectionVector(Vector3D<T> v, Vector3D<T> v1) => v - T.CreateChecked(2) * v * v1 * v1;
 
     public static Vector3D<double> GetRandomVector(int min, int max) {
         Random r = new Random();
@@ -47,6 +47,7 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
             return p;
         }
     }
+
 
     //operator overload
     public static Vector3D<T> operator +(Vector3D<T> left, Vector3D<T> right) => new() {
