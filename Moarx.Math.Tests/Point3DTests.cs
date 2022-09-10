@@ -3,7 +3,7 @@
 namespace Moarx.Math.Tests; 
 
 [TestFixture]
-public class PointTests {
+public class Point3DTests {
 
     [Test]
     public void TestCtor() {

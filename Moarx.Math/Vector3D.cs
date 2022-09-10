@@ -20,7 +20,6 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
     };
 
     public int MaxDimension() => (X > Y) ? ((X > Z) ? 0 : 2) : ((Y > Z) ? 1 : 2);
-    //public int MaxDimension() => (Z > Y) ? ((Z > X) ? 2 : 0) : ((Y > X) ? 1 : 0);
 
     public Vector3D<T> Permute(int x, int y, int z) => new(X: this[x], Y: this[y], Z: this[z]);
 

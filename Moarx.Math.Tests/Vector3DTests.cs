@@ -59,7 +59,7 @@ public class Vector3DTests {
 
     static IEnumerable<MaxDimesionTestData> GetMaxDimensionTestData() {
 
-        yield return new(X: 0, Y: 0, Z: 0, Expected: 2); // TODO hm Check!
+        yield return new(X: 0, Y: 0, Z: 0, Expected: 2);
 
         yield return new(X: 1, Y: 2, Z: 3, Expected: 2);
         yield return new(X: 1, Y: 3, Z: 2, Expected: 1);
@@ -171,5 +171,146 @@ public class Vector3DTests {
     public void ClampTest(ClampTestData<double> td) {
         var vector = td.Vector;
         Assert.That(vector.Clamp(td.Min, td.Max), Is.EqualTo(td.Expected));
+    }
+
+    public record OperaterTestData<T>(Vector3D<T> Vector1, Vector3D<T> Vector2, Vector3D<T> Expected) where T: INumber<T>;
+
+    static IEnumerable<OperaterTestData<double>> GetPlusOperatorTestData() {
+
+        yield return new(Vector1:  new(1, 0, 2),
+                         Vector2:  new(2, 1, 5),
+                         Expected: new(3, 1, 7));
+
+        yield return new(Vector1:  new(-1, 0, 2),
+                         Vector2:  new(2, -1, 5),
+                         Expected: new(1, -1, 7));
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetPlusOperatorTestData))]
+    public void PlusOperatorTest(OperaterTestData<double> td) {
+        var vector1 = td.Vector1;
+        var vector2 = td.Vector2;
+        Assert.That(vector1 + vector2, Is.EqualTo(td.Expected));
+    }
+
+    static IEnumerable<OperaterTestData<double>> GetMinusOperatorTestData() {
+
+        yield return new(Vector1:  new(1, 0, 2),
+                         Vector2:  new(2, 1, 5),
+                         Expected: new(-1, -1, -3));
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetMinusOperatorTestData))]
+    public void MinusOperatorTest(OperaterTestData<double> td) {
+        var vector1 = td.Vector1;
+        var vector2 = td.Vector2;
+        Assert.That(vector1 - vector2, Is.EqualTo(td.Expected));
+    }
+
+    public record UnaryMinusOperatorTestData<T>(Vector3D<T> Vector, Vector3D<T> Expected) where T: INumber<T>;
+
+    static IEnumerable<UnaryMinusOperatorTestData<double>> GetUnaryMinusOperatorTestData() {
+
+        yield return new(Vector: new(1, 0, -2),
+                         Expected: new(-1, 0, 2));
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetUnaryMinusOperatorTestData))]
+    public void UnaryMinusOperatorTest(UnaryMinusOperatorTestData<double> td) {
+        var vector1 = td.Vector;
+        Assert.That(-vector1, Is.EqualTo(td.Expected));
+    }
+
+    public record DotProductTestData<T>(Vector3D<T> Vector1, Vector3D<T> Vector2, T Expected) where T: INumber<T>;
+
+    static IEnumerable<DotProductTestData<double>> GetDotProductTestData() {
+
+        yield return new(Vector1: new(1, 4, 2),
+                         Vector2: new(2, 2, 7),
+                         Expected: 24);
+
+        yield return new(Vector1: new(0, 0, 0),
+                         Vector2: new(2, 2, 7),
+                         Expected: 0);
+
+        yield return new(Vector1: new(1, 4, 2),
+                         Vector2: new(0, 0, 0),
+                         Expected: 0);
+        yield return new(Vector1: new(1, 4, -2),
+                         Vector2: new(2, 2, 7),
+                         Expected: -4);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetDotProductTestData))]
+    public void DotProductTest(DotProductTestData<double> td) {
+        var vector1 = td.Vector1;
+        var vector2 = td.Vector2;
+        Assert.That(vector1 * vector2, Is.EqualTo(td.Expected));
+    }
+
+    public record OperaterScalarTestData<T>(Vector3D<T> Vector1, T Scalar, Vector3D<T> Expected) where T : INumber<T>;
+
+    static IEnumerable<OperaterScalarTestData<double>> GetMultiplyOperatorTestData() {
+
+        yield return new(Vector1: new(1, 4, 6),
+                         Scalar: 8,
+                         Expected: new(8, 32, 48));
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetMultiplyOperatorTestData))]
+    public void MultiplyOperatorTest(OperaterScalarTestData<double> td) {
+        var vector1 = td.Vector1;
+        Assert.That(vector1 * td.Scalar, Is.EqualTo(td.Expected));
+        Assert.That(td.Scalar * vector1, Is.EqualTo(td.Expected));
+    }
+
+    static IEnumerable<OperaterScalarTestData<double>> GetDivisionOperatorTestData() {
+
+        yield return new(Vector1: new(8, 32, 48),
+                         Scalar: 8,
+                         Expected: new(1, 4, 6));
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetDivisionOperatorTestData))]
+    public void DivisionOperatorTest(OperaterScalarTestData<double> td) {
+        var vector1 = td.Vector1;
+        Assert.That(vector1 / td.Scalar, Is.EqualTo(td.Expected));
+    }
+
+    public record AccessOperatorTestData<T>(Vector3D<T> Vector, int Index, T Expected) where T : INumber<T>;
+
+    static IEnumerable<AccessOperatorTestData<double>> GetAccessOperatorTestData() {
+
+        yield return new(Vector: new(2, 390, 19),
+                         Index: 1,
+                         Expected: 390);
+
+
+        yield return new(Vector: new(2, 390, 19),
+                         Index: 2,
+                         Expected: 19);
+
+        yield return new(Vector: new(2, 390, 19),
+                 Index: 0,
+                 Expected: 2);
+
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetAccessOperatorTestData))]
+    public void AccessOperatorTest(AccessOperatorTestData<double> td) {
+        var vector = td.Vector;
+        Assert.That(vector[td.Index], Is.EqualTo(td.Expected));
     }
 }
