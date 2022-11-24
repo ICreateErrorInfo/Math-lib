@@ -114,7 +114,7 @@ namespace Math_lib
         }
         public static Matrix PointAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            Vector3D newForward = target - pos;
+            Vector3D newForward = target - pos.ToVector();
             newForward = Vector3D.Normalize(newForward);
 
             Vector3D a = newForward * Vector3D.Dot(up, newForward);
@@ -134,13 +134,13 @@ namespace Math_lib
         }
         public static Matrix LookAt(Point3D pos, Vector3D target, Vector3D up)
         {
-            var zaxis = Vector3D.Normalize((target - pos));
-            var xaxis = Vector3D.Normalize((Vector3D.Cross(up, zaxis)));
+            var zaxis = Vector3D.Normalize(target - pos.ToVector());
+            var xaxis = Vector3D.Normalize(Vector3D.Cross(up, zaxis));
             var yaxis = Vector3D.Cross(zaxis, xaxis);
 
-            double ta = -Vector3D.Dot(xaxis, (Vector3D)pos);
-            double tb = -Vector3D.Dot(yaxis, (Vector3D)pos);
-            double tc = -Vector3D.Dot(zaxis, (Vector3D)pos);
+            double ta = -Vector3D.Dot(xaxis, pos.ToVector());
+            double tb = -Vector3D.Dot(yaxis, pos.ToVector());
+            double tc = -Vector3D.Dot(zaxis, pos.ToVector());
 
             return new Matrix(new[,]
             {

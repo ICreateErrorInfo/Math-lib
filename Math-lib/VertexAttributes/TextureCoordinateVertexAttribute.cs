@@ -17,7 +17,7 @@ namespace Math_lib.VertexAttributes
 
         public override VertexAttribute Add(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T + ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
 
-        public override VertexAttribute Div(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T / ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
+        public override VertexAttribute Div(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(new Point2D(T.X / ((TextureCoordinateVertexAttribute)vertexAttribute2).T.X, T.Y / ((TextureCoordinateVertexAttribute)vertexAttribute2).T.Y));
 
         public override VertexAttribute Mul(VertexAttribute vertexAttribute2) => new TextureCoordinateVertexAttribute(T * ((TextureCoordinateVertexAttribute)vertexAttribute2).T);
 
@@ -36,12 +36,12 @@ namespace Math_lib.VertexAttributes
 
         public override VertexAttribute AddDouble(double d)
         {
-            return new TextureCoordinateVertexAttribute(T + d);
+            return new TextureCoordinateVertexAttribute(T + new Point2D(d));
         }
 
         public override VertexAttribute SubDouble(double d)
         {
-            return new TextureCoordinateVertexAttribute(T - d);
+            return new TextureCoordinateVertexAttribute(T - new Vector2D(d));
         }
 
         public override VertexAttribute MulDouble(double d)

@@ -78,7 +78,7 @@ namespace Raytracing.Materials
 
         public override Vector3D Value(double u, double v, Point3D p)
         {
-            return new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * (Vector3D)p)));
+            return new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
         }
     }
 }

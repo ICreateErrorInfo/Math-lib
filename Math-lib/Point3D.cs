@@ -45,6 +45,9 @@ namespace Math_lib
             }
             return false;
         }
+        public Vector3D ToVector() {
+            return new Vector3D(X, Y, Z);
+        }
         public static double Distance(Point3D p, Point3D p1)
         {
             Debug.Assert(IsNaN(p) || IsNaN(p1));
@@ -116,46 +119,15 @@ namespace Math_lib
 
             return new Point3D(p[x], p[y], p[z]);
         }
-        public static explicit operator Vector3D(Point3D a)
-        {
-            Debug.Assert(IsNaN(a));
-
-            return new Vector3D() { X = a.X, Y = a.Y, Z = a.Z };
-        }
-        public static explicit operator Point2D(Point3D a)
-        {
-            Debug.Assert(IsNaN(a));
-
-            return new Point2D() { X = a.X, Y = a.Y};
-        }
 
         //overrides +
-        public static Point3D operator +(Point3D p, Point3D p1)
-        {
+        public static Point3D operator +(Point3D p, Point3D p1) {
             Debug.Assert(IsNaN(p));
             Debug.Assert(IsNaN(p1));
 
             return new Point3D(p.X + p1.X,
                                p.Y + p1.Y,
                                p.Z + p1.Z);
-        }
-        public static Point3D operator +(Point3D p, double d) 
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(!double.IsNaN(d));
-
-            return new Point3D(p.X + d,
-                               p.Y + d,
-                               p.Z + d);
-        }
-        public static Point3D operator +(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(!double.IsNaN(d));
-
-            return new Point3D(p.X + d,
-                               p.Y + d,
-                               p.Z + d);
         }
         public static Point3D operator +(Point3D p, Vector3D v)
         {
@@ -182,24 +154,6 @@ namespace Math_lib
             return new Vector3D(p.X - p1.X,
                                 p.Y - p1.Y,
                                 p.Z - p1.Z);
-        }
-        public static Point3D operator -(Point3D p, double d)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(!double.IsNaN(d));
-
-            return new Point3D(p.X - d,
-                               p.Y - d,
-                               p.Z - d);
-        }
-        public static Point3D operator -(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(!double.IsNaN(d));
-
-            return new Point3D(d - p.X,
-                               d - p.Y,
-                               d - p.Z);
         }
         public static Point3D operator -(Point3D p, Vector3D v)
         {
@@ -233,35 +187,11 @@ namespace Math_lib
                                p.Y * d,
                                p.Z * d);
         }
-        public static Point3D operator *(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-
-            return new Point3D(p.X * d,
-                               p.Y * d,
-                               p.Z * d);
-        }
-        public static Point3D operator *(Point3D p, Vector3D v)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(Vector3D.IsNaN(v));
-
-            return new(p.X * v.X,
-                       p.Y * v.Y,
-                       p.Z * v.Z);
+        public static Point3D operator *(double d, Point3D p) {
+            return p * d;
         }
 
         //overrides /
-        public static Point3D operator /(Point3D p, Point3D p1)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(IsNaN(p1));
-            Debug.Assert(p1.X != 0 || p1.Y != 0 || p1.Z != 0);
-
-            return new Point3D(p.X / p1.X,
-                               p.Y / p1.Y,
-                               p.Z / p1.Z);
-        }
         public static Point3D operator /(Point3D p, double d)
         {
             Debug.Assert(IsNaN(p));
@@ -273,91 +203,7 @@ namespace Math_lib
                                p.Y * inv,
                                p.Z * inv);
         }
-        public static Point3D operator /(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(p.X != 0 || p.Y != 0 || p.Z != 0);
 
-            return new Point3D(d / p.X,
-                               d / p.Y,
-                               d / p.Z);
-        }
-        public static Point3D operator /(Point3D p, Vector3D v)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(Vector3D.IsNaN(v));
-            Debug.Assert(v.X != 0 || v.Y != 0 || v.Z != 0);
-
-            return new(p.X / v.X,
-                       p.Y / v.Y,
-                       p.Z / v.Z);
-        }
-
-        //overrides >
-        public static bool operator >(Point3D p, Point3D p1)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(IsNaN(p1));
-
-            if (p.X > p1.X && p.Y > p1.Y && p.Z > p1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Point3D p, double d)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (p.X > d && p.Y > d && p.Z > d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (d > p.X && d > p.Y && d > p.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        //overrides <
-        public static bool operator <(Point3D p, Point3D p1)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(IsNaN(p1));
-
-            if (p > p1)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator <(Point3D p, double d)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (p > d)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator <(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (d > p)
-            {
-                return false;
-            }
-            return true;
-        }
 
         //overrides ==
         public static bool operator ==(Point3D p, Point3D p1)
@@ -423,72 +269,6 @@ namespace Math_lib
                 return false;
             }
             return true;
-        }
-
-        //overides <=
-        public static bool operator <=(Point3D p, Point3D p1)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(IsNaN(p1));
-
-            if (p.X <= p1.X && p.Y <= p1.Y && p.Z <= p1.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(Point3D p, double d)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (p.X <= d && p.Y <= d && p.Z <= d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (d <= p.X && d <= p.Y && d <= p.Z)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        //overrides >=
-        public static bool operator >=(Point3D p, Point3D p1)
-        {
-            Debug.Assert(IsNaN(p));
-            Debug.Assert(IsNaN(p1));
-
-            if (p > p1 || p == p1)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Point3D p, double d)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (p > d || p == d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(double d, Point3D p)
-        {
-            Debug.Assert(IsNaN(p));
-
-            if (d > p || d == p)
-            {
-                return true;
-            }
-            return false;
         }
 
         //overrides []

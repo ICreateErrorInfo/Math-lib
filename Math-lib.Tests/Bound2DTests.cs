@@ -84,7 +84,7 @@ namespace Math_lib.Tests
 
             Ray r = new Ray(origin, direction);
 
-            Vector3D invDir = 1 / r.D;
+            Vector3D invDir = new Vector3D(1 / r.D.X, 1 / r.D.Y, 1 / r.D.Z);
             int[] dirIsNeg = new int[] { 0, 0, 0 };
 
             bool hitFound = b.IntersectP(r, invDir, dirIsNeg);
@@ -270,8 +270,12 @@ namespace Math_lib.Tests
 
             Vector2D o = p - pMin;
 
-            if (pMax.X > pMin.X) o /= new Vector2D(pMax.X - pMin.X, 1);
-            if (pMax.Y > pMin.Y) o /= new Vector2D(1, pMax.Y - pMin.Y);
+            double newX = o.X, newY = o.Y;
+
+            if (pMax.X > pMin.X) newX /= pMax.X - pMin.X;
+            if (pMax.Y > pMin.Y) newY /= pMax.Y - pMin.Y;
+
+            o = new Vector2D(newX, newY);
 
             Assert.That(b1.Offset(p), Is.EqualTo(o));
         }

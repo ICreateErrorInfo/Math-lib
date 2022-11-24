@@ -27,9 +27,9 @@ namespace Raytracing.Shapes
             Point3D p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
             //Translate
-            Point3D p0t = p0 - (Vector3D)ray.O;
-            Point3D p1t = p1 - (Vector3D)ray.O;
-            Point3D p2t = p2 - (Vector3D)ray.O;
+            Point3D p0t = p0 - ray.O.ToVector();
+            Point3D p1t = p1 - ray.O.ToVector();
+            Point3D p2t = p2 - ray.O.ToVector();
 
             //Permute
             int kz = Vector3D.MaxDimension(Vector3D.Abs(ray.D));

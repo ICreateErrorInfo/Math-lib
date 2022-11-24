@@ -83,7 +83,7 @@ namespace Math_lib.Tests
 
             Ray r = new Ray(origin, direction);
 
-            Vector3D invDir = 1 / r.D;
+            Vector3D invDir = new Vector3D(1 / r.D.X, 1 / r.D.Y, 1 / r.D.Z);
             bool[] dirIsNeg = new bool[] { false, false, false };
 
             bool hitFound = b.IntersectP(r, invDir, dirIsNeg);
@@ -273,9 +273,16 @@ namespace Math_lib.Tests
 
             Vector3D o = p - pMin;
 
-            if (pMax.X > pMin.X) o /= new Vector3D(pMax.X - pMin.X, 1, 1);
-            if (pMax.Y > pMin.Y) o /= new Vector3D(1, pMax.Y - pMin.Y, 1);
-            if (pMax.Z > pMin.Z) o /= new Vector3D(1, 1, pMax.Z - pMin.Z);
+            double newX = o.X, newY = o.Y, newZ = o.Z;
+
+            if (pMax.X > pMin.X)
+                newX /= pMax.X - pMin.X;
+            if (pMax.Y > pMin.Y)
+                newY /= pMax.Y - pMin.Y;
+            if (pMax.Z > pMin.Z)
+                newZ /= pMax.Z - pMin.Z;
+
+            o = new Vector3D(newX, newY, newZ);
 
             Assert.That(b1.Offset(p), Is.EqualTo(o));
         }

@@ -138,26 +138,6 @@ namespace Math_lib.Tests
             Assert.That(v + v1, Is.EqualTo(erg));
         }
         [Test]
-        public void TestOpPlusPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 5;
-
-            var erg = new Point3D(8, 9, 10);
-
-            Assert.That(v + v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpPlusDP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 5;
-
-            var erg = new Point3D(8, 9, 10);
-
-            Assert.That(v1 + v, Is.EqualTo(erg));
-        }
-        [Test]
         public void TestOpPlusPV()
         {
             var v = new Point3D(3, 4, 5);
@@ -187,26 +167,6 @@ namespace Math_lib.Tests
             var erg = new Vector3D(-2, -2, -2);
 
             Assert.That(v - v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpMinusPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 5;
-
-            var erg = new Point3D(-2, -1, 0);
-
-            Assert.That(v - v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpMinusDP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 5;
-
-            var erg = new Point3D(2, 1, 0);
-
-            Assert.That(v1 - v, Is.EqualTo(erg));
         }
         [Test]
         public void TestOpMinusPV()
@@ -259,28 +219,8 @@ namespace Math_lib.Tests
 
             Assert.That(v1 * v, Is.EqualTo(erg));
         }
-        [Test]
-        public void TestOpMulPV()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Vector3D(5, 6, 7);
-
-            var erg = new Point3D(15, 24, 35);
-
-            Assert.That(v * v1, Is.EqualTo(erg));
-        }
 
         // /
-        [Test]
-        public void TestOpDivPP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Point3D(5, 6, 7);
-
-            var erg = new Point3D(3.0 / 5, 4.0 / 6, 5.0 / 7);
-
-            Assert.That(v / v1, Is.EqualTo(erg));
-        }
         [Test]
         public void TestOpDivPD()
         {
@@ -292,78 +232,6 @@ namespace Math_lib.Tests
             var erg = new Point3D(3.0 * inv, 4.0 * inv, 5.0 * inv);
 
             Assert.That(v / v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpDivDP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 5;
-
-            var erg = new Point3D(5.0 / 3, 5.0 / 4, 5.0 / 5);
-
-            Assert.That(v1 / v, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpDivPV()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Vector3D(5, 6, 7);
-
-            var erg = new Point3D(3.0 / 5, 4.0 / 6, 5.0 / 7);
-
-            Assert.That(v / v1, Is.EqualTo(erg));
-        }
-
-        // >
-        [Test]
-        public void TestOpGreaterThanPP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Point3D(5, 6, 7);
-
-            Assert.That(v > v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterThanPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v > v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterThanDP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v1 > v, Is.EqualTo(true));
-        }
-
-        // <
-        [Test]
-        public void TestOpLessThanPP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Point3D(5, 6, 7);
-
-            Assert.That(v < v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessThanPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v < v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessThanDP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v1 < v, Is.EqualTo(false));
         }
 
         // ==
@@ -418,57 +286,6 @@ namespace Math_lib.Tests
             Assert.That(v1 != v, Is.EqualTo(false));
         }
 
-        // <=
-        [Test]
-        public void TestOpLessEqualPP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Point3D(2, 4, 5);
-
-            Assert.That(v <= v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpLessEqualPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v <= v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessEqualDP()
-        {
-            var v = new Point3D(5, 5, 5);
-            var v1 = 5;
-
-            Assert.That(v1 <= v, Is.EqualTo(true));
-        }
-
-        // >=
-        [Test]
-        public void TestOpGreaterEqualPP()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = new Point3D(2, 3, 4);
-
-            Assert.That(v >= v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpGreaterEqualPD()
-        {
-            var v = new Point3D(3, 4, 5);
-            var v1 = 6;
-
-            Assert.That(v >= v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterEqualDP()
-        {
-            var v = new Point3D(5, 5, 5);
-            var v1 = 5;
-
-            Assert.That(v1 >= v, Is.EqualTo(true));
-        }
 
         //[]
         [Test]

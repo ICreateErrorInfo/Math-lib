@@ -172,36 +172,6 @@ namespace Math_lib.Tests
             Assert.That(v + v1, Is.EqualTo(erg));
         }
         [Test]
-        public void TestOpPlusVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 5;
-
-            var erg = new Vector2D(8, 9);
-
-            Assert.That(v + v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpPlusDV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 5;
-
-            var erg = new Vector2D(8, 9);
-
-            Assert.That(v1 + v, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpPlusVP()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Point2D(5, 6);
-
-            var erg = new Vector2D(8, 10);
-
-            Assert.That(v + v1, Is.EqualTo(erg));
-        }
-        [Test]
         public void TestOpPlus()
         {
             var v = new Vector2D(3, 4);
@@ -217,36 +187,6 @@ namespace Math_lib.Tests
         {
             var v = new Vector2D(3, 4);
             var v1 = new Vector2D(5, 6);
-
-            var erg = new Vector2D(-2, -2);
-
-            Assert.That(v - v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpMinusVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 5;
-
-            var erg = new Vector2D(-2, -1);
-
-            Assert.That(v - v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpMinusDV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 5;
-
-            var erg = new Vector2D(2, 1);
-
-            Assert.That(v1 - v, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpMinusVP()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Point2D(5, 6);
 
             var erg = new Vector2D(-2, -2);
 
@@ -293,28 +233,8 @@ namespace Math_lib.Tests
 
             Assert.That(v1 * v, Is.EqualTo(erg));
         }
-        [Test]
-        public void TestOpMulVP()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Point2D(5, 6);
-
-            var erg = new Vector2D(15, 24);
-
-            Assert.That(v * v1, Is.EqualTo(erg));
-        }
 
         // /
-        [Test]
-        public void TestOpDivVV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Vector2D(5, 6);
-
-            var erg = new Vector2D(3.0 / 5, 4.0 / 6);
-
-            Assert.That(v / v1, Is.EqualTo(erg));
-        }
         [Test]
         public void TestOpDivVD()
         {
@@ -326,78 +246,6 @@ namespace Math_lib.Tests
             var erg = new Vector2D(3.0 * inv, 4.0 * inv);
 
             Assert.That(v / v1, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpDivDV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 5;
-
-            var erg = new Vector2D(5.0 / 3, 5.0 / 4);
-
-            Assert.That(v1 / v, Is.EqualTo(erg));
-        }
-        [Test]
-        public void TestOpDivVP()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Point2D(5, 6);
-
-            var erg = new Vector2D(3.0 / 5, 4.0 / 6);
-
-            Assert.That(v / v1, Is.EqualTo(erg));
-        }
-
-        // >
-        [Test]
-        public void TestOpGreaterThanVV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Vector2D(5, 6);
-
-            Assert.That(v > v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterThanVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v > v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterThanDV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v1 > v, Is.EqualTo(true));
-        }
-
-        // <
-        [Test]
-        public void TestOpLessThanVV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Vector2D(5, 6);
-
-            Assert.That(v < v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessThanVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v < v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessThanDV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v1 < v, Is.EqualTo(false));
         }
 
         // ==
@@ -452,57 +300,6 @@ namespace Math_lib.Tests
             Assert.That(v1 != v, Is.EqualTo(false));
         }
 
-        // <=
-        [Test]
-        public void TestOpLessEqualVV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Vector2D(2, 4);
-
-            Assert.That(v <= v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpLessEqualVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v <= v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpLessEqualDV()
-        {
-            var v = new Vector2D(5, 5);
-            var v1 = 5;
-
-            Assert.That(v1 <= v, Is.EqualTo(true));
-        }
-
-        // >=
-        [Test]
-        public void TestOpGreaterEqualVV()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = new Vector2D(2, 3);
-
-            Assert.That(v >= v1, Is.EqualTo(true));
-        }
-        [Test]
-        public void TestOpGreaterEqualVD()
-        {
-            var v = new Vector2D(3, 4);
-            var v1 = 6;
-
-            Assert.That(v >= v1, Is.EqualTo(false));
-        }
-        [Test]
-        public void TestOpGreaterEqualDV()
-        {
-            var v = new Vector2D(5, 5);
-            var v1 = 5;
-
-            Assert.That(v1 >= v, Is.EqualTo(true));
-        }
 
         //[]
         [Test]

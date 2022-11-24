@@ -75,7 +75,7 @@ namespace Projection
             var sphere = GetPlain(radius, latDiv, longDiv);
             foreach(var element in sphere.vertices)
             {
-                element.AddAttribute(new NormalVertexAttribute(Vector3D.Normalize(((Vector3D)element.Pos))));
+                element.AddAttribute(new NormalVertexAttribute(Vector3D.Normalize((element.Pos.ToVector()))));
             }
             return sphere;
         }

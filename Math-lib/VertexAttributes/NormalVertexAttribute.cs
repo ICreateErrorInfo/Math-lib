@@ -25,7 +25,11 @@ namespace Math_lib.VertexAttributes
         public override VertexAttribute Div(VertexAttribute vertexAttribute2)
         {
             var other = (NormalVertexAttribute)vertexAttribute2;
-            return new NormalVertexAttribute(this.N / other.N);
+            return new NormalVertexAttribute(new Vector3D(
+                N.X / other.N.X,
+                N.Y / other.N.Y,
+                N.Z / other.N.Z
+                ));
         }
 
         public override VertexAttribute Mul(VertexAttribute vertexAttribute2)
@@ -51,12 +55,12 @@ namespace Math_lib.VertexAttributes
 
         public override VertexAttribute AddDouble(double d)
         {
-            return new NormalVertexAttribute(N + d);
+            return new NormalVertexAttribute(N + new Vector3D(d));
         }
 
         public override VertexAttribute SubDouble(double d)
         {
-            return new NormalVertexAttribute(N - d);
+            return new NormalVertexAttribute(N - new Vector3D(d));
         }
 
         public override VertexAttribute MulDouble(double d)

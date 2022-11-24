@@ -85,7 +85,7 @@ namespace Math_lib
         }
         public static Vertex operator /(Vertex v0, Vertex v1)
         {
-            Vertex vertexOut = new(v0.Pos / v1.Pos);
+            Vertex vertexOut = new(new(v0.Pos.X / v1.Pos.X, v0.Pos.Y / v1.Pos.Y, v0.Pos.Z / v1.Pos.Z));
 
             var attrv0 = v0.Attributes;
             var attrv1 = v1.Attributes;
@@ -100,7 +100,7 @@ namespace Math_lib
 
         public static Vertex operator +(Vertex v0, double v1)
         {
-            Vertex vertexOut = new(v0.Pos + v1);
+            Vertex vertexOut = new(v0.Pos + new Vector3D(v1));
 
             foreach (var vaVal in v0.Attributes.Values)
             {
@@ -112,7 +112,7 @@ namespace Math_lib
         }
         public static Vertex operator -(Vertex v0, double v1)
         {
-            Vertex vertexOut = new(v0.Pos - v1);
+            Vertex vertexOut = new(v0.Pos - new Vector3D(v1));
 
             foreach (var vaVal in v0.Attributes.Values)
             {

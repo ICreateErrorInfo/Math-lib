@@ -125,29 +125,37 @@ namespace Math_lib
             Debug.Assert(IsNaN(b));
             Debug.Assert(IsNaN(b1));
 
-            return b.pMax >= b1.pMin && b.pMin <= b1.pMax;
+            bool x = (b.pMax.X >= b1.pMin.X) && (b.pMin.X <= b1.pMax.X);
+            bool y = (b.pMax.Y >= b1.pMin.Y) && (b.pMin.Y <= b1.pMax.Y);
+            bool z = (b.pMax.Z >= b1.pMin.Z) && (b.pMin.Z <= b1.pMax.Z);
+
+            return (x && y && z);
         }
         public static bool Inside(Point3D p, Bounds3D b)
         {
             Debug.Assert(Point3D.IsNaN(p));
             Debug.Assert(IsNaN(b));
 
-            return p >= b.pMin && p <= b.pMax;
+            return (p.X >= b.pMin.X && p.X <= b.pMax.X &&
+                    p.Y >= b.pMin.Y && p.Y <= b.pMax.Y &&
+                    p.Z >= b.pMin.Z && p.Z <= b.pMax.Z);
         }
         public bool InsideExclusive(Point3D p, Bounds3D b)
         {
             Debug.Assert(Point3D.IsNaN(p));
             Debug.Assert(IsNaN(b));
 
-            return p >= pMin && p < b.pMax;
+            return (p.X >= b.pMin.X && p.X < b.pMax.X &&
+                    p.Y >= b.pMin.Y && p.Y < b.pMax.Y &&
+                    p.Z >= b.pMin.Z && p.Z < b.pMax.Z);
         }
         public static Bounds3D Expand(Bounds3D b, double delta)
         {
             Debug.Assert(IsNaN(b));
             Debug.Assert(!double.IsNaN(delta));
 
-            return new Bounds3D(b.pMin - delta,
-                                b.pMax + delta);
+            return new Bounds3D(b.pMin - new Vector3D(delta),
+                                b.pMax + new Point3D(delta));
         }
         public Vector3D Diagonal()
         {
@@ -198,11 +206,13 @@ namespace Math_lib
 
             Vector3D o = p - pMin;
 
-            if (pMax.X > pMin.X) o /= new Vector3D(pMax.X - pMin.X, 1, 1);
-            if (pMax.Y > pMin.Y) o /= new Vector3D(1, pMax.Y - pMin.Y, 1);
-            if (pMax.Z > pMin.Z) o /= new Vector3D(1, 1, pMax.Z - pMin.Z);
+            double newX = o.X, newY = o.Y, newZ = o.Z;
 
-            return o;
+            if (pMax.X > pMin.X) newX /= pMax.X - pMin.X;
+            if (pMax.Y > pMin.Y) newY /= pMax.Y - pMin.Y;
+            if (pMax.Z > pMin.Z) newZ /= pMax.Z - pMin.Z;
+
+            return new Vector3D(newX, newY, newZ);
         }
 
 

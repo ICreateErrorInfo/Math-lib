@@ -113,8 +113,12 @@ namespace Math_lib
 
             Vector2D o = p - pMin;
 
-            if (pMax.X > pMin.X) o /= new Vector2D(pMax.X - pMin.X, 1);
-            if (pMax.Y > pMin.Y) o /= new Vector2D(1, pMax.Y - pMin.Y);
+            double newX = o.X, newY = o.Y;
+
+            if (pMax.X > pMin.X) newX /= pMax.X - pMin.X;
+            if (pMax.Y > pMin.Y) newY /= pMax.Y - pMin.Y;
+
+            o = new Vector2D(newX, newY);
 
             return o;
         }
@@ -147,29 +151,34 @@ namespace Math_lib
             Debug.Assert(IsNaN(b1));
             Debug.Assert(IsNaN(b2));
 
-            return b1.pMax >= b2.pMin && b1.pMin <= b2.pMax;
+            bool x = (b1.pMax.X >= b2.pMin.X) && (b1.pMin.X <= b2.pMax.X);
+            bool y = (b1.pMax.Y >= b2.pMin.Y) && (b1.pMin.Y <= b2.pMax.Y);
+
+            return x && y;
         }
         public static bool Inside(Point2D p, Bounds2D b)
         {
             Debug.Assert(Point2D.IsNaN(p));
             Debug.Assert(IsNaN(b));
 
-            return p >= b.pMin && p <= b.pMax;
+            return (p.X >= b.pMin.X && p.X <= b.pMax.X &&
+                    p.Y >= b.pMin.Y && p.Y <= b.pMax.Y);
         }
         public bool InsideExclusive(Point2D p, Bounds2D b)
         {
             Debug.Assert(Point2D.IsNaN(p));
             Debug.Assert(IsNaN(b));
 
-            return p >= pMin && p < b.pMax;
+            return (p.X >= b.pMin.X && p.X < b.pMax.X &&
+                    p.Y >= b.pMin.Y && p.Y < b.pMax.Y );
         }
         public static Bounds2D Expand(Bounds2D b, double delta)
         {
             Debug.Assert(IsNaN(b));
             Debug.Assert(!double.IsNaN(delta));
 
-            return new Bounds2D(b.pMin - delta,
-                                b.pMax + delta);
+            return new Bounds2D(b.pMin - new Vector2D(delta),
+                                b.pMax + new Vector2D(delta));
         }
         public double Volume()
         {

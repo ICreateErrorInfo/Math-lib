@@ -41,8 +41,8 @@ namespace Raytracing.Shapes
             Ray rTransformed = WorldToObject.m * ray;
 
             var a = rTransformed.D.GetLengthSqrt();
-            var halfB = Vector3D.Dot((Vector3D)rTransformed.O, rTransformed.D);
-            var c = ((Vector3D)rTransformed.O).GetLengthSqrt() - _radius * _radius;
+            var halfB = Vector3D.Dot(rTransformed.O.ToVector(), rTransformed.D);
+            var c = (rTransformed.O.ToVector()).GetLengthSqrt() - _radius * _radius;
 
             double t0;
             if(!Mathe.SolveQuadratic(a, halfB, c, out t0, 0.01, ray.TMax))

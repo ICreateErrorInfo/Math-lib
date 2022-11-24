@@ -154,27 +154,6 @@ namespace Math_lib
             return new(v.X + v1.X,
                        v.Y + v1.Y);
         }
-        public static Vector2D operator +(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-
-            return new(v.X + d,
-                       v.Y + d);
-        }
-        public static Vector2D operator +(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-
-            return new(v.X + d,
-                       v.Y + d);
-        }
-        public static Vector2D operator +(Vector2D v, Point2D p)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(Point2D.IsNaN(p));
-
-            return new(v.X + p.X, v.Y + p.Y);
-        }
         public static Vector2D operator +(Vector2D v)
         {
             Debug.Assert(IsNaN(v));
@@ -191,27 +170,6 @@ namespace Math_lib
             return new(v.X - v1.X,
                        v.Y - v1.Y);
         }
-        public static Vector2D operator -(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-
-            return new(v.X - d,
-                       v.Y - d);
-        }
-        public static Vector2D operator -(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-
-            return new(d - v.X,
-                       d - v.Y);
-        }
-        public static Vector2D operator -(Vector2D v, Point2D p)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(Point2D.IsNaN(p));
-
-            return new(v.X - p.X, v.Y - p.Y);
-        }
         public static Vector2D operator -(Vector2D v)
         {
             Debug.Assert(IsNaN(v));
@@ -220,8 +178,7 @@ namespace Math_lib
         }
 
         //overrides *
-        public static Vector2D operator *(Vector2D v, Vector2D v1)
-        {
+        public static Vector2D operator *(Vector2D v, Vector2D v1) {
             Debug.Assert(IsNaN(v));
             Debug.Assert(IsNaN(v1));
 
@@ -235,31 +192,11 @@ namespace Math_lib
             return new(v.X * d,
                        v.Y * d);
         }
-        public static Vector2D operator *(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-
-            return new(v.X * d,
-                       v.Y * d);
-        }
-        public static Vector2D operator *(Vector2D v, Point2D p)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(Point2D.IsNaN(p));
-
-            return new(v.X * p.X, v.Y * p.Y);
+        public static Vector2D operator *(double d, Vector2D v) {
+            return v * d;
         }
 
         //overrides /
-        public static Vector2D operator /(Vector2D v, Vector2D v1)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(IsNaN(v1));
-            Debug.Assert(v1.X != 0 || v1.Y != 0);
-
-            return new(v.X / v1.X,
-                       v.Y / v1.Y);
-        }
         public static Vector2D operator /(Vector2D v, double d)
         {
             Debug.Assert(IsNaN(v));
@@ -270,90 +207,7 @@ namespace Math_lib
             return new(v.X * inv,
                        v.Y * inv);
         }
-        public static Vector2D operator /(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(v.X != 0 || v.Y != 0);
 
-            return new(d / v.X,
-                       d / v.Y);
-        }
-        public static Vector2D operator /(Vector2D v, Point2D p)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(Point2D.IsNaN(p));
-            Debug.Assert(p.X != 0 || p.Y != 0);
-
-            return new(v.X / p.X, v.Y / p.Y);
-        }
-
-        //overrides >
-        public static bool operator >(Vector2D v, Vector2D v1)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(IsNaN(v1));
-
-            if (v.X > v1.X && v.Y > v1.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-
-            if (v.X > d && v.Y > d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-
-            if (d > v.X && d > v.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        //overrides <
-        public static bool operator <(Vector2D v, Vector2D v1)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(IsNaN(v1));
-
-            if (v > v1)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator <(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (v > d)
-            {
-                return false;
-            }
-            return true;
-        }
-        public static bool operator <(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (d > v)
-            {
-                return false;
-            }
-            return true;
-        }
 
         //overrides ==
         public static bool operator ==(Vector2D v, Vector2D v1)
@@ -423,76 +277,6 @@ namespace Math_lib
                 return false;
             }
             return true;
-        }
-
-        //overides <=
-        public static bool operator <=(Vector2D v, Vector2D v1)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(IsNaN(v1));
-
-            if (v.X <= v1.X && v.Y <= v1.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (v.X <= d && v.Y <= d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator <=(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (d <= v.X && d <= v.Y)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        //overrides >=
-        public static bool operator >=(Vector2D v, Vector2D v1)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(IsNaN(v1));
-
-            if (v > v1 || v == v1)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(Vector2D v, double d)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (v > d || v == d)
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool operator >=(double d, Vector2D v)
-        {
-            Debug.Assert(IsNaN(v));
-            Debug.Assert(!double.IsNaN(d));
-
-            if (d > v || d == v)
-            {
-                return true;
-            }
-            return false;
         }
 
         //overrides []

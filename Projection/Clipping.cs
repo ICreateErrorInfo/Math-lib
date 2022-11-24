@@ -13,9 +13,9 @@ namespace Projection
             Point3D lineEnd = lineEnd1.Pos;
 
             planeN = Normal3D.Normalize(planeN);
-            double planeD = -Normal3D.Dot(planeN, (Vector3D)planeP);
-            double ad = Normal3D.Dot((Vector3D)lineStart,planeN);
-            double bd = Normal3D.Dot((Vector3D)lineEnd, planeN);
+            double planeD = -Normal3D.Dot(planeN, planeP.ToVector());
+            double ad = Normal3D.Dot(lineStart.ToVector(),planeN);
+            double bd = Normal3D.Dot(lineEnd.ToVector(), planeN);
             double t = (-planeD - ad) / (bd - ad);
             Vector3D lineStartToEnd = lineEnd - lineStart;
             Vector3D lineToIntersect = lineStartToEnd * t;
