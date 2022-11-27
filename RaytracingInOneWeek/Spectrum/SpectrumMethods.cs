@@ -56,7 +56,7 @@ namespace Math_lib.Spectrum
 
             Func<double, int, double> interp = (double w, int i) =>
             {
-                return Mathe.Lerp((w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i], vals[i + 1]);
+                return Mathe.Lerp((double)(w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i], vals[i + 1]);
             };
 
             for (; i + 1 < n && lambdaEnd >= lambda[i]; ++i)
@@ -66,7 +66,7 @@ namespace Math_lib.Spectrum
                 sum += 0.5 * (interp(segLambdaStart, i) + interp(segLambdaEnd, i)) *
                        (segLambdaEnd - segLambdaStart);
             }
-            return sum / (lambdaEnd - lambdaStart);
+            return (double)sum / (lambdaEnd - lambdaStart);
         }
     }
 }

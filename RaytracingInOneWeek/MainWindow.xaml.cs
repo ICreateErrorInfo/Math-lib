@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 using Microsoft.Win32;
 using Raytracing.Materials;
 using Raytracing.Shapes;

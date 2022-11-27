@@ -9,7 +9,7 @@ namespace Math_lib.Spectrum
 {
     public class CoefficientSpectrum
     {
-        protected double[] c;
+        public double[] c;
         public int NSamples = 0;
 
         public CoefficientSpectrum(int nSpectrumSamples, double v = 0)
@@ -54,7 +54,7 @@ namespace Math_lib.Spectrum
             Debug.Assert(!ret.HasNaNs());
             return ret;
         }
-        public CoefficientSpectrum Clamp(double low = 0, double high = double.PositiveInfinity)
+        public void Clamp(double low = 0, double high = double.PositiveInfinity)
         {
             CoefficientSpectrum ret = new CoefficientSpectrum(NSamples);
             for (int i = 0; i < NSamples; i++)
@@ -62,7 +62,7 @@ namespace Math_lib.Spectrum
                 ret.c[i] = Math.Clamp(c[i], low, high);
             }
             Debug.Assert(!ret.HasNaNs());
-            return ret;
+            this.c = ret.c;
         }
         public bool IsBlack()
         {
@@ -94,13 +94,18 @@ namespace Math_lib.Spectrum
             }
             return false;
         }
+        public CoefficientSpectrum Copy() {
+            CoefficientSpectrum s = new CoefficientSpectrum(NSamples);
+            s.c = (double[])c.Clone();
+            return s;
+        }
 
         public static CoefficientSpectrum operator +(CoefficientSpectrum s1, CoefficientSpectrum s2)
         {
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1;
+            CoefficientSpectrum sum = s1.Copy();
             for (int i = 0; i < s1.NSamples; i++)
             {
                 sum.c[i] += s2.c[i];
@@ -112,7 +117,7 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1;
+            CoefficientSpectrum sum = s1.Copy();
             for (int i = 0; i < s1.NSamples; i++)
             {
                 sum.c[i] -= s2.c[i];
@@ -124,10 +129,20 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1;
+            CoefficientSpectrum sum = s1.Copy();
             for (int i = 0; i < s1.NSamples; i++)
             {
                 sum.c[i] *= s2.c[i];
+            }
+            return sum;
+        }
+        public static CoefficientSpectrum operator *(double s2, CoefficientSpectrum s1) {
+            Debug.Assert(!s1.HasNaNs());
+            Debug.Assert(!double.IsNaN(s2));
+
+            CoefficientSpectrum sum = s1.Copy();
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] *= s2;
             }
             return sum;
         }
@@ -136,7 +151,7 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1;
+            CoefficientSpectrum sum = s1.Copy();
             for (int i = 0; i < s1.NSamples; i++)
             {
                 Debug.Assert(s2.c[i] != 0);
@@ -197,6 +212,21 @@ namespace Math_lib.Spectrum
             }
             str += "]";
             return str;
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null)) {
+                return false;
+            }
+
+            throw new NotImplementedException();
+        }
+        public override int GetHashCode() {
+            throw new NotImplementedException();
         }
     }
 }
