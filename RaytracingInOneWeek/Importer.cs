@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 using Raytracing.Materials;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace Raytracing
                 }
             }
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(new Vector3D(.61, .61, .61), 0.7));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(SampledSpectrum.FromRGB(new double[] {.61, .61, .61 }, SampledSpectrum.SpectrumType.Reflectance), 0.7));
 
             return mesh;
         }

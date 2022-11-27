@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 using Raytracing.Accelerators;
 
 namespace Raytracing
@@ -13,7 +14,7 @@ namespace Raytracing
         public Vector3D VUp;
         public int VFov;
         public double Aperture;
-        public Vector3D Background;
+        public SampledSpectrum Background;
         public int ImageWidth;
         public int ImageHeight;
         public double FocusDistance;
@@ -40,14 +41,14 @@ namespace Raytracing
                 FocusDistance = focusDistance;
             }
 
-            Accel = new(objs.Objects, 2, BVHSplitMethod.SAH);
+            Accel = new(objs.Objects, 2, BVHSplitMethod.Middle);
             SamplesPerPixel = spp;
             MaxDepth = maxD;
             Lookfrom = lookfrom;
             Lookat = lookat;
             VFov = vFov;
             Aperture = aperture;
-            Background = background;
+            Background = SampledSpectrum.FromRGB(new double[] {background.X, background.Y, background.Z}, SampledSpectrum.SpectrumType.Reflectance);
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
             VUp = vUp;

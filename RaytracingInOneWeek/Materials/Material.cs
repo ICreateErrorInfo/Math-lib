@@ -1,13 +1,14 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 
 namespace Raytracing.Materials
 {
     public abstract class Material
     {
-        public virtual Vector3D Emitted(double u, double v, Point3D p)
+        public virtual SampledSpectrum Emitted(double u, double v, Point3D p)
         {
-            return new Vector3D(0,0,0);
+            return SampledSpectrum.FromRGB(new double[] { 0, 0, 0 }, SampledSpectrum.SpectrumType.Reflectance);
         }
-        public abstract bool Scatter(Ray rIn, ref SurfaceInteraction rec, out Vector3D attenuation, out Ray scattered);
+        public abstract bool Scatter(Ray rIn, ref SurfaceInteraction rec, out SampledSpectrum attenuation, out Ray scattered);
     }
 }

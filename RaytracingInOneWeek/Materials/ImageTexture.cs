@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 using System;
 using System.Drawing;
 
@@ -46,11 +47,11 @@ namespace Raytracing.Materials
             _bytesPerScanline = bytes_per_pixel * _width;
         }
 
-        public override Vector3D Value(double u, double v, Point3D p)
+        public override SampledSpectrum Value(double u, double v, Point3D p)
         {
             if (_data == null)
             {
-                return new Vector3D(0, 1, 1);
+                return SampledSpectrum.FromRGB(new double[] { 0, 1, 1 }, SampledSpectrum.SpectrumType.Reflectance);
             }
 
             u = Math.Clamp(u, 0.0f, 1);
@@ -67,7 +68,7 @@ namespace Raytracing.Materials
             var index =  j * _bytesPerScanline + i * bytes_per_pixel;
             Vector3D pixel = new Vector3D(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
-            return new Vector3D(pixel.X, pixel.Y, pixel.Z);
+            return SampledSpectrum.FromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SampledSpectrum.SpectrumType.Reflectance);
         }
         public Vector3D GetPixel(int x, int y)
         {

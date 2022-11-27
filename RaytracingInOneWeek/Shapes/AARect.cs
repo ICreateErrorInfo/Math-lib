@@ -17,6 +17,7 @@ namespace Raytracing.Shapes
             _y0 = y0;
             _y1 = y1;
             _k = k;
+            ObjectToWorld = Transform.Translate(new(0));
         }
 
         public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)

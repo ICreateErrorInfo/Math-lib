@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -761,7 +762,7 @@ namespace Math_lib.Spectrum {
             825, 826, 827, 828, 829, 830
         };
         public static readonly double CIE_Y_integral = 106.856895;
-
+         
         const int nRGB2SpectSamples = 32;
         public static readonly double[] RGB2SpectLambda = new double[]{
             380.000000, 390.967743, 401.935486, 412.903229, 423.870972, 434.838715,
@@ -970,10 +971,18 @@ namespace Math_lib.Spectrum {
         private const int sampledLambdaEnd = 700;
         private const int nSpectralSamples = 60;
 
-        public SampledSpectrum(double v = 0) : base(nSpectralSamples, v) {
+        public SampledSpectrum(double v) : base(nSpectralSamples, v) {
+
+        }
+        public SampledSpectrum() : base(nSpectralSamples, 0) {
 
         }
 
+        public SampledSpectrum Copy() {
+            SampledSpectrum s = new SampledSpectrum(NSamples);
+            s.c = (double[])c.Clone();
+            return s;
+        }
         public static void Init() {
             X = new SampledSpectrum();
             Y = new SampledSpectrum();
@@ -1083,8 +1092,8 @@ namespace Math_lib.Spectrum {
                 xyz[1] += Y.c[i] * c[i];
                 xyz[2] += Z.c[i] * c[i];
             }
-
-            double scale = (sampledLambdaEnd - sampledLambdaStart) / (double)(CIE_Y_integral * nSpectralSamples);
+            double scale = (double)(sampledLambdaEnd - sampledLambdaStart) /
+                      (double)(CIE_Y_integral * nSpectralSamples);
 
             xyz[0] *= scale;
             xyz[1] *= scale;
@@ -1110,9 +1119,9 @@ namespace Math_lib.Spectrum {
 
             double[] rgb = new double[3];
 
-            rgb[0] = (3.240479f * xyz[0]) - (1.537150f * xyz[1]) - (0.498535f * xyz[2]);
-            rgb[1] = (-0.969256f * xyz[0]) + (1.875991f * xyz[1]) + (0.041556f * xyz[2]);
-            rgb[2] = (0.055648f * xyz[0]) - (0.204043f * xyz[1]) + (1.057311f * xyz[2]);
+            rgb[0] = 3.240479f * xyz[0] - 1.537150f * xyz[1] - 0.498535f * xyz[2];
+            rgb[1] = -0.969256f * xyz[0] + 1.875991f * xyz[1] + 0.041556f * xyz[2];
+            rgb[2] = 0.055648f * xyz[0] - 0.204043f * xyz[1] + 1.057311f * xyz[2];
 
             return rgb;
         }
@@ -1136,6 +1145,8 @@ namespace Math_lib.Spectrum {
             double[] rgb = new double[3];
             rgb = XYZToRGB(xyz);
 
+            rgb[0] *= .8;
+
             return rgb;
         }
 
@@ -1144,7 +1155,6 @@ namespace Math_lib.Spectrum {
         public static SampledSpectrum FromRGB(double[] rgb, SpectrumType type) {
             CoefficientSpectrum r = new SampledSpectrum();
             if (type == SpectrumType.Reflectance) {
-
                 if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
 
                     r += rgb[0] * rgbRefl2SpectWhite;
@@ -1156,7 +1166,7 @@ namespace Math_lib.Spectrum {
                         r += (rgb[1] - rgb[2]) * rgbRefl2SpectGreen;
                     }
                 } else if (rgb[1] <= rgb[0] && rgb[1] <= rgb[2]) {
-                    
+
                     r += rgb[1] * rgbRefl2SpectWhite;
                     if (rgb[0] <= rgb[2]) {
                         r += (rgb[0] - rgb[1]) * rgbRefl2SpectMagenta;
@@ -1166,7 +1176,7 @@ namespace Math_lib.Spectrum {
                         r += (rgb[0] - rgb[2]) * rgbRefl2SpectRed;
                     }
                 } else {
-                    
+
                     r += rgb[2] * rgbRefl2SpectWhite;
                     if (rgb[0] <= rgb[1]) {
                         r += (rgb[0] - rgb[2]) * rgbRefl2SpectYellow;
@@ -1213,7 +1223,7 @@ namespace Math_lib.Spectrum {
                 //r = .86445f * r;
             }
 
-            SampledSpectrum s = new SampledSpectrum();
+            SampledSpectrum s = new SampledSpectrum(r.NSamples);
             r.Clamp();
             s.c = r.c;
 
@@ -1223,6 +1233,49 @@ namespace Math_lib.Spectrum {
             double[] rgb = new double[3];
             rgb = XYZToRGB(xyz);
             return FromRGB(rgb, type);
+        }
+
+        //TODO
+        public static SampledSpectrum operator +(SampledSpectrum s1, SampledSpectrum s2) {
+            Debug.Assert(!s1.HasNaNs());
+            Debug.Assert(!s2.HasNaNs());
+
+            SampledSpectrum sum = s1.Copy();
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] += s2.c[i];
+            }
+            return sum;
+        }
+        public static SampledSpectrum operator -(SampledSpectrum s1, SampledSpectrum s2) {
+            Debug.Assert(!s1.HasNaNs());
+            Debug.Assert(!s2.HasNaNs());
+
+            SampledSpectrum sum = s1.Copy();
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] -= s2.c[i];
+            }
+            return sum;
+        }
+        public static SampledSpectrum operator *(SampledSpectrum s1, SampledSpectrum s2) {
+            Debug.Assert(!s1.HasNaNs());
+            Debug.Assert(!s2.HasNaNs());
+
+            SampledSpectrum sum = s1.Copy();
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] *= s2.c[i];
+            }
+            return sum;
+        }
+        public static SampledSpectrum operator /(SampledSpectrum s1, SampledSpectrum s2) {
+            Debug.Assert(!s1.HasNaNs());
+            Debug.Assert(!s2.HasNaNs());
+
+            SampledSpectrum sum = s1.Copy();
+            for (int i = 0; i < s1.NSamples; i++) {
+                Debug.Assert(s2.c[i] != 0);
+                sum.c[i] /= s2.c[i];
+            }
+            return sum;
         }
     }
 }

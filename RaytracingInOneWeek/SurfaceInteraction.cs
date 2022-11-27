@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 
 namespace Raytracing
 {
@@ -6,7 +7,7 @@ namespace Raytracing
     {
         public Primitive Primitive;
         public Ray Scattered;
-        public Vector3D Attenuation;
+        public SampledSpectrum Attenuation;
         public Point3D P;
         public Normal3D Normal;
         public double U;

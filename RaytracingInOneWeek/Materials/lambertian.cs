@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Math_lib.Spectrum;
 
 namespace Raytracing.Materials
 {
@@ -6,7 +7,7 @@ namespace Raytracing.Materials
     {
         private readonly Texture _albedo;
 
-        public Lambertian(Vector3D a)
+        public Lambertian(SampledSpectrum a)
         {
             _albedo = new SolidColor(a);
         }
@@ -15,7 +16,7 @@ namespace Raytracing.Materials
             _albedo = a;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out Vector3D attenuation, out Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out SampledSpectrum attenuation, out Ray scattered)
         {
             var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
 

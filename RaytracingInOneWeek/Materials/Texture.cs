@@ -1,30 +1,31 @@
 ﻿using System;
 using Math_lib;
+using Math_lib.Spectrum;
 
 namespace Raytracing.Materials
 {
     public abstract class Texture
     {
-        public abstract Vector3D Value(double u, double v, Point3D p);
+        public abstract SampledSpectrum Value(double u, double v, Point3D p);
     }
     class SolidColor : Texture
     {
-        private readonly Vector3D _colorValue;
+        private readonly SampledSpectrum _colorValue;
 
         public SolidColor()
         {
 
         }
-        public SolidColor(Vector3D c)
+        public SolidColor(SampledSpectrum c)
         {
             _colorValue = c;
         }
         public SolidColor(double red, double green, double blue)
         {
-            _colorValue = new Vector3D(red, green, blue);
+            _colorValue = SampledSpectrum.FromRGB(new double[] { red, green, blue }, SampledSpectrum.SpectrumType.Reflectance);
         }
 
-        public override Vector3D Value(double u, double v, Point3D p)
+        public override SampledSpectrum Value(double u, double v, Point3D p)
         {
             return _colorValue;
         }
@@ -43,13 +44,13 @@ namespace Raytracing.Materials
             _even = even;
             _odd = odd;
         }
-        public CheckerTexture(Vector3D c1, Vector3D c2)
+        public CheckerTexture(SampledSpectrum c1, SampledSpectrum c2)
         {
             _even = new SolidColor(c1);
             _odd = new SolidColor(c2);
         }
 
-        public override Vector3D Value(double u, double v, Point3D p)
+        public override SampledSpectrum Value(double u, double v, Point3D p)
         {
             var sines = Math.Sin(10 * p.X) * Math.Sin(10 * p.Y) * Math.Sin(10 * p.Z);
             if(sines < 0)
@@ -76,9 +77,10 @@ namespace Raytracing.Materials
             _scale = scale;
         }
 
-        public override Vector3D Value(double u, double v, Point3D p)
+        public override SampledSpectrum Value(double u, double v, Point3D p)
         {
-            return new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
+            Vector3D rgb = new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
+            return SampledSpectrum.FromRGB(new double[] {rgb.X, rgb.Y, rgb.Z}, SampledSpectrum.SpectrumType.Reflectance);
         }
     }
 }
