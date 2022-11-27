@@ -1116,7 +1116,7 @@ namespace Math_lib.Spectrum {
 
             return rgb;
         }
-        public double[] RGBToXYZ(double[] rgb) {
+        public static double[] RGBToXYZ(double[] rgb) {
             if(rgb.Length != 3) {
                 throw new ArgumentException();
             }
@@ -1176,7 +1176,7 @@ namespace Math_lib.Spectrum {
                         r += (rgb[0] - rgb[1]) * rgbRefl2SpectRed;
                     }
                 }
-                r = .94 * r;
+                //r = .94 * r;
             } else {
                 
                 if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]) {
@@ -1210,7 +1210,7 @@ namespace Math_lib.Spectrum {
                         r += (rgb[0] - rgb[1]) * rgbIllum2SpectRed;
                     }
                 }
-                r = .86445f * r;
+                //r = .86445f * r;
             }
 
             SampledSpectrum s = new SampledSpectrum();
