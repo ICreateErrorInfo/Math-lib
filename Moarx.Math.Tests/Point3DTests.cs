@@ -5,7 +5,7 @@ namespace Moarx.Math.Tests;
 [TestFixture]
 public class Point3DTests {
 
-    [TestCaseSource(typeof(BaseTestData), "AdditionData3D")]
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.AdditionData3D))]
     public void AdditionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
         Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
@@ -15,7 +15,7 @@ public class Point3DTests {
         Assert.That(expectedPoint, Is.EqualTo(point1 + point2));
     }
 
-    [TestCaseSource(typeof(BaseTestData), "SubtractionData3D")]
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.SubtractionData3D))]
     public void SubtractionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
         Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
@@ -25,13 +25,32 @@ public class Point3DTests {
         Assert.That(expectedPoint, Is.EqualTo(point1 - point2));
     }
 
-    [TestCaseSource(typeof(BaseTestData), "DivisionData3D")]
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.DivisionData3D))]
     public void DivisionTests(double[] expected, double[] firstPoint, double[] scalar) {
         Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
 
         Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
 
         Assert.That(expectedPoint, Is.EqualTo(point1 / scalar[0]));
+    }
+
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.NegationData3D))]
+    public void NegationTests(double[] expected, double[] point) {
+        Point3D<double> point1 =  new Point3D<double>(point[0], point[1], point[2]);
+
+        Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedPoint, Is.EqualTo(-point1));
+    }
+
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.MultiplicationData3D))]
+    public void MultiplicationTests(double[] expected, double[] vector, double[] scalar) {
+        Point3D<double> vector1 =  new Point3D<double>(vector[0], vector[1], vector[2]);
+
+        Point3D<double> expectedVector = new Point3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedVector, Is.EqualTo(vector1 * scalar[0]));
+        Assert.That(expectedVector, Is.EqualTo(scalar[0] * vector1));
     }
 
     [Test]

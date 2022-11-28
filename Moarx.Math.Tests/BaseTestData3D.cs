@@ -24,5 +24,17 @@ namespace Moarx.Math.Tests {
             new object[] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 }, new double[] { 1 }  },
             new object[] { new double[] { 3, 8, 0.25 }, new double[] { 12, 32, 1 }, new double[] { 4 } }
         };
+
+        public static IEnumerable<object[]> NegationData3D = new List<object[]>
+        {
+            new object[] { new double[] { -1, -67, 32 }, new double[] { 1, 67, -32 }},
+            new object[] { new double[] { 3, -8, 0.25 }, new double[] { -3, 8, -0.25 }}
+        };
+
+        public static IEnumerable<object[]> MultiplicationData3D = new List<object[]>
+        {
+            new object[] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 }, new double[] { 1 }  },
+            new object[] { new double[] { 48, -40, -2 }, new double[] { 12, -10, -0.5 }, new double[] { 4 } }
+        };
     }
 }
