@@ -1,51 +1,38 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Moarx.Math;
 
-public readonly record struct Vector3D<T>(T X, T Y, T Z)
+public readonly record struct Vector3D<T>
     where T : INumber<T> {
 
-    public Vector3D<T> CrossProduct(Vector3D<T> vector2) => new() {
-        X = (Y * vector2.Z) - (Z * vector2.Y),
-        Y = (Z * vector2.X) - (X * vector2.Z),
-        Z = (X * vector2.Y) - (Y * vector2.X)
-    };
+    public T X { get; init; }
+    public T Y { get; init; }
+    public T Z { get; init; }
 
-    public T GetLengthSquared() => this * this;
+    public Vector3D(T x, T y, T z) {
+        X = x;
+        Y = y;
+        Z = z;
 
-    public Vector3D<T> Abs() => new() {
-        X = T.Abs(X),
-        Y = T.Abs(Y),
-        Z = T.Abs(Z)
-    };
-
-    public int MaxDimension() => (X > Y) ? ((X > Z) ? 0 : 2) : ((Y > Z) ? 1 : 2);
-
-    public Vector3D<T> Permute(int x, int y, int z) => new(X: this[x], Y: this[y], Z: this[z]);
-
-    public Vector3D<T> Clamp(T min, T max) {
-        return new(
-            X: T.Clamp(X, min: min, max: max),
-            Y: T.Clamp(Y, min: min, max: max),
-            Z: T.Clamp(Z, min: min, max: max));
+        CheckNaN();
     }
 
-    // TODO Evtl. in eigene Extension class verschiebenn
-    public static Vector3D<T> GetReflectionVector(Vector3D<T> v, Vector3D<T> v1) => v - T.CreateChecked(2) * v * v1 * v1;
-
-    public static Vector3D<double> GetRandomVector(int min, int max) {
-        Random r = new Random();
-        return new Vector3D<double>(r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min);
-    }
-
-    public static Vector3D<double> GetRandomVectorInUnitSphere() {
-        while (true) {
-            Vector3D<double> p = GetRandomVector(-1, 1);
-            if (p.GetLengthSquared() >= 1)
-                continue;
-            return p;
+    private void CheckNaN() {
+        if(T.IsNaN(X) | T.IsNaN(Y) | T.IsNaN(Z)) {
+            Debug.Assert(false, "Vector data has NaN");
         }
     }
+    public Vector3D<T> CrossProduct(Vector3D<T> vector2){
+        Vector3D<T> vector = new() {
+            X = (Y * vector2.Z) - (Z * vector2.Y),
+            Y = (Z * vector2.X) - (X * vector2.Z),
+            Z = (X * vector2.Y) - (Y * vector2.X)
+        };
+
+        return vector;
+    }
+    public T GetLengthSquared() => this * this;
 
 
     //operator overload
@@ -67,7 +54,9 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
         Z = -vector.Z
     };
 
-    public static T operator *(Vector3D<T> left, Vector3D<T> right) => (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+    public static T operator *(Vector3D<T> left, Vector3D<T> right) {
+        return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+    }
 
     public static Vector3D<T> operator *(Vector3D<T> left, T scalar) => new() {
         X = left.X * scalar,
@@ -81,14 +70,22 @@ public readonly record struct Vector3D<T>(T X, T Y, T Z)
         Z = right.Z * scalar
     };
 
-    public static Vector3D<T> operator /(Vector3D<T> left, T scalar) => new() {
-        X = left.X / scalar,
-        Y = left.Y / scalar,
-        Z = left.Z / scalar
-    };
+    public static Vector3D<T> operator /(Vector3D<T> left, T scalar) {
+        Debug.Assert(!T.IsNaN(scalar));
+        
+        Vector3D<T> vector = new() {
+            X = left.X / scalar,
+            Y = left.Y / scalar,
+            Z = left.Z / scalar
+        };
+
+        return vector;
+    }
 
     public T this[int i] {
         get {
+            CheckNaN();
+
             if (i == 0) {
                 return X;
             }
