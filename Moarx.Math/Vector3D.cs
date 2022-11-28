@@ -33,6 +33,19 @@ public readonly record struct Vector3D<T>
         return vector;
     }
     public T GetLengthSquared() => this * this;
+    public static Vector3D<T> Minimum(Vector3D<T> vector1, Vector3D<T> vector2) => new() {
+        X = T.Min(vector1.X, vector2.X),
+        Y = T.Min(vector1.Y, vector2.Y),
+        Z = T.Min(vector1.Z, vector2.Z)
+    };
+    public static Vector3D<T> Maximum(Vector3D<T> vector1, Vector3D<T> vector2) => new() {
+        X = T.Max(vector1.X, vector2.X),
+        Y = T.Max(vector1.Y, vector2.Y),
+        Z = T.Max(vector1.Z, vector2.Z)
+    };
+    public Point3D<T> ToPoint() {
+        return new Point3D<T>(X, Y, Z);
+    }
 
 
     //operator overload

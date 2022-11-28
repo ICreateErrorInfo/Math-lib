@@ -53,4 +53,24 @@ public class Vector3DTests {
         Assert.That(expectedVector, Is.EqualTo(vector1 * scalar[0]));
         Assert.That(expectedVector, Is.EqualTo(scalar[0] * vector1));
     }
+
+
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.MinimumData3D))]
+    public void MinimumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+        Vector3D<double> vector2 =  new Vector3D<double>(secondVector[0], secondVector[1], secondVector[2]);
+
+        Vector3D<double> expectedVector = new Vector3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedVector, Is.EqualTo(Vector3D<double>.Minimum(vector1, vector2)));
+    }
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.MaximumData3D))]
+    public void MaximumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+        Vector3D<double> vector2 =  new Vector3D<double>(secondVector[0], secondVector[1], secondVector[2]);
+
+        Vector3D<double> expectedVector = new Vector3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedVector, Is.EqualTo(Vector3D<double>.Maximum(vector1, vector2)));
+    }
 }

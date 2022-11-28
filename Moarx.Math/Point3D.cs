@@ -23,22 +23,24 @@ public readonly record struct Point3D<T>
             Debug.Assert(false, "Vector data has NaN");
         }
     }
-    public static Point3D<T> Min(Point3D<T> p, Point3D<T> p1) => new() {
-        X = T.Min(p.X, p1.X),
-        Y = T.Min(p.Y, p1.Y),
-        Z = T.Min(p.Z, p1.Z)
+    public static Point3D<T> Min(Point3D<T> point1, Point3D<T> point2) => new() {
+        X = T.Min(point1.X, point2.X),
+        Y = T.Min(point1.Y, point2.Y),
+        Z = T.Min(point1.Z, point2.Z)
     };
-    public static Point3D<T> Max(Point3D<T> p, Point3D<T> p1) => new() {
-        X = T.Max(p.X, p1.X),
-        Y = T.Max(p.Y, p1.Y),
-        Z = T.Max(p.Z, p1.Z)
+    public static Point3D<T> Max(Point3D<T> point1, Point3D<T> point2) => new() {
+        X = T.Max(point1.X, point2.X),
+        Y = T.Max(point1.Y, point2.Y),
+        Z = T.Max(point1.Z, point2.Z)
     };
     public static Point3D<T> Permute(Point3D<T> p, int x, int y, int z) => new() {
         X = p[x],
         Y = p[y],
         Z = p[z]
     };
-
+    public Vector3D<T> ToVector() {
+        return new Vector3D<T>(X, Y, Z);
+    }
 
     //operator overload
     public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {

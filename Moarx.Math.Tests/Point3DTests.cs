@@ -5,24 +5,54 @@ namespace Moarx.Math.Tests;
 [TestFixture]
 public class Point3DTests {
 
+    [Test]
+    public void TestCtor() {
+
+        var p = new Point3D<double>();
+        Assert.That(p.X, Is.Zero);
+        Assert.That(p.Y, Is.Zero);
+        Assert.That(p.Z, Is.EqualTo(0));
+
+        var p2 = new Point3D<int>();
+        Assert.That(p2.X, Is.Zero);
+        Assert.That(p2.Y, Is.Zero);
+        Assert.That(p2.Z, Is.Zero);
+    }
+
+    [Test]
+    public void TestCtorArgs() {
+
+        var p = new Point3D<double>(1, 2, 3);
+
+        Assert.That(p.X, Is.EqualTo(1));
+        Assert.That(p.Y, Is.EqualTo(2));
+        Assert.That(p.Z, Is.EqualTo(3));
+    }
+
+
     [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.AdditionData3D))]
     public void AdditionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
         Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
+        Vector3D<double> vector1 =  new Vector3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
 
         Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
 
         Assert.That(expectedPoint, Is.EqualTo(point1 + point2));
+        Assert.That(expectedPoint, Is.EqualTo(point1 + vector1));
     }
 
     [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.SubtractionData3D))]
     public void SubtractionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
         Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
+        Vector3D<double> vector1 =  new Vector3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
 
-        Vector3D<double> expectedPoint = new Vector3D<double>(expected[0], expected[1], expected[2]);
+        Vector3D<double> expectedVector = new Vector3D<double>(expected[0], expected[1], expected[2]);
+        Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
 
-        Assert.That(expectedPoint, Is.EqualTo(point1 - point2));
+        Assert.That(expectedVector, Is.EqualTo(point1 - point2));
+        Assert.That(expectedPoint, Is.EqualTo(point1 - vector1));
     }
 
     [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.DivisionData3D))]
@@ -53,28 +83,23 @@ public class Point3DTests {
         Assert.That(expectedVector, Is.EqualTo(scalar[0] * vector1));
     }
 
-    [Test]
-    public void TestCtor() {
 
-        var p = new Point3D<double>();
-        Assert.That(p.X, Is.Zero);
-        Assert.That(p.Y, Is.Zero);
-        Assert.That(p.Z, Is.EqualTo(0));
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.MinimumData3D))]
+    public void MinimumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Point3D<double> vector1 =  new Point3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+        Point3D<double> vector2 =  new Point3D<double>(secondVector[0], secondVector[1], secondVector[2]);
 
-        var p2 = new Point3D<int>();
-        Assert.That(p2.X, Is.Zero);
-        Assert.That(p2.Y, Is.Zero);
-        Assert.That(p2.Z, Is.Zero);
+        Point3D<double> expectedVector = new Point3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedVector, Is.EqualTo(Point3D<double>.Min(vector1, vector2)));
     }
+    [TestCaseSource(typeof(BaseTestData), nameof(BaseTestData.MaximumData3D))]
+    public void MaximumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Point3D<double> vector1 =  new Point3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+        Point3D<double> vector2 =  new Point3D<double>(secondVector[0], secondVector[1], secondVector[2]);
 
-    [Test]
-    public void TestCtorArgs() {
+        Point3D<double> expectedVector = new Point3D<double>(expected[0], expected[1], expected[2]);
 
-        var p = new Point3D<double>(1, 2, 3);
-
-        Assert.That(p.X, Is.EqualTo(1));
-        Assert.That(p.Y, Is.EqualTo(2));
-        Assert.That(p.Z, Is.EqualTo(3));
+        Assert.That(expectedVector, Is.EqualTo(Point3D<double>.Max(vector1, vector2)));
     }
-
 }
