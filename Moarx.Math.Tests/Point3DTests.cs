@@ -5,24 +5,33 @@ namespace Moarx.Math.Tests;
 [TestFixture]
 public class Point3DTests {
 
-    [TestCaseSource(typeof(BaseTestData3D), "AdditionData")]
-    public void AdditionTests(double[] expected, double[] firstVector, double[] secondVector) {
-        Point3D<double> point1 =  new Point3D<double>(firstVector[0], firstVector[1], firstVector[2]);
-        Point3D<double> point2 =  new Point3D<double>(secondVector[0], secondVector[1], secondVector[2]);
+    [TestCaseSource(typeof(BaseTestData), "AdditionData3D")]
+    public void AdditionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
+        Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
+        Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
 
         Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
 
         Assert.That(expectedPoint, Is.EqualTo(point1 + point2));
     }
 
-    [TestCaseSource(typeof(BaseTestData3D), "SubtractionData")]
-    public void SubtractionTests(double[] expected, double[] firstVector, double[] secondVector) {
-        Point3D<double> point1 =  new Point3D<double>(firstVector[0], firstVector[1], firstVector[2]);
-        Point3D<double> point2 =  new Point3D<double>(secondVector[0], secondVector[1], secondVector[2]);
+    [TestCaseSource(typeof(BaseTestData), "SubtractionData3D")]
+    public void SubtractionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
+        Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
+        Point3D<double> point2 =  new Point3D<double>(secondPoint[0], secondPoint[1], secondPoint[2]);
 
         Vector3D<double> expectedPoint = new Vector3D<double>(expected[0], expected[1], expected[2]);
 
         Assert.That(expectedPoint, Is.EqualTo(point1 - point2));
+    }
+
+    [TestCaseSource(typeof(BaseTestData), "DivisionData3D")]
+    public void DivisionTests(double[] expected, double[] firstPoint, double[] scalar) {
+        Point3D<double> point1 =  new Point3D<double>(firstPoint[0], firstPoint[1], firstPoint[2]);
+
+        Point3D<double> expectedPoint = new Point3D<double>(expected[0], expected[1], expected[2]);
+
+        Assert.That(expectedPoint, Is.EqualTo(point1 / scalar[0]));
     }
 
     [Test]
