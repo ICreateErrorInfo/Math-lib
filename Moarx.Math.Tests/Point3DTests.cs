@@ -12,11 +12,6 @@ public class Point3DTests {
         Assert.That(p.X, Is.Zero);
         Assert.That(p.Y, Is.Zero);
         Assert.That(p.Z, Is.EqualTo(0));
-
-        var p2 = new Point3D<int>();
-        Assert.That(p2.X, Is.Zero);
-        Assert.That(p2.Y, Is.Zero);
-        Assert.That(p2.Z, Is.Zero);
     }
 
     [Test]
