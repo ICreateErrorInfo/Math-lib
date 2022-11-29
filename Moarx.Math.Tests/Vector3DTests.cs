@@ -24,7 +24,6 @@ public class Vector3DTests {
         Assert.That(p.Z, Is.EqualTo(3));
     }
 
-
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.AdditionData))]
     public void AdditionTests(double[] expected, double[] firstVector, double[] secondVector) {
         Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
@@ -34,7 +33,6 @@ public class Vector3DTests {
 
         Assert.That(expectedVector, Is.EqualTo(vector1 + vector2));
     }
-
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.SubtractionData))]
     public void SubtractionTests(double[] expected, double[] firstVector, double[] secondVector) {
         Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
@@ -44,16 +42,14 @@ public class Vector3DTests {
 
         Assert.That(expectedVector, Is.EqualTo(vector1 - vector2));
     }
-
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.DivisionData))]
-    public void DivisionTests(double[] expected, double[] firstVector, double[] scalar) {
-        Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+    public void DivisionTests(double[] expected, double[] vector, double[] scalar) {
+        Vector3D<double> vector1 =  new Vector3D<double>(vector[0], vector[1], vector[2]);
 
         Vector3D<double> expectedVector = new Vector3D<double>(expected[0], expected[1], expected[2]);
 
         Assert.That(expectedVector, Is.EqualTo(vector1 / scalar[0]));
     }
-
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.NegationData))]
     public void NegationTests(double[] expected, double[] vector) {
         Vector3D<double> vector1 =  new Vector3D<double>(vector[0], vector[1], vector[2]);
@@ -62,7 +58,6 @@ public class Vector3DTests {
 
         Assert.That(expectedVector, Is.EqualTo(-vector1));
     }
-
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.MultiplicationData))]
     public void MultiplicationTests(double[] expected, double[] vector, double[] scalar) {
         Vector3D<double> vector1 =  new Vector3D<double>(vector[0], vector[1], vector[2]);
@@ -106,8 +101,8 @@ public class Vector3DTests {
         Assert.That(expectedVector, Is.EqualTo(Vector3D<double>.Maximum(vector1, vector2)));
     }
     [TestCaseSource(typeof(BaseTestData3D), nameof(BaseTestData3D.CastData))]
-    public void PointCastTests(double[] expected, double[] firstVector) {
-        Vector3D<double> vector1 =  new Vector3D<double>(firstVector[0], firstVector[1], firstVector[2]);
+    public void PointCastTests(double[] expected, double[] vector) {
+        Vector3D<double> vector1 =  new Vector3D<double>(vector[0], vector[1], vector[2]);
 
         Point3D<double> expectedVector = new Point3D<double>(expected[0], expected[1], expected[2]);
 

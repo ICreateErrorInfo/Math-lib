@@ -61,7 +61,6 @@ public readonly record struct Vector3D<T>
         Y = left.Y - right.Y,
         Z = left.Z - right.Z
     };
-
     public static Vector3D<T> operator -(Vector3D<T> vector) => new() {
         X = -vector.X,
         Y = -vector.Y,
@@ -71,13 +70,11 @@ public readonly record struct Vector3D<T>
     public static T operator *(Vector3D<T> left, Vector3D<T> right) {
         return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
     }
-
     public static Vector3D<T> operator *(Vector3D<T> left, T scalar) => new() {
         X = left.X * scalar,
         Y = left.Y * scalar,
         Z = left.Z * scalar
     };
-
     public static Vector3D<T> operator *(T scalar, Vector3D<T> right) => new() {
         X = right.X * scalar,
         Y = right.Y * scalar,
@@ -87,6 +84,8 @@ public readonly record struct Vector3D<T>
     public static Vector3D<T> operator /(Vector3D<T> left, T scalar) {
         Debug.Assert(!T.IsNaN(scalar));
         
+        //TODO * neg scalar
+
         Vector3D<T> vector = new() {
             X = left.X / scalar,
             Y = left.Y / scalar,

@@ -20,15 +20,15 @@ public readonly record struct Point3D<T>
 
     private void CheckNaN() {
         if (T.IsNaN(X) | T.IsNaN(Y) | T.IsNaN(Z)) {
-            Debug.Assert(false, "Vector data has NaN");
+            Debug.Assert(false, "Point data has NaN");
         }
     }
-    public static Point3D<T> Min(Point3D<T> point1, Point3D<T> point2) => new() {
+    public static Point3D<T> Minimum(Point3D<T> point1, Point3D<T> point2) => new() {
         X = T.Min(point1.X, point2.X),
         Y = T.Min(point1.Y, point2.Y),
         Z = T.Min(point1.Z, point2.Z)
     };
-    public static Point3D<T> Max(Point3D<T> point1, Point3D<T> point2) => new() {
+    public static Point3D<T> Maximum(Point3D<T> point1, Point3D<T> point2) => new() {
         X = T.Max(point1.X, point2.X),
         Y = T.Max(point1.Y, point2.Y),
         Z = T.Max(point1.Z, point2.Z)
@@ -43,13 +43,13 @@ public readonly record struct Point3D<T>
         return new Vector3D<T>(X, Y, Z);
     }
 
-    //operator overload
-    public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
+    //TODO punkt + punkt sinn?
+    public static Point3D<T> operator +(Point3D<T> left, Point3D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y,
         Z = left.Z + right.Z
     };
-    public static Point3D<T> operator +(Point3D<T> left, Point3D<T> right) => new() {
+    public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y,
         Z = left.Z + right.Z
@@ -71,6 +71,7 @@ public readonly record struct Point3D<T>
         Z = -point.Z
     };
 
+    //TODO punkt * punkt sinn?
     public static Point3D<T> operator *(Point3D<T> left, Point3D<T> right) => new() {
         X = left.X * right.X,
         Y = left.Y * right.Y,

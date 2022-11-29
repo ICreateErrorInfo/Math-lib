@@ -29,12 +29,12 @@
         public static IEnumerable<object[]> AccessOperatorData = new List<object[]>
         {
             new object[] { new double[] { 1 }, new double[] { 0, 1 }, new double[] { 1 }  },
-            new object[] { new double[] { -2 }, new double[] { 48, -10 }, new double[] { 2} },
+            new object[] { new double[] { -10 }, new double[] { 48, -10 }, new double[] { 1} },
             new object[] { new double[] { 48 }, new double[] { 48, -0 }, new double[] { 0} }
         };
         public static IEnumerable<object[]> DotProductData = new List<object[]>
         {
-            new object[] { new double[] { 90}, new double[] { 15, 5 }, new double[] { 5, 10 } },
+            new object[] { new double[] { 125}, new double[] { 15, 5 }, new double[] { 5, 10 } },
             new object[] { new double[] { -10 }, new double[] { -10, -1 }, new double[] { 1, 0 } },
             new object[] { new double[] { 0 }, new double[] { -10, -1 }, new double[] { 0, 0 } }
         };
