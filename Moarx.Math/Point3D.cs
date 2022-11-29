@@ -4,51 +4,59 @@ using System.Numerics;
 namespace Moarx.Math;
 
 public readonly record struct Point3D<T>
-    where T : INumber<T> {
+    where T : struct, INumber<T> {
 
-    public T X { get; init; }
-    public T Y { get; init; }
-    public T Z { get; init; }
+    readonly T _x;
+    readonly T _y;
+    readonly T _z;
 
     public Point3D(T x, T y, T z) {
         X = x;
         Y = y;
         Z = z;
-
-        CheckNaN();
+    }
+    public Point3D(T i) {
+        X = i;
+        Y = i;
+        Z = i;
     }
 
-    private void CheckNaN() {
-        if (T.IsNaN(X) | T.IsNaN(Y) | T.IsNaN(Z)) {
-            throw new Exception("Point data has NaN");
+    public static readonly Point3D<T> Empty = new();
+
+    public T X {
+        get => _x;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
+            }
+            _x = value;
         }
     }
-    public static Point3D<T> Minimum(Point3D<T> point1, Point3D<T> point2) => new() {
-        X = T.Min(point1.X, point2.X),
-        Y = T.Min(point1.Y, point2.Y),
-        Z = T.Min(point1.Z, point2.Z)
-    };
-    public static Point3D<T> Maximum(Point3D<T> point1, Point3D<T> point2) => new() {
-        X = T.Max(point1.X, point2.X),
-        Y = T.Max(point1.Y, point2.Y),
-        Z = T.Max(point1.Z, point2.Z)
-    };
-    public static Point3D<T> Permute(Point3D<T> p, int x, int y, int z) => new() {
-        X = p[x],
-        Y = p[y],
-        Z = p[z]
-    };
+    public T Y {
+        get => _y;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
+            }
+            _y = value;
+        }
+    }
+    public T Z {
+        get => _z;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
+            }
+            _z = value;
+        }
+    }
+
+
     public Vector3D<T> ToVector() {
-        CheckNaN();
         return new Vector3D<T>(X, Y, Z);
     }
 
-    //TODO punkt + punkt sinn?
-    public static Point3D<T> operator +(Point3D<T> left, Point3D<T> right) => new() {
-        X = left.X + right.X,
-        Y = left.Y + right.Y,
-        Z = left.Z + right.Z
-    };
+
     public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y,
@@ -71,25 +79,32 @@ public readonly record struct Point3D<T>
         Z = -point.Z
     };
 
-    //TODO punkt * punkt sinn?
-    public static Point3D<T> operator *(Point3D<T> left, Point3D<T> right) => new() {
-        X = left.X * right.X,
-        Y = left.Y * right.Y,
-        Z = left.Z * right.Z
-    };
-    public static Point3D<T> operator *(Point3D<T> left, T scalar) => new() {
-        X = left.X * scalar,
-        Y = left.Y * scalar,
-        Z = left.Z * scalar
-    };
-    public static Point3D<T> operator *(T scalar, Point3D<T> right) => new() {
-        X = right.X * scalar,
-        Y = right.Y * scalar,
-        Z = right.Z * scalar
-    };
+    public static Point3D<T> operator *(Point3D<T> left, T scalar) {
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = left.X * scalar,
+            Y = left.Y * scalar,
+            Z = left.Z * scalar
+        };
+    }
+    public static Point3D<T> operator *(T scalar, Point3D<T> right) {
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = right.X * scalar,
+            Y = right.Y * scalar,
+            Z = right.Z * scalar
+        };
+    }
 
     public static Point3D<T> operator /(Point3D<T> left, T scalar) {
-        Debug.Assert(!T.IsNaN(scalar));
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+        if (scalar == T.CreateChecked(0))
+            throw new DivideByZeroException(nameof(scalar));
 
         T inv = T.CreateChecked(1) / scalar;
 

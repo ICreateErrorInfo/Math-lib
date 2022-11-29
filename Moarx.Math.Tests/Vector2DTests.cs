@@ -8,18 +8,53 @@ public class Vector2DTests {
     [Test]
     public void TestCtor() {
 
-        var p = new Vector2D<double>();
-        Assert.That(p.X, Is.Zero);
-        Assert.That(p.Y, Is.Zero);
+        var v = new Vector2D<double>();
+        Assert.That(v.X, Is.Zero);
+        Assert.That(v.Y, Is.Zero);
     }
     [Test]
     public void TestCtorArgs() {
 
-        var p = new Vector2D<double>(1, 2);
+        var v = new Vector2D<double>(1, 2);
 
-        Assert.That(p.X, Is.EqualTo(1));
-        Assert.That(p.Y, Is.EqualTo(2));
+        Assert.That(v.X, Is.EqualTo(1));
+        Assert.That(v.Y, Is.EqualTo(2));
+
+        var v1 = new Vector2D<double>(0);
+
+        Assert.That(v1.X, Is.EqualTo(0));
+        Assert.That(v1.Y, Is.EqualTo(0));
     }
+    [Test]
+    public void TestCtorNaN() {
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Vector2D<double>(double.NaN, 2), "X is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Vector2D<double>(1, double.NaN), "Y is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Vector2D<double>(double.NaN, double.NaN), "Data is NaN");
+
+        var p = Vector2D<double>.Empty;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { X = double.NaN }, "X is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { Y = double.NaN }, "Y is NaN");
+
+    }
+    [Test]
+    public void TestOperatorException() {
+        var p = new Vector2D<double>(1, -4);
+
+        Assert.Throws<DivideByZeroException>(() => _ = p / 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p * double.NaN);
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = double.NaN * p);
+    }
+    [Test]
+    public void TestGetLengthSquared() {
+
+        var v = new Vector2D<double>(3, 4);
+
+        Assert.That(v.GetLengthSquared(), Is.EqualTo(25));     
+    }
+
 
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.AdditionData))]
     public void AdditionTests(double[] expected, double[] firstVector, double[] secondVector) {
@@ -79,24 +114,6 @@ public class Vector2DTests {
     }
 
 
-    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MinimumData))]
-    public void MinimumTests(double[] expected, double[] firstVector, double[] secondVector) {
-        Vector2D<double> vector1 =  new Vector2D<double>(firstVector[0], firstVector[1]);
-        Vector2D<double> vector2 =  new Vector2D<double>(secondVector[0], secondVector[1]);
-
-        Vector2D<double> expectedVector = new Vector2D<double>(expected[0], expected[1]);
-
-        Assert.That(expectedVector, Is.EqualTo(Vector2D<double>.Minimum(vector1, vector2)));
-    }
-    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MaximumData))]
-    public void MaximumTests(double[] expected, double[] firstVector, double[] secondVector) {
-        Vector2D<double> vector1 =  new Vector2D<double>(firstVector[0], firstVector[1]);
-        Vector2D<double> vector2 =  new Vector2D<double>(secondVector[0], secondVector[1]);
-
-        Vector2D<double> expectedVector = new Vector2D<double>(expected[0], expected[1]);
-
-        Assert.That(expectedVector, Is.EqualTo(Vector2D<double>.Maximum(vector1, vector2)));
-    }
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.CastData))]
     public void PointCastTests(double[] expected, double[] vector) {
         Vector2D<double> vector1 =  new Vector2D<double>(vector[0], vector[1]);

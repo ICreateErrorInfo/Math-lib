@@ -5,32 +5,45 @@ namespace Moarx.Math;
 public readonly record struct Vector2D<T>
     where T : struct, INumber<T> {
 
-    public T X { get; init; }
-    public T Y { get; init; }
+    readonly T _x;
+    readonly T _y;
 
     public Vector2D(T x, T y) {
-        X = x; Y = y;
-        CheckNaN();
+        X = x;
+        Y = y;
+    }
+    public Vector2D(T i) {
+        X = i;
+        Y = i;
     }
 
-    private void CheckNaN() {
-        if (T.IsNaN(X) | T.IsNaN(Y)) {
-            throw new Exception("Vector data has NaN");
+    public static readonly Point2D<T> Empty = new();
+
+    public T X {
+        get => _x;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Vector data has NaN");
+            }
+            _x = value;
         }
     }
+    public T Y {
+        get => _y;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Vector data has NaN");
+            }
+            _y = value;
+        }
+    }
+
+
     public T GetLengthSquared() => this * this;
-    public static Vector2D<T> Minimum(Vector2D<T> vector1, Vector2D<T> vector2) => new() {
-        X = T.Min(vector1.X, vector2.X),
-        Y = T.Min(vector1.Y, vector2.Y)
-    };
-    public static Vector2D<T> Maximum(Vector2D<T> vector1, Vector2D<T> vector2) => new() {
-        X = T.Max(vector1.X, vector2.X),
-        Y = T.Max(vector1.Y, vector2.Y)
-    };
     public Point2D<T> ToPoint() {
-        CheckNaN();
         return new Point2D<T>(X, Y);
     }
+
 
     public static Vector2D<T> operator +(Vector2D<T> left, Vector2D<T> right) => new() {
         X = left.X + right.X,
@@ -49,17 +62,30 @@ public readonly record struct Vector2D<T>
     public static T operator *(Vector2D<T> left, Vector2D<T> right) {
         return (left.X * right.X) + (left.Y * right.Y);
     }
-    public static Vector2D<T> operator *(Vector2D<T> left, T scalar) => new() {
-        X = left.X * scalar,
-        Y = left.Y * scalar,
-    };
-    public static Vector2D<T> operator *(T scalar, Vector2D<T> right) => new() {
-        X = right.X * scalar,
-        Y = right.Y * scalar,
-    };
+    public static Vector2D<T> operator *(Vector2D<T> left, T scalar) {
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = left.X * scalar,
+            Y = left.Y * scalar,
+        };
+    }
+    public static Vector2D<T> operator *(T scalar, Vector2D<T> right) {
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = right.X * scalar,
+            Y = right.Y * scalar,
+        };
+    }
 
     public static Vector2D<T> operator /(Vector2D<T> left, T scalar) {
-        Debug.Assert(!T.IsNaN(scalar));
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+        if (scalar == T.CreateChecked(0))
+            throw new DivideByZeroException(nameof(scalar));
 
         T inv = T.CreateChecked(1) / scalar;
 
@@ -73,8 +99,6 @@ public readonly record struct Vector2D<T>
 
     public T this[int i] {
         get {
-            CheckNaN();
-
             if (i == 0) {
                 return X;
             }

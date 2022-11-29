@@ -20,31 +20,44 @@ public class Point2DTests {
 
         Assert.That(p.X, Is.EqualTo(1));
         Assert.That(p.Y, Is.EqualTo(2));
+
+        var p1 = new Point2D<double>(0);
+
+        Assert.That(p1.X, Is.EqualTo(0));
+        Assert.That(p1.Y, Is.EqualTo(0));
     }
 
     [Test]
     public void TestCtorNaN() {
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, 2),          "Guckguck");
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(1,          double.NaN), "Guckguck");
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, double.NaN), "Guckguck");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, 2),          "X is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(1,          double.NaN), "Y is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, double.NaN), "Data is NaN");
         
         var p = Point2D<double>.Empty;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { X = double.NaN }, "Guckguck");
-        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { Y = double.NaN }, "Guckguck");
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { X = double.NaN }, "X is NaN");
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { Y = double.NaN }, "Y is NaN");
 
     }
+    [Test]
+    public void TestOperatorException() {
+        var p = new Point2D<double>(1, -4);
+
+        Assert.Throws<DivideByZeroException>(() => _ = p / 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p * double.NaN);
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = double.NaN * p);
+    }
+
 
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.AdditionData))]
     public void AdditionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
-        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
         Vector2D<double> vector1 =  new Vector2D<double>(secondPoint[0], secondPoint[1]);
 
         Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
 
-        Assert.That(expectedPoint, Is.EqualTo(point1 + point2));
         Assert.That(expectedPoint, Is.EqualTo(point1 + vector1));
     }
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.SubtractionData))]
@@ -90,35 +103,8 @@ public class Point2DTests {
 
         Assert.That(expected[0], Is.EqualTo(point1[(int)access[0]]));
     }
-    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.PointMultiplicationData))]
-    public void PointMultiplicationTests(double[] expected, double[] firstPoint, double[] secondPoint) {
-        Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
-        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
-
-        Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
-
-        Assert.That(expectedPoint, Is.EqualTo(point1 * point2));
-    }
 
 
-    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MinimumData))]
-    public void MinimumTests(double[] expected, double[] firstPoint, double[] secondPoint) {
-        Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
-        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
-
-        Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
-
-        Assert.That(expectedPoint, Is.EqualTo(Point2D<double>.Minimum(point1, point2)));
-    }
-    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MaximumData))]
-    public void MaximumTests(double[] expected, double[] firstPoint, double[] secondPoint) {
-        Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
-        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
-
-        Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
-
-        Assert.That(expectedPoint, Is.EqualTo(Point2D<double>.Maximum(point1, point2)));
-    }
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.CastData))]
     public void VectorCastTests(double[] expected, double[] firstPoint) {
         Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);

@@ -44,24 +44,8 @@ namespace Moarx.Math.Tests {
             new object[] { new double[] { -24 }, new double[] { -10, -1, 1 }, new double[] { 1, 0, -14 } },
             new object[] { new double[] { 0 }, new double[] { -10, -1, 1 }, new double[] { 0, 0, 0 } }
         };
-        public static IEnumerable<object[]> PointMultiplicationData = new List<object[]>
-        {
-            new object[] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 }, new double[] { 1, 1, 1 }  },
-            new object[] { new double[] { 48, -40, -2 }, new double[] { 12, -10, -0.5 }, new double[] { 4, 4, 4 } },
-            new object[] { new double[] { 48, -10, -1 }, new double[] { 12, -10, -0.5 }, new double[] { 4, 1, 2 } }
-        };
 
 
-        public static IEnumerable<object[]> MinimumData = new List<object[]>
-        {
-            new object[] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 }, new double[] { 1, 1, 1 }  },
-            new object[] { new double[] { 48, -40, -2 }, new double[] { 48, -10, -2 }, new double[] { 50, -40, 1 } }
-        };
-        public static IEnumerable<object[]> MaximumData = new List<object[]>
-        {
-            new object[] { new double[] { 1, 1, 1 }, new double[] { 0, 0, 0 }, new double[] { 1, 1, 1 }  },
-            new object[] { new double[] { 50, -10, 1 }, new double[] { 48, -10, -2 }, new double[] { 50, -40, 1 } }
-        };
         public static IEnumerable<object[]> CastData = new List<object[]>
         {
             new object[] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 } },

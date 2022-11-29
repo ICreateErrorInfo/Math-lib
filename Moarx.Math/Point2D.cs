@@ -3,14 +3,18 @@ using System.Numerics;
 
 namespace Moarx.Math;
 public readonly record struct Point2D<T>
-    where T :struct, INumber<T>{
+    where T : struct, INumber<T> {
 
     readonly T _x;
     readonly T _y;
 
     public Point2D(T x, T y) {
-        X =  x ;
-        Y =  y ;
+        X = x;
+        Y = y;
+    }
+    public Point2D(T i) {
+        X = i;
+        Y = i;
     }
 
     public static readonly Point2D<T> Empty = new();
@@ -24,7 +28,6 @@ public readonly record struct Point2D<T>
             _x = value;
         }
     }
-    
     public T Y {
         get => _y;
         init {
@@ -34,24 +37,12 @@ public readonly record struct Point2D<T>
             _y = value;
         }
     }
-    
-    public static Point2D<T> Minimum(Point2D<T> point1, Point2D<T> point2) => new() {
-        X = T.Min(point1.X, point2.X),
-        Y = T.Min(point1.Y, point2.Y)
-    };
-    public static Point2D<T> Maximum(Point2D<T> point1, Point2D<T> point2) => new() {
-        X = T.Max(point1.X, point2.X),
-        Y = T.Max(point1.Y, point2.Y)
-    };
+
     public Vector2D<T> ToVector() {
         return new Vector2D<T>(X, Y);
     }
 
-    //TODO punkt + punkt sinn?
-    public static Point2D<T> operator +(Point2D<T> left, Point2D<T> right) => new() {
-        X = left.X + right.X,
-        Y = left.Y + right.Y
-    };
+
     public static Point2D<T> operator +(Point2D<T> left, Vector2D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y
@@ -70,22 +61,30 @@ public readonly record struct Point2D<T>
         Y = -point.Y
     };
 
-    //TODO punkt * punkt sinn?
-    public static Point2D<T> operator *(Point2D<T> left, Point2D<T> right) => new() {
-        X = left.X * right.X,
-        Y = left.Y * right.Y
-    };
-    public static Point2D<T> operator *(Point2D<T> left, T scalar) => new() {
-        X = left.X * scalar,
-        Y = left.Y * scalar
-    };
-    public static Point2D<T> operator *(T scalar, Point2D<T> right) => new() {
-        X = right.X * scalar,
-        Y = right.Y * scalar
-    };
+    public static Point2D<T> operator *(Point2D<T> left, T scalar) {
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = left.X * scalar,
+            Y = left.Y * scalar
+        };
+    }
+    public static Point2D<T> operator *(T scalar, Point2D<T> right) {
+        if (T.IsNaN(scalar)) 
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+
+        return new() {
+            X = right.X * scalar,
+            Y = right.Y * scalar
+        };
+    }
 
     public static Point2D<T> operator /(Point2D<T> left, T scalar) {
-        Debug.Assert(!T.IsNaN(scalar));
+        if (T.IsNaN(scalar))
+            throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
+        if(scalar == T.CreateChecked(0)) 
+            throw new DivideByZeroException(nameof(scalar));
 
         T inv = T.CreateChecked(1) / scalar;
 
