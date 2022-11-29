@@ -54,9 +54,11 @@ public readonly record struct Vector2D<T>
     public static Vector2D<T> operator /(Vector2D<T> left, T scalar) {
         Debug.Assert(!T.IsNaN(scalar));
 
+        T inv = T.CreateChecked(1) / scalar;
+
         Vector2D<T> vector = new() {
-            X = left.X / scalar,
-            Y = left.Y / scalar
+            X = left.X * inv,
+            Y = left.Y * inv
         };
 
         return vector;

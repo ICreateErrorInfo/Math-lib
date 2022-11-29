@@ -63,9 +63,11 @@ public readonly record struct Point2D<T>
     public static Point2D<T> operator /(Point2D<T> left, T scalar) {
         Debug.Assert(!T.IsNaN(scalar));
 
+        T inv = T.CreateChecked(1) / scalar;
+
         Point2D<T> point = new() {
-            X = left.X / scalar,
-            Y = left.Y / scalar
+            X = left.X * inv,
+            Y = left.Y * inv
         };
 
         return point;

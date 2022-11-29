@@ -83,13 +83,13 @@ public readonly record struct Vector3D<T>
 
     public static Vector3D<T> operator /(Vector3D<T> left, T scalar) {
         Debug.Assert(!T.IsNaN(scalar));
-        
-        //TODO * neg scalar
+
+        T inv = T.CreateChecked(1) / scalar;
 
         Vector3D<T> vector = new() {
-            X = left.X / scalar,
-            Y = left.Y / scalar,
-            Z = left.Z / scalar
+            X = left.X * inv,
+            Y = left.Y * inv,
+            Z = left.Z * inv
         };
 
         return vector;

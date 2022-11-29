@@ -91,10 +91,12 @@ public readonly record struct Point3D<T>
     public static Point3D<T> operator /(Point3D<T> left, T scalar) {
         Debug.Assert(!T.IsNaN(scalar));
 
+        T inv = T.CreateChecked(1) / scalar;
+
         Point3D<T> point = new() {
-            X = left.X / scalar,
-            Y = left.Y / scalar,
-            Z = left.Z / scalar
+            X = left.X * inv,
+            Y = left.Y * inv,
+            Z = left.Z * inv
         };
 
         return point;
