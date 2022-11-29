@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 
 namespace Moarx.Math.Tests; 
 
@@ -22,6 +23,10 @@ public class Point3DTests {
         Assert.That(p.X, Is.EqualTo(1));
         Assert.That(p.Y, Is.EqualTo(2));
         Assert.That(p.Z, Is.EqualTo(3));
+    }
+
+    public void TestCheckNaN() {
+        //TODO       
     }
 
 

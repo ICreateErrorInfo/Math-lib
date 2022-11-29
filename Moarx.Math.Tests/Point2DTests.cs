@@ -86,6 +86,25 @@ public class Point2DTests {
         Assert.That(expectedPoint, Is.EqualTo(point1 * point2));
     }
 
+
+    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MinimumData))]
+    public void MinimumTests(double[] expected, double[] firstPoint, double[] secondPoint) {
+        Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
+        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
+
+        Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
+
+        Assert.That(expectedPoint, Is.EqualTo(Point2D<double>.Minimum(point1, point2)));
+    }
+    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MaximumData))]
+    public void MaximumTests(double[] expected, double[] firstPoint, double[] secondPoint) {
+        Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);
+        Point2D<double> point2 =  new Point2D<double>(secondPoint[0], secondPoint[1]);
+
+        Point2D<double> expectedPoint = new Point2D<double>(expected[0], expected[1]);
+
+        Assert.That(expectedPoint, Is.EqualTo(Point2D<double>.Maximum(point1, point2)));
+    }
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.CastData))]
     public void VectorCastTests(double[] expected, double[] firstPoint) {
         Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);

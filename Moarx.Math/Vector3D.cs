@@ -20,7 +20,7 @@ public readonly record struct Vector3D<T>
 
     private void CheckNaN() {
         if(T.IsNaN(X) | T.IsNaN(Y) | T.IsNaN(Z)) {
-            Debug.Assert(false, "Vector data has NaN");
+            throw new Exception("Vector data has NaN");
         }
     }
     public Vector3D<T> CrossProduct(Vector3D<T> vector2){

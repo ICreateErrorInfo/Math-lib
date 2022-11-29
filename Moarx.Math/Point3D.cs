@@ -20,7 +20,7 @@ public readonly record struct Point3D<T>
 
     private void CheckNaN() {
         if (T.IsNaN(X) | T.IsNaN(Y) | T.IsNaN(Z)) {
-            Debug.Assert(false, "Point data has NaN");
+            throw new Exception("Point data has NaN");
         }
     }
     public static Point3D<T> Minimum(Point3D<T> point1, Point3D<T> point2) => new() {

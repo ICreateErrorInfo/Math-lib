@@ -15,11 +15,18 @@ public readonly record struct Vector2D<T>
 
     private void CheckNaN() {
         if (T.IsNaN(X) | T.IsNaN(Y)) {
-            //TODO ob assert oder nicht
-            Debug.Assert(false, "Vector data has NaN");
+            throw new Exception("Vector data has NaN");
         }
     }
     public T GetLengthSquared() => this * this;
+    public static Vector2D<T> Minimum(Vector2D<T> vector1, Vector2D<T> vector2) => new() {
+        X = T.Min(vector1.X, vector2.X),
+        Y = T.Min(vector1.Y, vector2.Y)
+    };
+    public static Vector2D<T> Maximum(Vector2D<T> vector1, Vector2D<T> vector2) => new() {
+        X = T.Max(vector1.X, vector2.X),
+        Y = T.Max(vector1.Y, vector2.Y)
+    };
     public Point2D<T> ToPoint() {
         CheckNaN();
         return new Point2D<T>(X, Y);

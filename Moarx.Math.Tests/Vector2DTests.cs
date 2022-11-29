@@ -79,6 +79,24 @@ public class Vector2DTests {
     }
 
 
+    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MinimumData))]
+    public void MinimumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Vector2D<double> vector1 =  new Vector2D<double>(firstVector[0], firstVector[1]);
+        Vector2D<double> vector2 =  new Vector2D<double>(secondVector[0], secondVector[1]);
+
+        Vector2D<double> expectedVector = new Vector2D<double>(expected[0], expected[1]);
+
+        Assert.That(expectedVector, Is.EqualTo(Vector2D<double>.Minimum(vector1, vector2)));
+    }
+    [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.MaximumData))]
+    public void MaximumTests(double[] expected, double[] firstVector, double[] secondVector) {
+        Vector2D<double> vector1 =  new Vector2D<double>(firstVector[0], firstVector[1]);
+        Vector2D<double> vector2 =  new Vector2D<double>(secondVector[0], secondVector[1]);
+
+        Vector2D<double> expectedVector = new Vector2D<double>(expected[0], expected[1]);
+
+        Assert.That(expectedVector, Is.EqualTo(Vector2D<double>.Maximum(vector1, vector2)));
+    }
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.CastData))]
     public void PointCastTests(double[] expected, double[] vector) {
         Vector2D<double> vector1 =  new Vector2D<double>(vector[0], vector[1]);
