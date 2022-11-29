@@ -14,7 +14,6 @@ public class Point3DTests {
         Assert.That(p.Y, Is.Zero);
         Assert.That(p.Z, Is.EqualTo(0));
     }
-
     [Test]
     public void TestCtorArgs() {
 

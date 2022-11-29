@@ -12,7 +12,6 @@ public class Point2DTests {
         Assert.That(p.X, Is.Zero);
         Assert.That(p.Y, Is.Zero);
     }
-
     [Test]
     public void TestCtorArgs() {
 
@@ -26,7 +25,6 @@ public class Point2DTests {
         Assert.That(p1.X, Is.EqualTo(0));
         Assert.That(p1.Y, Is.EqualTo(0));
     }
-
     [Test]
     public void TestCtorNaN() {
 

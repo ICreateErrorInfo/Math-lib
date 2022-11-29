@@ -13,7 +13,6 @@ public class Vector3DTests {
         Assert.That(p.Y, Is.Zero);
         Assert.That(p.Z, Is.EqualTo(0));
     }
-
     [Test]
     public void TestCtorArgs() {
 
@@ -46,7 +45,7 @@ public class Vector3DTests {
     }
     [Test]
     public void TestOperatorException() {
-        var p = new Point3D<double>(1, -4, 3);
+        var p = new Vector3D<double>(1, -4, 3);
 
         Assert.Throws<DivideByZeroException>(() => _ = p / 0);
 
