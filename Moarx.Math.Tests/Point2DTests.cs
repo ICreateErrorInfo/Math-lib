@@ -22,6 +22,20 @@ public class Point2DTests {
         Assert.That(p.Y, Is.EqualTo(2));
     }
 
+    [Test]
+    public void TestCtorNaN() {
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, 2),          "Guckguck");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(1,          double.NaN), "Guckguck");
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Point2D<double>(double.NaN, double.NaN), "Guckguck");
+        
+        var p = Point2D<double>.Empty;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { X = double.NaN }, "Guckguck");
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = p with { Y = double.NaN }, "Guckguck");
+
+    }
+
     [TestCaseSource(typeof(BaseTestData2D), nameof(BaseTestData2D.AdditionData))]
     public void AdditionTests(double[] expected, double[] firstPoint, double[] secondPoint) {
         Point2D<double> point1 =  new Point2D<double>(firstPoint[0], firstPoint[1]);

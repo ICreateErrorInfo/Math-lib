@@ -3,21 +3,38 @@ using System.Numerics;
 
 namespace Moarx.Math;
 public readonly record struct Point2D<T>
-    where T : INumber<T> {
+    where T :struct, INumber<T>{
 
-    public T X { get; init; }
-    public T Y { get; init; }
+    readonly T _x;
+    readonly T _y;
 
     public Point2D(T x, T y) {
-        X = x; Y = y;
-        CheckNaN();
+        X =  x ;
+        Y =  y ;
     }
 
-    private void CheckNaN() {
-        if (T.IsNaN(X) | T.IsNaN(Y)) {
-            throw new Exception("Point data has NaN");
+    public static readonly Point2D<T> Empty = new();
+
+    public T X {
+        get => _x;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
+            }
+            _x = value;
         }
     }
+    
+    public T Y {
+        get => _y;
+        init {
+            if (T.IsNaN(value)) {
+                throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
+            }
+            _y = value;
+        }
+    }
+    
     public static Point2D<T> Minimum(Point2D<T> point1, Point2D<T> point2) => new() {
         X = T.Min(point1.X, point2.X),
         Y = T.Min(point1.Y, point2.Y)
@@ -27,7 +44,6 @@ public readonly record struct Point2D<T>
         Y = T.Max(point1.Y, point2.Y)
     };
     public Vector2D<T> ToVector() {
-        CheckNaN();
         return new Vector2D<T>(X, Y);
     }
 

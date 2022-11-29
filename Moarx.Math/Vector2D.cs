@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Moarx.Math;
 public readonly record struct Vector2D<T>
-    where T : INumber<T> {
+    where T : struct, INumber<T> {
 
     public T X { get; init; }
     public T Y { get; init; }
