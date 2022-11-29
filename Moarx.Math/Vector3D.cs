@@ -44,6 +44,7 @@ public readonly record struct Vector3D<T>
         Z = T.Max(vector1.Z, vector2.Z)
     };
     public Point3D<T> ToPoint() {
+        CheckNaN();
         return new Point3D<T>(X, Y, Z);
     }
 

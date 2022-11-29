@@ -39,6 +39,7 @@ public readonly record struct Point3D<T>
         Z = p[z]
     };
     public Vector3D<T> ToVector() {
+        CheckNaN();
         return new Vector3D<T>(X, Y, Z);
     }
 
