@@ -8,16 +8,24 @@ public readonly record struct Normal3D<T>
     readonly Vector3D<T> _vector;
 
     public Normal3D(T x, T y, T z) {
+        if (x == T.CreateChecked(0) && y == T.CreateChecked(0) && z == T.CreateChecked(0))
+            throw new ArgumentException("Normal cant be [0, 0, 0]");
+
         _vector = new Vector3D<T>(x, y, z).Normalize();
     }
-
     public Normal3D(Vector3D<T> vector) {
+        if (vector.X == T.CreateChecked(0) && vector.Y == T.CreateChecked(0) && vector.Z == T.CreateChecked(0))
+            throw new ArgumentException("Normal cant be [0, 0, 0]");
+
         _vector = vector.Normalize();
+    }
+    public Normal3D() {
+        throw new ArgumentException("Normal cant be [0, 0, 0]");
     }
 
     public T X => _vector.X;
     public T Y => _vector.Y;
-    public T Z => _vector.Y;
+    public T Z => _vector.Z;
 
     public T this[int i] =>
         i switch {
@@ -29,8 +37,8 @@ public readonly record struct Normal3D<T>
 
     public Vector3D<T> ToVector() => _vector;
 
-    public T GetLengthSquared() => T.CreateChecked(1); // Ist bei einem Normal per Definition immer 1!
-    public T GetLength() => T.CreateChecked(1);        // Ist bei einem Normal per Definition immer 1!
+    public T GetLengthSquared() => T.CreateChecked(1);
+    public T GetLength() => T.CreateChecked(1);       
 
     public override string ToString() {
         return _vector.ToString();
