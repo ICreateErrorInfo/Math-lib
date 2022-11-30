@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Moarx.Math;
 public readonly record struct Vector2D<T>
@@ -111,7 +110,7 @@ public readonly record struct Vector2D<T>
     }
 
     public override string ToString() {
-        return $"[{X}, {Y}, {Z}]";
+        return $"[{X}, {Y}]";
     }
 }
 
