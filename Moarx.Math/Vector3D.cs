@@ -141,4 +141,8 @@ public readonly record struct Vector3D<T>
             throw new IndexOutOfRangeException();
         }
     }
+
+    public override string ToString() {
+        return $"[{X}, {Y}, {Z}]";
+    }
 }

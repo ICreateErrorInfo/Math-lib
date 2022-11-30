@@ -109,5 +109,9 @@ public readonly record struct Vector2D<T>
             throw new IndexOutOfRangeException();
         }
     }
+
+    public override string ToString() {
+        return $"[{X}, {Y}, {Z}]";
+    }
 }
 

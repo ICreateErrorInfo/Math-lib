@@ -108,5 +108,9 @@ public readonly record struct Point2D<T>
             throw new IndexOutOfRangeException();
         }
     }
+
+    public override string ToString() {
+        return $"[{X}, {Y}, {Z}]";
+    }
 }
 
