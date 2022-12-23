@@ -61,7 +61,7 @@ public readonly record struct Vector3D<T>
     }
 
     public T GetLengthSquared() => this * this;
-    public bool IsNormalized() => GetLengthSquared() == T.CreateChecked(1);
+    public bool IsNormalized() => GetLengthSquared() == T.CreateChecked(1); //TODO round bug
 
     public Point3D<T> ToPoint() {
         return new Point3D<T>(X, Y, Z);

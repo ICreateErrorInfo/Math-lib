@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using System;
 
 namespace Moarx.Math;
 
@@ -55,6 +56,16 @@ public readonly record struct Point3D<T>
     public Vector3D<T> ToVector() {
         return new Vector3D<T>(X, Y, Z);
     }
+    public static Point3D<T> SmalestComponents(Point3D<T> p, Point3D<T> p1) {
+        return new Point3D<T>(T.Min(p.X, p1.X),
+                              T.Min(p.Y, p1.Y),
+                              T.Min(p.Z, p1.Z));
+    } //TODO Naming, UnitTests
+    public static Point3D<T> GreatestComponents(Point3D<T> p, Point3D<T> p1) {
+        return new Point3D<T>(T.Max(p.X, p1.X),
+                              T.Max(p.Y, p1.Y),
+                              T.Max(p.Z, p1.Z));
+    } //TODO Naming, UnitTests
 
 
     public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
