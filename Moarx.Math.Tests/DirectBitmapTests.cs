@@ -15,12 +15,12 @@ public class DirectBitmapTests {
     }
     [Test]
     public void TestCtor2() {
-        byte[] bytes = new byte[1920 * 1080 * 2];
+        byte[] bytes = new byte[1920 * 1080 * 3];
         DirectBitmap bitmap = new DirectBitmap(1920, 1080, bytes);
 
         Assert.That(bitmap.Height, Is.EqualTo(1080));
         Assert.That(bitmap.Width, Is.EqualTo(1920));
-        Assert.That(bitmap.Bits.Length, Is.EqualTo(1080 * 1920 * 2));
+        Assert.That(bitmap.Bits.Length, Is.EqualTo(1080 * 1920 * 3));
     }
     [Test]
     public void TestCtor3() {

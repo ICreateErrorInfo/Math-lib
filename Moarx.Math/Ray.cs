@@ -1,21 +1,21 @@
 ﻿namespace Moarx.Math;
 public class Ray {
-    public readonly Point3D<double> O;
-    public readonly Vector3D<double> D;
+    public readonly Point3D<double> Origin;
+    public readonly Vector3D<double> Direction;
 
     public Ray() {
     }
-    public Ray(Point3D<double> o, Vector3D<double> d) {
-        O = o;
-        D = d;
+    public Ray(Point3D<double> origin, Vector3D<double> direction) {
+        Origin = origin;
+        Direction = direction;
     }
 
     public Point3D<double> At(double t) {
-        return O + D * t;
+        return Origin + Direction * t;
     }
 
     public override string ToString() {
-        return $"[o={O}, d={D}]";
+        return $"[o={Origin}, d={Direction}]";
     }
 }
 
