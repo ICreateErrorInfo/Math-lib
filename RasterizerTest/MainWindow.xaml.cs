@@ -1,21 +1,23 @@
-﻿using System.Windows;
-using Math_lib;
+﻿using Math_lib;
+using Moarx.Rasterizer;
+using System.Drawing;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace RasterizerTest {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-
 
     public partial class MainWindow: Window {
         //TODO implement new Rasterizer
-        //public Rasterizer r;
         public MainWindow() {
             InitializeComponent();
-            //r = new Rasterizer(width: 100,
-            //height: 100,
-            //scale: 8,
-            //cooMi: true);
+
+            Moarx.Math.DirectBitmap bmp = new Moarx.Math.DirectBitmap(11, 11);
+
+            MoarxGraphics graphics = new MoarxGraphics(bmp);
+            graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
+
+            Display.Source = ToImageSource(graphics.Bitmap);
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) {
@@ -48,6 +50,20 @@ namespace RasterizerTest {
             //Display.Source = r.GetSource();
         }
 
+        public static ImageSource ToImageSource(Moarx.Math.DirectBitmap bitmap) {
 
+            var bs = BitmapSource.Create(
+                pixelWidth: bitmap.Width,
+                pixelHeight: bitmap.Height,
+                dpiX: 96,
+                dpiY: 96,
+                pixelFormat: PixelFormats.Bgr24,
+                palette: null,
+                pixels: bitmap.Bits,
+                stride: bitmap.Stride);
+
+            return bs;
+
+        }
     }
 }

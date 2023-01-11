@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
+    <ProjectReference Include="..\Moarx.Rasterizer\Moarx.Rasterizer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@
         ResizeMode="CanResizeWithGrip"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Image x:Name="Display" />
+        <Image x:Name="Display" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
 
     </Grid>
 </Window>
