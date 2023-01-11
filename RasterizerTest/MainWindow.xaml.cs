@@ -1,30 +1,26 @@
 ﻿using System.Windows;
 using Math_lib;
-using Rasterizer_lib;
 
-namespace RasterizerTest
-{
+namespace RasterizerTest {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    
-    
-    public partial class MainWindow : Window
-    {
-        public Rasterizer r;
-        public MainWindow()
-        {
+
+
+    public partial class MainWindow: Window {
+        //TODO implement new Rasterizer
+        //public Rasterizer r;
+        public MainWindow() {
             InitializeComponent();
-            r = new Rasterizer(width: 100,
-                               height: 100,
-                               scale: 8,
-                               cooMi: true);
+            //r = new Rasterizer(width: 100,
+            //height: 100,
+            //scale: 8,
+            //cooMi: true);
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
-        {
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) {
             base.OnRenderSizeChanged(sizeInfo);
-            r.UpdateSize((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            //r.UpdateSize((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
 
             //r.DrawLine(p1: new(0,0), p2: new(2, 0), c: System.Drawing.Color.Red, thickness: 1);
 
@@ -49,9 +45,9 @@ namespace RasterizerTest
 
             var i = Vector3D.Normalize(new Vector3D(3, 4, 5)).GetLength();
 
-            Display.Source = r.GetSource();
+            //Display.Source = r.GetSource();
         }
 
-      
+
     }
 }

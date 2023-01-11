@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RasterizerTest", "Rasterize
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandSim", "SandSim\SandSim.csproj", "{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rasterizer-lib", "Rasterizer-lib\Rasterizer-lib.csproj", "{B98CDF66-C010-4460-B2E9-3B31D18C01ED}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BenchmarkTests", "BenchmarkTests\BenchmarkTests.csproj", "{0F3C1EC1-8EAE-425A-96C5-DDFC5C42F849}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{D8FFA6A1-B29E-40CF-B6DB-95BB2AF0FE00}"
@@ -35,6 +33,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Math.Tests", "Moarx.Math.Tests\Moarx.Math.Tests.csproj", "{78E1775D-BEC6-45DA-BF7E-028692B2FCF6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recognizer", "Recognizer\Recognizer.csproj", "{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moarx.Rasterizer", "Moarx.Rasterizer\Moarx.Rasterizer.csproj", "{106460FC-7DE8-492F-93F7-B8F34FE42192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,10 +66,6 @@ Global
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2FDE2BC-CEE4-406B-9912-C3C4BF250DA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B98CDF66-C010-4460-B2E9-3B31D18C01ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F3C1EC1-8EAE-425A-96C5-DDFC5C42F849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F3C1EC1-8EAE-425A-96C5-DDFC5C42F849}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F3C1EC1-8EAE-425A-96C5-DDFC5C42F849}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,6 +94,10 @@ Global
 		{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
