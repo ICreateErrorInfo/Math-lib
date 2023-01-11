@@ -12,10 +12,11 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            Moarx.Math.DirectBitmap bmp = new Moarx.Math.DirectBitmap(11, 11);
+            Moarx.Math.DirectBitmap bmp = new Moarx.Math.DirectBitmap(500, 500);
 
             MoarxGraphics graphics = new MoarxGraphics(bmp);
-            graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
+            //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
+            graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
 
             Display.Source = ToImageSource(graphics.Bitmap);
         }
