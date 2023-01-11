@@ -107,4 +107,12 @@ public class MoarxGraphics {
             Bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y, color);
         }
     }
+    public void DrawTriangle(Triangle2D triangle, Color color) {
+        DrawLine(new(triangle.Point1, triangle.Point2), color);
+        DrawLine(new(triangle.Point2, triangle.Point3), color);
+        DrawLine(new(triangle.Point3, triangle.Point1), color);
+    }
+    public void DrawTriangleFilled(Triangle2D triangle, Color color) {
+
+    }
 }

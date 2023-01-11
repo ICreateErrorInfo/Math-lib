@@ -16,7 +16,8 @@ namespace RasterizerTest {
 
             MoarxGraphics graphics = new MoarxGraphics(bmp);
             //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
-            graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
+            //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
+            graphics.DrawTriangle(new(new(0,0), new(250, 499), new(499, 250)), System.Drawing.Color.White);
 
             Display.Source = ToImageSource(graphics.Bitmap);
         }
