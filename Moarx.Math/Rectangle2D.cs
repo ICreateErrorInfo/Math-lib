@@ -8,6 +8,10 @@ public static class Rectangle2D {
         return new Rectangle2D<T>(x: x, y: y, width: width, height: height);
     }
 
+    public static Rectangle2D<T> Create<T>(Point2D<T> corner1, Point2D<T> corner2) where T : struct, INumber<T> {
+        return new Rectangle2D<T>(corner1, corner2);
+    }
+
 }
 
 public readonly record struct Rectangle2D<T>

@@ -64,7 +64,11 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawLine(Line2D line, Color color) {
+    public void DrawLine(Point2D<double> start, Point2D<double> end, Color color) {
+        DrawLine(new(start, end), color);
+    }
+
+    public void DrawLine(Line2D<double> line, Color color) {
         Vector2D<double> slope = line.EndPoint - line.StartPoint;
 
         int dx = System.Math.Abs((int)slope.X);
@@ -97,7 +101,7 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawEllipse(Ellipse2D ellipse, Color color) {
+    public void DrawEllipse(Ellipse2D<double> ellipse, Color color) {
         //Circle
         if (ellipse.VerticalStretch == ellipse.HorizontalStretch) {
             int radius = (int)ellipse.VerticalStretch;
@@ -184,13 +188,17 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawTriangle(Triangle2D triangle, Color color) {
-        DrawLine(new(triangle.Point1, triangle.Point2), color);
-        DrawLine(new(triangle.Point2, triangle.Point3), color);
-        DrawLine(new(triangle.Point3, triangle.Point1), color);
+    public void DrawTriangle(Triangle2D<double> triangle, Color color) {
+        DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
 
-    public void DrawTriangleFilled(Triangle2D triangle, Color color) {
+    public void DrawTriangle(Point2D<double> point1, Point2D<double> point2, Point2D<double> point3, Color color) {
+        DrawLine(point1, point2, color);
+        DrawLine(point2, point3, color);
+        DrawLine(point3, point1, color);
+    }
+
+    public void DrawTriangleFilled(Triangle2D<double> triangle, Color color) {
 
     }
 

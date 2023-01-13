@@ -16,7 +16,7 @@ namespace RasterizerTest {
             DirectGraphics graphics = new DirectGraphics(bmp);
             //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
             //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
-            graphics.DrawTriangle(new(new(0,0), new(250, 499), new(499, 250)), System.Drawing.Color.White);
+            graphics.DrawTriangle(new(0,0), new(250, 499), new(499, 250), System.Drawing.Color.White);
 
             var slice = Rectangle2D.Create(
                 x: bmp.Width     / 2, y: bmp.Height / 2,
