@@ -1,12 +1,15 @@
 ﻿namespace Moarx.Math;
-public class Ray {
-    public readonly Point3D<double> Origin;
+
+public readonly record struct Ray {
+
+    public readonly Point3D<double>  Origin;
     public readonly Vector3D<double> Direction;
 
     public Ray() {
     }
+
     public Ray(Point3D<double> origin, Vector3D<double> direction) {
-        Origin = origin;
+        Origin    = origin;
         Direction = direction;
     }
 
@@ -17,5 +20,5 @@ public class Ray {
     public override string ToString() {
         return $"[o={Origin}, d={Direction}]";
     }
-}
 
+}

@@ -1,18 +1,20 @@
 ﻿namespace Moarx.Math;
-public class Ellipse2D {
-    public readonly Point2D<double> MidPoint;
-    public readonly double HorizontalStretch;
-    public readonly double VerticalStretch;
+
+public readonly record struct Ellipse2D {
 
     public Ellipse2D(Point2D<double> midPoint, double horizontalStretch, double verticalStretch) {
-        MidPoint = midPoint;
+        MidPoint          = midPoint;
         HorizontalStretch = horizontalStretch;
-        VerticalStretch = verticalStretch;
+        VerticalStretch   = verticalStretch;
     }
 
     public Ellipse2D(Point2D<double> midPoint, double radius) {
-        MidPoint = midPoint;
+        MidPoint          = midPoint;
         HorizontalStretch = VerticalStretch = radius;
     }
-}
 
+    public Point2D<double> MidPoint          { get; }
+    public double          HorizontalStretch { get; }
+    public double          VerticalStretch   { get; }
+
+}

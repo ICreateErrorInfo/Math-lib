@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Moarx.Math;
+
 public readonly record struct Point2D<T>
     where T : struct, INumber<T> {
 
@@ -12,6 +12,7 @@ public readonly record struct Point2D<T>
         X = x;
         Y = y;
     }
+
     public Point2D(T i) {
         X = i;
         Y = i;
@@ -25,15 +26,18 @@ public readonly record struct Point2D<T>
             if (T.IsNaN(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
             }
+
             _x = value;
         }
     }
+
     public T Y {
         get => _y;
         init {
             if (T.IsNaN(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value), "Point data has NaN");
             }
+
             _y = value;
         }
     }
@@ -41,7 +45,6 @@ public readonly record struct Point2D<T>
     public Vector2D<T> ToVector() {
         return new Vector2D<T>(X, Y);
     }
-
 
     public static Point2D<T> operator +(Point2D<T> left, Vector2D<T> right) => new() {
         X = left.X + right.X,
@@ -52,10 +55,12 @@ public readonly record struct Point2D<T>
         X = left.X - right.X,
         Y = left.Y - right.Y
     };
+
     public static Point2D<T> operator -(Point2D<T> left, Vector2D<T> right) => new() {
         X = left.X - right.X,
         Y = left.Y - right.Y
     };
+
     public static Point2D<T> operator -(Point2D<T> point) => new() {
         X = -point.X,
         Y = -point.Y
@@ -70,8 +75,9 @@ public readonly record struct Point2D<T>
             Y = left.Y * scalar
         };
     }
+
     public static Point2D<T> operator *(T scalar, Point2D<T> right) {
-        if (T.IsNaN(scalar)) 
+        if (T.IsNaN(scalar))
             throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
 
         return new() {
@@ -83,7 +89,7 @@ public readonly record struct Point2D<T>
     public static Point2D<T> operator /(Point2D<T> left, T scalar) {
         if (T.IsNaN(scalar))
             throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");
-        if(scalar == T.CreateChecked(0)) 
+        if (scalar == T.CreateChecked(0))
             throw new DivideByZeroException(nameof(scalar));
 
         T inv = T.CreateChecked(1) / scalar;
@@ -101,6 +107,7 @@ public readonly record struct Point2D<T>
             if (i == 0) {
                 return X;
             }
+
             if (i == 1) {
                 return Y;
             }
@@ -112,5 +119,5 @@ public readonly record struct Point2D<T>
     public override string ToString() {
         return $"[{X}, {Y}]";
     }
-}
 
+}

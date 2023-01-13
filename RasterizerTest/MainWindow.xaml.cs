@@ -1,6 +1,4 @@
-﻿using Math_lib;
-using Moarx.Rasterizer;
-using System.Drawing;
+﻿using Moarx.Rasterizer;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
@@ -12,14 +10,14 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            Moarx.Math.DirectBitmap bmp = new Moarx.Math.DirectBitmap(500, 500);
+            DirectBitmap bmp = new DirectBitmap(500, 500);
 
             MoarxGraphics graphics = new MoarxGraphics(bmp);
             //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
             //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
             graphics.DrawTriangle(new(new(0,0), new(250, 499), new(499, 250)), System.Drawing.Color.White);
 
-            Display.Source = ToImageSource(graphics.Bitmap);
+            Display.Source = ToImageSource(bmp);
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) {
@@ -47,12 +45,12 @@ namespace RasterizerTest {
             //r.DrawPoint(new(0.5,0.5), System.Drawing.Color.White);
             //r.DrawTriangle(new(0,0), new(1,0), new(2,-2), System.Drawing.Color.AliceBlue);
 
-            var i = Vector3D.Normalize(new Vector3D(3, 4, 5)).GetLength();
+            //var i = Vector3D.Normalize(new Vector3D(3, 4, 5)).GetLength();
 
             //Display.Source = r.GetSource();
         }
 
-        public static ImageSource ToImageSource(Moarx.Math.DirectBitmap bitmap) {
+        public static ImageSource ToImageSource(DirectBitmap bitmap) {
 
             var bs = BitmapSource.Create(
                 pixelWidth: bitmap.Width,

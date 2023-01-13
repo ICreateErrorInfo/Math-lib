@@ -14,7 +14,7 @@ namespace Moarx.Math {
 
         public static Normal3D<T> ToNormal<T>(this Vector3D<T> source) where T : struct, INumber<T>, IRootFunctions<T> {
             return new Normal3D<T>(
-                x: source.X, 
+                x: source.X,
                 y: source.Y,
                 z: source.Z);
         }

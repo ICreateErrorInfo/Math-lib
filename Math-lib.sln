@@ -34,7 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Math.Tests", "Moarx.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recognizer", "Recognizer\Recognizer.csproj", "{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moarx.Rasterizer", "Moarx.Rasterizer\Moarx.Rasterizer.csproj", "{106460FC-7DE8-492F-93F7-B8F34FE42192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Rasterizer", "Moarx.Rasterizer\Moarx.Rasterizer.csproj", "{106460FC-7DE8-492F-93F7-B8F34FE42192}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Rasterizer.Tests", "Moarx.Rasterizer.Tests\Moarx.Rasterizer.Tests.csproj", "{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +100,10 @@ Global
 		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{106460FC-7DE8-492F-93F7-B8F34FE42192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
