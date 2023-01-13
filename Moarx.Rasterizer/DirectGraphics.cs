@@ -7,7 +7,7 @@ public class DirectGraphics {
 
     readonly DirectBitmap _bitmap;
 
-    public DirectGraphics(DirectBitmap bitmap) {
+    DirectGraphics(DirectBitmap bitmap) {
         _bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
     }
 
