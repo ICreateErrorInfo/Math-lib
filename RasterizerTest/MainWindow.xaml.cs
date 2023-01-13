@@ -10,9 +10,9 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            DirectBitmap bmp = new DirectBitmap(500, 500);
+            DirectBitmap bmp = DirectBitmap.Create(500, 500);
 
-            MoarxGraphics graphics = new MoarxGraphics(bmp);
+            DirectGraphics graphics = new DirectGraphics(bmp);
             //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
             //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
             graphics.DrawTriangle(new(new(0,0), new(250, 499), new(499, 250)), System.Drawing.Color.White);
@@ -59,7 +59,7 @@ namespace RasterizerTest {
                 dpiY: 96,
                 pixelFormat: PixelFormats.Bgr24,
                 palette: null,
-                pixels: bitmap.Bits,
+                pixels: bitmap.GetBytes(),
                 stride: bitmap.Stride);
 
             return bs;

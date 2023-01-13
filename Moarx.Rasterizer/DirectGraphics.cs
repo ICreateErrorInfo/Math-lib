@@ -3,11 +3,11 @@ using System.Drawing;
 
 namespace Moarx.Rasterizer;
 
-public class MoarxGraphics {
+public class DirectGraphics {
 
     readonly DirectBitmap _bitmap;
 
-    public MoarxGraphics(DirectBitmap bitmap) {
+    public DirectGraphics(DirectBitmap bitmap) {
         _bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
     }
 
