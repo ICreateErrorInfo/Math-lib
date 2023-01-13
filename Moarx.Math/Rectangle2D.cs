@@ -72,9 +72,9 @@ public readonly record struct Rectangle2D<T>
     public static Rectangle2D<T> Intersect(Rectangle2D<T> a, Rectangle2D<T> b) {
 
         T x1 = T.Max(a.X, b.X);
-        T x2 = T.Min(a.X + a.Width, b.X + b.Width);
+        T x2 = T.Min(a.Right, b.Right);
         T y1 = T.Max(a.Y, b.Y);
-        T y2 = T.Min(a.Y + a.Height, b.Y + b.Height);
+        T y2 = T.Min(a.Bottom, b.Bottom);
 
         if (x2 >= x1 && y2 >= y1) {
             return Rectangle2D.Create(x1, y1, x2 - x1, y2 - y1);
@@ -85,14 +85,14 @@ public readonly record struct Rectangle2D<T>
     }
 
     public bool IntersectsWith(Rectangle2D<T> other) =>
-        (other.X < X + Width)  && (X < other.X + other.Width) &&
-        (other.Y < Y + Height) && (Y < other.Y + other.Height);
+        (other.X < Right)  && (X < other.Right) &&
+        (other.Y < Bottom) && (Y < other.Bottom);
 
     public static Rectangle2D<T> Union(Rectangle2D<T> a, Rectangle2D<T> b) {
         T x1 = T.Min(a.X, b.X);
-        T x2 = T.Max(a.X + a.Width, b.X + b.Width);
+        T x2 = T.Max(a.Right, b.Right);
         T y1 = T.Min(a.Y, b.Y);
-        T y2 = T.Max(a.Y + a.Height, b.Y + b.Height);
+        T y2 = T.Max(a.Bottom, b.Bottom);
 
         return new Rectangle2D<T>(x: x1, y: y1, width: x2 - x1, height: y2 - y1);
     }
@@ -116,9 +116,9 @@ public readonly record struct Rectangle2D<T>
     }
 
     public Rectangle2D<T> Inflate(T width, T height) {
-        return new Rectangle2D<T>(X - width, Y - height, Width + width + width, Height + height + height);
+        return new Rectangle2D<T>(X - width, Y - height, width + Width + width, height + Height + height);
     }
 
+    public override string ToString() => $"{{X={X},Y={Y},Width={Width},Height={Height}}}";
 
-    public override readonly string ToString() => $"{{X={X},Y={Y},Width={Width},Height={Height}}}";
 }
