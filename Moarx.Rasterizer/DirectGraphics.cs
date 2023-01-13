@@ -11,6 +11,8 @@ public class DirectGraphics {
         _bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
     }
 
+    public static DirectGraphics Create(DirectBitmap bitmap) => new(bitmap);
+
     public void FloodFill(int x, int y, Color newColor) {
 
         newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...

@@ -19,7 +19,7 @@ namespace Moarx.Rasterizer {
                     throw new ArgumentOutOfRangeException();
                 }
 
-                if (sliceRectangle.Right < _source.Width) {
+                if (sliceRectangle.Right > _source.Width) {
                     throw new ArgumentOutOfRangeException();
                 }
 
@@ -27,7 +27,7 @@ namespace Moarx.Rasterizer {
                     throw new ArgumentOutOfRangeException();
                 }
 
-                if (sliceRectangle.Bottom < _source.Height) {
+                if (sliceRectangle.Bottom > _source.Height) {
                     throw new ArgumentOutOfRangeException();
                 }
 
@@ -45,7 +45,13 @@ namespace Moarx.Rasterizer {
 
             public override void Clear() {
 
-                // TODO...
+                for (var y = 0; y < Height; ++y) {
+
+                    for (var x = 0; x < Width; ++x) {
+                        SetPixel(x, y, Color.Black);
+                    }
+
+                }
             }
 
             public override void SetPixel(int x, int y, Color color) {

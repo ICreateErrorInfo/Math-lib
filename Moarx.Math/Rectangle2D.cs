@@ -2,8 +2,32 @@
 
 namespace Moarx.Math;
 
+public static class Rectangle2D {
+
+    public static Rectangle2D<T> Create<T>(T x, T y, T width, T height) where T : struct, INumber<T> {
+        return new Rectangle2D<T>(x: x, y: y, width: width, height: height);
+    }
+
+}
+
 public readonly record struct Rectangle2D<T>
     where T : struct, INumber<T> {
+
+    public Rectangle2D(T x, T y, T width, T height) {
+
+        T smallX = x;
+        T smallY = y;
+
+        T largeX = x + width;
+        T largeY = y + height;
+
+        TopLeft  = new Point2D<T>(smallX, smallY);
+        TopRight = new Point2D<T>(largeX, smallY);
+
+        BottomLeft  = new Point2D<T>(smallX, largeY);
+        BottomRight = new Point2D<T>(largeX, largeY);
+        
+    }
 
     public Rectangle2D(Point2D<T> corner1, Point2D<T> corner2) {
         T smallX = T.Min(corner1.X, corner2.X);
@@ -12,10 +36,11 @@ public readonly record struct Rectangle2D<T>
         T largeX = T.Max(corner1.X, corner2.X);
         T largeY = T.Max(corner1.Y, corner2.Y);
 
-        BottomLeft  = new Point2D<T>(smallX, smallY);
-        BottomRight = new Point2D<T>(largeX, smallY);
-        TopRight    = new Point2D<T>(largeX, largeY);
-        TopLeft     = new Point2D<T>(smallX, largeY);
+        TopLeft  = new Point2D<T>(smallX, smallY);
+        TopRight = new Point2D<T>(largeX, smallY);
+        BottomLeft = new Point2D<T>(smallX, largeY);
+        BottomRight = new Point2D<T>(largeX, largeY);
+       
     }
 
     public T Left   => TopLeft.X;

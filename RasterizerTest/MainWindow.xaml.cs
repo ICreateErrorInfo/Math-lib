@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using Moarx.Math;
 
 namespace RasterizerTest {
 
@@ -16,6 +17,15 @@ namespace RasterizerTest {
             //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
             //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
             graphics.DrawTriangle(new(new(0,0), new(250, 499), new(499, 250)), System.Drawing.Color.White);
+
+            var slice = Rectangle2D.Create(
+                x: bmp.Width     / 2, y: bmp.Height / 2,
+                width: bmp.Width / 2, height: bmp.Height / 2);
+
+            var bmpSlice  = bmp.Slice(slice);
+            var grfxSlice = DirectGraphics.Create(bmpSlice);
+
+            grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
 
             Display.Source = ToImageSource(bmp);
         }
