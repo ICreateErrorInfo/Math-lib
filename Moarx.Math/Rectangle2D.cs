@@ -19,17 +19,10 @@ public readonly record struct Rectangle2D<T>
 
     public Rectangle2D(T x, T y, T width, T height) {
 
-        T smallX = x;
-        T smallY = y;
-
-        T largeX = x + width;
-        T largeY = y + height;
-
-        TopLeft  = new Point2D<T>(smallX, smallY);
-        TopRight = new Point2D<T>(largeX, smallY);
-
-        BottomLeft  = new Point2D<T>(smallX, largeY);
-        BottomRight = new Point2D<T>(largeX, largeY);
+        TopLeft     = new Point2D<T>(x        , y);
+        TopRight    = new Point2D<T>(x + width, y);
+        BottomLeft  = new Point2D<T>(x        , y + height);
+        BottomRight = new Point2D<T>(x + width, y + height);
 
     }
 
