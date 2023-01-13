@@ -30,7 +30,7 @@ public readonly record struct Rectangle2D<T>
 
         BottomLeft  = new Point2D<T>(smallX, largeY);
         BottomRight = new Point2D<T>(largeX, largeY);
-        
+
     }
 
     public Rectangle2D(Point2D<T> corner1, Point2D<T> corner2) {
@@ -40,15 +40,24 @@ public readonly record struct Rectangle2D<T>
         T largeX = T.Max(corner1.X, corner2.X);
         T largeY = T.Max(corner1.Y, corner2.Y);
 
-        TopLeft  = new Point2D<T>(smallX, smallY);
-        TopRight = new Point2D<T>(largeX, smallY);
-        BottomLeft = new Point2D<T>(smallX, largeY);
+        TopLeft     = new Point2D<T>(smallX, smallY);
+        TopRight    = new Point2D<T>(largeX, smallY);
+        BottomLeft  = new Point2D<T>(smallX, largeY);
         BottomRight = new Point2D<T>(largeX, largeY);
-       
+
     }
 
-    public T Left   => TopLeft.X;
-    public T Top    => TopLeft.Y;
+    public static readonly Rectangle2D<T> Empty = new();
+
+    public bool IsEmpty => Height == T.Zero &&
+                           Width  == T.Zero &&
+                           X      == T.Zero &&
+                           Y      == T.Zero;
+
+    public T X      => TopLeft.X;
+    public T Left   => X;
+    public T Y      => TopLeft.Y;
+    public T Top    => Y;
     public T Right  => BottomRight.X;
     public T Bottom => BottomRight.Y;
 
@@ -60,7 +69,56 @@ public readonly record struct Rectangle2D<T>
     public Point2D<T> TopRight    { get; }
     public Point2D<T> TopLeft     { get; }
 
-    public bool PointInRect(Point2D<T> point) => PointInRect(point.X, point.Y);
-    public bool PointInRect(T x, T y) => x >= Left && x < Right && y >= Top && y < Bottom;
+    public static Rectangle2D<T> Intersect(Rectangle2D<T> a, Rectangle2D<T> b) {
 
+        T x1 = T.Max(a.X, b.X);
+        T x2 = T.Min(a.X + a.Width, b.X + b.Width);
+        T y1 = T.Max(a.Y, b.Y);
+        T y2 = T.Min(a.Y + a.Height, b.Y + b.Height);
+
+        if (x2 >= x1 && y2 >= y1) {
+            return Rectangle2D.Create(x1, y1, x2 - x1, y2 - y1);
+        }
+
+        return Empty;
+
+    }
+
+    public bool IntersectsWith(Rectangle2D<T> other) =>
+        (other.X < X + Width)  && (X < other.X + other.Width) &&
+        (other.Y < Y + Height) && (Y < other.Y + other.Height);
+
+    public static Rectangle2D<T> Union(Rectangle2D<T> a, Rectangle2D<T> b) {
+        T x1 = T.Min(a.X, b.X);
+        T x2 = T.Max(a.X + a.Width, b.X + b.Width);
+        T y1 = T.Min(a.Y, b.Y);
+        T y2 = T.Max(a.Y + a.Height, b.Y + b.Height);
+
+        return new Rectangle2D<T>(x: x1, y: y1, width: x2 - x1, height: y2 - y1);
+    }
+
+    public void Offset(Point2D<T> pos) => Offset(pos.X, pos.Y);
+
+    public Rectangle2D<T> Offset(T x, T y) {
+        return new(X + x, Y + y, Width, Height);
+
+    }
+
+    public bool Contains(Point2D<T> point) => Contains(point.X, point.Y);
+    public bool Contains(T x, T y) => x >= Left && x < Right && y >= Top && y < Bottom;
+
+    public bool Contains(Rectangle2D<T> rect) =>
+        (X <= rect.X) && (rect.Right  <= Right) &&
+        (Y <= rect.Y) && (rect.Bottom <= Right);
+
+    public Rectangle2D<T> Inflate(T value) {
+        return Inflate(value, value);
+    }
+
+    public Rectangle2D<T> Inflate(T width, T height) {
+        return new Rectangle2D<T>(X - width, Y - height, Width + width + width, Height + height + height);
+    }
+
+
+    public override readonly string ToString() => $"{{X={X},Y={Y},Width={Width},Height={Height}}}";
 }

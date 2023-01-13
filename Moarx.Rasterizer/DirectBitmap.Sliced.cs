@@ -58,7 +58,7 @@ namespace Moarx.Rasterizer {
                 var xSource = TranslateXToSource(x);
                 var ySource = TranslateYToSource(y);
 
-                if (!_sliceRectangle.PointInRect(xSource, ySource)) {
+                if (!_sliceRectangle.Contains(xSource, ySource)) {
                     return;
                 }
 
@@ -69,7 +69,7 @@ namespace Moarx.Rasterizer {
                 var xSource = TranslateXToSource(x);
                 var ySource = TranslateYToSource(y);
 
-                if (!_sliceRectangle.PointInRect(xSource, ySource)) {
+                if (!_sliceRectangle.Contains(xSource, ySource)) {
                     return Color.Black;
                 }
 
