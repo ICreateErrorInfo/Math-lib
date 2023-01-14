@@ -48,6 +48,13 @@ public readonly record struct Vector2D<T>
         return new Point2D<T>(X, Y);
     }
 
+    public static explicit operator Vector2D<int>(Vector2D<T> v) {
+        return new Vector2D<int>(Convert.ToInt32(v.X), Convert.ToInt32(v.Y));
+    }
+    public static explicit operator Vector2D<double>(Vector2D<T> v) {
+        return new Vector2D<double>(Convert.ToDouble(v.X), Convert.ToDouble(v.Y));
+    }
+
     public static Vector2D<T> operator +(Vector2D<T> left, Vector2D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y,

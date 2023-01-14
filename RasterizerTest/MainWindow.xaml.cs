@@ -15,18 +15,20 @@ namespace RasterizerTest {
             var bmp      = DirectBitmap.Create(500, 500);
             var graphics = DirectGraphics.Create(bmp);
 
-            //graphics.DrawLine(new Moarx.Math.Line2D(new(0, 0), new(10, 5)), System.Drawing.Color.White);
-            //graphics.DrawEllipse(new Moarx.Math.Ellipse2D(new(250, 350), 100, 100), System.Drawing.Color.White);
-            graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), System.Drawing.Color.White);
+            //graphics.DrawLine(new(new(10, 10), new(40, 30)), System.Drawing.Color.White);
+            //graphics.DrawEllipse(new(new(250, 250), 100, 100), System.Drawing.Color.White);
+            //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), System.Drawing.Color.White);
 
-            var slice = Rectangle2D.Create(
-                x: bmp.Width     / 2, y: bmp.Height      / 2,
-                width: bmp.Width / 2, height: bmp.Height / 2);
+            //var slice = Rectangle2D.Create(
+            //    x: bmp.Width     / 2, y: bmp.Height      / 2,
+            //    width: bmp.Width / 2, height: bmp.Height / 2);
 
-            var bmpSlice  = bmp.Slice(slice);
-            var grfxSlice = DirectGraphics.Create(bmpSlice);
+            //var bmpSlice  = bmp.Slice(slice);
+            //var grfxSlice = DirectGraphics.Create(bmpSlice);
 
-            grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
+            //grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
+
+            graphics.DrawTriangleFilled(new(new(100, 100), new(10, 200), new(300, 300)), System.Drawing.Color.White);
 
             Display.Source = ToImageSource(bmp);
         }

@@ -1,5 +1,6 @@
 ﻿using Moarx.Math;
 using System.Drawing;
+using System.Security.AccessControl;
 
 namespace Moarx.Rasterizer;
 
@@ -64,12 +65,13 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawLine(Point2D<double> start, Point2D<double> end, Color color) {
+    public void DrawLine(Point2D<int> start, Point2D<int> end, Color color) {
         DrawLine(new(start, end), color);
     }
 
-    public void DrawLine(Line2D<double> line, Color color) {
-        Vector2D<double> slope = line.EndPoint - line.StartPoint;
+    //TODO bug
+    public void DrawLine(Line2D<int> line, Color color) {
+        Vector2D<int> slope = line.EndPoint - line.StartPoint;
 
         int dx = System.Math.Abs((int)slope.X);
         int dy = -System.Math.Abs((int)slope.Y);
@@ -101,7 +103,7 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawEllipse(Ellipse2D<double> ellipse, Color color) {
+    public void DrawEllipse(Ellipse2D<int> ellipse, Color color) {
         //Circle
         if (ellipse.VerticalStretch == ellipse.HorizontalStretch) {
             int radius = (int)ellipse.VerticalStretch;
@@ -188,18 +190,81 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawTriangle(Triangle2D<double> triangle, Color color) {
+    public void DrawTriangle(Triangle2D<int> triangle, Color color) {
         DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
 
-    public void DrawTriangle(Point2D<double> point1, Point2D<double> point2, Point2D<double> point3, Color color) {
+    public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, Color color) {
         DrawLine(point1, point2, color);
         DrawLine(point2, point3, color);
         DrawLine(point3, point1, color);
     }
 
-    public void DrawTriangleFilled(Triangle2D<double> triangle, Color color) {
+    public void DrawTriangleFilled(Triangle2D<int> triangle, Color color) {
 
+        Point2D<int> top = triangle.Point1, middle = triangle.Point2, bottom = triangle.Point3;
+
+        //Sort points by Y
+        if (middle.Y < top.Y)    (top, middle)    = (middle, top);
+        if (middle.Y > bottom.Y) (bottom, middle) = (middle, bottom);
+        if (middle.Y < top.Y)    (top, middle)    = (middle, top);
+
+
+        if (top.Y == middle.Y) //top flat
+        {
+            Point2D<int> right = top, left = middle;
+            if (right.X < left.X) (left, right) = (right, left);
+
+            DrawTopFlatTriangle(right, left, bottom, color);
+            return;
+        }
+
+        if (bottom.Y == middle.Y) //top bottom
+        {
+            Point2D<int> right = bottom, left = middle;
+            if (right.X < left.X) (left, right) = (right, left);
+
+            DrawBottomFlatTriangle(top, left, right, color);
+            return;
+        }
+
+        Point2D<int> splitPoint= new((int)(top.X + ((float)(middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
+        if(splitPoint.X < middle.X) {
+            //split point is left
+            DrawBottomFlatTriangle(top, splitPoint, middle, color);
+            DrawTopFlatTriangle(middle, splitPoint, bottom, color);
+        } else {
+            //split point is right
+            DrawBottomFlatTriangle(top, middle, splitPoint, color);
+            DrawTopFlatTriangle(splitPoint, middle, bottom, color);
+        }
+
+    }
+    private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, System.Drawing.Color color) {
+        double inverseSlopeLeft  = (bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
+        double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
+
+        double currentXPositionLeft  = top.X;
+        double currentXPositionRight = top.X;
+
+        for(int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
+            DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
+            currentXPositionLeft  += inverseSlopeLeft;
+            currentXPositionRight += inverseSlopeRight;
+        }
+    }
+    private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, System.Drawing.Color color) {
+        double inverseSlopeLeft  = (bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
+        double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
+
+        double currentXPositionLeft  = bottom.X;
+        double currentXPositionRight = bottom.X;
+
+        for (int scanlineY = bottom.Y; scanlineY > topRight.Y; scanlineY--) {
+            DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
+            currentXPositionLeft  -= inverseSlopeLeft;
+            currentXPositionRight -= inverseSlopeRight;
+        }
     }
 
 }
