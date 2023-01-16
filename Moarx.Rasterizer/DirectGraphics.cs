@@ -69,7 +69,6 @@ public class DirectGraphics {
         DrawLine(new(start, end), color);
     }
 
-    //TODO bug
     public void DrawLine(Line2D<int> line, Color color) {
         Vector2D<int> slope = line.EndPoint - line.StartPoint;
 
@@ -101,6 +100,86 @@ public class DirectGraphics {
                 newY  += sy;
             }
         }
+    }
+    public void DrawAntiAliasedLine(Line2D<int> line, Color color) {
+        bool steep = System.Math.Abs(line.EndPoint.Y - line.StartPoint.Y) > System.Math.Abs(line.EndPoint.X - line.StartPoint.X);
+
+        int x0 = line.StartPoint.X, y0 = line.StartPoint.Y;
+        int x1 = line.EndPoint.X, y1 = line.EndPoint.Y;
+
+        if (steep) {
+            (x0, y0) = (y0, x0);
+            (x1, y1) = (y1, x1);
+        }
+
+        if(x0 > x1) {
+            (x0, x1) = (x1, x0);
+            (y0, y1) = (y1, y0);
+        }
+
+        Vector2D<int> slope = new Point2D<int>(x0, y0) -  new Point2D<int>(x1, y1);
+        double gradient = 0;
+
+        if(slope.X == 0) {
+            gradient = 1;
+        } else {
+            gradient = (double)slope.Y / slope.X;
+        }
+
+        double xend = (int)(x0+0.5);
+        double yend = y0 + gradient * (xend - x0);
+        double xgap = rfpart(x0 + 0.5);
+        double xpxl1 = xend;
+        double ypxl1 = (int)yend;
+
+        if (steep) {
+            _bitmap.SetPixel((int)ypxl1, (int)xpxl1, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.SetPixel((int)ypxl1 + 1, (int)xpxl1, GetColor(color, fpart(yend) * xgap));
+        } else {
+            _bitmap.SetPixel((int)xpxl1, (int)ypxl1  , GetColor(color, rfpart(yend) * xgap));
+            _bitmap.SetPixel((int)xpxl1, (int)ypxl1+1, GetColor(color, fpart(yend) * xgap));
+        }
+        double intery = yend + gradient;
+
+        xend = (int)(x1 + 0.5);
+        yend = y1+ gradient*(xend- x1);
+        xgap = fpart(x1 + 0.5);
+        double xpxl2 = xend;
+        double ypxl2 = (int)yend;
+
+        if (steep) {
+            _bitmap.SetPixel((int)ypxl2, (int)xpxl2, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.SetPixel((int)ypxl2 + 1, (int)xpxl2, GetColor(color, fpart(yend) * xgap));
+        } else {
+            _bitmap.SetPixel((int)xpxl2, (int)ypxl2, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.SetPixel((int)xpxl2, (int)ypxl2 + 1, GetColor(color, fpart(yend) * xgap));
+        }
+
+        if (steep) {
+            for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++){
+                _bitmap.SetPixel((int)intery, (int)x, GetColor(color, rfpart(intery)));
+                _bitmap.SetPixel((int)intery + 1, (int)x, GetColor(color, fpart(intery)));
+                intery = intery + gradient;
+            }
+        } else {
+            for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++) {
+                _bitmap.SetPixel((int)x, (int)intery, GetColor(color, rfpart(intery)));
+                _bitmap.SetPixel((int)x, (int)intery + 1, GetColor(color, fpart(intery)));
+                intery = intery + gradient;
+            }
+        }
+    }
+
+    private double fpart(double x) {
+        if(x < 0) return 1-(x - System.Math.Floor(x));
+
+        return x - System.Math.Floor(x);
+    }
+    private double rfpart(double x) {
+        return 1 - fpart(x);
+    }
+    private Color GetColor(Color color, double brightness) {
+        return Color.FromArgb((int)(color.R * brightness), (int)(color.G * brightness), (int)(color.B * brightness));
     }
 
     public void DrawEllipse(Ellipse2D<int> ellipse, Color color) {
@@ -193,6 +272,11 @@ public class DirectGraphics {
     public void DrawTriangle(Triangle2D<int> triangle, Color color) {
         DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
+    public void DrawAliasedTriangle(Triangle2D<int> triangle, Color color) {
+        DrawAliasedLine(new(triangle.Point1, triangle.Point2), color);
+        DrawAliasedLine(new(triangle.Point2, triangle.Point3), color);
+        DrawAliasedLine(new(triangle.Point1, triangle.Point3), color);
+    }                                     
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, Color color) {
         DrawLine(point1, point2, color);
@@ -248,6 +332,7 @@ public class DirectGraphics {
         double currentXPositionRight = top.X;
 
         for(int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
+            //TODO loop
             DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
             currentXPositionLeft  += inverseSlopeLeft;
             currentXPositionRight += inverseSlopeRight;

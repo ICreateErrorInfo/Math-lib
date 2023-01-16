@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RasterizerTest"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="551" Width="800">
     <Grid>
         <Image x:Name="Display" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
 

@@ -12,10 +12,10 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            var bmp      = DirectBitmap.Create(500, 500);
+            var bmp      = DirectBitmap.Create(513, 513);
             var graphics = DirectGraphics.Create(bmp);
 
-            //graphics.DrawLine(new(new(10, 10), new(40, 30)), System.Drawing.Color.White);
+            //graphics.DrawAliasedLine(new(new(1, 1), new(150, 150)), System.Drawing.Color.White);
             //graphics.DrawEllipse(new(new(250, 250), 100, 100), System.Drawing.Color.White);
             //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), System.Drawing.Color.White);
 
@@ -28,7 +28,9 @@ namespace RasterizerTest {
 
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
 
-            graphics.DrawTriangleFilled(new(new(100, 100), new(10, 200), new(300, 300)), System.Drawing.Color.White);
+            //graphics.DrawTriangleFilled(new(new(10, 10), new(10, 20), new(30, 30)), System.Drawing.Color.White);
+            graphics.DrawAliasedTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.White);
+            //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.White);
 
             Display.Source = ToImageSource(bmp);
         }
