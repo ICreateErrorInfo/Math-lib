@@ -14,7 +14,7 @@ namespace RasterizerTest {
 
             int width = 513;
             int height = 513;
-            int bytesPerPixel = 3;
+            int bytesPerPixel = 4;
 
             byte[] data = new byte[width * height * bytesPerPixel];
 
@@ -78,13 +78,17 @@ namespace RasterizerTest {
         }
 
         public static ImageSource ToImageSource(DirectBitmap bitmap) {
+            var pixelFormat = PixelFormats.Bgr24;
+            if (bitmap.BytesPerPixel == 4) {
+                pixelFormat = PixelFormats.Bgra32;
+            }
 
             var bs = BitmapSource.Create(
                 pixelWidth: bitmap.Width,
                 pixelHeight: bitmap.Height,
                 dpiX: 96,
                 dpiY: 96,
-                pixelFormat: PixelFormats.Bgr24,
+                pixelFormat: pixelFormat,
                 palette: null,
                 pixels: bitmap.GetBytes(),
                 stride: bitmap.Stride);

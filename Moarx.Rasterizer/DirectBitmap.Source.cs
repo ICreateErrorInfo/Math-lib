@@ -39,7 +39,7 @@ namespace Moarx.Rasterizer {
                 Height = height;
                 Bits = bytes;
                 //TODO support alpha channel in ToImageSource: bgr24 to bgra32
-                BytesPerPixel = 3;
+                BytesPerPixel = bytesPerPixel;
             }
 
             public byte[] Bits { get; }
@@ -67,13 +67,14 @@ namespace Moarx.Rasterizer {
                     Bits[index + 0] = (byte)(1 / newAlpha * (alphaA * color.B + (1 - alphaA) * alphaB * Bits[index + 0]));
                     Bits[index + 1] = (byte)(1 / newAlpha * (alphaA * color.G + (1 - alphaA) * alphaB * Bits[index + 1]));
                     Bits[index + 2] = (byte)(1 / newAlpha * (alphaA * color.R + (1 - alphaA) * alphaB * Bits[index + 2]));
-                    //Bits[index + 3] = (byte)(newAlpha * 255);
+                    Bits[index + 3] = (byte)(newAlpha * 255);
                     //TODO support alpha channel in ToImageSource: bgr24 to bgra32
+                } else {
+                    Bits[index + 0] = color.B;
+                    Bits[index + 1] = color.G;
+                    Bits[index + 2] = color.R;
                 }
 
-                Bits[index + 0] = (byte)(alphaA * color.B + (1 - alphaA) * Bits[index + 0]);
-                Bits[index + 1] = (byte)(alphaA * color.G + (1 - alphaA) * Bits[index + 1]);
-                Bits[index + 2] = (byte)(alphaA * color.R + (1 - alphaA) * Bits[index + 2]);
             }
 
             public override Color GetPixel(int x, int y) {
@@ -84,7 +85,12 @@ namespace Moarx.Rasterizer {
                 int g = Bits[index + 1];
                 int r = Bits[index + 2];
 
-                return Color.FromArgb(alpha: 255, red: r, green: g, blue: b);
+                int alpha = BytesPerPixel switch {
+                    4 => Bits[index + 3],
+                    _ => 255
+                };
+
+                return Color.FromArgb(alpha: alpha, red: r, green: g, blue: b);
             }
 
             public override byte[] GetBytes() => Bits;
