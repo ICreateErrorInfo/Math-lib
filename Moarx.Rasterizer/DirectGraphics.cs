@@ -275,7 +275,54 @@ public class DirectGraphics {
     public void DrawAntiAliasedTriangle(Triangle2D<int> triangle, Color color) {
         DrawAntiAliasedLine(new(triangle.Point1, triangle.Point2), color);
         DrawAntiAliasedLine(new(triangle.Point2, triangle.Point3), color);
-        DrawAntiAliasedLine(new(triangle.Point1, triangle.Point3), color);
+        DrawAntiAliasedLine(new(triangle.Point3, triangle.Point1), color);
+    }
+    public void DrawAntiAliasedTriangleFilled(Triangle2D<int> triangle, Color color) {
+        DrawAntiAliasedLine(new(triangle.Point1, triangle.Point2), color);
+        DrawAntiAliasedLine(new(triangle.Point2, triangle.Point3), color);
+        DrawAntiAliasedLine(new(triangle.Point3, triangle.Point1), color);
+
+        Point2D<int> top = triangle.Point1, middle = triangle.Point2, bottom = triangle.Point3;
+
+        //Sort points by Y
+        if (middle.Y < top.Y)
+            (top, middle) = (middle, top);
+        if (middle.Y > bottom.Y)
+            (bottom, middle) = (middle, bottom);
+        if (middle.Y < top.Y)
+            (top, middle) = (middle, top);
+
+
+        if (top.Y == middle.Y) //top flat
+        {
+            Point2D<int> right = top, left = middle;
+            if (right.X < left.X)
+                (left, right) = (right, left);
+
+            DrawTopFlatTriangle(right, left, bottom, color);
+            return;
+        }
+
+        if (bottom.Y == middle.Y) //top bottom
+        {
+            Point2D<int> right = bottom, left = middle;
+            if (right.X < left.X)
+                (left, right) = (right, left);
+
+            DrawBottomFlatAnitAliasedTriangle(top, left, right, color);
+            return;
+        }
+
+        Point2D<int> splitPoint= new((int)(top.X + ((float)(middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
+        if (splitPoint.X < middle.X) {
+            //split point is left
+            DrawBottomFlatAnitAliasedTriangle(top, splitPoint, middle, color);
+            DrawTopFlatAnitAliasedTriangle(middle, splitPoint, bottom, color);
+        } else {
+            //split point is right
+            DrawBottomFlatAnitAliasedTriangle(top, middle, splitPoint, color);
+            DrawTopFlatAnitAliasedTriangle(splitPoint, middle, bottom, color);
+        }
     }                                     
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, Color color) {
@@ -348,6 +395,40 @@ public class DirectGraphics {
         for (int scanlineY = bottom.Y; scanlineY > topRight.Y; scanlineY--) {
             DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
             currentXPositionLeft  -= inverseSlopeLeft;
+            currentXPositionRight -= inverseSlopeRight;
+        }
+    }
+
+    private void DrawBottomFlatAnitAliasedTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, System.Drawing.Color color) {
+        double inverseSlopeLeft  = (double)(bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
+        double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
+
+        double currentXPositionLeft  = top.X;
+        double currentXPositionRight = top.X;
+
+        for (int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
+            //TODO loop
+            //TODO not optimal
+            if(currentXPositionLeft != currentXPositionRight) {
+                DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft + 1), scanlineY), new((int)System.Math.Floor(currentXPositionRight - 1), scanlineY)), color);
+            }
+            currentXPositionLeft += inverseSlopeLeft;
+            currentXPositionRight += inverseSlopeRight;
+        }
+    }
+    private void DrawTopFlatAnitAliasedTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, System.Drawing.Color color) {
+        double inverseSlopeLeft  = (double)(bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
+        double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
+
+        double currentXPositionLeft  = bottom.X;
+        double currentXPositionRight = bottom.X;
+
+        for (int scanlineY = bottom.Y; scanlineY > topRight.Y; scanlineY--) {
+
+            if (currentXPositionLeft != currentXPositionRight) {
+                DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft) + 1, scanlineY), new((int)System.Math.Floor(currentXPositionRight) - 1, scanlineY)), color);
+            }
+            currentXPositionLeft -= inverseSlopeLeft;
             currentXPositionRight -= inverseSlopeRight;
         }
     }
