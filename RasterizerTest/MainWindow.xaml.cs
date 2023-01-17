@@ -12,10 +12,22 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            var bmp      = DirectBitmap.Create(513, 513);
+            int width = 513;
+            int height = 513;
+            int bytesPerPixel = 3;
+
+            byte[] data = new byte[width * height * bytesPerPixel];
+
+            //TODO Add method vor background in DirectBitmap
+            for(int i = 0; i < width * height * bytesPerPixel; i++) {
+                data[i] = 200;
+            }
+
+            var bmp      = DirectBitmap.Create(width, height, data, bytesPerPixel);
+
             var graphics = DirectGraphics.Create(bmp);
 
-            //graphics.DrawAliasedLine(new(new(1, 1), new(150, 150)), System.Drawing.Color.White);
+            //graphics.DrawAntiAliasedLine(new(new(1, 1), new(150, 198)), System.Drawing.Color.Black);
             //graphics.DrawEllipse(new(new(250, 250), 100, 100), System.Drawing.Color.White);
             //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), System.Drawing.Color.White);
 
@@ -28,9 +40,9 @@ namespace RasterizerTest {
 
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
 
-            //graphics.DrawTriangleFilled(new(new(10, 10), new(10, 20), new(30, 30)), System.Drawing.Color.White);
-            graphics.DrawAliasedTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.White);
-            //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.White);
+            //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
+            graphics.DrawAntiAliasedTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
+            //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
 
             Display.Source = ToImageSource(bmp);
         }

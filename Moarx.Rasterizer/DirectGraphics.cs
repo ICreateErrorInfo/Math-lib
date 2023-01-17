@@ -179,7 +179,7 @@ public class DirectGraphics {
         return 1 - fpart(x);
     }
     private Color GetColor(Color color, double brightness) {
-        return Color.FromArgb((int)(color.R * brightness), (int)(color.G * brightness), (int)(color.B * brightness));
+        return Color.FromArgb((int)(brightness * 255), color);
     }
 
     public void DrawEllipse(Ellipse2D<int> ellipse, Color color) {
@@ -272,10 +272,10 @@ public class DirectGraphics {
     public void DrawTriangle(Triangle2D<int> triangle, Color color) {
         DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
-    public void DrawAliasedTriangle(Triangle2D<int> triangle, Color color) {
-        DrawAliasedLine(new(triangle.Point1, triangle.Point2), color);
-        DrawAliasedLine(new(triangle.Point2, triangle.Point3), color);
-        DrawAliasedLine(new(triangle.Point1, triangle.Point3), color);
+    public void DrawAntiAliasedTriangle(Triangle2D<int> triangle, Color color) {
+        DrawAntiAliasedLine(new(triangle.Point1, triangle.Point2), color);
+        DrawAntiAliasedLine(new(triangle.Point2, triangle.Point3), color);
+        DrawAntiAliasedLine(new(triangle.Point1, triangle.Point3), color);
     }                                     
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, Color color) {
@@ -325,7 +325,7 @@ public class DirectGraphics {
 
     }
     private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, System.Drawing.Color color) {
-        double inverseSlopeLeft  = (bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
+        double inverseSlopeLeft  = (double)(bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
         double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
 
         double currentXPositionLeft  = top.X;
@@ -339,7 +339,7 @@ public class DirectGraphics {
         }
     }
     private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, System.Drawing.Color color) {
-        double inverseSlopeLeft  = (bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
+        double inverseSlopeLeft  = (double)(bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
         double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
 
         double currentXPositionLeft  = bottom.X;
