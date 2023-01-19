@@ -16,6 +16,30 @@
             };
         }
 
+        public static DirectColor FromArgb(byte alpha, byte red, byte green, byte blue) {
+            return new() {
+                R = red,
+                G = green,
+                B = blue,
+                A = alpha
+            };
+        }
+
+        public static DirectColor FromArgb(byte alpha, DirectColor color) {
+            return color with {
+                A = alpha
+            };
+        }
+
+        public static DirectColor FromRgb(byte red, byte green, byte blue) {
+            return new() {
+                R = red,
+                G = green,
+                B = blue,
+                A = 255
+            };
+        }
+
     }
 
 }

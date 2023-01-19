@@ -1,5 +1,4 @@
 ﻿using Moarx.Math;
-using System.Drawing;
 
 namespace Moarx.Rasterizer {
 
@@ -48,13 +47,13 @@ namespace Moarx.Rasterizer {
                 for (var y = 0; y < Height; ++y) {
 
                     for (var x = 0; x < Width; ++x) {
-                        SetPixel(x, y, Color.Black);
+                        SetPixel(x, y, DirectColors.Black);
                     }
 
                 }
             }
 
-            public override void SetPixel(int x, int y, Color color) {
+            public override void SetPixel(int x, int y, DirectColor color) {
                 var xSource = TranslateXToSource(x);
                 var ySource = TranslateYToSource(y);
 
@@ -65,12 +64,12 @@ namespace Moarx.Rasterizer {
                 _source.SetPixel(xSource, ySource, color);
             }
 
-            public override Color GetPixel(int x, int y) {
+            public override DirectColor GetPixel(int x, int y) {
                 var xSource = TranslateXToSource(x);
                 var ySource = TranslateYToSource(y);
 
                 if (!_sliceRectangle.Contains(xSource, ySource)) {
-                    return Color.Black;
+                    return DirectColors.Black;
                 }
 
                 return _source.GetPixel(xSource, ySource);

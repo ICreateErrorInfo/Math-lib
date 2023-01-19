@@ -41,7 +41,7 @@ namespace RasterizerTest {
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
 
             //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
-            graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
+            graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
 
             Display.Source = ToImageSource(bmp);

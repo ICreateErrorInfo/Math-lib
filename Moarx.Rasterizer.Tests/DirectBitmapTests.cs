@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Drawing;
 
 namespace Moarx.Rasterizer.Tests;
 
@@ -49,7 +48,7 @@ public class DirectBitmapTests {
         byte[]       bytes  = new byte[1920 * 1080 * 3];
         var bitmap = DirectBitmap.Create(1920, 1080, bytes, 3);
 
-        bitmap.SetPixel(110, 600, Color.FromArgb(255, 255, 255));
+        bitmap.SetPixel(110, 600, DirectColor.FromRgb(255, 255, 255));
         Assert.That(bitmap.Bits[3456330], Is.EqualTo(255));
         Assert.That(bitmap.Bits[3456331], Is.EqualTo(255));
         Assert.That(bitmap.Bits[3456332], Is.EqualTo(255));
@@ -60,9 +59,9 @@ public class DirectBitmapTests {
         byte[]       bytes  = new byte[1920 * 1080 * 3];
         var bitmap = DirectBitmap.Create(1920, 1080, bytes, 3);
 
-        bitmap[110, 600] = Color.FromArgb(255, 255, 255);
+        bitmap[110, 600] = DirectColor.FromRgb(255, 255, 255);
 
-        Assert.That(bitmap.GetPixel(110, 600), Is.EqualTo(Color.FromArgb(255, 255, 255)));
+        Assert.That(bitmap.GetPixel(110, 600), Is.EqualTo(DirectColor.FromRgb(255, 255, 255)));
     }
 
     [Test]
@@ -70,9 +69,9 @@ public class DirectBitmapTests {
         byte[]       bytes  = new byte[1920 * 1080 * 3];
         var bitmap = DirectBitmap.Create(1920, 1080, bytes, 3);
 
-        bitmap[110, 600] = Color.FromArgb(255, 255, 255);
+        bitmap[110, 600] = DirectColor.FromRgb(255, 255, 255);
 
-        Assert.That(bitmap[110, 600], Is.EqualTo(Color.FromArgb(255, 255, 255)));
+        Assert.That(bitmap[110, 600], Is.EqualTo(DirectColor.FromRgb(255, 255, 255)));
     }
 
 }

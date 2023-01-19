@@ -1,6 +1,4 @@
 ﻿using Moarx.Math;
-using System.Drawing;
-using System.Security.AccessControl;
 
 namespace Moarx.Rasterizer;
 
@@ -14,9 +12,8 @@ public class DirectGraphics {
 
     public static DirectGraphics Create(DirectBitmap bitmap) => new(bitmap);
 
-    public void FloodFill(int x, int y, Color newColor) {
+    public void FloodFill(int x, int y, DirectColor newColor) {
 
-        newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...
 
         var replaceColor = _bitmap.GetPixel(x, y);
         if (newColor == replaceColor) {
@@ -27,7 +24,7 @@ public class DirectGraphics {
 
     }
 
-    void FloodFillmpl(int x1, int y1, Color newColor, Color replaceColor) {
+    void FloodFillmpl(int x1, int y1, DirectColor newColor, DirectColor replaceColor) {
 
         Stack<(int X, int Y)> stack = new();
 
@@ -54,7 +51,7 @@ public class DirectGraphics {
             }
         }
 
-        Color? SafeGetPixel(int x, int y) {
+        DirectColor? SafeGetPixel(int x, int y) {
 
             if (x < 0 || x >= _bitmap.Width ||
                 y < 0 || y >= _bitmap.Height) {
@@ -65,23 +62,23 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawLine(Point2D<int> start, Point2D<int> end, Color color) {
+    public void DrawLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
         DrawLine(new(start, end), color);
     }
 
-    public void DrawLine(Line2D<int> line, Color color) {
+    public void DrawLine(Line2D<int> line, DirectColor color) {
         Vector2D<int> slope = line.EndPoint - line.StartPoint;
 
-        int dx = System.Math.Abs((int)slope.X);
-        int dy = -System.Math.Abs((int)slope.Y);
+        int dx = System.Math.Abs(slope.X);
+        int dy = -System.Math.Abs(slope.Y);
 
         int sx = line.StartPoint.X < line.EndPoint.X ? 1 : -1;
         int sy = line.StartPoint.Y < line.EndPoint.Y ? 1 : -1;
 
         int error = dx + dy;
 
-        int newX = (int)line.StartPoint.X;
-        int newY = (int)line.StartPoint.Y;
+        int newX = line.StartPoint.X;
+        int newY = line.StartPoint.Y;
 
         while (true) {
             _bitmap.SetPixel(newX, newY, color);
@@ -101,7 +98,7 @@ public class DirectGraphics {
             }
         }
     }
-    public void DrawAntiAliasedLine(Line2D<int> line, Color color) {
+    public void DrawAntiAliasedLine(Line2D<int> line, DirectColor color) {
         bool steep = System.Math.Abs(line.EndPoint.Y - line.StartPoint.Y) > System.Math.Abs(line.EndPoint.X - line.StartPoint.X);
 
         int x0 = line.StartPoint.X, y0 = line.StartPoint.Y;
@@ -118,13 +115,11 @@ public class DirectGraphics {
         }
 
         Vector2D<int> slope = new Point2D<int>(x0, y0) -  new Point2D<int>(x1, y1);
-        double gradient = 0;
 
-        if(slope.X == 0) {
-            gradient = 1;
-        } else {
-            gradient = (double)slope.Y / slope.X;
-        }
+        double gradient = slope.X switch {
+            0 => 1,
+            _ => (double)slope.Y / slope.X
+        };
 
         double xend = (int)(x0+0.5);
         double yend = y0 + gradient * (xend - x0);
@@ -178,14 +173,14 @@ public class DirectGraphics {
     private double rfpart(double x) {
         return 1 - fpart(x);
     }
-    private Color GetColor(Color color, double brightness) {
-        return Color.FromArgb((int)(brightness * 255), color);
+    private DirectColor GetColor(DirectColor color, double brightness) {
+        return DirectColor.FromArgb((byte)(brightness * 255), color);
     }
 
-    public void DrawEllipse(Ellipse2D<int> ellipse, Color color) {
+    public void DrawEllipse(Ellipse2D<int> ellipse, DirectColor color) {
         //Circle
         if (ellipse.VerticalStretch == ellipse.HorizontalStretch) {
-            int radius = (int)ellipse.VerticalStretch;
+            int radius = ellipse.VerticalStretch;
 
             int f     = 1 - radius;
             int ddF_x = 0;
@@ -193,10 +188,10 @@ public class DirectGraphics {
             int x     = 0;
             int y     = radius;
 
-            _bitmap.SetPixel((int)ellipse.MidPoint.X, (int)ellipse.MidPoint.Y + radius, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X, (int)ellipse.MidPoint.Y - radius, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X                          + radius, (int)ellipse.MidPoint.Y, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X                          - radius, (int)ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X, ellipse.MidPoint.Y + radius, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X, ellipse.MidPoint.Y - radius, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X                     + radius, ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X                     - radius, ellipse.MidPoint.Y, color);
 
             while (x < y) {
                 if (f >= 0) {
@@ -209,29 +204,29 @@ public class DirectGraphics {
                 ddF_x += 2;
                 f     += ddF_x + 1;
 
-                _bitmap.SetPixel((int)ellipse.MidPoint.X + x, (int)ellipse.MidPoint.Y + y, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X - x, (int)ellipse.MidPoint.Y + y, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X + x, (int)ellipse.MidPoint.Y - y, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X - x, (int)ellipse.MidPoint.Y - y, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X + y, (int)ellipse.MidPoint.Y + x, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X - y, (int)ellipse.MidPoint.Y + x, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X + y, (int)ellipse.MidPoint.Y - x, color);
-                _bitmap.SetPixel((int)ellipse.MidPoint.X - y, (int)ellipse.MidPoint.Y - x, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X + x, ellipse.MidPoint.Y + y, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X - x, ellipse.MidPoint.Y + y, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X + x, ellipse.MidPoint.Y - y, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X - x, ellipse.MidPoint.Y - y, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X + y, ellipse.MidPoint.Y + x, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X - y, ellipse.MidPoint.Y + x, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X + y, ellipse.MidPoint.Y - x, color);
+                _bitmap.SetPixel(ellipse.MidPoint.X - y, ellipse.MidPoint.Y - x, color);
             }
 
             return;
         }
 
         //Ellipse
-        int    dx    = 0,                                                     dy = (int)ellipse.VerticalStretch;
+        int    dx    = 0,                                                     dy = ellipse.VerticalStretch;
         double a2    = ellipse.HorizontalStretch * ellipse.HorizontalStretch, b2 = ellipse.VerticalStretch * ellipse.VerticalStretch;
         double error = b2 - (2 * ellipse.VerticalStretch - 1) * a2,           errorDoubled;
 
         while (dy >= 0) {
-            _bitmap.SetPixel((int)ellipse.MidPoint.X + dx, (int)ellipse.MidPoint.Y + dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y + dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y - dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X + dx, (int)ellipse.MidPoint.Y - dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y + dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y + dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y - dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y - dy, color);
 
             errorDoubled = 2 * error;
             if (errorDoubled < (2 * dx + 1) * b2) {
@@ -246,10 +241,10 @@ public class DirectGraphics {
         }
 
         do {
-            _bitmap.SetPixel((int)ellipse.MidPoint.X + dx, (int)ellipse.MidPoint.Y + dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y + dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y - dy, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X + dx, (int)ellipse.MidPoint.Y - dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y + dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y + dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y - dy, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y - dy, color);
 
             errorDoubled = 2 * error;
             if (errorDoubled < (2 * dx + 1) * b2) {
@@ -264,20 +259,20 @@ public class DirectGraphics {
         } while (dy >= 0);
 
         while (dx++ < ellipse.HorizontalStretch) {
-            _bitmap.SetPixel((int)ellipse.MidPoint.X + dx, (int)ellipse.MidPoint.Y, color);
-            _bitmap.SetPixel((int)ellipse.MidPoint.X - dx, (int)ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y, color);
         }
     }
 
-    public void DrawTriangle(Triangle2D<int> triangle, Color color) {
+    public void DrawTriangle(Triangle2D<int> triangle, DirectColor color) {
         DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
-    public void DrawAntiAliasedTriangle(Triangle2D<int> triangle, Color color) {
+    public void DrawAntiAliasedTriangle(Triangle2D<int> triangle, DirectColor color) {
         DrawAntiAliasedLine(new(triangle.Point1, triangle.Point2), color);
         DrawAntiAliasedLine(new(triangle.Point2, triangle.Point3), color);
         DrawAntiAliasedLine(new(triangle.Point3, triangle.Point1), color);
     }
-    public void DrawAntiAliasedTriangleFilled(Triangle2D<int> triangle, Color color) {
+    public void DrawAntiAliasedTriangleFilled(Triangle2D<int> triangle, DirectColor color) {
         DrawAntiAliasedLine(new(triangle.Point1, triangle.Point2), color);
         DrawAntiAliasedLine(new(triangle.Point2, triangle.Point3), color);
         DrawAntiAliasedLine(new(triangle.Point3, triangle.Point1), color);
@@ -313,7 +308,7 @@ public class DirectGraphics {
             return;
         }
 
-        Point2D<int> splitPoint= new((int)(top.X + ((float)(middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
+        Point2D<int> splitPoint = new((int)(top.X + ((middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
         if (splitPoint.X < middle.X) {
             //split point is left
             DrawBottomFlatAnitAliasedTriangle(top, splitPoint, middle, color);
@@ -325,13 +320,13 @@ public class DirectGraphics {
         }
     }                                     
 
-    public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, Color color) {
+    public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
         DrawLine(point1, point2, color);
         DrawLine(point2, point3, color);
         DrawLine(point3, point1, color);
     }
 
-    public void DrawTriangleFilled(Triangle2D<int> triangle, Color color) {
+    public void DrawTriangleFilled(Triangle2D<int> triangle, DirectColor color) {
 
         Point2D<int> top = triangle.Point1, middle = triangle.Point2, bottom = triangle.Point3;
 
@@ -359,7 +354,7 @@ public class DirectGraphics {
             return;
         }
 
-        Point2D<int> splitPoint= new((int)(top.X + ((float)(middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
+        Point2D<int> splitPoint = new((int)(top.X + ((middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
         if(splitPoint.X < middle.X) {
             //split point is left
             DrawBottomFlatTriangle(top, splitPoint, middle, color);
@@ -371,7 +366,7 @@ public class DirectGraphics {
         }
 
     }
-    private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, System.Drawing.Color color) {
+    private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, DirectColor color) {
         double inverseSlopeLeft  = (double)(bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
         double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
 
@@ -385,7 +380,7 @@ public class DirectGraphics {
             currentXPositionRight += inverseSlopeRight;
         }
     }
-    private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, System.Drawing.Color color) {
+    private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, DirectColor color) {
         double inverseSlopeLeft  = (double)(bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
         double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
 
@@ -399,7 +394,7 @@ public class DirectGraphics {
         }
     }
 
-    private void DrawBottomFlatAnitAliasedTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, System.Drawing.Color color) {
+    private void DrawBottomFlatAnitAliasedTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, DirectColor color) {
         double inverseSlopeLeft  = (double)(bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
         double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
 
@@ -416,7 +411,7 @@ public class DirectGraphics {
             currentXPositionRight += inverseSlopeRight;
         }
     }
-    private void DrawTopFlatAnitAliasedTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, System.Drawing.Color color) {
+    private void DrawTopFlatAnitAliasedTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, DirectColor color) {
         double inverseSlopeLeft  = (double)(bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
         double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
 

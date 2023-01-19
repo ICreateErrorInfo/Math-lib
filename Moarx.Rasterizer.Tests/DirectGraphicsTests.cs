@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Drawing;
 
 namespace Moarx.Rasterizer.Tests;
 
@@ -11,7 +10,7 @@ public class DirectGraphicsTests {
         var    bitmap = DirectBitmap.Create(10, 1);
         var    grfx   = DirectGraphics.Create(bitmap);
 
-        grfx.FloodFill(5, 0, Color.FromArgb(255));
+        grfx.FloodFill(5, 0, DirectColors.White);
 
         Assert.That(bitmap.Bits[0], Is.EqualTo(255));
     }

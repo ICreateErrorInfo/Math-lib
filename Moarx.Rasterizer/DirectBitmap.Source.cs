@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Moarx.Rasterizer {
+﻿namespace Moarx.Rasterizer {
 
     public abstract partial class DirectBitmap {
 
@@ -55,7 +53,7 @@ namespace Moarx.Rasterizer {
                 Array.Clear(Bits, 0, Bits.Length);
             }
 
-            public override void SetPixel(int x, int y, Color color) {
+            public override void SetPixel(int x, int y, DirectColor color) {
 
                 int index = GetIndex(x, y);
                 double alphaA = (double)color.A / 255;
@@ -77,20 +75,20 @@ namespace Moarx.Rasterizer {
 
             }
 
-            public override Color GetPixel(int x, int y) {
+            public override DirectColor GetPixel(int x, int y) {
 
                 int index = GetIndex(x, y);
 
-                int b = Bits[index + 0];
-                int g = Bits[index + 1];
-                int r = Bits[index + 2];
+                byte b = Bits[index + 0];
+                byte g = Bits[index + 1];
+                byte r = Bits[index + 2];
 
-                int alpha = BytesPerPixel switch {
+                byte alpha = BytesPerPixel switch {
                     4 => Bits[index + 3],
                     _ => 255
                 };
 
-                return Color.FromArgb(alpha: alpha, red: r, green: g, blue: b);
+                return DirectColor.FromArgb(alpha: alpha, red: r, green: g, blue: b);
             }
 
             public override byte[] GetBytes() => Bits;
