@@ -4,15 +4,12 @@
 
         public sealed class DirectBitmapSource: DirectBitmap {
 
-            public DirectBitmapSource(int width, int height) :
-                this(width: width, height: height, bytes: new byte[width * 3 * height], bytesPerPixel: 3) {
-            }
-            public DirectBitmapSource(int width, int height, int bytesPerPixel) :
-                this(width: width, height: height, bytes: new byte[width * bytesPerPixel * height], bytesPerPixel: bytesPerPixel) {
+            public DirectBitmapSource(int width, int height):
+                this(width: width, height: height, bytes: new byte[width * 4 * height], bytesPerPixel: 4) {
             }
 
-            public DirectBitmapSource(int width, int height, byte[] bytes)
-                : this(width: width, height: height, bytes: bytes, bytesPerPixel: 3) {
+            public DirectBitmapSource(int width, int height, int bytesPerPixel):
+                this(width: width, height: height, bytes: new byte[width * bytesPerPixel * height], bytesPerPixel: bytesPerPixel) {
             }
 
             public DirectBitmapSource(int width, int height, byte[] bytes, int bytesPerPixel) {

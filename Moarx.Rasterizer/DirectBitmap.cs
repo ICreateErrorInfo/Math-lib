@@ -12,11 +12,6 @@ public abstract partial class DirectBitmap {
         return new DirectBitmapSource(width, height, bytesPerPixel);
     }
 
-    public static DirectBitmapSource Create(int width, int height, byte[] bytes) {
-        return new DirectBitmapSource(width, height, bytes);
-
-    }
-
     public static DirectBitmapSource Create(int width, int height, byte[] bytes, int bytesPerPixel) {
         return new DirectBitmapSource(width, height, bytes, bytesPerPixel);
     }
