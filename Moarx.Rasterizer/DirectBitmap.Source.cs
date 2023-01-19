@@ -25,8 +25,8 @@
                     throw new ArgumentOutOfRangeException(nameof(height), "height is less or 0");
                 }
 
-                if (bytesPerPixel < 1) {
-                    throw new ArgumentOutOfRangeException(nameof(bytesPerPixel), "bytesPerPixel is less than 1");
+                if (bytesPerPixel !=3 && bytesPerPixel !=4) {
+                    throw new ArgumentOutOfRangeException(nameof(bytesPerPixel), "bytesPerPixel must be 3 or 4");
                 }
 
                 if (bytes.Length != width * height * bytesPerPixel) {
@@ -36,7 +36,6 @@
                 Width = width;
                 Height = height;
                 Bits = bytes;
-                //TODO support alpha channel in ToImageSource: bgr24 to bgra32
                 BytesPerPixel = bytesPerPixel;
             }
 
@@ -56,17 +55,12 @@
             public override void SetPixel(int x, int y, DirectColor color) {
 
                 int index = GetIndex(x, y);
-                double alphaA = (double)color.A / 255;
 
                 if (BytesPerPixel == 4) {
-                    double alphaB = (double)Bits[index + 3] / 255;
-                    double newAlpha = alphaA + (1 - alphaA) * alphaB;
-
-                    Bits[index + 0] = (byte)(1 / newAlpha * (alphaA * color.B + (1 - alphaA) * alphaB * Bits[index + 0]));
-                    Bits[index + 1] = (byte)(1 / newAlpha * (alphaA * color.G + (1 - alphaA) * alphaB * Bits[index + 1]));
-                    Bits[index + 2] = (byte)(1 / newAlpha * (alphaA * color.R + (1 - alphaA) * alphaB * Bits[index + 2]));
-                    Bits[index + 3] = (byte)(newAlpha * 255);
-                    //TODO support alpha channel in ToImageSource: bgr24 to bgra32
+                    Bits[index + 0] = color.B;
+                    Bits[index + 1] = color.G;
+                    Bits[index + 2] = color.R;
+                    Bits[index + 3] = color.A;
                 } else {
                     Bits[index + 0] = color.B;
                     Bits[index + 1] = color.G;

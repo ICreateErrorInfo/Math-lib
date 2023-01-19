@@ -35,6 +35,12 @@ public abstract partial class DirectBitmap {
 
     public abstract void Clear();
     public abstract void SetPixel(int x, int y, DirectColor color);
+
+    public void BlendPixel(int x, int y, DirectColor color) {
+        var dst = GetPixel(x, y);
+        SetPixel(x, y, DirectColor.Blend(color, dst));
+    }
+
     public abstract DirectColor GetPixel(int x, int y);
 
     public abstract byte[] GetBytes();

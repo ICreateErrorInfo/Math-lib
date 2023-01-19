@@ -128,11 +128,11 @@ public class DirectGraphics {
         double ypxl1 = (int)yend;
 
         if (steep) {
-            _bitmap.SetPixel((int)ypxl1, (int)xpxl1, GetColor(color, rfpart(yend) * xgap));
-            _bitmap.SetPixel((int)ypxl1 + 1, (int)xpxl1, GetColor(color, fpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl1,     (int)xpxl1, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl1 + 1, (int)xpxl1, GetColor(color, fpart(yend)  * xgap));
         } else {
-            _bitmap.SetPixel((int)xpxl1, (int)ypxl1  , GetColor(color, rfpart(yend) * xgap));
-            _bitmap.SetPixel((int)xpxl1, (int)ypxl1+1, GetColor(color, fpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1  ,  GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1 +1, GetColor(color, fpart(yend)  * xgap));
         }
         double intery = yend + gradient;
 
@@ -143,23 +143,23 @@ public class DirectGraphics {
         double ypxl2 = (int)yend;
 
         if (steep) {
-            _bitmap.SetPixel((int)ypxl2, (int)xpxl2, GetColor(color, rfpart(yend) * xgap));
-            _bitmap.SetPixel((int)ypxl2 + 1, (int)xpxl2, GetColor(color, fpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl2,     (int)xpxl2, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl2 + 1, (int)xpxl2, GetColor(color, fpart(yend)  * xgap));
         } else {
-            _bitmap.SetPixel((int)xpxl2, (int)ypxl2, GetColor(color, rfpart(yend) * xgap));
-            _bitmap.SetPixel((int)xpxl2, (int)ypxl2 + 1, GetColor(color, fpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2,     GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2 + 1, GetColor(color, fpart(yend)  * xgap));
         }
 
         if (steep) {
             for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++){
-                _bitmap.SetPixel((int)intery, (int)x, GetColor(color, rfpart(intery)));
-                _bitmap.SetPixel((int)intery + 1, (int)x, GetColor(color, fpart(intery)));
+                _bitmap.BlendPixel((int)intery,     (int)x, GetColor(color, rfpart(intery)));
+                _bitmap.BlendPixel((int)intery + 1, (int)x, GetColor(color, fpart(intery)));
                 intery = intery + gradient;
             }
         } else {
             for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++) {
-                _bitmap.SetPixel((int)x, (int)intery, GetColor(color, rfpart(intery)));
-                _bitmap.SetPixel((int)x, (int)intery + 1, GetColor(color, fpart(intery)));
+                _bitmap.BlendPixel((int)x, (int)intery,     GetColor(color, rfpart(intery)));
+                _bitmap.BlendPixel((int)x, (int)intery + 1, GetColor(color, fpart(intery)));
                 intery = intery + gradient;
             }
         }
