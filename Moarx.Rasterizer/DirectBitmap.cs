@@ -33,6 +33,15 @@ public abstract partial class DirectBitmap {
 
     public abstract int Stride { get; }
 
+    public void Clear(DirectColor color) {
+        // TODO Optmieren...
+        for (var y = 0; y < Height; y++) {
+            for (var x = 0; x < Width; x++) {
+                SetPixel(x, y, color);
+            }
+        }
+    }
+
     public abstract void Clear();
     public abstract void SetPixel(int x, int y, DirectColor color);
 

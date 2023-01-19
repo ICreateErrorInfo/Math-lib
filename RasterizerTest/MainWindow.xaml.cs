@@ -12,18 +12,14 @@ namespace RasterizerTest {
         public MainWindow() {
             InitializeComponent();
 
-            int width = 513;
-            int height = 513;
+            int width         = 513;
+            int height        = 513;
             int bytesPerPixel = 4;
 
             byte[] data = new byte[width * height * bytesPerPixel];
 
-            //TODO Add method vor background in DirectBitmap
-            for(int i = 0; i < width * height * bytesPerPixel; i++) {
-                data[i] = 200;
-            }
-
-            var bmp      = DirectBitmap.Create(width, height, data, bytesPerPixel);
+            var bmp = DirectBitmap.Create(width: 513, height: 513, data, bytesPerPixel);
+            bmp.Clear(DirectColors.Gray);
 
             var graphics = DirectGraphics.Create(bmp);
 
@@ -38,7 +34,7 @@ namespace RasterizerTest {
             //var bmpSlice  = bmp.Slice(slice);
             //var grfxSlice = DirectGraphics.Create(bmpSlice);
 
-            //grfxSlice.FloodFill(x: 0, y: 0, newColor: System.Drawing.Color.Red);
+            //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
             //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), System.Drawing.Color.Black);
             graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);

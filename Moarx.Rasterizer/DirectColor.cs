@@ -1,5 +1,6 @@
 ﻿namespace Moarx.Rasterizer {
 
+    [Serializable]
     public readonly record struct DirectColor {
 
         public const int BlueChannel  = 0;
