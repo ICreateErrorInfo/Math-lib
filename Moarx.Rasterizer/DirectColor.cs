@@ -33,6 +33,8 @@
             return (byte)((B + G + R) / 3);
         }
 
+        public DirectColor Blend(DirectColor b) => Blend(this, b);
+
         public static DirectColor Blend(DirectColor a, DirectColor b) {
 
             // Eine Farbe mit Alpha 255 gewinnt eh immer.
