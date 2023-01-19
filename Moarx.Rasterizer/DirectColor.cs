@@ -7,6 +7,9 @@
         public const int RedChannel   = 2;
         public const int AlphaChannel = 3;
 
+        public const int MinChannelValue = 0;
+        public const int MaxChannelValue = 255;
+
         public byte R { get; init; }
         public byte G { get; init; }
         public byte B { get; init; }
@@ -20,7 +23,7 @@
                     GreenChannel => G,
                     RedChannel   => R,
                     AlphaChannel => A,
-                    _            => throw new ArgumentOutOfRangeException(nameof(channel), channel, "valid range is [0,3]")
+                    _            => throw new ArgumentOutOfRangeException(nameof(channel), channel, $"valid range is [{MinChannelValue}, {MaxChannelValue}]")
                 };
             }
         }
@@ -37,34 +40,35 @@
 
         public static DirectColor Blend(DirectColor a, DirectColor b) {
 
-            // Eine Farbe mit Alpha 255 gewinnt eh immer.
-            if (a.A == 255) {
+            // Eine Farbe mit Alpha 255 gewinnt immer.
+            if (a.A == MaxChannelValue) {
                 return a;
             }
 
-            var aa = a.A / 255.0;
+            var alphaA = a.A / (double)MaxChannelValue;
 
-            if (b.A == 255) {
+            if (b.A == MaxChannelValue) {
                 // Farbe b hat keinen alpha Kanal
-                var nAb = 1 - aa;
+                var newAlphaB = 1 - alphaA;
                 return FromRgb(
-                    red: (byte)(aa   * a.R + nAb * b.R),
-                    green: (byte)(aa * a.G + nAb * b.G),
-                    blue: (byte)(aa  * a.B + nAb * b.B)
+                    red: (byte)(alphaA   * a.R + newAlphaB * b.R),
+                    green: (byte)(alphaA * a.G + newAlphaB * b.G),
+                    blue: (byte)(alphaA  * a.B + newAlphaB * b.B)
                 );
             } else {
                 // Farbe a und b haben einen Alphawert < 255
                 // Porter-Duff-Algorithmus 
-                var ab    = b.A / 255.0;
-                var ac    = aa + (1 - aa) * ab;
-                var invAc = 1        / ac;
-                var nAb   = (1 - aa) * ab;
+                var alphaB    = b.A / (double)MaxChannelValue;
+                var newAlphaB = (1 - alphaA) * alphaB;
+
+                var alphaC    = alphaA + (1 - alphaA) * alphaB;
+                var invAlphaC = 1 / alphaC;
 
                 return FromRgba(
-                    red: (byte)(invAc   * (aa * a.R + nAb * b.R)),
-                    green: (byte)(invAc * (aa * a.G + nAb * b.G)),
-                    blue: (byte)(invAc  * (aa * a.B + nAb * b.B)),
-                    alpha: (byte)(255   * ac)
+                    red: (byte)(invAlphaC       * (alphaA * a.R + newAlphaB * b.R)),
+                    green: (byte)(invAlphaC     * (alphaA * a.G + newAlphaB * b.G)),
+                    blue: (byte)(invAlphaC      * (alphaA * a.B + newAlphaB * b.B)),
+                    alpha: (byte)(MaxChannelValue * alphaC)
                 );
             }
         }
@@ -96,7 +100,7 @@
                 R = red,
                 G = green,
                 B = blue,
-                A = 255
+                A = MaxChannelValue
             };
         }
 
