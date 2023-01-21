@@ -23,7 +23,6 @@ public class DirectGraphics {
         FloodFillmpl(x, y, newColor, replaceColor);
 
     }
-
     void FloodFillmpl(int x1, int y1, DirectColor newColor, DirectColor replaceColor) {
 
         Stack<(int X, int Y)> stack = new();
@@ -62,10 +61,10 @@ public class DirectGraphics {
         }
     }
 
+
     public void DrawLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
         DrawLine(new(start, end), color);
     }
-
     public void DrawLine(Line2D<int> line, DirectColor color) {
         Vector2D<int> slope = line.EndPoint - line.StartPoint;
 
@@ -97,6 +96,10 @@ public class DirectGraphics {
                 newY  += sy;
             }
         }
+    }
+
+    public void DrawAntiAliasedLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
+        DrawAntiAliasedLine(new(start, end), color);
     }
     public void DrawAntiAliasedLine(Line2D<int> line, DirectColor color) {
         bool steep = System.Math.Abs(line.EndPoint.Y - line.StartPoint.Y) > System.Math.Abs(line.EndPoint.X - line.StartPoint.X);
@@ -163,18 +166,6 @@ public class DirectGraphics {
                 intery = intery + gradient;
             }
         }
-    }
-
-    private double fpart(double x) {
-        if(x < 0) return 1-(x - System.Math.Floor(x));
-
-        return x - System.Math.Floor(x);
-    }
-    private double rfpart(double x) {
-        return 1 - fpart(x);
-    }
-    private DirectColor GetColor(DirectColor color, double brightness) {
-        return DirectColor.FromArgb((byte)(brightness * 255), color);
     }
 
     public void DrawEllipse(Ellipse2D<int> ellipse, DirectColor color) {
@@ -261,6 +252,40 @@ public class DirectGraphics {
         while (dx++ < ellipse.HorizontalStretch) {
             _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y, color);
             _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y, color);
+        }
+    }
+    public void DrawAntiAliasedEllipse(Ellipse2D<int> ellipse, DirectColor color) {
+        double radiusX = ellipse.HorizontalStretch;
+        double radiusY = ellipse.VerticalStretch;
+        double radiusXSquared = radiusX * radiusX;
+        double radiusYSquared = radiusY * radiusY;
+
+        double maxTransparency = 255;
+
+        double quater = System.Math.Round(radiusXSquared / System.Math.Sqrt(radiusXSquared + radiusYSquared));
+        for(int x = 0; x <= quater; x++) {
+            double y = radiusY * System.Math.Sqrt(1 - x * x / radiusXSquared);
+            double error = y - System.Math.Floor(y);
+
+            double transparency = System.Math.Round(error * maxTransparency);
+            int alpha = (int)transparency;
+            int alpha2 = (int)(maxTransparency - transparency);
+
+            SetPixel4(ellipse.MidPoint, x, (int)System.Math.Floor(y), DirectColor.FromArgb((byte)alpha, color));
+            SetPixel4(ellipse.MidPoint, x, (int)System.Math.Floor(y) - 1, DirectColor.FromArgb((byte)alpha2, color));
+        }
+
+        quater = System.Math.Round(radiusYSquared / System.Math.Sqrt(radiusXSquared + radiusYSquared));
+        for (int y = 0; y <= quater; y++) {
+            double x = radiusX * System.Math.Sqrt(1 - y * y / radiusYSquared);
+            double error = x - System.Math.Floor(x);
+
+            double transparency = System.Math.Round(error * maxTransparency);
+            int alpha = (int)transparency;
+            int alpha2 = (int)(maxTransparency - transparency);
+
+            SetPixel4(ellipse.MidPoint, (int)System.Math.Floor(x), y, DirectColor.FromArgb((byte)alpha, color));
+            SetPixel4(ellipse.MidPoint, (int)System.Math.Floor(x) - 1, y, DirectColor.FromArgb((byte)alpha2, color));
         }
     }
 
@@ -428,4 +453,26 @@ public class DirectGraphics {
         }
     }
 
+    //Anit aliased line methods
+    private double fpart(double x) {
+        if (x < 0)
+            return 1 - (x - System.Math.Floor(x));
+
+        return x - System.Math.Floor(x);
+    }
+    private double rfpart(double x) {
+        return 1 - fpart(x);
+    }
+    private DirectColor GetColor(DirectColor color, double brightness) {
+        return DirectColor.FromArgb((byte)(brightness * 255), color);
+    }
+
+
+    //Anti aliased ellipse methods
+    private void SetPixel4(Point2D<int> center, int deltaX, int deltaY, DirectColor color) {
+        _bitmap.BlendPixel(center.X + deltaX, center.Y + deltaY, color);
+        _bitmap.BlendPixel(center.X - deltaX, center.Y + deltaY, color);
+        _bitmap.BlendPixel(center.X + deltaX, center.Y - deltaY, color);
+        _bitmap.BlendPixel(center.X - deltaX, center.Y - deltaY, color);
+    }
 }
