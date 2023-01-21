@@ -123,7 +123,7 @@ public class DirectGraphics {
 
         double xend = (int)(x0+0.5);
         double yend = y0 + gradient * (xend - x0);
-        double xgap = rfpart(x0 + 0.5);
+        double xgap = rfpart(x0 + 1);
         double xpxl1 = xend;
         double ypxl1 = (int)yend;
 
@@ -138,7 +138,7 @@ public class DirectGraphics {
 
         xend = (int)(x1 + 0.5);
         yend = y1+ gradient*(xend- x1);
-        xgap = fpart(x1 + 0.5);
+        xgap = fpart(x1 + 1);
         double xpxl2 = xend;
         double ypxl2 = (int)yend;
 
@@ -294,7 +294,7 @@ public class DirectGraphics {
             if (right.X < left.X)
                 (left, right) = (right, left);
 
-            DrawTopFlatTriangle(right, left, bottom, color);
+            DrawTopFlatAnitAliasedTriangle(right, left, bottom, color);
             return;
         }
 

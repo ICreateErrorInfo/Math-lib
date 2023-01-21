@@ -18,12 +18,12 @@ namespace RasterizerTest {
 
             byte[] data = new byte[width * height * bytesPerPixel];
 
-            var bmp = DirectBitmap.Create(width: 513, height: 513, data, bytesPerPixel);
+            var bmp = DirectBitmap.Create(width: width, height: height, data, bytesPerPixel);
             bmp.Clear(DirectColors.Gray);
 
             var graphics = DirectGraphics.Create(bmp);
 
-            //graphics.DrawAntiAliasedLine(new(new(1, 1), new(150, 198)), DirectColors.Black);
+            graphics.DrawAntiAliasedLine(new(new(1, 1), new(2, 198)), DirectColors.Black);
             //graphics.DrawEllipse(new(new(250, 250), 100, 100), DirectColors.White);
             //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), DirectColors.White);
 
@@ -37,7 +37,7 @@ namespace RasterizerTest {
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
             //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
-            graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
+            //graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
 
             Display.Source = ToImageSource(bmp);
