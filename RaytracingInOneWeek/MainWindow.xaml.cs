@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using Raytracing.Materials;
 using Raytracing.Shapes;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Raytracing
@@ -16,7 +17,7 @@ namespace Raytracing
 
             Raytracer.Init();
             Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(SimpleLight());
+            r.RenderScene(FirstScene());
         }
 
         Scene TestSphere()
@@ -120,7 +121,7 @@ namespace Raytracing
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 10, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, new Vector3D(.7, .8, 1), 20);
+            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, new Vector3D(.7, .8, 1), 20);
 
             return scene;
         }

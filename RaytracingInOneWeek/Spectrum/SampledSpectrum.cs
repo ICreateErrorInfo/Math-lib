@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 
@@ -764,7 +765,7 @@ namespace Math_lib.Spectrum {
         public static readonly double CIE_Y_integral = 106.856895;
          
         const int nRGB2SpectSamples = 32;
-        public static readonly double[] RGB2SpectLambda = new double[]{
+        [ThreadStatic]public static readonly double[] RGB2SpectLambda = new double[]{
             380.000000, 390.967743, 401.935486, 412.903229, 423.870972, 434.838715,
             445.806458, 456.774200, 467.741943, 478.709686, 489.677429, 500.645172,
             511.612915, 522.580627, 533.548340, 544.516052, 555.483765, 566.451477,
@@ -772,7 +773,7 @@ namespace Math_lib.Spectrum {
             643.225464, 654.193176, 665.160889, 676.128601, 687.096313, 698.064026,
             709.031738, 720.000000
         };
-        public static readonly double[] RGBRefl2SpectWhite = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectWhite = new double[]{
             1.0618958571272863e+00, 1.0615019980348779e+00, 1.0614335379927147e+00,
             1.0622711654692485e+00, 1.0622036218416742e+00, 1.0625059965187085e+00,
             1.0623938486985884e+00, 1.0624706448043137e+00, 1.0625048144827762e+00,
@@ -785,7 +786,7 @@ namespace Math_lib.Spectrum {
             1.0594262608698046e+00, 1.0599810758292072e+00, 1.0602547314449409e+00,
             1.0601263046243634e+00, 1.0606565756823634e+00 
         };
-        public static readonly double[] RGBRefl2SpectCyan = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectCyan = new double[]{
             1.0414628021426751e+00,  1.0328661533771188e+00,  1.0126146228964314e+00,
             1.0350460524836209e+00,  1.0078661447098567e+00,  1.0422280385081280e+00,
             1.0442596738499825e+00,  1.0535238290294409e+00,  1.0180776226938120e+00,
@@ -798,7 +799,7 @@ namespace Math_lib.Spectrum {
             -4.4669775637208031e-03, 1.7119799082865147e-02,  4.9211089759759801e-03,
             5.8762925143334985e-03,  2.5259399415550079e-02
         };
-        public static readonly double[] RGBRefl2SpectMagenta = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectMagenta = new double[]{
             9.9422138151236850e-01,  9.8986937122975682e-01, 9.8293658286116958e-01,
             9.9627868399859310e-01,  1.0198955019000133e+00, 1.0166395501210359e+00,
             1.0220913178757398e+00,  9.9651666040682441e-01, 1.0097766178917882e+00,
@@ -811,7 +812,7 @@ namespace Math_lib.Spectrum {
             9.4751876096521492e-01,  9.9598944191059791e-01, 8.6301351503809076e-01,
             8.9150987853523145e-01,  8.4866492652845082e-01
         };
-        public static readonly double[] RGBRefl2SpectYellow = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectYellow = new double[]{
             5.5740622924920873e-03,  -4.7982831631446787e-03, -5.2536564298613798e-03,
             -6.4571480044499710e-03, -5.9693514658007013e-03, -2.1836716037686721e-03,
             1.6781120601055327e-02,  9.6096355429062641e-02,  2.1217357081986446e-01,
@@ -824,7 +825,7 @@ namespace Math_lib.Spectrum {
             1.0508923708102380e+00,  1.0477492815668303e+00,  1.0493272144017338e+00,
             1.0435963333422726e+00,  1.0392280772051465e+00
         };
-        public static readonly double[] RGBRefl2SpectRed = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectRed = new double[]{
             1.6575604867086180e-01,  1.1846442802747797e-01,  1.2408293329637447e-01,
             1.1371272058349924e-01,  7.8992434518899132e-02,  3.2205603593106549e-02,
             -1.0798365407877875e-02, 1.8051975516730392e-02,  5.3407196598730527e-03,
@@ -837,7 +838,7 @@ namespace Math_lib.Spectrum {
             1.0085023660099048e+00,  9.7451138326568698e-01,  9.8543269570059944e-01,
             9.3495763980962043e-01,  9.8713907792319400e-01
         };
-        public static readonly double[] RGBRefl2SpectGreen = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectGreen = new double[]{
             2.6494153587602255e-03,  -5.0175013429732242e-03, -1.2547236272489583e-02,
             -9.4554964308388671e-03, -1.2526086181600525e-02, -7.9170697760437767e-03,
             -7.9955735204175690e-03, -9.3559433444469070e-03, 6.5468611982999303e-02,
@@ -850,7 +851,7 @@ namespace Math_lib.Spectrum {
             -8.3690869120289398e-03, -7.8685832338754313e-03, -8.3657578711085132e-06,
             5.4301225442817177e-03,  -2.7745589759259194e-03
         };
-        public static readonly double[] RGBRefl2SpectBlue = new double[]{
+        [ThreadStatic]public static readonly double[] RGBRefl2SpectBlue = new double[]{
             9.9209771469720676e-01,  9.8876426059369127e-01,  9.9539040744505636e-01,
             9.9529317353008218e-01,  9.9181447411633950e-01,  1.0002584039673432e+00,
             9.9968478437342512e-01,  9.9988120766657174e-01,  9.8504012146370434e-01,
@@ -863,7 +864,7 @@ namespace Math_lib.Spectrum {
             3.9840911064978023e-02,  3.0501024937233868e-02,  2.1243054765241080e-02,
             6.9596532104356399e-03,  4.1733649330980525e-03
         };
-        public static readonly double[] RGBIllum2SpectWhite = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectWhite = new double[]{
             1.1565232050369776e+00, 1.1567225000119139e+00, 1.1566203150243823e+00,
             1.1555782088080084e+00, 1.1562175509215700e+00, 1.1567674012207332e+00,
             1.1568023194808630e+00, 1.1567677445485520e+00, 1.1563563182952830e+00,
@@ -876,7 +877,7 @@ namespace Math_lib.Spectrum {
             8.7998311373826676e-01, 8.7635244612244578e-01, 8.8000368331709111e-01,
             8.8065665428441120e-01, 8.8304706460276905e-01
         };
-        public static readonly double[] RGBIllum2SpectCyan = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectCyan = new double[]{
             1.1334479663682135e+00,  1.1266762330194116e+00,  1.1346827504710164e+00,
             1.1357395805744794e+00,  1.1356371830149636e+00,  1.1361152989346193e+00,
             1.1362179057706772e+00,  1.1364819652587022e+00,  1.1355107110714324e+00,
@@ -889,7 +890,7 @@ namespace Math_lib.Spectrum {
             -7.9982745819542154e-03, -9.4722817708236418e-03, -5.5329541006658815e-03,
             -4.5428914028274488e-03, -1.2541015360921132e-02
         };
-        public static readonly double[] RGBIllum2SpectMagenta = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectMagenta = new double[]{
             1.0371892935878366e+00,  1.0587542891035364e+00,  1.0767271213688903e+00,
             1.0762706844110288e+00,  1.0795289105258212e+00,  1.0743644742950074e+00,
             1.0727028691194342e+00,  1.0732447452056488e+00,  1.0823760816041414e+00,
@@ -902,7 +903,7 @@ namespace Math_lib.Spectrum {
             1.0783085560613190e+00,  9.8333849623218872e-01,  1.0707246342802621e+00,
             1.0634247770423768e+00,  1.0150875475729566e+00
         };
-        public static readonly double[] RGBIllum2SpectYellow = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectYellow = new double[]{
             2.7756958965811972e-03,  3.9673820990646612e-03,  -1.4606936788606750e-04,
             3.6198394557748065e-04,  -2.5819258699309733e-04, -5.0133191628082274e-05,
             -2.4437242866157116e-04, -7.8061419948038946e-05, 4.9690301207540921e-02,
@@ -915,7 +916,7 @@ namespace Math_lib.Spectrum {
             5.9549794132420741e-01,  5.9419261278443136e-01,  5.6517682326634266e-01,
             5.6061186014968556e-01,  5.8228610381018719e-01
         };
-        public static readonly double[] RGBIllum2SpectRed = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectRed = new double[]{
             5.4711187157291841e-02,  5.5609066498303397e-02,  6.0755873790918236e-02,
             5.6232948615962369e-02,  4.6169940535708678e-02,  3.8012808167818095e-02,
             2.4424225756670338e-02,  3.8983580581592181e-03,  -5.6082252172734437e-04,
@@ -928,7 +929,7 @@ namespace Math_lib.Spectrum {
             9.9532502805345202e-01,  9.7433478377305371e-01,  9.9134364616871407e-01,
             9.8866287772174755e-01,  9.9713856089735531e-01
         };
-        public static readonly double[] RGBIllum2SpectGreen = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectGreen = new double[]{
             2.5168388755514630e-02,  3.9427438169423720e-02,  6.2059571596425793e-03,
             7.1120859807429554e-03,  2.1760044649139429e-04,  7.3271839984290210e-12,
             -2.1623066217181700e-02, 1.5670209409407512e-02,  2.8019603188636222e-03,
@@ -941,7 +942,7 @@ namespace Math_lib.Spectrum {
             1.6414511045291513e-04,  -6.4630764968453287e-03, 1.0250854718507939e-02,
             4.2387394733956134e-02,  2.1252716926861620e-02
         };
-        public static readonly double[] RGBIllum2SpectBlue = new double[]{
+        [ThreadStatic]public static readonly double[] RGBIllum2SpectBlue = new double[]{
             1.0570490759328752e+00,  1.0538466912851301e+00,  1.0550494258140670e+00,
             1.0530407754701832e+00,  1.0579930596460185e+00,  1.0578439494812371e+00,
             1.0583132387180239e+00,  1.0579712943137616e+00,  1.0561884233578465e+00,

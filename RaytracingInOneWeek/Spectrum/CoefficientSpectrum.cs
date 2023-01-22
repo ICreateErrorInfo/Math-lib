@@ -105,11 +105,11 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1.Copy();
-            for (int i = 0; i < s1.NSamples; i++)
-            {
-                sum.c[i] += s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] = s1.c[i] + s2.c[i];
             }
+
             return sum;
         }
         public static CoefficientSpectrum operator -(CoefficientSpectrum s1, CoefficientSpectrum s2)
@@ -117,11 +117,11 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1.Copy();
-            for (int i = 0; i < s1.NSamples; i++)
-            {
-                sum.c[i] -= s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] = s1.c[i] - s2.c[i];
             }
+
             return sum;
         }
         public static CoefficientSpectrum operator *(CoefficientSpectrum s1, CoefficientSpectrum s2)
@@ -129,21 +129,22 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1.Copy();
-            for (int i = 0; i < s1.NSamples; i++)
-            {
-                sum.c[i] *= s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
+            for (int i = 0; i < s1.NSamples; i++) {
+                sum.c[i] = s1.c[i] * s2.c[i];
             }
+
             return sum;
         }
         public static CoefficientSpectrum operator *(double s2, CoefficientSpectrum s1) {
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!double.IsNaN(s2));
 
-            CoefficientSpectrum sum = s1.Copy();
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
             for (int i = 0; i < s1.NSamples; i++) {
-                sum.c[i] *= s2;
+                sum.c[i] = s1.c[i] * s2;
             }
+
             return sum;
         }
         public static CoefficientSpectrum operator /(CoefficientSpectrum s1, CoefficientSpectrum s2)

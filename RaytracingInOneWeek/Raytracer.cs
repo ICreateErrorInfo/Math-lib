@@ -35,7 +35,7 @@ namespace Raytracing
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            Init();
+            //Init();
 
             var progress = new Progress<ProgressData>(OnProgress);
 

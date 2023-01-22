@@ -216,8 +216,7 @@ namespace Math_lib
             Debug.Assert(!double.IsNaN(min));
             Debug.Assert(!double.IsNaN(max));
 
-            Random r = new Random();
-            return new Vector3D(r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min, r.NextDouble() * (max - min) + min);
+            return new Vector3D(Mathe.GetRandomDouble(min, max), Mathe.GetRandomDouble(min, max), Mathe.GetRandomDouble(min, max));
         }
         public static Vector3D RandomInUnitSphere()
         {
