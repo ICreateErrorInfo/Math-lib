@@ -39,7 +39,9 @@ namespace RasterizerTest {
             //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
-            graphics.DrawSSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)),2, DirectColors.White);
+            //graphics.DrawSSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)),1, DirectColors.White);
+            graphics.DrawThickLine(new(new(20, 20), new(200, 400)), 10, DirectColors.Tan);
+            //graphics.DrawRectangle(new(new(20, 20), new(150, 180)), DirectColors.Aqua);
 
             Display.Source = ToImageSource(bmp);
         }

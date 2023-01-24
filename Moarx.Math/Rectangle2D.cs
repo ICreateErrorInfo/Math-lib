@@ -12,6 +12,10 @@ public static class Rectangle2D {
         return new Rectangle2D<T>(corner1, corner2);
     }
 
+    public static Rectangle2D<T> Create<T>(Point2D<T> topLeft, Point2D<T> bottomLeft, Point2D<T> bottomRight, Point2D<T> topRight) where T : struct, INumber<T> {
+        return new Rectangle2D<T>(topLeft, bottomLeft, bottomRight, topRight);
+    }
+
 }
 
 public readonly record struct Rectangle2D<T>
@@ -25,7 +29,6 @@ public readonly record struct Rectangle2D<T>
         BottomRight = new Point2D<T>(x + width, y + height);
 
     }
-
     public Rectangle2D(Point2D<T> corner1, Point2D<T> corner2) {
         T smallX = T.Min(corner1.X, corner2.X);
         T smallY = T.Min(corner1.Y, corner2.Y);
@@ -39,6 +42,13 @@ public readonly record struct Rectangle2D<T>
         BottomRight = new Point2D<T>(largeX, largeY);
 
     }
+    public Rectangle2D(Point2D<T> topLeft, Point2D<T> bottomLeft, Point2D<T> bottomRight, Point2D<T> topRight) {
+        TopLeft = topLeft;
+        TopRight = topRight;
+        BottomLeft = bottomLeft;
+        BottomRight = bottomRight;
+    }
+
 
     public static readonly Rectangle2D<T> Empty = new();
 

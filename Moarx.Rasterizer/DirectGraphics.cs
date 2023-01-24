@@ -36,8 +36,8 @@ public class DirectGraphics {
 
             ProcessPixel(x, y + 1);
             ProcessPixel(x, y - 1);
-            ProcessPixel(x    + 1, y);
-            ProcessPixel(x    - 1, y);
+            ProcessPixel(x + 1, y);
+            ProcessPixel(x - 1, y);
 
         }
 
@@ -62,6 +62,16 @@ public class DirectGraphics {
         }
     }
 
+    public void DrawRectangle(Rectangle2D<int> rectangle, DirectColor color) {
+        DrawLine(rectangle.TopLeft, rectangle.TopRight, color);
+        DrawLine(rectangle.TopRight, rectangle.BottomRight, color);
+        DrawLine(rectangle.BottomLeft, rectangle.BottomRight, color);
+        DrawLine(rectangle.BottomLeft, rectangle.TopLeft, color);
+    }
+    public void DrawRectangleFilled(Rectangle2D<int> rectangle, DirectColor color) {
+        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.TopRight, rectangle.BottomRight), color);
+        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.BottomLeft, rectangle.BottomRight), color);
+    }
 
     public void DrawLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
         DrawLine(new(start, end), color);
@@ -89,14 +99,26 @@ public class DirectGraphics {
             var errorDoubled = 2 * error;
             if (errorDoubled > dy) {
                 error += dy;
-                newX  += sx;
+                newX += sx;
             }
 
             if (errorDoubled < dx) {
                 error += dx;
-                newY  += sy;
+                newY += sy;
             }
         }
+    }
+    public void DrawThickLine(Line2D<int> line, int thickness, DirectColor color) {
+        Vector2D<int> lineVector = line.EndPoint - line.StartPoint;
+        Vector2D<double> perpendicentVector = new((double)-lineVector.Y, (double)lineVector.X);
+        perpendicentVector = perpendicentVector / System.Math.Sqrt(perpendicentVector.GetLengthSquared());
+
+        Point2D<int> topLeft     = (Point2D<int>)((Point2D<double>)line.StartPoint + perpendicentVector * thickness);
+        Point2D<int> bottomLeft  = (Point2D<int>)((Point2D<double>)line.StartPoint - perpendicentVector * thickness);
+        Point2D<int> topRight    = (Point2D<int>)((Point2D<double>)line.EndPoint + perpendicentVector * thickness);
+        Point2D<int> bottomRight = (Point2D<int>)((Point2D<double>)line.EndPoint - perpendicentVector * thickness);
+
+        DrawRectangleFilled(new(topLeft, bottomLeft, bottomRight, topRight), color);
     }
 
     public void DrawAntiAliasedLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
@@ -113,7 +135,7 @@ public class DirectGraphics {
             (x1, y1) = (y1, x1);
         }
 
-        if(x0 > x1) {
+        if (x0 > x1) {
             (x0, x1) = (x1, x0);
             (y0, y1) = (y1, y0);
         }
@@ -132,37 +154,37 @@ public class DirectGraphics {
         double ypxl1 = (int)yend;
 
         if (steep) {
-            _bitmap.BlendPixel((int)ypxl1,     (int)xpxl1, GetColor(color, rfpart(yend) * xgap));
-            _bitmap.BlendPixel((int)ypxl1 + 1, (int)xpxl1, GetColor(color, fpart(yend)  * xgap));
+            _bitmap.BlendPixel((int)ypxl1, (int)xpxl1, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl1 + 1, (int)xpxl1, GetColor(color, fpart(yend) * xgap));
         } else {
-            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1  ,  GetColor(color, rfpart(yend) * xgap));
-            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1 +1, GetColor(color, fpart(yend)  * xgap));
+            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl1, (int)ypxl1 + 1, GetColor(color, fpart(yend) * xgap));
         }
         double intery = yend + gradient;
 
         xend = (int)(x1 + 0.5);
-        yend = y1+ gradient*(xend- x1);
+        yend = y1 + gradient * (xend - x1);
         xgap = fpart(x1 + 1);
         double xpxl2 = xend;
         double ypxl2 = (int)yend;
 
         if (steep) {
-            _bitmap.BlendPixel((int)ypxl2,     (int)xpxl2, GetColor(color, rfpart(yend) * xgap));
-            _bitmap.BlendPixel((int)ypxl2 + 1, (int)xpxl2, GetColor(color, fpart(yend)  * xgap));
+            _bitmap.BlendPixel((int)ypxl2, (int)xpxl2, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)ypxl2 + 1, (int)xpxl2, GetColor(color, fpart(yend) * xgap));
         } else {
-            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2,     GetColor(color, rfpart(yend) * xgap));
-            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2 + 1, GetColor(color, fpart(yend)  * xgap));
+            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2, GetColor(color, rfpart(yend) * xgap));
+            _bitmap.BlendPixel((int)xpxl2, (int)ypxl2 + 1, GetColor(color, fpart(yend) * xgap));
         }
 
         if (steep) {
-            for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++){
-                _bitmap.BlendPixel((int)intery,     (int)x, GetColor(color, rfpart(intery)));
+            for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++) {
+                _bitmap.BlendPixel((int)intery, (int)x, GetColor(color, rfpart(intery)));
                 _bitmap.BlendPixel((int)intery + 1, (int)x, GetColor(color, fpart(intery)));
                 intery = intery + gradient;
             }
         } else {
             for (double x = xpxl1 + 1; x <= xpxl2 - 1; x++) {
-                _bitmap.BlendPixel((int)x, (int)intery,     GetColor(color, rfpart(intery)));
+                _bitmap.BlendPixel((int)x, (int)intery, GetColor(color, rfpart(intery)));
                 _bitmap.BlendPixel((int)x, (int)intery + 1, GetColor(color, fpart(intery)));
                 intery = intery + gradient;
             }
@@ -182,19 +204,19 @@ public class DirectGraphics {
 
             _bitmap.SetPixel(ellipse.MidPoint.X, ellipse.MidPoint.Y + radius, color);
             _bitmap.SetPixel(ellipse.MidPoint.X, ellipse.MidPoint.Y - radius, color);
-            _bitmap.SetPixel(ellipse.MidPoint.X                     + radius, ellipse.MidPoint.Y, color);
-            _bitmap.SetPixel(ellipse.MidPoint.X                     - radius, ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X + radius, ellipse.MidPoint.Y, color);
+            _bitmap.SetPixel(ellipse.MidPoint.X - radius, ellipse.MidPoint.Y, color);
 
             while (x < y) {
                 if (f >= 0) {
-                    y     -= 1;
+                    y -= 1;
                     ddF_y += 2;
-                    f     += ddF_y;
+                    f += ddF_y;
                 }
 
-                x     += 1;
+                x += 1;
                 ddF_x += 2;
-                f     += ddF_x + 1;
+                f += ddF_x + 1;
 
                 _bitmap.SetPixel(ellipse.MidPoint.X + x, ellipse.MidPoint.Y + y, color);
                 _bitmap.SetPixel(ellipse.MidPoint.X - x, ellipse.MidPoint.Y + y, color);
@@ -264,7 +286,7 @@ public class DirectGraphics {
         double maxTransparency = 255;
 
         double quater = System.Math.Round(radiusXSquared / System.Math.Sqrt(radiusXSquared + radiusYSquared));
-        for(int x = 0; x <= quater; x++) {
+        for (int x = 0; x <= quater; x++) {
             double y = radiusY * System.Math.Sqrt(1 - x * x / radiusXSquared);
             double error = y - System.Math.Floor(y);
 
@@ -370,15 +392,19 @@ public class DirectGraphics {
         Point2D<int> top = triangle.Point1, middle = triangle.Point2, bottom = triangle.Point3;
 
         //Sort points by Y
-        if (middle.Y < top.Y)    (top, middle)    = (middle, top);
-        if (middle.Y > bottom.Y) (bottom, middle) = (middle, bottom);
-        if (middle.Y < top.Y)    (top, middle)    = (middle, top);
+        if (middle.Y < top.Y)
+            (top, middle) = (middle, top);
+        if (middle.Y > bottom.Y)
+            (bottom, middle) = (middle, bottom);
+        if (middle.Y < top.Y)
+            (top, middle) = (middle, top);
 
 
         if (top.Y == middle.Y) //top flat
         {
             Point2D<int> right = top, left = middle;
-            if (right.X < left.X) (left, right) = (right, left);
+            if (right.X < left.X)
+                (left, right) = (right, left);
 
             DrawTopFlatTriangle(right, left, bottom, color);
             return;
@@ -387,14 +413,15 @@ public class DirectGraphics {
         if (bottom.Y == middle.Y) //top bottom
         {
             Point2D<int> right = bottom, left = middle;
-            if (right.X < left.X) (left, right) = (right, left);
+            if (right.X < left.X)
+                (left, right) = (right, left);
 
             DrawBottomFlatTriangle(top, left, right, color);
             return;
         }
 
         Point2D<int> splitPoint = new((int)(top.X + ((middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
-        if(splitPoint.X < middle.X) {
+        if (splitPoint.X < middle.X) {
             //split point is left
             DrawBottomFlatTriangle(top, splitPoint, middle, color);
             DrawTopFlatTriangle(middle, splitPoint, bottom, color);
@@ -412,11 +439,11 @@ public class DirectGraphics {
         double currentXPositionLeft  = top.X;
         double currentXPositionRight = top.X;
 
-        for(int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
-            for(int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
+        for (int scanlineY = top.Y; scanlineY < bottomLeft.Y; scanlineY++) {
+            for (int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
                 _bitmap.SetPixel(x, scanlineY, color);
             }
-            currentXPositionLeft  += inverseSlopeLeft;
+            currentXPositionLeft += inverseSlopeLeft;
             currentXPositionRight += inverseSlopeRight;
         }
     }
@@ -427,11 +454,11 @@ public class DirectGraphics {
         double currentXPositionLeft  = bottom.X;
         double currentXPositionRight = bottom.X;
 
-        for (int scanlineY = bottom.Y; scanlineY > topRight.Y; scanlineY--) {
+        for (int scanlineY = bottom.Y; scanlineY >= topRight.Y; scanlineY--) {
             for (int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
                 _bitmap.SetPixel(x, scanlineY, color);
             }
-            currentXPositionLeft  -= inverseSlopeLeft;
+            currentXPositionLeft -= inverseSlopeLeft;
             currentXPositionRight -= inverseSlopeRight;
         }
     }
@@ -446,7 +473,7 @@ public class DirectGraphics {
         for (int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
             //TODO loop
             //TODO not optimal
-            if(currentXPositionLeft != currentXPositionRight) {
+            if (currentXPositionLeft != currentXPositionRight) {
                 DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft + 1), scanlineY), new((int)System.Math.Floor(currentXPositionRight - 1), scanlineY)), color);
             }
             currentXPositionLeft += inverseSlopeLeft;
@@ -510,7 +537,7 @@ public class DirectGraphics {
                                                             (byte)(sampledColor.Z / (samples * samples))));
             }
         }
-    } 
+    }
 
 
     //Anti aliased ellipse methods
