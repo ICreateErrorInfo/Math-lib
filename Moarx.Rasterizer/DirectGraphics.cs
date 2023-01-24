@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using System;
 
 namespace Moarx.Rasterizer;
 
@@ -345,14 +346,17 @@ public class DirectGraphics {
         }
     }
     public void DrawSSAATriangleFilled(Triangle2D<int> triangle, int samples, DirectColor color) {
-        DirectBitmap supersampledBitmap = DirectBitmap.Create(_bitmap.Width * samples, _bitmap.Height * samples);
+        Rectangle2D<int> rec = triangle.GetBoundingBox().ToRectangle();
+        DirectBitmap bitmapSliced = _bitmap.Slice(rec);
 
-        Triangle2D<int> scaledTriangle = new Triangle2D<int>(triangle.Point1 * samples, triangle.Point2 * samples, triangle.Point3 * samples);
+        DirectBitmap supersampledBitmap = DirectBitmap.Create(bitmapSliced.Width * samples, bitmapSliced.Height * samples);
+
+        Triangle2D<int> scaledTriangle = (new Triangle2D<int>(triangle.Point1 * samples, triangle.Point2 * samples, triangle.Point3 * samples)).Transform(new(-rec.Left * samples, -rec.Top * samples));
 
         DirectGraphics g = DirectGraphics.Create(supersampledBitmap);
         g.DrawTriangleFilled(scaledTriangle, color);
 
-        DownSample(supersampledBitmap, samples);
+        DownSample(bitmapSliced, supersampledBitmap, samples);
     }
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
@@ -409,8 +413,9 @@ public class DirectGraphics {
         double currentXPositionRight = top.X;
 
         for(int scanlineY = top.Y; scanlineY <= bottomLeft.Y; scanlineY++) {
-            //TODO loop
-            DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
+            for(int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
+                _bitmap.SetPixel(x, scanlineY, color);
+            }
             currentXPositionLeft  += inverseSlopeLeft;
             currentXPositionRight += inverseSlopeRight;
         }
@@ -423,7 +428,9 @@ public class DirectGraphics {
         double currentXPositionRight = bottom.X;
 
         for (int scanlineY = bottom.Y; scanlineY > topRight.Y; scanlineY--) {
-            DrawLine(new Line2D<int>(new((int)System.Math.Floor(currentXPositionLeft), scanlineY), new((int)System.Math.Floor(currentXPositionRight), scanlineY)), color);
+            for (int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
+                _bitmap.SetPixel(x, scanlineY, color);
+            }
             currentXPositionLeft  -= inverseSlopeLeft;
             currentXPositionRight -= inverseSlopeRight;
         }
@@ -478,9 +485,9 @@ public class DirectGraphics {
     }
 
     //SSAA
-    private void DownSample(DirectBitmap sampledBitmap, int samples) {
-        for (int x = 0; x < _bitmap.Width; x++) {
-            for (int y = 0; y < _bitmap.Height; y++) {
+    private void DownSample(DirectBitmap originalBitmap, DirectBitmap sampledBitmap, int samples) {
+        for (int x = 0; x < originalBitmap.Width; x++) {
+            for (int y = 0; y < originalBitmap.Height; y++) {
                 Vector3D<int> sampledColor = new Vector3D<int>();
                 for (int i = 0; i < samples; i++) {
                     for (int j = 0; j < samples; j++) {
@@ -490,7 +497,7 @@ public class DirectGraphics {
                                                                    (int)(sampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
 
                         if (newColor.X == 0 && newColor.Y == 0 && newColor.Z == 0) {
-                            newColor = new(_bitmap.GetPixel(x, y).R, _bitmap.GetPixel(x, y).G, _bitmap.GetPixel(x, y).B);
+                            newColor = new(originalBitmap.GetPixel(x, y).R, originalBitmap.GetPixel(x, y).G, originalBitmap.GetPixel(x, y).B);
                         }
 
                         sampledColor += newColor;
