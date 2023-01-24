@@ -352,30 +352,7 @@ public class DirectGraphics {
         DirectGraphics g = DirectGraphics.Create(supersampledBitmap);
         g.DrawTriangleFilled(scaledTriangle, color);
 
-        for(int x = 0; x < _bitmap.Width; x++) {
-            for(int y = 0; y < _bitmap.Height; y++) {
-                Vector3D<int> sampledColor = new Vector3D<int>();
-                for(int i = 0; i < samples; i++) {
-                    for(int j = 0; j < samples; j++) {
-
-                        Vector3D<int> newColor = new Vector3D<int>((int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).R),
-                                                                   (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).G),
-                                                                   (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
-
-                        if(newColor.X == 0 && newColor.Y == 0 && newColor.Z == 0) {
-                            newColor = new(_bitmap.GetPixel(x, y).R, _bitmap.GetPixel(x, y).G, _bitmap.GetPixel(x, y).B);
-                        }
-
-                        sampledColor += newColor;
-                    }
-                }
-
-                _bitmap.SetPixel(x, y, DirectColor.FromArgb(255,
-                                                            (byte)(sampledColor.X / (samples * samples)),
-                                                            (byte)(sampledColor.Y / (samples * samples)),
-                                                            (byte)(sampledColor.Z / (samples * samples))));
-            }
-        }
+        DownSample(supersampledBitmap, samples);
     }
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
@@ -499,6 +476,34 @@ public class DirectGraphics {
     private DirectColor GetColor(DirectColor color, double brightness) {
         return DirectColor.FromArgb((byte)(brightness * 255), color);
     }
+
+    //SSAA
+    private void DownSample(DirectBitmap sampledBitmap, int samples) {
+        for (int x = 0; x < _bitmap.Width; x++) {
+            for (int y = 0; y < _bitmap.Height; y++) {
+                Vector3D<int> sampledColor = new Vector3D<int>();
+                for (int i = 0; i < samples; i++) {
+                    for (int j = 0; j < samples; j++) {
+
+                        Vector3D<int> newColor = new Vector3D<int>((int)(sampledBitmap.GetPixel(x * samples + i, y * samples + j).R),
+                                                                   (int)(sampledBitmap.GetPixel(x * samples + i, y * samples + j).G),
+                                                                   (int)(sampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
+
+                        if (newColor.X == 0 && newColor.Y == 0 && newColor.Z == 0) {
+                            newColor = new(_bitmap.GetPixel(x, y).R, _bitmap.GetPixel(x, y).G, _bitmap.GetPixel(x, y).B);
+                        }
+
+                        sampledColor += newColor;
+                    }
+                }
+
+                _bitmap.SetPixel(x, y, DirectColor.FromArgb(255,
+                                                            (byte)(sampledColor.X / (samples * samples)),
+                                                            (byte)(sampledColor.Y / (samples * samples)),
+                                                            (byte)(sampledColor.Z / (samples * samples))));
+            }
+        }
+    } 
 
 
     //Anti aliased ellipse methods
