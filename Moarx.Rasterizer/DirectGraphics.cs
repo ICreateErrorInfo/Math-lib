@@ -358,13 +358,15 @@ public class DirectGraphics {
                 for(int i = 0; i < samples; i++) {
                     for(int j = 0; j < samples; j++) {
 
-                        if (x == 2 && y == 1) {
+                        Vector3D<int> newColor = new Vector3D<int>((int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).R),
+                                                                   (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).G),
+                                                                   (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
 
+                        if(newColor.X == 0 && newColor.Y == 0 && newColor.Z == 0) {
+                            newColor = new(_bitmap.GetPixel(x, y).R, _bitmap.GetPixel(x, y).G, _bitmap.GetPixel(x, y).B);
                         }
 
-                        sampledColor += new Vector3D<int>((int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).R),
-                                                          (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).G),
-                                                          (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
+                        sampledColor += newColor;
                     }
                 }
 
