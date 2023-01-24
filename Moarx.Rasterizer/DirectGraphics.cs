@@ -343,7 +343,38 @@ public class DirectGraphics {
             DrawBottomFlatAnitAliasedTriangle(top, middle, splitPoint, color);
             DrawTopFlatAnitAliasedTriangle(splitPoint, middle, bottom, color);
         }
-    }                                     
+    }
+    public void DrawSSAATriangleFilled(Triangle2D<int> triangle, int samples, DirectColor color) {
+        DirectBitmap supersampledBitmap = DirectBitmap.Create(_bitmap.Width * samples, _bitmap.Height * samples);
+
+        Triangle2D<int> scaledTriangle = new Triangle2D<int>(triangle.Point1 * samples, triangle.Point2 * samples, triangle.Point3 * samples);
+
+        DirectGraphics g = DirectGraphics.Create(supersampledBitmap);
+        g.DrawTriangleFilled(scaledTriangle, color);
+
+        for(int x = 0; x < _bitmap.Width; x++) {
+            for(int y = 0; y < _bitmap.Height; y++) {
+                Vector3D<int> sampledColor = new Vector3D<int>();
+                for(int i = 0; i < samples; i++) {
+                    for(int j = 0; j < samples; j++) {
+
+                        if (x == 2 && y == 1) {
+
+                        }
+
+                        sampledColor += new Vector3D<int>((int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).R),
+                                                          (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).G),
+                                                          (int)(supersampledBitmap.GetPixel(x * samples + i, y * samples + j).B));
+                    }
+                }
+
+                _bitmap.SetPixel(x, y, DirectColor.FromArgb(255,
+                                                            (byte)(sampledColor.X / (samples * samples)),
+                                                            (byte)(sampledColor.Y / (samples * samples)),
+                                                            (byte)(sampledColor.Z / (samples * samples))));
+            }
+        }
+    }
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
         DrawLine(point1, point2, color);

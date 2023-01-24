@@ -23,8 +23,8 @@ namespace RasterizerTest {
 
             var graphics = DirectGraphics.Create(bmp);
 
-            //graphics.DrawAntiAliasedLine(new(new(1, 1), new(2, 198)), DirectColors.Black);
-            graphics.DrawAntiAliasedEllipse(new(new(250, 250), 100, 100), DirectColors.White);
+            //graphics.DrawAntiAliasedLine(new(new(1, 1), new(200, 198)), DirectColors.Black);
+            //graphics.DrawAntiAliasedEllipse(new(new(250, 250), 100, 100), DirectColors.White);
             //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), DirectColors.White);
 
             //var slice = Rectangle2D.Create(
@@ -39,6 +39,7 @@ namespace RasterizerTest {
             //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
+            graphics.DrawSSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)),2, DirectColors.White);
 
             Display.Source = ToImageSource(bmp);
         }
