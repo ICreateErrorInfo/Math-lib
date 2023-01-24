@@ -113,12 +113,25 @@ public class DirectGraphics {
         Vector2D<double> perpendicentVector = new((double)-lineVector.Y, (double)lineVector.X);
         perpendicentVector = perpendicentVector / System.Math.Sqrt(perpendicentVector.GetLengthSquared());
 
-        Point2D<int> topLeft     = (Point2D<int>)((Point2D<double>)line.StartPoint + perpendicentVector * thickness);
-        Point2D<int> bottomLeft  = (Point2D<int>)((Point2D<double>)line.StartPoint - perpendicentVector * thickness);
-        Point2D<int> topRight    = (Point2D<int>)((Point2D<double>)line.EndPoint + perpendicentVector * thickness);
-        Point2D<int> bottomRight = (Point2D<int>)((Point2D<double>)line.EndPoint - perpendicentVector * thickness);
+        Point2D<int> topLeft     = (Point2D<int>)((Point2D<double>)line.StartPoint + perpendicentVector * thickness/2);
+        Point2D<int> bottomLeft  = (Point2D<int>)((Point2D<double>)line.StartPoint - perpendicentVector * thickness/2);
+        Point2D<int> topRight    = (Point2D<int>)((Point2D<double>)line.EndPoint + perpendicentVector * thickness/2);
+        Point2D<int> bottomRight = (Point2D<int>)((Point2D<double>)line.EndPoint - perpendicentVector * thickness/2);
 
         DrawRectangleFilled(new(topLeft, bottomLeft, bottomRight, topRight), color);
+    }
+    public void DrawSSAALine(Line2D<int> line, int thickness, int samples, DirectColor color) {
+        Rectangle2D<int> rec = new Bounds2D<int>(line.GetBoundingBox().PMin - new Vector2D<int>(1), line.GetBoundingBox().PMax + new Vector2D<int>(1)).ToRectangle();
+        DirectBitmap bitmapSliced = _bitmap.Slice(rec);
+
+        DirectBitmap supersampledBitmap = DirectBitmap.Create(bitmapSliced.Width * samples, bitmapSliced.Height * samples);
+
+        Line2D<int> scaledTriangle = (new Line2D<int>(line.StartPoint * samples, line.EndPoint * samples)).Transform(new(-rec.Left * samples, -rec.Top * samples));
+
+        DirectGraphics g = DirectGraphics.Create(supersampledBitmap);
+        g.DrawThickLine(scaledTriangle, thickness * samples, color);
+
+        DownSample(bitmapSliced, supersampledBitmap, samples);
     }
 
     public void DrawAntiAliasedLine(Point2D<int> start, Point2D<int> end, DirectColor color) {

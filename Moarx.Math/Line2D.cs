@@ -21,4 +21,12 @@ public readonly record struct Line2D<T>
     public Point2D<T> StartPoint { get; }
     public Point2D<T> EndPoint   { get; }
 
+    public Bounds2D<T> GetBoundingBox() {
+        return new(StartPoint,
+                   new(EndPoint.X, EndPoint.Y));
+    }
+
+    public Line2D<T> Transform(Vector2D<T> vector) {
+        return new(StartPoint + vector, EndPoint + vector);
+    }
 }
