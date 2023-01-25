@@ -8,7 +8,16 @@
         ResizeMode="CanResizeWithGrip"
         Title="MainWindow" Height="551" Width="800">
     <Grid>
-        <Image x:Name="Display" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="31*"/>
+            <RowDefinition Height="504*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23*"/>
+            <ColumnDefinition Width="177*"/>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="Display" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        <TextBox x:Name="Time" />
 
     </Grid>
 </Window>
