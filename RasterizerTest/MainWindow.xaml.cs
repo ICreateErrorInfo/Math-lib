@@ -52,16 +52,16 @@ namespace RasterizerTest {
 
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
-            DirectAttributes attributes = new DirectAttributes(DirectColors.Black, 10, DirectColors.Blue);
+            DirectAttributes attributes = new DirectAttributes(DirectColors.Black, 10, DirectColors.Yellow);
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), attributes);
-            _graphics.DrawEllipse(new(new(250, 250), 100, 100), attributes);
+            //_graphics.DrawEllipse(new(new(250, 250), 100, 100), attributes);
             //_graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black, DirectColors.Blue);
             //_graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 4, DirectColors.White);
-            //_graphics.DrawThickLine(new(new(20, 20), new(200, 400)), 2, DirectColors.Tan);
+            _graphics.DrawLine(new(new(20, 20), new(200, 400)), attributes);
             //_graphics.DrawSSAALine(new(new(20, 20), new(200, 400)), 2, 4, DirectColors.Tan);
-            //_graphics.DrawRectangle(new(new(20, 20), new(150, 180)), DirectColors.Aqua);
+            //_graphics.DrawRectangle(new(new(20, 20), new(150, 180)), attributes);
 
             Display.Source = ToImageSource(_bitmap);
             Time.Text = stopwatch.ElapsedMilliseconds.ToString() + "ms";
