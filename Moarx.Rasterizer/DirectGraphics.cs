@@ -393,6 +393,34 @@ public class DirectGraphics {
 
         DownSample(bitmapSliced, supersampledBitmap, samples);
     }
+    public void DrawSSAATriangleFilled2(Triangle2D<int> triangle, int samples, DirectColor color) {
+        Rectangle2D<int> rec = triangle.GetBoundingBox().ToRectangle();
+        DirectBitmap bitmapSliced = _bitmap.Slice(rec);
+
+        Triangle2D<int> transformedTriangle = triangle.Transform(new(-rec.Left, -rec.Top));
+
+        Random r = new Random();
+
+        for(int x = 0; x < bitmapSliced.Width; x++) {
+            for(int y = 0; y < bitmapSliced.Height; y++) {
+                Vector3D<double> sampleColor = new Vector3D<double>();
+                DirectColor backgroundColor = bitmapSliced.GetPixel(x, y);
+
+                for(int s = 0; s < samples * samples; s++) {
+
+                    Point2D<double> sampledPoint = new Point2D<double>(x + r.NextDouble() - 0.5, y + r.NextDouble() - 0.5);
+
+                    if(IsInsideTriangle(sampledPoint, transformedTriangle)) {
+                        sampleColor += new Vector3D<double>(color.R, color.G, color.B);
+                    } else {
+                        sampleColor += new Vector3D<double>(backgroundColor.R, backgroundColor.G, backgroundColor.B);
+                    }
+                }
+                Vector3D<double> averageColor = sampleColor / (samples * samples);
+                bitmapSliced.SetPixel(x, y, DirectColor.FromArgb(255, (byte)(averageColor.X), (byte)(averageColor.Y), (byte)(averageColor.Z)));
+            }
+        }
+    }
 
     public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
         DrawLine(point1, point2, color);
@@ -544,12 +572,19 @@ public class DirectGraphics {
                     }
                 }
 
-                _bitmap.SetPixel(x, y, DirectColor.FromArgb(255,
+                originalBitmap.SetPixel(x, y, DirectColor.FromArgb(255,
                                                             (byte)(sampledColor.X / (samples * samples)),
                                                             (byte)(sampledColor.Y / (samples * samples)),
                                                             (byte)(sampledColor.Z / (samples * samples))));
             }
         }
+    }
+    private bool IsInsideTriangle(Point2D<double> point, Triangle2D<int> triangle) {
+        double alpha = ((triangle.Point2.Y - triangle.Point3.Y) * (point.X - triangle.Point3.X) + (triangle.Point3.X - triangle.Point2.X) * (point.Y - triangle.Point3.Y)) / ((triangle.Point2.Y - triangle.Point3.Y) * (triangle.Point1.X - triangle.Point3.X) + (triangle.Point3.X - triangle.Point2.X) * (triangle.Point1.Y - triangle.Point3.Y));
+        double beta = ((triangle.Point3.Y - triangle.Point1.Y) * (point.X - triangle.Point3.X) + (triangle.Point1.X - triangle.Point3.X) * (point.Y - triangle.Point3.Y)) / ((triangle.Point2.Y - triangle.Point3.Y) * (triangle.Point1.X - triangle.Point3.X) + (triangle.Point3.X - triangle.Point2.X) * (triangle.Point1.Y - triangle.Point3.Y));
+        double gamma = 1 - alpha - beta;
+
+        return alpha > 0 && beta > 0 && gamma > 0;
     }
 
 
