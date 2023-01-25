@@ -393,7 +393,7 @@ public class DirectGraphics {
 
         DownSample(bitmapSliced, supersampledBitmap, samples);
     }
-    public void DrawSSAATriangleFilled2(Triangle2D<int> triangle, int samples, DirectColor color) {
+    public void DrawMSAATriangleFilled(Triangle2D<int> triangle, int samples, DirectColor color) {
         Rectangle2D<int> rec = triangle.GetBoundingBox().ToRectangle();
         DirectBitmap bitmapSliced = _bitmap.Slice(rec);
 
