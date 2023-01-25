@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Moarx.Rasterizer;
 
-namespace Moarx.Rasterizer {
-    public class DirectAttributes {
+public record DirectAttributes {
 
-        public DirectAttributes(DirectColor lineColor, bool isFilled, int lineThickness, DirectColor fillColor = new()) {
-            IsFilled= isFilled;
-            FillColor= fillColor;
-            LineColor= lineColor;
-            LineThickness= lineThickness;
-        }
-
-        public bool IsFilled;
-        public DirectColor LineColor;
-        public DirectColor FillColor;
-        public int LineThickness;
+    public DirectAttributes(DirectColor lineColor, int lineThickness)
+        : this(lineColor, lineThickness, DirectColors.Transparent) {
 
     }
+
+    public DirectAttributes(DirectColor lineColor, int lineThickness, DirectColor fillColor) {
+        if (lineThickness < 0) {
+            throw new ArgumentOutOfRangeException(nameof(lineThickness));
+        }
+
+        FillColor     = fillColor;
+        LineColor     = lineColor;
+        LineThickness = lineThickness;
+    }
+
+    public bool        IsFilled      => FillColor.A != 0;
+    public DirectColor LineColor     { get; init; }
+    public DirectColor FillColor     { get; init; }
+    public int         LineThickness { get; init; }
+
 }

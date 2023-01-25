@@ -52,7 +52,7 @@ namespace RasterizerTest {
 
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
-            DirectAttributes attributes = new DirectAttributes(DirectColors.Black, true, 10, DirectColors.Blue);
+            DirectAttributes attributes = new DirectAttributes(DirectColors.Black, 10, DirectColors.Blue);
             _graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), attributes);
             //_graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black, DirectColors.Blue);
             //_graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
