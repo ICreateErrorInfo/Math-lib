@@ -62,6 +62,14 @@ public class DirectGraphics {
         }
     }
 
+    public void DrawTriangle(Triangle2D<int> triangle, DirectAttributes attributes) {
+        if (attributes.IsFilled) {
+            DrawTriangleFilled(triangle, attributes.LineColor, attributes.FillColor);
+        } else {
+            DrawTriangle(triangle, attributes.LineColor);
+        }
+    }
+
     public void DrawRectangle(Rectangle2D<int> rectangle, DirectColor color) {
         DrawLine(rectangle.TopLeft, rectangle.TopRight, color);
         DrawLine(rectangle.TopRight, rectangle.BottomRight, color);
@@ -69,8 +77,8 @@ public class DirectGraphics {
         DrawLine(rectangle.BottomLeft, rectangle.TopLeft, color);
     }
     public void DrawRectangleFilled(Rectangle2D<int> rectangle, DirectColor color) {
-        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.TopRight, rectangle.BottomRight), color);
-        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.BottomLeft, rectangle.BottomRight), color);
+        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.TopRight, rectangle.BottomRight), color, color);
+        DrawTriangleFilled(new(rectangle.TopLeft, rectangle.BottomLeft, rectangle.BottomRight), color, color);
     }
 
     public void DrawLine(Point2D<int> start, Point2D<int> end, DirectColor color) {
@@ -325,7 +333,7 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawTriangle(Triangle2D<int> triangle, DirectColor color) {
+    private void DrawTriangle(Triangle2D<int> triangle, DirectColor color) {
         DrawTriangle(triangle.Point1, triangle.Point2, triangle.Point3, color);
     }
     public void DrawAntiAliasedTriangle(Triangle2D<int> triangle, DirectColor color) {
@@ -389,7 +397,7 @@ public class DirectGraphics {
         Triangle2D<int> scaledTriangle = (new Triangle2D<int>(triangle.Point1 * samples, triangle.Point2 * samples, triangle.Point3 * samples)).Transform(new(-rec.Left * samples, -rec.Top * samples));
 
         DirectGraphics g = DirectGraphics.Create(supersampledBitmap);
-        g.DrawTriangleFilled(scaledTriangle, color);
+        g.DrawTriangleFilled(scaledTriangle, color, color);
 
         DownSample(bitmapSliced, supersampledBitmap, samples);
     }
@@ -422,13 +430,13 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
+    //Triangle
+    private void DrawTriangle(Point2D<int> point1, Point2D<int> point2, Point2D<int> point3, DirectColor color) {
         DrawLine(point1, point2, color);
         DrawLine(point2, point3, color);
         DrawLine(point3, point1, color);
     }
-
-    public void DrawTriangleFilled(Triangle2D<int> triangle, DirectColor color) {
+    private void DrawTriangleFilled(Triangle2D<int> triangle, DirectColor lineColor, DirectColor fillColor) {
 
         Point2D<int> top = triangle.Point1, middle = triangle.Point2, bottom = triangle.Point3;
 
@@ -447,33 +455,33 @@ public class DirectGraphics {
             if (right.X < left.X)
                 (left, right) = (right, left);
 
-            DrawTopFlatTriangle(right, left, bottom, color);
+            DrawTopFlatTriangle(right, left, bottom, lineColor, fillColor);
             return;
         }
 
-        if (bottom.Y == middle.Y) //top bottom
+        if (bottom.Y == middle.Y) //bottom flat
         {
             Point2D<int> right = bottom, left = middle;
             if (right.X < left.X)
                 (left, right) = (right, left);
 
-            DrawBottomFlatTriangle(top, left, right, color);
+            DrawBottomFlatTriangle(top, left, right, lineColor, fillColor);
             return;
         }
 
         Point2D<int> splitPoint = new((int)(top.X + ((middle.Y - top.Y) / (float)(bottom.Y - top.Y)) * (bottom.X - top.X)), middle.Y);
         if (splitPoint.X < middle.X) {
             //split point is left
-            DrawBottomFlatTriangle(top, splitPoint, middle, color);
-            DrawTopFlatTriangle(middle, splitPoint, bottom, color);
+            DrawBottomFlatTriangle(top, splitPoint, middle, lineColor, fillColor);
+            DrawTopFlatTriangle(middle, splitPoint, bottom, lineColor, fillColor);
         } else {
             //split point is right
-            DrawBottomFlatTriangle(top, middle, splitPoint, color);
-            DrawTopFlatTriangle(splitPoint, middle, bottom, color);
+            DrawBottomFlatTriangle(top, middle, splitPoint, lineColor, fillColor);
+            DrawTopFlatTriangle(splitPoint, middle, bottom, lineColor, fillColor);
         }
 
     }
-    private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, DirectColor color) {
+    private void DrawBottomFlatTriangle(Point2D<int> top, Point2D<int> bottomLeft, Point2D<int> bottomRight, DirectColor lineColor, DirectColor fillColor) {
         double inverseSlopeLeft  = (double)(bottomLeft.X - top.X) / (bottomLeft.Y - top.Y);
         double inverseSlopeRight = (double)(bottomRight.X - top.X) / (bottomRight.Y - top.Y);
 
@@ -481,14 +489,19 @@ public class DirectGraphics {
         double currentXPositionRight = top.X;
 
         for (int scanlineY = top.Y; scanlineY < bottomLeft.Y; scanlineY++) {
-            for (int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
-                _bitmap.SetPixel(x, scanlineY, color);
+
+            _bitmap.SetPixel((int)currentXPositionLeft, scanlineY, lineColor);
+            _bitmap.SetPixel((int)currentXPositionRight, scanlineY, lineColor);
+
+            for (int x = (int)currentXPositionLeft + 1; x < currentXPositionRight; x++) {
+                _bitmap.SetPixel(x, scanlineY, fillColor);
             }
+
             currentXPositionLeft += inverseSlopeLeft;
             currentXPositionRight += inverseSlopeRight;
         }
     }
-    private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, DirectColor color) {
+    private void DrawTopFlatTriangle(Point2D<int> topRight, Point2D<int> topLeft, Point2D<int> bottom, DirectColor lineColor, DirectColor fillColor) {
         double inverseSlopeLeft  = (double)(bottom.X - topLeft.X) / (bottom.Y - topLeft.Y);
         double inverseSlopeRight = (double)(bottom.X - topRight.X) / (bottom.Y - topRight.Y);
 
@@ -496,8 +509,12 @@ public class DirectGraphics {
         double currentXPositionRight = bottom.X;
 
         for (int scanlineY = bottom.Y; scanlineY >= topRight.Y; scanlineY--) {
-            for (int x = (int)currentXPositionLeft; x < currentXPositionRight; x++) {
-                _bitmap.SetPixel(x, scanlineY, color);
+
+            _bitmap.SetPixel((int)currentXPositionLeft, scanlineY, lineColor);
+            _bitmap.SetPixel((int)currentXPositionRight, scanlineY, lineColor);
+
+            for (int x = (int)currentXPositionLeft + 1; x < currentXPositionRight; x++) {
+                _bitmap.SetPixel(x, scanlineY, fillColor);
             }
             currentXPositionLeft -= inverseSlopeLeft;
             currentXPositionRight -= inverseSlopeRight;
@@ -537,6 +554,7 @@ public class DirectGraphics {
             currentXPositionRight -= inverseSlopeRight;
         }
     }
+
 
     //Anit aliased line methods
     private double fpart(double x) {

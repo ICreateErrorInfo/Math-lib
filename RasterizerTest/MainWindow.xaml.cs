@@ -39,9 +39,9 @@ namespace RasterizerTest {
             _bitmap.Clear(DirectColors.Gray);
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            //graphics.DrawAntiAliasedLine(new(new(1, 1), new(200, 198)), DirectColors.Black);
-            //graphics.DrawAntiAliasedEllipse(new(new(250, 250), 100, 100), DirectColors.White);
-            //graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), DirectColors.White);
+            //_graphics.DrawAntiAliasedLine(new(new(1, 1), new(200, 198)), DirectColors.Black);
+            //_graphics.DrawAntiAliasedEllipse(new(new(250, 250), 100, 100), DirectColors.White);
+            //_graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), DirectColors.White);
 
             //var slice = Rectangle2D.Create(
             //    x: bmp.Width     / 2, y: bmp.Height      / 2,
@@ -52,13 +52,15 @@ namespace RasterizerTest {
 
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
-            //graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
-            //graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
-            //graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
-            _graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 8, DirectColors.White);
-            //graphics.DrawThickLine(new(new(20, 20), new(200, 400)), 2, DirectColors.Tan);
-            //graphics.DrawSSAALine(new(new(20, 20), new(200, 400)), 2, 4, DirectColors.Tan);
-            //graphics.DrawRectangle(new(new(20, 20), new(150, 180)), DirectColors.Aqua);
+            DirectAttributes attributes = new DirectAttributes(DirectColors.Black, true, 10, DirectColors.Blue);
+            _graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), attributes);
+            //_graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black, DirectColors.Blue);
+            //_graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
+            //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
+            //_graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 4, DirectColors.White);
+            //_graphics.DrawThickLine(new(new(20, 20), new(200, 400)), 2, DirectColors.Tan);
+            //_graphics.DrawSSAALine(new(new(20, 20), new(200, 400)), 2, 4, DirectColors.Tan);
+            //_graphics.DrawRectangle(new(new(20, 20), new(150, 180)), DirectColors.Aqua);
 
             Display.Source = ToImageSource(_bitmap);
             Time.Text = stopwatch.ElapsedMilliseconds.ToString() + "ms";
