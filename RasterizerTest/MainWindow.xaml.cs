@@ -40,7 +40,7 @@ namespace RasterizerTest {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             //_graphics.DrawAntiAliasedLine(new(new(1, 1), new(200, 198)), DirectColors.Black);
-            //_graphics.DrawAntiAliasedEllipse(new(new(250, 250), 100, 100), DirectColors.White);
+            //_graphics.DrawEllipse(new(new(250, 250), 100, 100), DirectColors.White);
             //_graphics.DrawTriangle(new(0, 0), new(250, 499), new(499, 250), DirectColors.White);
 
             //var slice = Rectangle2D.Create(
@@ -53,7 +53,8 @@ namespace RasterizerTest {
             //grfxSlice.FloodFill(x: 0, y: 0, newColor: DirectColors.Red);
 
             DirectAttributes attributes = new DirectAttributes(DirectColors.Black, 10, DirectColors.Blue);
-            _graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), attributes);
+            //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), attributes);
+            _graphics.DrawEllipse(new(new(250, 250), 100, 100), attributes);
             //_graphics.DrawTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black, DirectColors.Blue);
             //_graphics.DrawAntiAliasedTriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);

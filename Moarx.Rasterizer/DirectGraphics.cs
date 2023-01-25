@@ -1,5 +1,6 @@
 ﻿using Moarx.Math;
 using System;
+using System.Xml.Linq;
 
 namespace Moarx.Rasterizer;
 
@@ -212,7 +213,7 @@ public class DirectGraphics {
         }
     }
 
-    public void DrawEllipse(Ellipse2D<int> ellipse, DirectColor color) {
+    private void DrawEllipse(Ellipse2D<int> ellipse, DirectColor color) {
         //Circle
         if (ellipse.VerticalStretch == ellipse.HorizontalStretch) {
             int radius = ellipse.VerticalStretch;
@@ -297,6 +298,49 @@ public class DirectGraphics {
             _bitmap.SetPixel(ellipse.MidPoint.X + dx, ellipse.MidPoint.Y, color);
             _bitmap.SetPixel(ellipse.MidPoint.X - dx, ellipse.MidPoint.Y, color);
         }
+    }
+    public void DrawEllipse(Ellipse2D<int> ellipse, DirectAttributes attributes) {
+        if (!attributes.IsFilled) {
+            DrawEllipse(ellipse, attributes.LineColor);
+            return;
+        }
+
+        int a = ellipse.HorizontalStretch;
+        int b = ellipse.VerticalStretch;
+
+        int x = 0, y = b;
+        double d2 = b*b + a*a*(-b + 0.25);
+
+        while (b * b * x <= a * a * y) {
+            if (d2 < 0) {
+                d2 += b * b * (2 * x + 3);
+            } else {
+                d2 += b * b * (2 * x + 3) + a * a * (-2 * y + 2);
+                y--;
+            }
+            x++;
+
+            for (int i = ellipse.MidPoint.X - x + 1; i < ellipse.MidPoint.X + x; i++) {
+                _bitmap.SetPixel(i, ellipse.MidPoint.Y - y, attributes.FillColor);
+                _bitmap.SetPixel(i, ellipse.MidPoint.Y + y, attributes.FillColor);
+            }
+        }
+        d2 = b * b * x * x + a * a * (y - 1) * (y - 1) - a * a * b * b;
+        while (y >= 0) {
+            if (d2 < 0) {
+                d2 += b * b * (2 * x + 2) + a * a * (-2 * y + 3);
+                x++;
+            } else {
+                d2 += a * a * (-2 * y + 3);
+            }
+            y--;
+            for (int i = ellipse.MidPoint.X - x + 1; i < ellipse.MidPoint.X + x; i++) {
+                _bitmap.SetPixel(i, ellipse.MidPoint.Y - y, attributes.FillColor);
+                _bitmap.SetPixel(i, ellipse.MidPoint.Y + y, attributes.FillColor);
+            }
+        }
+
+        DrawEllipse(ellipse, attributes.LineColor);
     }
     public void DrawAntiAliasedEllipse(Ellipse2D<int> ellipse, DirectColor color) {
         double radiusX = ellipse.HorizontalStretch;
