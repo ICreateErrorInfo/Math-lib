@@ -21,4 +21,26 @@ public readonly record struct BezierCurve2D<T>
     public Point2D<T> Point1 { get; }
     public Point2D<T> Point2 { get; }
     public Point2D<T> EndPoint { get; }
+
+    public Point2D<T> this[int i] {
+        get {
+            if (i == 0) {
+                return StartPoint;
+            }
+
+            if (i == 1) {
+                return Point1;
+            }
+
+            if (i == 2) {
+                return Point2;
+            }
+
+            if (i == 3){
+                return EndPoint;
+            }
+
+            throw new IndexOutOfRangeException();
+        }
+    } 
 }

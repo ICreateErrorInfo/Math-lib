@@ -60,6 +60,7 @@ namespace RasterizerTest {
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 4, DirectColors.White);
             _graphics.DrawLine(new(new(20, 20), new(200, 400)), attributes);
+            _graphics.DrawBezier(new(new(50, 400), new(130, 90), new(345, 90), new(450, 400)), attributes);
             //_graphics.DrawSSAALine(new(new(20, 20), new(200, 400)), 2, 4, DirectColors.Tan);
             //_graphics.DrawRectangle(new(new(20, 20), new(150, 180)), attributes);
 

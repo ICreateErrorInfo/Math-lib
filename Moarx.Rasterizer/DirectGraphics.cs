@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using System.Security;
 
 namespace Moarx.Rasterizer;
 
@@ -129,7 +130,30 @@ public class DirectGraphics {
 
         DrawThickLine(line, attributes.LineThickness, attributes.LineColor);
     }
+    public void DrawBezier(BezierCurve2D<double> curve, DirectAttributes attributes) {
+        DrawCasteljau(curve, attributes.LineColor);
+    }
 
+
+    private void DrawCasteljau(BezierCurve2D<double> curve, DirectColor color) {
+        Point2D<double> tmp;
+        Point2D<double> old = curve.StartPoint;
+        for (double t = 0; t <= 1; t += 0.005) {
+            tmp = GetCasteljauPoint(3, 0, t, curve);
+            DrawLine((Point2D<int>)old, (Point2D<int>)tmp, color);
+            old = tmp;
+        }
+    }
+    private Point2D<double> GetCasteljauPoint(int r, int i, double t, BezierCurve2D<double> curve) {
+        if (r == 0) {
+            return curve[i];
+        }
+
+        Point2D<double> p1 = GetCasteljauPoint(r - 1, i, t, curve);
+        Point2D<double> p2 = GetCasteljauPoint(r - 1, i + 1, t, curve);
+
+        return new Point2D<double>(((1 - t) * p1.X + t * p2.X), ((1 - t) * p1.Y + t * p2.Y));
+    }
 
     private void DrawRectangle(Rectangle2D<int> rectangle, DirectColor color) {
         DrawLine(rectangle.TopLeft, rectangle.TopRight, color);
