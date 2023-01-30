@@ -1,4 +1,6 @@
 ﻿using Moarx.Math;
+using System.Drawing;
+using System.Numerics;
 using System.Security;
 
 namespace Moarx.Rasterizer;
@@ -130,29 +132,155 @@ public class DirectGraphics {
 
         DrawThickLine(line, attributes.LineThickness, attributes.LineColor);
     }
-    public void DrawBezier(BezierCurve2D<double> curve, DirectAttributes attributes) {
-        DrawCasteljau(curve, attributes.LineColor);
+    public void DrawQuadBezier(QuadBezierCurve2D<int> curve, DirectAttributes attributes) {
+        DrawQuadBezier(curve, attributes.LineColor);
     }
 
 
-    private void DrawCasteljau(BezierCurve2D<double> curve, DirectColor color) {
-        Point2D<double> tmp;
-        Point2D<double> old = curve.StartPoint;
-        for (double t = 0; t <= 1; t += 0.005) {
-            tmp = GetCasteljauPoint(3, 0, t, curve);
-            DrawLine((Point2D<int>)old, (Point2D<int>)tmp, color);
-            old = tmp;
+    //Bezier from http://members.chello.at/~easyfilter/bresenham.html
+    private void DrawQuadBezier(QuadBezierCurve2D<int> curve, DirectColor color) {
+        int x = curve[0].X-curve[1].X, y = curve[0].Y-curve[1].Y;
+        double t = curve[0].X-2*curve[1].X+curve[2].X, r;
+
+        Point2D<int> p0Swaped = curve[0], p1Swaped = curve[1], p2Swaped = curve[2];
+
+        if ((double)x * (curve[2].X - curve[1].X) > 0) {
+
+            if ((double)y * (curve[2].Y - curve[1].Y) > 0) {
+
+                if (System.Math.Abs((curve[0].Y - 2 * curve[1].Y + curve[2].Y) / t * x) > System.Math.Abs(y)) {
+                    p0Swaped = new(curve[2].X, curve[2].Y);
+                    p2Swaped = new(x + curve[1].X, y + curve[1].Y);
+                }
+            }
+
+            t = (p0Swaped.X - p1Swaped.X) / t;
+            r = (1 - t) * ((1 - t) * p0Swaped.Y + 2.0 * t * p1Swaped.Y) + t * t * p2Swaped.Y;
+            t = (p0Swaped.X * p2Swaped.X - p1Swaped.X * p1Swaped.X) * t / (p0Swaped.X - p1Swaped.X);
+            x = (int)System.Math.Floor(t + 0.5);
+            y = (int)System.Math.Floor(r + 0.5);
+            r = (p1Swaped.Y - p0Swaped.Y) * (t - p0Swaped.X) / (p1Swaped.X - p0Swaped.X) + p0Swaped.Y;
+            DrawQuadBezierSeg(new(new(p0Swaped.X, p0Swaped.Y), new( x, (int)System.Math.Floor(r + 0.5)),new(x, y)), color);
+
+            r = (p1Swaped.Y - p2Swaped.Y) * (t - p2Swaped.X) / (p1Swaped.X - p2Swaped.X) + p2Swaped.Y;
+            p0Swaped = new(x, y);
+            p1Swaped = new(x, (int)System.Math.Floor(r + 0.5));
         }
+        if ((double)(p0Swaped.Y - p1Swaped.Y) * (p2Swaped.Y - p1Swaped.Y) > 0) {
+            t = p0Swaped.Y - 2 * p1Swaped.Y + p2Swaped.Y;
+            t = (p0Swaped.Y - p1Swaped.Y) / t;
+            r = (1 - t) * ((1 - t) * p0Swaped.X + 2.0 * t * p1Swaped.X) + t * t * p2Swaped.X;
+            t = (p0Swaped.Y * p2Swaped.Y - p1Swaped.Y * p1Swaped.Y) * t / (p0Swaped.Y - p1Swaped.Y);
+            x = (int)System.Math.Floor(r + 0.5);
+            y = (int)System.Math.Floor(t + 0.5);
+            r = (p1Swaped.X - p0Swaped.X) * (t - p0Swaped.Y) / (p1Swaped.Y - p0Swaped.Y) + p0Swaped.X;
+            DrawQuadBezierSeg(new(p0Swaped, new((int)System.Math.Floor(r + 0.5), y),new(x, y)), color);
+
+            r = (p1Swaped.X - p2Swaped.X) * (t - p2Swaped.Y) / (p1Swaped.Y - p2Swaped.Y) + p2Swaped.X;
+
+            p0Swaped = new(x, y);
+            p1Swaped = new((int)System.Math.Floor(r + 0.5), y);
+        }
+        DrawQuadBezierSeg(new(p0Swaped, p1Swaped, p2Swaped), color);
     }
-    private Point2D<double> GetCasteljauPoint(int r, int i, double t, BezierCurve2D<double> curve) {
-        if (r == 0) {
-            return curve[i];
+    private void DrawQuadBezierSeg(QuadBezierCurve2D<int> curve, DirectColor color) {
+        int sx = curve[2].X-curve[1].X, sy = curve[2].Y-curve[1].Y;
+        long xx = curve[0].X-curve[1].X, yy = curve[0].Y-curve[1].Y, xy; 
+        double dx, dy, err, cur = xx*sy-yy*sx;
+
+        if (!(xx * sx <= 0 && yy * sy <= 0)) throw new Exception("sign of gradient must not change");
+
+        Point2D<int> p1Swaped = curve[0], p2Swaped = curve[1], p3Swaped = curve[2];
+
+        if (sx * (long)sx + sy * (long)sy > xx * xx + yy * yy) {
+            p3Swaped = new(curve[0].X, curve[0].Y);
+            p1Swaped = new(sx + curve[1].X, sy + curve[1].Y);
+            cur = -cur;
         }
 
-        Point2D<double> p1 = GetCasteljauPoint(r - 1, i, t, curve);
-        Point2D<double> p2 = GetCasteljauPoint(r - 1, i + 1, t, curve);
+        if (cur != 0) {                                   
+            xx += sx;
+            xx *= sx = p1Swaped.X < p3Swaped.X ? 1 : -1;          
+            yy += sy;
+            yy *= sy = p1Swaped.Y < p3Swaped.Y ? 1 : -1;          
+            xy = 2 * xx * yy;
+            xx *= xx;
+            yy *= yy;        
+            if (cur * sx * sy < 0) {                          
+                xx = -xx;
+                yy = -yy;
+                xy = -xy;
+                cur = -cur;
+            }
+            dx = 4.0 * sy * cur * (p2Swaped.X - p1Swaped.X) + xx - xy;           
+            dy = 4.0 * sx * cur * (p1Swaped.Y - p2Swaped.Y) + yy - xy;
+            xx += xx;
+            yy += yy;
+            err = dx + dy + xy;              
+            do {
+                _bitmap.SetPixel(p1Swaped.X, p1Swaped.Y, color);                                   
+                if (p1Swaped.X == p3Swaped.X && p1Swaped.Y == p3Swaped.Y)
+                    return; 
+                bool y = 2 * err < dx;             
+                if (2 * err > dy) {p1Swaped += new Vector2D<int>(sx, 0); dx -= xy; err += dy += yy; } 
+                if (y) { p1Swaped += new Vector2D<int>(0, sy); dy -= xy; err += dx += xx; }
+            } while (dy < dx);          
+        }
+        DrawLine(new(p1Swaped, p3Swaped), color);             
+    }
+    private void DrawFineQuadBezierSeg(QuadBezierCurve2D<int> curve, DirectColor color) {
+        int x0 = curve[0].X, x1 = curve[1].X, x2 = curve[2].X;
+        int y0 = curve[0].Y, y1 = curve[1].Y, y2 = curve[2].Y;
 
-        return new Point2D<double>(((1 - t) * p1.X + t * p2.X), ((1 - t) * p1.Y + t * p2.Y));
+        int sx = x0<x2 ? 1 : -1, sy = y0<y2 ? 1 : -1;
+
+        long f = 1, fx = x0-2 * x1 + x2, fy = y0-2 * y1 + y2;
+
+        long x = 2*fx*fx, y = 2*fy*fy, xy = 2*fx*fy*sx*sy;
+        long cur = sx*sy*(fx*(y2-y0)-fy * (x2-x0));
+        /* compute error increments of P0 */
+        long dx = System.Math.Abs(y0-y1)*xy-System.Math.Abs(x0-x1) * y-cur* System.Math.Abs(y0-y2);
+        long dy = System.Math.Abs(x0-x1)*xy-System.Math.Abs(y0-y1) * x + cur * System.Math.Abs(x0-x2);
+        /* compute error increments of P2 */
+        long ex = System.Math.Abs(y2-y1)*xy-System.Math.Abs(x2-x1) * y + cur * System.Math.Abs(y0-y2);
+        long ey = System.Math.Abs(x2-x1)*xy-System.Math.Abs(y2-y1) * x-cur* System.Math.Abs(x0-x2);
+        /* sign of gradient must not change */
+        if (!((x0 - x1) * (x2 - x1) <= 0 && (y0 - y1) * (y2 - y1) <= 0)) throw new Exception("sign of gradient must not change");
+
+        if (cur == 0) { DrawLine(new(x0, y0),new( x2, y2), color); return; } /* straight line */
+        /* compute required minimum resolution factor */
+        if (dx == 0 || dy == 0 || ex == 0 || ey == 0)
+            f = System.Math.Abs(xy / cur) / 2 + 1; /* division by zero: use curvature */
+        else {
+            fx = 2 * y / dx;
+            if (fx > f)
+                f = fx; /* increase resolution */
+            fx = 2 * x / dy;
+            if (fx > f)
+                f = fx;
+            fx = 2 * y / ex;
+            if (fx > f)
+                f = fx;
+            fx = 2 * x / ey;
+            if (fx > f)
+                f = fx;
+        } /* negated curvature? */
+        if (cur < 0) { x = -x; y = -y; dx = -dx; dy = -dy; xy = -xy; }
+        dx = f * dx + y / 2-xy;
+        dy = f * dy + x / 2-xy;
+        ex = dx + dy + xy; /* error 1.step */
+        for (fx = fy = f; ;) { /* plot curve */
+            _bitmap.SetPixel(x0, y0, color);
+            if (x0 == x2 && y0 == y2)
+                break;
+            do { /* move f sub-pixel */
+                ey = 2 * ex-dy; /* save value for test of y step */
+                if (2 * ex >= dx) { fx--; dy -= xy; ex += dx += y; } /* x step */
+                if (ey <= 0) { fy--; dx -= xy; ex += dy += x; } /* y step */
+            } while (fx > 0 && fy > 0); /* pixel complete? */
+            if (2 * fx <= f) { x0 += sx; fx += f; } /* sufficient sub-steps.. */
+            if (2 * fy <= f) { y0 += sy; fy += f; } /* .. for a pixel? */
+        }
     }
 
     private void DrawRectangle(Rectangle2D<int> rectangle, DirectColor color) {
