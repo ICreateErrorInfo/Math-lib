@@ -5,9 +5,7 @@ using System.Windows.Media;
 using Moarx.Math;
 using System.Windows.Threading;
 using System;
-using System.Drawing;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RasterizerTest {
@@ -17,8 +15,8 @@ namespace RasterizerTest {
         private readonly DispatcherTimer   _timer;
         private DirectGraphics _graphics;
         private DirectBitmap _bitmap;
-        private System.Windows.Point _mousePositionLeft;
-        private System.Windows.Point _mousePositionRight;
+        private Point _mousePositionLeft;
+        private Point _mousePositionRight;
         private double newHeight;
 
         public MainWindow() {
@@ -40,7 +38,7 @@ namespace RasterizerTest {
             _timer.Tick += UpdateImage;
         }
 
-        private void UpdateImage(object sender, EventArgs e) {
+        private void UpdateImage(object? sender, EventArgs e) {
             _bitmap.Clear(DirectColors.Gray);
             Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -65,11 +63,11 @@ namespace RasterizerTest {
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 4, DirectColors.White);
             //_graphics.DrawLine(new(new(20, 20), new(200, 400)), attributes);
-            QuadBezierCurve2D<int> bezierCurve2D = new();
-            if (_mousePositionLeft == new System.Windows.Point(0, 0)) {
+            QuadBezierCurve2D<int> bezierCurve2D;
+            if (_mousePositionLeft == new Point(0, 0)) {
                 bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500), new(200, 10), new(150, 100));
             } else {
-                if (_mousePositionRight == new System.Windows.Point(0, 0)) {
+                if (_mousePositionRight == new Point(0, 0)) {
                     bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500),
                                            new(200, 10),
                                            new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)));
@@ -99,11 +97,40 @@ namespace RasterizerTest {
                 newHeight = (_bitmap.Height) / (sizeInfo.NewSize.Height - 38);
 
         }
-        protected override void OnMouseLeftButtonUp(System.Windows.Input.MouseButtonEventArgs e) {
-            _mousePositionLeft = e.GetPosition(Display);
+
+        protected override void OnMouseMove(MouseEventArgs e) {
+            base.OnMouseMove(e);
+            if (!IsMouseCaptured) {
+                return;
+            }
+
+            if (e.LeftButton == MouseButtonState.Pressed) {
+                _mousePositionLeft = e.GetPosition(Display);
+            } else if (e.MiddleButton == MouseButtonState.Pressed) {
+
+            } else if (e.RightButton == MouseButtonState.Pressed) {
+                _mousePositionRight = e.GetPosition(Display);
+            }
         }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e) {
+            _mousePositionLeft = e.GetPosition(Display);
+            CaptureMouse();
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
+            _mousePositionLeft = e.GetPosition(Display);
+            ReleaseMouseCapture();
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e) {
+            _mousePositionRight = e.GetPosition(Display);
+            CaptureMouse();
+        }
+
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e) {
             _mousePositionRight = e.GetPosition(Display);
+            ReleaseMouseCapture();
         }
 
         public static ImageSource ToImageSource(DirectBitmap bitmap) {
