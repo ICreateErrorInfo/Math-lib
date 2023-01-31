@@ -63,26 +63,45 @@ namespace RasterizerTest {
             //_graphics.DrawTriangle(new(new(10, 10), new(100, 200), new(300, 300)), DirectColors.Black);
             //_graphics.DrawMSAATriangleFilled(new(new(10, 10), new(100, 200), new(300, 300)), 4, DirectColors.White);
             //_graphics.DrawLine(new(new(20, 20), new(200, 400)), attributes);
-            QuadBezierCurve2D<int> bezierCurve2D;
+            //QuadBezierCurve2D<int> bezierCurve2D;
+            //if (_mousePositionLeft == new Point(0, 0)) {
+            //    bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500), new(200, 10), new(150, 100));
+            //} else {
+            //    if (_mousePositionRight == new Point(0, 0)) {
+            //        bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500),
+            //                               new(200, 10),
+            //                               new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)));
+            //    } else {
+            //        bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500),
+            //                               new((int)(_mousePositionRight.X * newHeight), (int)(_mousePositionRight.Y * newHeight)),
+            //                               new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)));
+            //    }
+            //}
+
+
+            CubicBezierCurve2D<int> bezierCurve2D;
+
             if (_mousePositionLeft == new Point(0, 0)) {
-                bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500), new(200, 10), new(150, 100));
+                bezierCurve2D = new CubicBezierCurve2D<int>(new(100, 500), new(500, 100), new(10, 100), new(410, 500));
             } else {
                 if (_mousePositionRight == new Point(0, 0)) {
-                    bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500),
-                                           new(200, 10),
-                                           new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)));
+                    bezierCurve2D = new CubicBezierCurve2D<int>(new(100, 500),
+                                                                new(400, 100),
+                                                                new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)),
+                                                                new(500, 500));
                 } else {
-                    bezierCurve2D = new QuadBezierCurve2D<int>(new(10, 500),
-                                           new((int)(_mousePositionRight.X * newHeight), (int)(_mousePositionRight.Y * newHeight)),
-                                           new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)));
+                    bezierCurve2D = new CubicBezierCurve2D<int>(new(100, 500),
+                                                                new((int)(_mousePositionRight.X * newHeight), (int)(_mousePositionRight.Y * newHeight)),
+                                                                new((int)(_mousePositionLeft.X * newHeight), (int)(_mousePositionLeft.Y * newHeight)),
+                                                                new(500, 500));
                 }
             }
 
-
-            _graphics.DrawQuadBezier(bezierCurve2D, attributes);
+            _graphics.DrawCubicBezier(bezierCurve2D, attributes);
             _graphics.DrawEllipse(new(bezierCurve2D[0], 3), attributes);
             _graphics.DrawEllipse(new(bezierCurve2D[1], 3), attributes);
             _graphics.DrawEllipse(new(bezierCurve2D[2], 3), attributes);
+            _graphics.DrawEllipse(new(bezierCurve2D[3], 3), attributes);
 
 
             //_graphics.DrawSSAALine(new(new(20, 20), new(200, 400)), 2, 4, DirectColors.Tan);

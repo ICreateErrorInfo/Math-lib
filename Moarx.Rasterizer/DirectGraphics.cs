@@ -125,7 +125,7 @@ public class DirectGraphics {
 
     }
     public void DrawLine(Line2D<int> line, DirectAttributes attributes) {
-        if(attributes.LineThickness == 1) {
+        if (attributes.LineThickness == 1) {
             DrawLine(line, attributes.LineColor);
             return;
         }
@@ -134,6 +134,9 @@ public class DirectGraphics {
     }
     public void DrawQuadBezier(QuadBezierCurve2D<int> curve, DirectAttributes attributes) {
         DrawQuadBezier(curve, attributes.LineColor);
+    }
+    public void DrawCubicBezier(CubicBezierCurve2D<int> curve, DirectAttributes attributes) {
+        DrawCubicBezier(curve, attributes.LineColor);
     }
 
 
@@ -160,7 +163,7 @@ public class DirectGraphics {
             x = (int)System.Math.Floor(t + 0.5);
             y = (int)System.Math.Floor(r + 0.5);
             r = (p1Swaped.Y - p0Swaped.Y) * (t - p0Swaped.X) / (p1Swaped.X - p0Swaped.X) + p0Swaped.Y;
-            DrawQuadBezierSeg(new(new(p0Swaped.X, p0Swaped.Y), new( x, (int)System.Math.Floor(r + 0.5)),new(x, y)), color);
+            DrawQuadBezierSeg(new(new(p0Swaped.X, p0Swaped.Y), new(x, (int)System.Math.Floor(r + 0.5)), new(x, y)), color);
 
             r = (p1Swaped.Y - p2Swaped.Y) * (t - p2Swaped.X) / (p1Swaped.X - p2Swaped.X) + p2Swaped.Y;
             p0Swaped = new(x, y);
@@ -174,7 +177,7 @@ public class DirectGraphics {
             x = (int)System.Math.Floor(r + 0.5);
             y = (int)System.Math.Floor(t + 0.5);
             r = (p1Swaped.X - p0Swaped.X) * (t - p0Swaped.Y) / (p1Swaped.Y - p0Swaped.Y) + p0Swaped.X;
-            DrawQuadBezierSeg(new(p0Swaped, new((int)System.Math.Floor(r + 0.5), y),new(x, y)), color);
+            DrawQuadBezierSeg(new(p0Swaped, new((int)System.Math.Floor(r + 0.5), y), new(x, y)), color);
 
             r = (p1Swaped.X - p2Swaped.X) * (t - p2Swaped.Y) / (p1Swaped.Y - p2Swaped.Y) + p2Swaped.X;
 
@@ -185,10 +188,11 @@ public class DirectGraphics {
     }
     private void DrawQuadBezierSeg(QuadBezierCurve2D<int> curve, DirectColor color) {
         int sx = curve[2].X-curve[1].X, sy = curve[2].Y-curve[1].Y;
-        long xx = curve[0].X-curve[1].X, yy = curve[0].Y-curve[1].Y, xy; 
+        long xx = curve[0].X-curve[1].X, yy = curve[0].Y-curve[1].Y, xy;
         double dx, dy, err, cur = xx*sy-yy*sx;
 
-        if (!(xx * sx <= 0 && yy * sy <= 0)) throw new Exception("sign of gradient must not change");
+        if (!(xx * sx <= 0 && yy * sy <= 0))
+            throw new Exception("sign of gradient must not change");
 
         Point2D<int> p1Swaped = curve[0], p2Swaped = curve[1], p3Swaped = curve[2];
 
@@ -198,35 +202,35 @@ public class DirectGraphics {
             cur = -cur;
         }
 
-        if (cur != 0) {                                   
+        if (cur != 0) {
             xx += sx;
-            xx *= sx = p1Swaped.X < p3Swaped.X ? 1 : -1;          
+            xx *= sx = p1Swaped.X < p3Swaped.X ? 1 : -1;
             yy += sy;
-            yy *= sy = p1Swaped.Y < p3Swaped.Y ? 1 : -1;          
+            yy *= sy = p1Swaped.Y < p3Swaped.Y ? 1 : -1;
             xy = 2 * xx * yy;
             xx *= xx;
-            yy *= yy;        
-            if (cur * sx * sy < 0) {                          
+            yy *= yy;
+            if (cur * sx * sy < 0) {
                 xx = -xx;
                 yy = -yy;
                 xy = -xy;
                 cur = -cur;
             }
-            dx = 4.0 * sy * cur * (p2Swaped.X - p1Swaped.X) + xx - xy;           
+            dx = 4.0 * sy * cur * (p2Swaped.X - p1Swaped.X) + xx - xy;
             dy = 4.0 * sx * cur * (p1Swaped.Y - p2Swaped.Y) + yy - xy;
             xx += xx;
             yy += yy;
-            err = dx + dy + xy;              
+            err = dx + dy + xy;
             do {
-                _bitmap.SetPixel(p1Swaped.X, p1Swaped.Y, color);                                   
+                _bitmap.SetPixel(p1Swaped.X, p1Swaped.Y, color);
                 if (p1Swaped.X == p3Swaped.X && p1Swaped.Y == p3Swaped.Y)
-                    return; 
-                bool y = 2 * err < dx;             
-                if (2 * err > dy) {p1Swaped += new Vector2D<int>(sx, 0); dx -= xy; err += dy += yy; } 
+                    return;
+                bool y = 2 * err < dx;
+                if (2 * err > dy) { p1Swaped += new Vector2D<int>(sx, 0); dx -= xy; err += dy += yy; }
                 if (y) { p1Swaped += new Vector2D<int>(0, sy); dy -= xy; err += dx += xx; }
-            } while (dy < dx);          
+            } while (dy < dx);
         }
-        DrawLine(new(p1Swaped, p3Swaped), color);             
+        DrawLine(new(p1Swaped, p3Swaped), color);
     }
     private void DrawFineQuadBezierSeg(QuadBezierCurve2D<int> curve, DirectColor color) {
         int x0 = curve[0].X, x1 = curve[1].X, x2 = curve[2].X;
@@ -245,9 +249,10 @@ public class DirectGraphics {
         long ex = System.Math.Abs(y2-y1)*xy-System.Math.Abs(x2-x1) * y + cur * System.Math.Abs(y0-y2);
         long ey = System.Math.Abs(x2-x1)*xy-System.Math.Abs(y2-y1) * x-cur* System.Math.Abs(x0-x2);
         /* sign of gradient must not change */
-        if (!((x0 - x1) * (x2 - x1) <= 0 && (y0 - y1) * (y2 - y1) <= 0)) throw new Exception("sign of gradient must not change");
+        if (!((x0 - x1) * (x2 - x1) <= 0 && (y0 - y1) * (y2 - y1) <= 0))
+            throw new Exception("sign of gradient must not change");
 
-        if (cur == 0) { DrawLine(new(x0, y0),new( x2, y2), color); return; } /* straight line */
+        if (cur == 0) { DrawLine(new(x0, y0), new(x2, y2), color); return; } /* straight line */
         /* compute required minimum resolution factor */
         if (dx == 0 || dy == 0 || ex == 0 || ey == 0)
             f = System.Math.Abs(xy / cur) / 2 + 1; /* division by zero: use curvature */
@@ -266,15 +271,15 @@ public class DirectGraphics {
                 f = fx;
         } /* negated curvature? */
         if (cur < 0) { x = -x; y = -y; dx = -dx; dy = -dy; xy = -xy; }
-        dx = f * dx + y / 2-xy;
-        dy = f * dy + x / 2-xy;
+        dx = f * dx + y / 2 - xy;
+        dy = f * dy + x / 2 - xy;
         ex = dx + dy + xy; /* error 1.step */
         for (fx = fy = f; ;) { /* plot curve */
             _bitmap.SetPixel(x0, y0, color);
             if (x0 == x2 && y0 == y2)
                 break;
             do { /* move f sub-pixel */
-                ey = 2 * ex-dy; /* save value for test of y step */
+                ey = 2 * ex - dy; /* save value for test of y step */
                 if (2 * ex >= dx) { fx--; dy -= xy; ex += dx += y; } /* x step */
                 if (ey <= 0) { fy--; dx -= xy; ex += dy += x; } /* y step */
             } while (fx > 0 && fy > 0); /* pixel complete? */
@@ -282,6 +287,174 @@ public class DirectGraphics {
             if (2 * fy <= f) { y0 += sy; fy += f; } /* .. for a pixel? */
         }
     }
+
+    private void DrawCubicBezier(CubicBezierCurve2D<int> curve, DirectColor color) {
+        DirectAttributes attributes = new DirectAttributes(DirectColors.Black, 10, DirectColors.Yellow);
+        int x0 = curve[0].X, x1 = curve[1].X, x2 = curve[2].X, x3 = curve[3].X;
+        int y0 = curve[0].Y, y1 = curve[1].Y, y2 = curve[2].Y, y3 = curve[3].Y;
+
+        int n = 0, i = 0;
+        double xc = x0+x1-x2-x3, xa = xc-4*(x1-x2);
+        double xb = x0-x1-x2+x3, xd = xb+4*(x1+x2);
+        double yc = y0+y1-y2-y3, ya = yc-4*(y1-y2);
+        double yb = y0-y1-y2+y3, yd = yb+4*(y1+y2);
+        double fx0 = x0, fx1, fx2, fx3, fy0 = y0, fy1, fy2, fy3;
+        double t1 = xb*xb-xa*xc, t2;
+        double[] t = new double[5];
+
+        if (xa == 0) {
+            if (System.Math.Abs(xc) < 2 * System.Math.Abs(xb))
+                t[n++] = xc / (2.0 * xb);
+        } else if (t1 > 0.0) {
+            t2 = System.Math.Sqrt(t1);
+            t1 = (xb - t2) / xa;
+            if (System.Math.Abs(t1) < 1.0)
+                t[n++] = t1;
+            t1 = (xb + t2) / xa;
+            if (System.Math.Abs(t1) < 1.0)
+                t[n++] = t1;
+        }
+        t1 = yb * yb - ya * yc;
+        if (ya == 0) {
+            if (System.Math.Abs(yc) < 2 * System.Math.Abs(yb))
+                t[n++] = yc / (2.0 * yb);
+        } else if (t1 > 0.0) {
+            t2 = System.Math.Sqrt(t1);
+            t1 = (yb - t2) / ya;
+            if (System.Math.Abs(t1) < 1.0)
+                t[n++] = t1;
+            t1 = (yb + t2) / ya;
+            if (System.Math.Abs(t1) < 1.0)
+                t[n++] = t1;
+        }
+        for (i = 1; i < n; i++)
+            if ((t1 = t[i - 1]) > t[i]) { t[i - 1] = t[i]; t[i] = t1; i = 0; }
+        t1 = -1.0;
+        t[n] = 1.0;
+        for (i = 0; i <= n; i++) {
+            t2 = t[i];
+            fx1 = (t1 * (t1 * xb - 2 * xc) - t2 * (t1 * (t1 * xa - 2 * xb) + xc) + xd) / 8 - fx0;
+            fy1 = (t1 * (t1 * yb - 2 * yc) - t2 * (t1 * (t1 * ya - 2 * yb) + yc) + yd) / 8 - fy0;
+            fx2 = (t2 * (t2 * xb - 2 * xc) - t1 * (t2 * (t2 * xa - 2 * xb) + xc) + xd) / 8 - fx0;
+            fy2 = (t2 * (t2 * yb - 2 * yc) - t1 * (t2 * (t2 * ya - 2 * yb) + yc) + yd) / 8 - fy0;
+            fx0 -= fx3 = (t2 * (t2 * (3 * xb - t2 * xa) - 3 * xc) + xd) / 8;
+            fy0 -= fy3 = (t2 * (t2 * (3 * yb - t2 * ya) - 3 * yc) + yd) / 8;
+            x3 = (int)System.Math.Floor(fx3 + 0.5);
+            y3 = (int)System.Math.Floor(fy3 + 0.5);
+            if (fx0 != 0.0) { fx1 *= fx0 = (x0 - x3) / fx0; fx2 *= fx0; }
+            if (fy0 != 0.0) { fy1 *= fy0 = (y0 - y3) / fy0; fy2 *= fy0; }
+            if (x0 != x3 || y0 != y3)
+                DrawCubicBezierSeg(new(new(x0, y0), new((int)(x0 + fx1), (int)(y0 + fy1)),new((int)(x0 + fx2), (int)(y0 + fy2)),new( x3, y3)), color);
+            x0 = x3;
+            y0 = y3;
+            fx0 = fx3;
+            fy0 = fy3;
+            t1 = t2;
+        }
+    }
+    private void DrawCubicBezierSeg(CubicBezierCurve2D<int> curve, DirectColor color) {
+
+        int x0 = curve[0].X, x1 = curve[1].X, x2 = curve[2].X, x3 = curve[3].X;
+        int y0 = curve[0].Y, y1 = curve[1].Y, y2 = curve[2].Y, y3 = curve[3].Y;
+
+        int f, fx, fy, leg = 1;
+        int sx = x0 < x3 ? 1 : -1, sy = y0 < y3 ? 1 : -1;
+        double xc = -System.Math.Abs(x0+x1-x2-x3), xa = xc-4*sx*(x1-x2), xb = sx*(x0-x1-x2+x3);
+        double yc = -System.Math.Abs(y0+y1-y2-y3), ya = yc-4*sy*(y1-y2), yb = sy*(y0-y1-y2+y3);
+        double ab, ac, bc, cb, xx, xy, yy, dx, dy, ex, pxy, EP = 0.01;
+
+
+        //if (!((x1 - x0) * (x2 - x3) < EP && ((x3 - x0) * (x1 - x2) < EP || xb * xb < xa * xc + EP)))
+        //    throw new Exception();
+        //if(!((y1 - y0) * (y2 - y3) < EP && ((y3 - y0) * (y1 - y2) < EP || yb * yb < ya * yc + EP)))
+        //    throw new Exception();
+
+
+        if (xa == 0 && ya == 0) {
+            sx = (int)System.Math.Floor((double)(3 * x1 - x0 + 1) / 2);
+            sy = (int)System.Math.Floor((double)(3 * y1 - y0 + 1) / 2);
+            DrawQuadBezierSeg(new(new(x0, y0),new(sx, sy),new( x3, y3)), color);
+            return;
+        }
+        x1 = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0) + 1;
+        x2 = (x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3) + 1;
+        do {
+            ab = xa * yb - xb * ya;
+            ac = xa * yc - xc * ya;
+            bc = xb * yc - xc * yb;
+            ex = ab * (ab + ac - 3 * bc) + ac * ac;
+            f = ex > 0 ? 1 : (int)System.Math.Sqrt(1 + 1024 / x1);
+            ab *= f;
+            ac *= f;
+            bc *= f;
+            ex *= f * f;
+            xy = 9 * (ab + ac + bc) / 8;
+            cb = 8 * (xa - ya);
+            dx = 27 * (8 * ab * (yb * yb - ya * yc) + ex * (ya + 2 * yb + yc)) / 64 - ya * ya * (xy - ya);
+            dy = 27 * (8 * ab * (xb * xb - xa * xc) - ex * (xa + 2 * xb + xc)) / 64 - xa * xa * (xy + xa);
+            xx = 3 * (3 * ab * (3 * yb * yb - ya * ya - 2 * ya * yc) - ya * (3 * ac * (ya + yb) + ya * cb)) / 4;
+            yy = 3 * (3 * ab * (3 * xb * xb - xa * xa - 2 * xa * xc) - xa * (3 * ac * (xa + xb) + xa * cb)) / 4;
+            xy = xa * ya * (6 * ab + 6 * ac - 3 * bc + cb);
+            ac = ya * ya;
+            cb = xa * xa;
+            xy = 3 * (xy + 9 * f * (cb * yb * yc - xb * xc * ac) - 18 * xb * yb * ab) / 8;
+            if (ex < 0) {
+                dx = -dx;
+                dy = -dy;
+                xx = -xx;
+                yy = -yy;
+                xy = -xy;
+                ac = -ac;
+                cb = -cb;
+            }
+            ab = 6 * ya * ac;
+            ac = -6 * xa * ac;
+            bc = 6 * ya * cb;
+            cb = -6 * xa * cb;
+            dx += xy;
+            ex = dx + dy;
+            dy += xy;
+            for (pxy = xy, fx = fy = f; x0 != x3 && y0 != y3;) {
+                _bitmap.SetPixel(x0, y0, color);
+                do {
+                    if (dx > pxy || dy < pxy)
+                        goto exit;
+                    if (2 * ex >= dx) {
+                        fx--;
+                        ex += dx += xx;
+                        dy += xy += ac;
+                        yy += bc;
+                        xx += ab;
+                    }
+                    if (2 * ex - dy <= 0) {
+                        fy--;
+                        ex += dy += yy;
+                        dx += xy += bc;
+                        xx += ac;
+                        yy += cb;
+                    }
+                } while (fx > 0 && fy > 0);
+                if (2 * fx <= f) { x0 += sx; fx += f; }
+                if (2 * fy <= f) { y0 += sy; fy += f; }
+                if (pxy == xy && dx < 0 && dy > 0)
+                    pxy = EP;
+            }
+            exit:
+            xx = x0;
+            x0 = x3;
+            x3 = (int)xx;
+            sx = -sx;
+            xb = -xb;
+            yy = y0;
+            y0 = y3;
+            y3 = (int)yy;
+            sy = -sy;
+            yb = -yb;
+            x1 = x2;
+        } while (leg-- >= 0);
+        DrawLine(new(x0, y0), new(x3, y3), color);
+    }
+
 
     private void DrawRectangle(Rectangle2D<int> rectangle, DirectColor color) {
         DrawLine(rectangle.TopLeft, rectangle.TopRight, color);
@@ -625,16 +798,16 @@ public class DirectGraphics {
 
         Random r = new Random();
 
-        for(int x = 0; x < bitmapSliced.Width; x++) {
-            for(int y = 0; y < bitmapSliced.Height; y++) {
+        for (int x = 0; x < bitmapSliced.Width; x++) {
+            for (int y = 0; y < bitmapSliced.Height; y++) {
                 Vector3D<double> sampleColor = new Vector3D<double>();
                 DirectColor backgroundColor = bitmapSliced.GetPixel(x, y);
 
-                for(int s = 0; s < samples * samples; s++) {
+                for (int s = 0; s < samples * samples; s++) {
 
                     Point2D<double> sampledPoint = new Point2D<double>(x + r.NextDouble() - 0.5, y + r.NextDouble() - 0.5);
 
-                    if(IsInsideTriangle(sampledPoint, transformedTriangle)) {
+                    if (IsInsideTriangle(sampledPoint, transformedTriangle)) {
                         sampleColor += new Vector3D<double>(color.R, color.G, color.B);
                     } else {
                         sampleColor += new Vector3D<double>(backgroundColor.R, backgroundColor.G, backgroundColor.B);
