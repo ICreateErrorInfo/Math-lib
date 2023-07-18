@@ -35,7 +35,7 @@ public partial class MainWindow: Window {
 
         var solution = GaussSeidelSolver(10,0.0001, matrix2, source2);
 
-        OneDDIffusionImplicit();
+        OneDConvectionImplicit();
     }
 
     //Navier Stoke 2D
@@ -728,6 +728,68 @@ public partial class MainWindow: Window {
     }
 
     //Implicid
+    public void OneDConvectionImplicit() {
+        int nx = 41, nt = 25;
+        double dt = 0.025, c = 1;
+        double dx = (double)2 / (nx - 1);
+
+        double[,] coefficientMatrix = new double[nx, nx];
+        double[] u = new double[nx];
+
+        //initial Conditions
+        for (int i = 0; i < nx; i++) {
+            double currentX = i * dx;
+
+            if (0.5 <= currentX && currentX <= 1) {
+                u[i] = 2;
+            } else {
+                u[i] = 1;
+            }
+        }
+
+        PointCollection points2 = new PointCollection();
+        for (int i = 0; i < nx; i++) {
+            double currentX = i * dx;
+            points2.Add(new(currentX, u[i]));
+        }
+
+        CreatePlot(2, 2.5, points2);
+
+        double alpha = c * dt / dx;
+
+        //Solve for U n+1
+        for (int it = 1; it <= nt; it++) {
+            // Reset the coefficient matrix to zeros at each time step
+            for (int i = 0; i < nx; i++) {
+                for (int j = 0; j < nx; j++) {
+                    coefficientMatrix[i, j] = 0;
+                }
+            }
+
+
+            for (int i = 1; i < nx - 1; i++) {
+                coefficientMatrix[i, i - 1] = -alpha;
+                coefficientMatrix[i, i] = 1 + alpha;
+                coefficientMatrix[i, i + 1] = 0;
+            }
+
+            // Apply the boundary conditions to the coefficient matrix
+            coefficientMatrix[0, 0] = 1;
+            coefficientMatrix[0, 1] = 0;
+            coefficientMatrix[nx - 1, nx - 1] = 1;
+            coefficientMatrix[nx - 1, nx - 2] = 0;
+
+            u = GaussSeidelSolver(10000, 0, coefficientMatrix, u);
+        }
+
+        PointCollection points = new PointCollection();
+        for (int i = 0; i < nx; i++) {
+            double currentX = i * dx;
+            points.Add(new(currentX, u[i]));
+        }
+
+        CreatePlot(2, 2.5, points);
+    }
     public void OneDDIffusionImplicit() {
         int nx = 10, nt = 1000;
         double dt = 0.001, vis = 0.1;
