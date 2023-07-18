@@ -35,7 +35,7 @@ public partial class MainWindow: Window {
 
         var solution = GaussSeidelSolver(10,0.0001, matrix2, source2);
 
-        NavierStokeCavityFlow();
+        OneDDIffusionImplicit();
     }
 
     //Navier Stoke 2D
@@ -728,15 +728,15 @@ public partial class MainWindow: Window {
     }
 
     //Implicid
-    public void OneDDIffusionImplicid() {
-        int nx = 10, nt = 1;
-        double dt = 0.01, vis = 0.1;
+    public void OneDDIffusionImplicit() {
+        int nx = 10, nt = 1000;
+        double dt = 0.001, vis = 0.1;
         double dx = (double)2 / (nx - 1);
 
         double[,] coefficientMatrix = new double[nx, nx];
         double[] u = new double[nx];
 
-        //Boundry Conditions
+        //initial Conditions
         for (int i = 0; i < nx; i++) {
             double currentX = i * dx;
 
@@ -755,14 +755,29 @@ public partial class MainWindow: Window {
 
         CreatePlot(2, 2.5, points2);
 
+        double alpha = vis * dt / (dx * dx);
+
         //Solve for U n+1
         for (int it = 1; it <= nt; it++) {
             for (int i = 1; i < nx - 1; i++) {
-                coefficientMatrix[i, i - 1] = -(vis * dt / (dx * dx));
-                coefficientMatrix[i, i] = 1 + (2 * vis * dt / (dx * dx));
-                coefficientMatrix[i, i + 1] = vis * dt / (dx * dx);
+                coefficientMatrix[i, i - 1] = 0;
+                coefficientMatrix[i, i] = 0;
+                coefficientMatrix[i, i + 1] = 0;
             }
-            u = GaussSeidelSolver(100000, 0, coefficientMatrix, u);
+
+            for (int i = 1; i < nx - 1; i++) {
+                coefficientMatrix[i, i - 1] = -alpha;
+                coefficientMatrix[i, i] = 1 + 2 * alpha;
+                coefficientMatrix[i, i + 1] = -alpha;
+            }
+
+            // Apply the boundary conditions to the coefficient matrix
+            coefficientMatrix[0, 0] = 1;
+            coefficientMatrix[0, 1] = 0;
+            coefficientMatrix[nx - 1, nx - 1] = 1;
+            coefficientMatrix[nx - 1, nx - 2] = 0;
+
+            u = GaussSeidelSolver(10000, 0, coefficientMatrix, u);
         }
 
         PointCollection points = new PointCollection();
