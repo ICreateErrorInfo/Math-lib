@@ -35,7 +35,7 @@ public partial class MainWindow: Window {
 
         var solution = GaussSeidelSolver(10,0.0001, matrix2, source2);
 
-        OneDConvectionImplicit();
+        TwoDConvectionImplicit();
     }
 
     //Navier Stoke 2D
@@ -728,6 +728,106 @@ public partial class MainWindow: Window {
     }
 
     //Implicid
+    public void TwoDConvectionImplicit() {
+        int nx = 20, ny = 20;
+        int nt = 50;
+        double dt = 0.005;
+        double c = 1;
+        double dx = 2.0 / (nx - 1);
+        double dy = 2.0 / (ny - 1);
+
+        double[,] u = new double[nx, ny];
+
+        // Initial condition
+        for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
+                double x = i * dx;
+                double y = j * dy;
+
+                if (0.5 <= x && x <= 1 && 0.5 <= y && y <= 1) {
+                    u[i, j] = 2;
+                } else {
+                    u[i, j] = 1;
+                }
+            }
+        }
+
+        CreatePictureFromArray(u);
+
+        double alpha = c * dt / dx;
+
+        // Apply the boundary conditions
+        for (int j = 0; j < ny; j++) {
+            u[0, j] = 1;          // u at x=0
+            u[nx - 1, j] = 1;     // u at x=2
+        }
+        for (int i = 0; i < nx; i++) {
+            u[i, 0] = 1;          // u at y=0
+            u[i, ny - 1] = 1;     // u at y=2
+        }
+
+        // Solve for U n+1
+        for (int it = 1; it <= nt; it++) {
+            // Construct the coefficient matrix
+            double[,] coefficientMatrix = new double[nx * ny, nx * ny];
+
+            for (int i = 0; i < nx; i++) {
+                for (int j = 0; j < ny; j++) {
+                    int index = i * ny + j;  // Convert 2D index to 1D index
+
+                    if (i != 0 && j != 0 && i != nx - 1 && j != ny - 1) {
+                        double coefficient_i = 1 + 2 * alpha;
+                        double coefficient_im1 = -alpha;
+                        double coefficient_ip1 = 0;
+                        double coefficient_jm1 = -alpha;
+                        double coefficient_jp1 = 0;
+
+                        // Set the coefficients in the matrix
+                        coefficientMatrix[index, index] = coefficient_i;
+                        coefficientMatrix[index, index - ny] = coefficient_im1;
+                        coefficientMatrix[index, index + ny] = coefficient_ip1;
+                        coefficientMatrix[index, index - 1] = coefficient_jm1;
+                        coefficientMatrix[index, index + 1] = coefficient_jp1;
+                    }
+                    if (i == 0) {
+                        coefficientMatrix[index, index] = 1;
+                    }
+                    if (j == 0) {
+                        coefficientMatrix[index, index] = 1;
+                    }
+                    if (j == ny - 1) {
+                        coefficientMatrix[index, index] = 1;
+                    }
+                    if (i == nx - 1) {
+                        coefficientMatrix[index, index] = 1;
+                    }
+                }
+            }
+
+            // Construct the RHS vector 'b'
+            double[] b = new double[nx * ny];
+            for (int i = 0; i < nx; i++) {
+                for (int j = 0; j < ny; j++) {
+                    int index = i * ny + j;  // Convert 2D index to 1D index
+                    b[index] = u[i, j];
+                }
+            }
+
+            // Solve the 2D system of equations using Gauss-Seidel
+            b = GaussSeidelSolver(100, 0, coefficientMatrix, b);
+
+            // Update 'u' with the new values from 'b'
+            for (int i = 0; i < nx; i++) {
+                for (int j = 0; j < ny; j++) {
+                    int index = i * ny + j;  // Convert 2D index to 1D index
+                    u[i, j] = b[index];
+                }
+            }
+
+            // Create a visualization of the updated 'u'
+            CreatePictureFromArray(u);
+        }
+    }
     public void OneDConvectionImplicit() {
         int nx = 41, nt = 25;
         double dt = 0.025, c = 1;
