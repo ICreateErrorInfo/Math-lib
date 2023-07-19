@@ -21,21 +21,12 @@ public partial class MainWindow: Window {
 
         InitializeComponent();
 
-        //Gauss Seidel Test
-        double[,] matrix2 = new double[2, 2] {
-            {16, 3 },
-            { 7, -11 }
-        };
+        NavierStokesSim simulation = new NavierStokesSim(20, 20, 0.01, 500, 100, .1, 1);
 
-        double[] source2 = new double[2]
-        {
-            11,
-            13
-        };
+        FluidInformation information = simulation.Solve();
 
-        var solution = GaussSeidelSolver(10,0.0001, matrix2, source2);
-
-        TwoDConvectionImplicit();
+        DrawVectorField(information.uVectorField, information.vVectorField);
+        CreatePictureFromNegativArray(information.pressureGradient);
     }
 
     //Navier Stoke 2D
@@ -290,7 +281,7 @@ public partial class MainWindow: Window {
         int nx = 20, ny = 20;
         int nt = 100, nit = 100;
         double dt = 0.01, vis = 0.1, rho = 1;
-        double F = 1, nu = .1;
+        double F = 1;
 
         double dx = (double)2 / (nx - 1), dy = (double)2 / (ny - 1);
         double[,] u = new double[nx, ny];
