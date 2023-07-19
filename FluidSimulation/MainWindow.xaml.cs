@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace FluidSimulation; 
+namespace FluidSimulation;
 public partial class MainWindow: Window {
     public MainWindow() {
-
         InitializeComponent();
 
         NavierStokesSim simulation = new NavierStokesSim(20, 20, 0.01, 500, 100, .1, 1);
@@ -546,7 +536,7 @@ public partial class MainWindow: Window {
         //p[(int)(2 / dx), (int)(1 / dy)] = 1; // Test //black @ x = 2 && y = 1
 
         for (int iit = 0; iit < nit; iit++) {
-            double[,] pd = p.Clone() as double[,];
+            double[,] pd = (double[,])p.Clone();
             for (int i = 1; i < nx - 1; i++) {
                 for (int j = 1; j < ny - 1; j++) {
                     p[i, j] = ((pd[i + 1, j] + pd[i - 1, j]) * (dy * dy) + (pd[i, j + 1] + pd[i, j - 1]) * (dx * dx)) / (dx * dx + dy * dy) / 2;
