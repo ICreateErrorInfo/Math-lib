@@ -31,11 +31,11 @@ public partial class MainWindow: Window {
         Rectangle2D<double> rectangleRightWall = new Rectangle2D<double>(new(2, 0), new(2, 2));
         Rectangle2D<double> rectangleTopWall = new Rectangle2D<double>(new(0, 0), new(2, 0));
 
-        FluidObject domain = new FluidObject() {Geometry = new() { rectangleDomain}, type = FluidObjectType.Domain};
-        FluidObject leftWall = new FluidObject() {Geometry = new() { rectangleLeftWall}, type = FluidObjectType.Collision};
-        FluidObject bottomWall = new FluidObject() {Geometry = new() { rectangleBottomWall}, type = FluidObjectType.Collision};
-        FluidObject rightWall = new FluidObject() {Geometry = new() { rectangleRightWall}, type = FluidObjectType.Collision};
-        FluidObject topWall = new FluidObject() {Geometry = new() { rectangleTopWall}, type = FluidObjectType.Collision};
+        FluidObject domain = new FluidObject() {Geometry = new() { rectangleDomain}, Type = FluidObjectType.Domain};
+        FluidObject leftWall = new FluidObject() {Geometry = new() { rectangleLeftWall}, Type = FluidObjectType.Collision};
+        FluidObject bottomWall = new FluidObject() {Geometry = new() { rectangleBottomWall}, Type = FluidObjectType.Collision};
+        FluidObject rightWall = new FluidObject() {Geometry = new() { rectangleRightWall}, Type = FluidObjectType.Collision};
+        FluidObject topWall = new FluidObject() {Geometry = new() { rectangleTopWall}, Type = FluidObjectType.Collision};
 
         MeshGenerator generator = new MeshGenerator(domain, data._cellsX, data._cellsY);
         generator.AddObject(leftWall);
