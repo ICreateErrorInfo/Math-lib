@@ -11,7 +11,53 @@ public partial class MainWindow: Window {
     public MainWindow() {
         InitializeComponent();
 
-        NavierStokesSim simulation = new NavierStokesSim(20, 20, 0.01, 500, 100, .1, 1);
+        FluidSimulationData data = new FluidSimulationData() { 
+            _cellsX = 20,
+            _cellsY = 20,
+            _numberIterations = 100,
+            _numberTimesteps = 500,
+            _rho = 1,
+            _viscosityFactor = .1,
+            _timestep = 0.01
+        };
+
+        data.boundaryConditions = new BoundaryConditionData[data._cellsX, data._cellsY];
+
+        //Boundary Conditions
+        for (int j = 0; j < data._cellsY; j++) {
+            data.boundaryConditions[0, j].UVelocity = 0;
+            data.boundaryConditions[0, j].VVelocity = 0;
+
+            data.boundaryConditions[data._cellsX - 1, j].UVelocity = 0;
+            data.boundaryConditions[data._cellsX - 1, j].VVelocity = 0;
+        }
+        for (int i = 0; i < data._cellsX; i++) {
+            data.boundaryConditions[i, 0].UVelocity = 0;
+            data.boundaryConditions[i, 0].VVelocity = 0;
+
+            data.boundaryConditions[i, data._cellsY - 1].UVelocity = 1;
+            data.boundaryConditions[i, data._cellsY - 1].VVelocity = 0;
+        }
+
+        //Boundary Conditions Pressure
+        for (int j = 0; j < data._cellsY; j++) {
+            data.boundaryConditions[0, j].Pressure = (p, i, j) => {
+                return p[1, j];
+            };
+            data.boundaryConditions[data._cellsX - 1, j].Pressure = (p, i, j) => {
+                return p[data._cellsX - 2, j];
+            };
+        }
+        for (int i = 0; i < data._cellsX; i++) {
+            data.boundaryConditions[i, 0].Pressure = (p, i, j) => {
+                return p[i, 1];
+            };
+            data.boundaryConditions[i, data._cellsY - 1].Pressure = (p, i, j) => {
+                return 0;
+            };
+        }
+
+        NavierStokesSim simulation = new NavierStokesSim(data);
 
         FluidInformation information = simulation.Solve();
 
