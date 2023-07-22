@@ -11,4 +11,9 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Moarx.Math\Moarx.Math.csproj" />
+    <ProjectReference Include="..\Moarx.Rasterizer\Moarx.Rasterizer.csproj" />
+  </ItemGroup>
+
 </Project>

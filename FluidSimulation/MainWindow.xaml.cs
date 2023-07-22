@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moarx.Math;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,20 +24,29 @@ public partial class MainWindow: Window {
 
         data.boundaryConditions = new BoundaryConditionData[data._cellsX, data._cellsY];
 
+        Rectangle2D<double> rectangleDomain = new Rectangle2D<double>(new(0, 0), new(2, 2));
+        Rectangle2D<double> rectangleLeftWall = new Rectangle2D<double>(new(0, 0), new(0, 2));
+        Rectangle2D<double> rectangleBottomWall = new Rectangle2D<double>(new(0, 2), new(2, 2));
+        Rectangle2D<double> rectangleRightWall = new Rectangle2D<double>(new(2, 0), new(2, 2));
+        Rectangle2D<double> rectangleTopWall = new Rectangle2D<double>(new(0, 0), new(2, 0));
+
+        FluidObject domain = new FluidObject() {Geometry = new() { rectangleDomain}, type = FluidObjectType.Domain};
+        FluidObject leftWall = new FluidObject() {Geometry = new() { rectangleLeftWall}, type = FluidObjectType.Collision};
+        FluidObject bottomWall = new FluidObject() {Geometry = new() { rectangleBottomWall}, type = FluidObjectType.Collision};
+        FluidObject rightWall = new FluidObject() {Geometry = new() { rectangleRightWall}, type = FluidObjectType.Collision};
+        FluidObject topWall = new FluidObject() {Geometry = new() { rectangleTopWall}, type = FluidObjectType.Collision};
+
+        MeshGenerator generator = new MeshGenerator(domain, data._cellsX, data._cellsY);
+        generator.AddObject(leftWall);
+        generator.AddObject(bottomWall);
+        generator.AddObject(rightWall);
+        generator.AddObject(topWall);
+
+        data.boundaryConditions = generator.GetBoundaryConditions();
+
         //Boundary Conditions
-        for (int j = 0; j < data._cellsY; j++) {
-            data.boundaryConditions[0, j].UVelocity = 0;
-            data.boundaryConditions[0, j].VVelocity = 0;
-
-            data.boundaryConditions[data._cellsX - 1, j].UVelocity = 0;
-            data.boundaryConditions[data._cellsX - 1, j].VVelocity = 0;
-        }
         for (int i = 0; i < data._cellsX; i++) {
-            data.boundaryConditions[i, 0].UVelocity = 0;
-            data.boundaryConditions[i, 0].VVelocity = 0;
-
             data.boundaryConditions[i, data._cellsY - 1].UVelocity = 1;
-            data.boundaryConditions[i, data._cellsY - 1].VVelocity = 0;
         }
 
         //Boundary Conditions Pressure
@@ -51,9 +61,6 @@ public partial class MainWindow: Window {
         for (int i = 0; i < data._cellsX; i++) {
             data.boundaryConditions[i, 0].Pressure = (p, i, j) => {
                 return p[i, 1];
-            };
-            data.boundaryConditions[i, data._cellsY - 1].Pressure = (p, i, j) => {
-                return 0;
             };
         }
 
