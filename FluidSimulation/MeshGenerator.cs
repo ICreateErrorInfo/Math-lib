@@ -17,7 +17,6 @@ public struct FluidObject {
 }
 
 public class MeshGenerator {
-
     List<FluidObject> fluidObjects;
     readonly int _cellsX;
     readonly int _cellsY;
@@ -62,7 +61,7 @@ public class MeshGenerator {
         double PixelsPerUnitY = (_cellsY - 1) / domainY;
 
 
-        DirectBitmap bitmap = DirectBitmap.Create(_cellsX, _cellsY);
+        DirectBitmap bitmap = DirectBitmap.Create(_cellsX, _cellsY, 3);
         DirectGraphics directGraphics = DirectGraphics.Create(bitmap);
 
         foreach (var fluidObject in fluidObjects) {
@@ -73,15 +72,19 @@ public class MeshGenerator {
                 Rectangle2D<int> rect = new Rectangle2D<int>(p1, p2);
 
                 if (fluidObject.type == FluidObjectType.Collision) {
-                    DirectAttributes attributes = new DirectAttributes(DirectColor.FromArgb(0, 0, 0, 255), 0, DirectColor.FromArgb(0, 0, 0, 255));
-                    directGraphics.DrawRectangle(rect, attributes);
+                    DirectAttributes attributes = new DirectAttributes(DirectColor.FromRgb(0, 0, 255), 1, DirectColor.FromRgb(0, 0, 255));
+                    if(p1.X == p2.X || p1.Y == p2.Y) {
+                        directGraphics.DrawLine(new(p1, p2), attributes); //TODO bug
+                    } else {
+                        directGraphics.DrawRectangle(rect, attributes);
+                    }
                 }
             }
         }
 
         for(int i = 0; i < _cellsX; i++) {
             for(int j  = 0; j < _cellsY; j++) {
-                if(bitmap.GetPixel(i, j) == DirectColor.FromArgb(0, 0, 0, 255)) {
+                if(bitmap.GetPixel(i, j) == DirectColor.FromRgb(0, 0, 255)) {
                     boundaryConditions[i, j] = new BoundaryConditionData() { 
                         UVelocity = 0,
                         VVelocity = 0,

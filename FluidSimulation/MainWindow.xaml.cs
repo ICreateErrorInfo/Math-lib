@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Moarx.Rasterizer;
 using System;
 using System.IO;
 using System.Windows;
@@ -1140,6 +1141,21 @@ public partial class MainWindow: Window {
 
             return bitmapimage;
         }
+    }
+    ImageSource ToImageSource(DirectBitmap bitmap) {
+
+        var bs = BitmapSource.Create(
+                pixelWidth: bitmap.Width,
+                pixelHeight: bitmap.Height,
+                dpiX: 96,
+                dpiY: 96,
+                pixelFormat: PixelFormats.Bgr24, 
+                palette: null,
+                pixels: bitmap.GetBytes(),
+                stride: bitmap.Stride);
+
+        return bs;
+
     }
 
 }
