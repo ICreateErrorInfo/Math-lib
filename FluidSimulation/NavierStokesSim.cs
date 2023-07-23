@@ -28,7 +28,7 @@ public class NavierStokesSim {
     public NavierStokesSim(FluidSimulationData data) {
         _data = data;
 
-        dx = (double)2 / (_data._cellsX - 1);
+        dx = (double)2 / (_data._cellsX - 1); //TODO Bug 2 has to be the domain legth 
         dy = (double)2 / (_data._cellsY - 1);
     }
 

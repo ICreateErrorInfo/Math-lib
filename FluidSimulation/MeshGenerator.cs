@@ -74,7 +74,23 @@ public class MeshGenerator {
                 if (fluidObject.Type == FluidObjectType.Collision) {
                     DirectAttributes attributes = new DirectAttributes(DirectColor.FromRgb(0, 0, 255), 1, DirectColor.FromRgb(0, 0, 255));
                     if(p1.X == p2.X || p1.Y == p2.Y) {
-                        directGraphics.DrawLine(new(p1, p2), attributes); //TODO bug
+                        directGraphics.DrawLine(new(p1, p2), attributes); //TODO bad
+                    } else {
+                        directGraphics.DrawRectangle(rect, attributes);
+                    }
+                }
+                if(fluidObject.Type == FluidObjectType.Inflow) {
+                    DirectAttributes attributes = new DirectAttributes(DirectColor.FromRgb(255, 0, 0), 1, DirectColor.FromRgb(255, 0, 0));
+                    if (p1.X == p2.X || p1.Y == p2.Y) {
+                        directGraphics.DrawLine(new(p1, p2), attributes);
+                    } else {
+                        directGraphics.DrawRectangle(rect, attributes);
+                    }
+                }
+                if (fluidObject.Type == FluidObjectType.Outflow) {
+                    DirectAttributes attributes = new DirectAttributes(DirectColor.FromRgb(0, 255, 0), 1, DirectColor.FromRgb(0, 255, 0));
+                    if (p1.X == p2.X || p1.Y == p2.Y) {
+                        directGraphics.DrawLine(new(p1, p2), attributes);
                     } else {
                         directGraphics.DrawRectangle(rect, attributes);
                     }
@@ -89,6 +105,16 @@ public class MeshGenerator {
                         UVelocity = 0,
                         VVelocity = 0,
                         Pressure = (p, i, j) => { return 0; } 
+                    };
+                }
+                if (bitmap.GetPixel(i, j) == DirectColor.FromRgb(255, 0, 0)) {
+                    boundaryConditions[i, j] = new BoundaryConditionData() {
+                        Pressure = (p, i, j) => { return 1; }
+                    };
+                }
+                if (bitmap.GetPixel(i, j) == DirectColor.FromRgb(0, 255, 0)) {
+                    boundaryConditions[i, j] = new BoundaryConditionData() {
+                        Pressure = (p, i, j) => { return -1; }
                     };
                 }
             }
