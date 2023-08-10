@@ -190,9 +190,9 @@ namespace Raytracing
         public static System.Drawing.Color toColor(SampledSpectrum pixel_color, int samples_per_pixel)
         {
             var scale = (double)1 / (double)samples_per_pixel;
-
-            for (int i = 0; i < pixel_color.NSamples; i++) {
-                pixel_color.c[i] = Math.Sqrt(scale * pixel_color.c[i]);
+            
+            for (int i = 0; i < pixel_color.NumberSamples; i++) {
+                pixel_color.coefficients[i] = Math.Sqrt(scale * pixel_color.coefficients[i]);
             }
 
             double[] rgb = pixel_color.ToRGB();
@@ -202,8 +202,8 @@ namespace Raytracing
             var b = rgb[2];
 
             return System.Drawing.Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
-                                  Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),
-                                  Convert.ToInt32(255 * Math.Clamp(b, 0, 0.999)));
+                                                 Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),
+                                                 Convert.ToInt32(255 * Math.Clamp(b, 0, 0.999)));
         }
         public static ImageSource ToImageSource(DirectBitmap bitmap) {
 

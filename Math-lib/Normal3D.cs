@@ -184,6 +184,8 @@ namespace Math_lib
             Debug.Assert(IsNaN(n));
             Debug.Assert(IsNaN(n1));
 
+            //Bug has to be Normalized
+
             return new(n.X + n1.X,
                        n.Y + n1.Y,
                        n.Z + n1.Z);

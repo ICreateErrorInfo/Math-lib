@@ -9,95 +9,90 @@ namespace Math_lib.Spectrum
 {
     public class CoefficientSpectrum
     {
-        public double[] c;
-        public int NSamples = 0;
+        public double[] coefficients;
+        public int NumberSamples = 0;
 
         public CoefficientSpectrum(int nSpectrumSamples, double v = 0)
         {
-            NSamples = nSpectrumSamples;
-            c = new double[nSpectrumSamples];
+            NumberSamples = nSpectrumSamples;
+            coefficients = new double[nSpectrumSamples];
             for(int i = 0; i < nSpectrumSamples; i++)
             {
-                c[i] = v;
+                coefficients[i] = v;
             }
             Debug.Assert(!HasNaNs());
-            Debug.Assert(!double.IsNaN(NSamples));
+            Debug.Assert(!double.IsNaN(NumberSamples));
         }
 
         public static CoefficientSpectrum Sqrt(CoefficientSpectrum s)
         {
-            CoefficientSpectrum ret = new CoefficientSpectrum(s.NSamples);
-            for (int i = 0; i < s.NSamples; i++)
+            CoefficientSpectrum ret = new CoefficientSpectrum(s.NumberSamples);
+            for (int i = 0; i < s.NumberSamples; i++)
             {
-                ret.c[i] = Math.Sqrt(s.c[i]);
+                ret.coefficients[i] = Math.Sqrt(s.coefficients[i]);
             }
             Debug.Assert(!ret.HasNaNs());
             return ret;
         }
         public static CoefficientSpectrum Pow(CoefficientSpectrum s, double n)
         {
-            CoefficientSpectrum ret = new CoefficientSpectrum(s.NSamples);
-            for (int i = 0; i < s.NSamples; i++)
+            CoefficientSpectrum ret = new CoefficientSpectrum(s.NumberSamples);
+            for (int i = 0; i < s.NumberSamples; i++)
             {
-                ret.c[i] = Math.Pow(s.c[i], n);
+                ret.coefficients[i] = Math.Pow(s.coefficients[i], n);
             }
             Debug.Assert(!ret.HasNaNs());
             return ret;
         }
         public static CoefficientSpectrum Exp(CoefficientSpectrum s)
         {
-            CoefficientSpectrum ret = new CoefficientSpectrum(s.NSamples);
-            for (int i = 0; i < s.NSamples; i++)
+            CoefficientSpectrum ret = new CoefficientSpectrum(s.NumberSamples);
+            for (int i = 0; i < s.NumberSamples; i++)
             {
-                ret.c[i] = Math.Exp(s.c[i]);
+                ret.coefficients[i] = Math.Exp(s.coefficients[i]);
             }
             Debug.Assert(!ret.HasNaNs());
             return ret;
         }
         public void Clamp(double low = 0, double high = double.PositiveInfinity)
         {
-            CoefficientSpectrum ret = new CoefficientSpectrum(NSamples);
-            for (int i = 0; i < NSamples; i++)
+            CoefficientSpectrum ret = new CoefficientSpectrum(NumberSamples);
+            for (int i = 0; i < NumberSamples; i++)
             {
-                ret.c[i] = Math.Clamp(c[i], low, high);
+                ret.coefficients[i] = Math.Clamp(coefficients[i], low, high);
             }
             Debug.Assert(!ret.HasNaNs());
-            this.c = ret.c;
+            this.coefficients = ret.coefficients;
         }
         public bool IsBlack()
         {
             Debug.Assert(!this.HasNaNs());
-            for (int i = 0; i < NSamples; i++)
+            for (int i = 0; i < NumberSamples; i++)
             {
-                if (c[i] != 0) return false;
+                if (coefficients[i] != 0) return false;
             }
             return true;
         }
         public double MaxComponentValue()
         {
             double m = 0;
-            for (int i = 0; i < NSamples; i++)
+            for (int i = 0; i < NumberSamples; i++)
             {
-                m = Math.Max(m, c[i]);
+                m = Math.Max(m, coefficients[i]);
             }
             Debug.Assert(!double.IsNaN(m));
             return m;
         }
         public bool HasNaNs()
         {
-            for(int i = 0; i < NSamples; i++)
+            for(int i = 0; i < NumberSamples; i++)
             {
-                if (double.IsNaN(c[i]))
+                if (double.IsNaN(coefficients[i]))
                 {
                     return true;
                 }
             }
             return false;
-        }
-        public CoefficientSpectrum Copy() {
-            CoefficientSpectrum s = new CoefficientSpectrum(NSamples);
-            s.c = (double[])c.Clone();
-            return s;
         }
 
         public static CoefficientSpectrum operator +(CoefficientSpectrum s1, CoefficientSpectrum s2)
@@ -105,9 +100,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
-            for (int i = 0; i < s1.NSamples; i++) {
-                sum.c[i] = s1.c[i] + s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NumberSamples);
+            for (int i = 0; i < s1.NumberSamples; i++) {
+                sum.coefficients[i] = s1.coefficients[i] + s2.coefficients[i];
             }
 
             return sum;
@@ -117,9 +112,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
-            for (int i = 0; i < s1.NSamples; i++) {
-                sum.c[i] = s1.c[i] - s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NumberSamples);
+            for (int i = 0; i < s1.NumberSamples; i++) {
+                sum.coefficients[i] = s1.coefficients[i] - s2.coefficients[i];
             }
 
             return sum;
@@ -129,9 +124,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
-            for (int i = 0; i < s1.NSamples; i++) {
-                sum.c[i] = s1.c[i] * s2.c[i];
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NumberSamples);
+            for (int i = 0; i < s1.NumberSamples; i++) {
+                sum.coefficients[i] = s1.coefficients[i] * s2.coefficients[i];
             }
 
             return sum;
@@ -140,9 +135,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!double.IsNaN(s2));
 
-            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NSamples);
-            for (int i = 0; i < s1.NSamples; i++) {
-                sum.c[i] = s1.c[i] * s2;
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NumberSamples);
+            for (int i = 0; i < s1.NumberSamples; i++) {
+                sum.coefficients[i] = s1.coefficients[i] * s2;
             }
 
             return sum;
@@ -152,11 +147,11 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            CoefficientSpectrum sum = s1.Copy();
-            for (int i = 0; i < s1.NSamples; i++)
+            CoefficientSpectrum sum = new CoefficientSpectrum(s1.NumberSamples);
+            for (int i = 0; i < s1.NumberSamples; i++)
             {
-                Debug.Assert(s2.c[i] != 0);
-                sum.c[i] /= s2.c[i];
+                Debug.Assert(s2.coefficients[i] != 0);
+                sum.coefficients[i] = s1.coefficients[i] / s2.coefficients[i];
             }
             return sum;
         }
@@ -166,9 +161,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            for (int i = 0; i < s1.NSamples; ++i)
+            for (int i = 0; i < s1.NumberSamples; ++i)
             {
-                if (s1.c[i] != s2.c[i]) return false;
+                if (s1.coefficients[i] != s2.coefficients[i]) return false;
             }
             return true;
         }
@@ -177,9 +172,9 @@ namespace Math_lib.Spectrum
             Debug.Assert(!s1.HasNaNs());
             Debug.Assert(!s2.HasNaNs());
 
-            for (int i = 0; i < s1.NSamples; ++i)
+            for (int i = 0; i < s1.NumberSamples; ++i)
             {
-                if (s1.c[i] == s2.c[i]) return false;
+                if (s1.coefficients[i] == s2.coefficients[i]) return false;
             }
             return true;
         }
@@ -188,8 +183,8 @@ namespace Math_lib.Spectrum
         {
             Debug.Assert(!s.HasNaNs());
 
-            CoefficientSpectrum ret = s;
-            for (int i = 0; i < s.NSamples; ++i) ret.c[i] = -s.c[i];
+            CoefficientSpectrum ret = new CoefficientSpectrum(s.NumberSamples);
+            for (int i = 0; i < s.NumberSamples; ++i) ret.coefficients[i] = -s.coefficients[i];
             return ret;
         }
 
@@ -197,19 +192,19 @@ namespace Math_lib.Spectrum
         {
             get
             {
-                Debug.Assert(i >= 0 && i < NSamples);
+                Debug.Assert(i >= 0 && i < NumberSamples);
                 Debug.Assert(!double.IsNaN(i));
-                return c[i];
+                return coefficients[i];
             }
         }
 
         public override string ToString()
         {
             string str = "[";
-            for(int i = 0; i < NSamples; i++)
+            for(int i = 0; i < NumberSamples; i++)
             {
-                str += c[i];
-                if (i + 1 < NSamples) str += ", ";
+                str += coefficients[i];
+                if (i + 1 < NumberSamples) str += ", ";
             }
             str += "]";
             return str;

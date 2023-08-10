@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,34 +9,35 @@ namespace Math_lib.Spectrum
 {
     public static class SpectrumMethods
     {
-        public static bool SpectrumSamplesSorted(double[] lambda, double[] values, int n)
-        {
-            for (int i = 0; i < n - 1; ++i)
-            {
-                if (lambda[i] > lambda[i + 1])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        public static void SortSpectrumSamples(ref double[] lambda, ref double[] vals, int n)
-        {
-            List<Tuple<double, double>> sortVec = new List<Tuple<double, double>>();
-            for(int i = 0; i < n; i++)
-            {
-                sortVec.Add(new Tuple<double, double>(lambda[i], vals[i]));
-            }
+        //TODO
+        //public static bool SpectrumSamplesSorted(ImmutableArray<double> lambda, ImmutableArray<double> values, int n)
+        //{
+        //    for (int i = 0; i < n - 1; ++i)
+        //    {
+        //        if (lambda[i] > lambda[i + 1])
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
+        //public static void SortSpectrumSamples(double[] lambda, double[] vals, int n)
+        //{
+        //    List<Tuple<double, double>> sortVec = new List<Tuple<double, double>>();
+        //    for(int i = 0; i < n; i++)
+        //    {
+        //        sortVec.Add(new Tuple<double, double>(lambda[i], vals[i]));
+        //    }
 
-            sortVec.Sort();
+        //    sortVec.Sort();
 
-            for(int i = 0; i < n; i++)
-            {
-                lambda[i] = sortVec[i].Item1;
-                vals[i]   = sortVec[i].Item2;
-            }
-        }
-        public static double AverageSpectrumSamples(double[] lambda, double[] vals, int n, double lambdaStart, double lambdaEnd)
+        //    for(int i = 0; i < n; i++)
+        //    {
+        //        lambda[i] = sortVec[i].Item1;
+        //        vals[i]   = sortVec[i].Item2;
+        //    }
+        //}
+        public static double AverageSpectrumSamples(ImmutableArray<double> lambda, ImmutableArray<double> vals, int n, double lambdaStart, double lambdaEnd)
         {
             if (lambdaEnd <= lambda[0]) return vals[0];
             if (lambdaStart >= lambda[n - 1]) return vals[n - 1];

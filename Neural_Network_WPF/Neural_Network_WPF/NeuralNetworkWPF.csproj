@@ -23,12 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Math-lib">
-      <HintPath>..\..\NeuralNetwork\bin\Debug\net5.0-windows\Math-lib.dll</HintPath>
-    </Reference>
-    <Reference Include="NeuralNetwork">
-      <HintPath>..\..\NeuralNetwork\bin\Debug\net5.0-windows\NeuralNetwork.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Math-lib\Math-lib.csproj" />
+    <ProjectReference Include="..\..\NeuralNetwork\NeuralNetwork.csproj" />
   </ItemGroup>
 
 </Project>
