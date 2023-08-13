@@ -15,18 +15,18 @@ namespace Raytracing
             _material = material;
         }
 
-        public override SurfaceInteraction Intersect(Ray r, SurfaceInteraction intersection)
+        public override SurfaceInteraction Intersect(Ray r, SurfaceInteraction interaction)
         {
             double tHit = 0;
-            if (!_shape.Intersect(r, out tHit, out intersection))
+            if (!_shape.Intersect(r, out tHit, out interaction))
             {
-                intersection.HasIntersection = false; //TODO theoretisch unnötig
-                return intersection;
+                interaction.HasIntersection = false; //TODO theoretisch unnötig
+                return interaction;
             }
             r.TMax = tHit;
-            intersection.Primitive = this;
-            intersection.HasIntersection = true;
-            return intersection;
+            interaction.Primitive = this;
+            interaction.HasIntersection = true;
+            return interaction;
         }
         public override Material GetMaterial()
         {

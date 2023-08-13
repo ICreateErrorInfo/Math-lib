@@ -20,10 +20,10 @@ namespace Raytracing.Shapes
             ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
         }
 
-        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
         {
             tMax = 0;
-            isect = new SurfaceInteraction();
+            interaction = new SurfaceInteraction();
 
             Ray rTransformed = WorldToObject.m * ray;
 
@@ -45,9 +45,9 @@ namespace Raytracing.Shapes
             if (phi > _phiMax) return false;
 
             tMax = t0;
-            isect.P = ray.At(t0);
+            interaction.P = ray.At(t0);
             Normal3D outwardNormal = new(pHit.X,pHit.Y,_height + 1);
-            isect.SetFaceNormal(ray, outwardNormal);
+            interaction.SetFaceNormal(ray, outwardNormal);
 
             return true;
         }

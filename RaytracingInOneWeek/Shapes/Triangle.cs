@@ -16,10 +16,10 @@ namespace Raytracing.Shapes
             _firstVertexIndex = 3 * triangleNumber;
         }
 
-        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
         {
             tMax = 0;
-            isect = new SurfaceInteraction();
+            interaction = new SurfaceInteraction();
 
             //Get Triangle Points
             Point3D p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
@@ -86,9 +86,9 @@ namespace Raytracing.Shapes
             double t = tScaled * invDet;
 
             tMax = t;
-            isect.P = b0 * p0 + b1 * p1 + b2 * p2;
+            interaction.P = b0 * p0 + b1 * p1 + b2 * p2;
             Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(Vector3D.Cross(p1 - p0, p2 - p0));
-            isect.SetFaceNormal(ray, outwardNormal);
+            interaction.SetFaceNormal(ray, outwardNormal);
 
             return true;
         }

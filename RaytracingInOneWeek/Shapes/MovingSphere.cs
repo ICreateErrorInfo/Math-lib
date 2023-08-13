@@ -24,10 +24,10 @@ namespace Raytracing.Shapes
             _radius = radius;
         }
 
-        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
         {
             tMax = 0;
-            isect = new SurfaceInteraction();
+            interaction = new SurfaceInteraction();
 
             Vector3D oc = ray.O - Center(ray.Time);
             var a = ray.D.GetLengthSqrt();
@@ -52,9 +52,9 @@ namespace Raytracing.Shapes
             }
 
             tMax = root;
-            isect.P = ray.At(root);
-            Normal3D outward_normal = (Normal3D)(Vector3D)((isect.P - Center(ray.Time)) / _radius);
-            isect.SetFaceNormal(ray, outward_normal);
+            interaction.P = ray.At(root);
+            Normal3D outward_normal = (Normal3D)(Vector3D)((interaction.P - Center(ray.Time)) / _radius);
+            interaction.SetFaceNormal(ray, outward_normal);
 
             return true;
         }

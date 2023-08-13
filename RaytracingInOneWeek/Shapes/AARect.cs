@@ -20,10 +20,10 @@ namespace Raytracing.Shapes
             ObjectToWorld = Transform.Translate(new(0));
         }
 
-        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
         {
             tMax = 0;
-            isect = new SurfaceInteraction();
+            interaction = new SurfaceInteraction();
             var t = (_k - ray.O.Z) / ray.D.Z;
 
             if(t < 0.01 || t > ray.TMax)
@@ -39,13 +39,13 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            isect.UCoordinate = (x - _x0) / (_x1 - _x0);
-            isect.VCoordinate = (y - _y0) / (_y1 - _y0);
+            interaction.UCoordinate = (x - _x0) / (_x1 - _x0);
+            interaction.VCoordinate = (y - _y0) / (_y1 - _y0);
             tMax = t;
 
             var outwardNormal = new Normal3D(0,0,1);
-            isect.SetFaceNormal(ray, outwardNormal);
-            isect.P = ray.At(t);
+            interaction.SetFaceNormal(ray, outwardNormal);
+            interaction.P = ray.At(t);
 
             return true;
         }
@@ -71,10 +71,10 @@ namespace Raytracing.Shapes
             _k = k;
         }
 
-        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction isect)
+        public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
         {
             tMax = 0;
-            isect = new SurfaceInteraction();
+            interaction = new SurfaceInteraction();
             var t = (_k - ray.O.Y) / ray.D.Y;
 
             if (t < 0.01 || t > ray.TMax)
@@ -90,12 +90,12 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            isect.UCoordinate = (x - _x0) / (_x1 - _x0);
-            isect.VCoordinate = (z - _z0) / (_z1 - _z0);
+            interaction.UCoordinate = (x - _x0) / (_x1 - _x0);
+            interaction.VCoordinate = (z - _z0) / (_z1 - _z0);
             tMax = t;
             var outwardNormal = new Normal3D(0, 1, 0);
-            isect.SetFaceNormal(ray, outwardNormal);
-            isect.P = ray.At(t);
+            interaction.SetFaceNormal(ray, outwardNormal);
+            interaction.P = ray.At(t);
 
             return true;
         }

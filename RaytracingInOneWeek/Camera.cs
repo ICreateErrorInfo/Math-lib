@@ -22,7 +22,7 @@ namespace Raytracing
                       double   vFov, 
                       double   aspectRatio, 
                       double   aperture,
-                      double   focusDist, 
+                      double   focusDistance, 
                       double   time0 = 0,
                       double   time1 = 0)
         {
@@ -36,9 +36,9 @@ namespace Raytracing
             _v = Vector3D.Cross(_w, _u);
 
             _origin = lookFrom;
-            _horizontal = focusDist * viewportWidth * _u;
-            _vertical = focusDist * viewportHeight * _v;
-            _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDist * _w;
+            _horizontal = focusDistance * viewportWidth * _u;
+            _vertical = focusDistance * viewportHeight * _v;
+            _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDistance * _w;
 
             _lensRadius = aperture / 2;
             _time0 = time0;
