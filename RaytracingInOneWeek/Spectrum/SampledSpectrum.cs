@@ -17,14 +17,10 @@ public partial class SampledSpectrum: ISpectrum {
     public SampledSpectrum(){
         NumberSamples = SampledSpectrumConstants.nSpectralSamples;
         coefficients = new double[NumberSamples];
-        for (var i = 0; i < NumberSamples; i++) {
-            coefficients[i] = 0;
-        }
     }
 
-    public ISpectrum Copy() {
-        var s = new SampledSpectrum(NumberSamples);
-        s.coefficients = (double[])coefficients.Clone();
+    public ISpectrum CreateNew() {
+        var s = new SampledSpectrum();
         return s;
     }
     public ISpectrum ToIspectrum() {

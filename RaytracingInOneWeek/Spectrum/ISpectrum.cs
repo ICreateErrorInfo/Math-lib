@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Raytracing.Spectrum;
 public interface ISpectrum {
@@ -55,49 +56,37 @@ public interface ISpectrum {
     }
 
     public abstract double[] ToRGB();
-    public abstract ISpectrum Copy();
+    public abstract ISpectrum CreateNew();
     public abstract ISpectrum ToIspectrum();
 
     public static ISpectrum operator +(ISpectrum s1, ISpectrum s2) {
-        Debug.Assert(!s1.HasNaNs());
-        Debug.Assert(!s2.HasNaNs());
-
-        var sum = s1.Copy();
+        var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
-            sum.coefficients[i] += s2.coefficients[i];
+            sum.coefficients[i] = s1.coefficients[i] + s2.coefficients[i];
         }
 
         return sum;
     }
     public static ISpectrum operator -(ISpectrum s1, ISpectrum s2) {
-        Debug.Assert(!s1.HasNaNs());
-        Debug.Assert(!s2.HasNaNs());
-
-        var sum = s1.Copy();
+        var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
-            sum.coefficients[i] -= s2.coefficients[i];
+            sum.coefficients[i] = s1.coefficients[i] - s2.coefficients[i];
         }
 
         return sum;
     }
     public static ISpectrum operator *(ISpectrum s1, ISpectrum s2) {
-        Debug.Assert(!s1.HasNaNs());
-        Debug.Assert(!s2.HasNaNs());
-
-        var sum = s1.Copy();
+        var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
-            sum.coefficients[i] *= s2.coefficients[i];
+            sum.coefficients[i] = s1.coefficients[i] * s2.coefficients[i];
         }
 
         return sum;
     }
     public static ISpectrum operator *(double s2, ISpectrum s1) {
-        Debug.Assert(!s1.HasNaNs());
-        Debug.Assert(!double.IsNaN(s2));
-
-        var sum = s1.Copy();
+        var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
-            sum.coefficients[i] *= s2;
+            sum.coefficients[i] = s1.coefficients[i] * s2;
         }
 
         return sum;
@@ -106,7 +95,7 @@ public interface ISpectrum {
         Debug.Assert(!s1.HasNaNs());
         Debug.Assert(!s2.HasNaNs());
 
-        var sum = s1.Copy();
+        var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
             Debug.Assert(s2.coefficients[i] != 0);
             sum.coefficients[i] /= s2.coefficients[i];
