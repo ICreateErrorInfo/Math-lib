@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Raytracing.Materials;
+using Raytracing.Spectrum;
 using System.Collections.Generic;
 
 namespace Raytracing
@@ -38,9 +39,9 @@ namespace Raytracing
             }
         }
 
-        public static TriangleMesh Import(string path)
+        public static TriangleMesh Import(SpectrumFactory factory, string path)
         {
-            return Importer.Obj(path);
+            return Importer.Obj(factory, path);
         }
     }
 }

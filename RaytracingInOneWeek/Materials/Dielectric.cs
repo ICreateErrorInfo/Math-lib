@@ -1,21 +1,20 @@
 ﻿using System;
 using Math_lib;
-using Math_lib.Spectrum;
+using Raytracing.Spectrum;
 
-namespace Raytracing.Materials
-{
+namespace Raytracing.Materials {
     class Dielectric : Material
     {
         private readonly double _ir;
 
-        public Dielectric(double indexOfRefraction)
+        public Dielectric(SpectrumFactory factory, double indexOfRefraction) : base(factory)
         {
             _ir = indexOfRefraction;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out SampledSpectrum attenuation, out Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
         {
-            attenuation = SampledSpectrum.FromRGB(new double[] { 1, 1, 1 }, SampledSpectrum.SpectrumType.Reflectance);
+            attenuation = Factory.CreateFromRGB(new double[] { 1, 1, 1 }, SpectrumMaterialType.Reflectance);
             double refractionRatio = isect.FrontFace ? (1 / _ir) : _ir;
 
             Vector3D unitDirection = Vector3D.Normalize(rIn.D);

@@ -1,5 +1,5 @@
-﻿using Math_lib.Spectrum;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Raytracing.Spectrum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,75 +8,83 @@ using System.Threading.Tasks;
 
 namespace Raytracing.Tests {
     [TestFixture]
-    internal class CoefficientSpectrumTests {
+    internal class SpectrumTests {
         [Test]
-        public void TestCtor1() {
-            CoefficientSpectrum spectrum = new CoefficientSpectrum(50, 20);
+        public void TestCtorSampledSpectrum() {
+            var spectrum = new SampledSpectrum(20);
 
             foreach (var c in spectrum.coefficients) {
                 Assert.That(c, Is.EqualTo(20));
             }
         }
+        [Test]
+        public void TestFactoryCreate() {
+            var spectrum = SpectrumFactory.CreateSpectrum(SpectrumType.SampledSpectrum);
+
+            foreach (var c in spectrum.coefficients) {
+                Assert.That(c, Is.EqualTo(0));
+            }
+        }
 
         [Test]
-        public void TestPlus() {
-            var s = new CoefficientSpectrum(100, 1);
-            var r = new CoefficientSpectrum(100, 2);
+        public void TestPlusSampledSpectrum() {
+            var s = new SampledSpectrum(1);
+            var r = new SampledSpectrum(2);
 
-            CoefficientSpectrum sum = s + r;
+            ISpectrum sum = s.ToIspectrum() + r;
 
             foreach (var c in sum.coefficients) {
                 Assert.That(c, Is.EqualTo(3));
             }
         }
         [Test]
-        public void TestMinus() {
-            var s = new CoefficientSpectrum(100, 1);
-            var r = new CoefficientSpectrum(100, 2);
+        public void TestMinusSampledSpectrum() {
+            var s = new SampledSpectrum(1);
+            var r = new SampledSpectrum(2);
 
-            CoefficientSpectrum sum = s - r;
+            ISpectrum sum = s.ToIspectrum() - r;
 
             foreach (var c in sum.coefficients) {
                 Assert.That(c, Is.EqualTo(-1));
             }
         }
         [Test]
-        public void TestMal() {
-            var s = new CoefficientSpectrum(100, 1);
-            var r = new CoefficientSpectrum(100, 2);
+        public void TestMalSampledSpectrum() {
+            var s = new SampledSpectrum(1);
+            var r = new SampledSpectrum(2);
 
-            CoefficientSpectrum sum = s * r;
-
-            foreach (var c in sum.coefficients) {
-                Assert.That(c, Is.EqualTo(2));
-            }
-        }
-        [Test]
-        public void TestScalarMal() {
-            var s = new CoefficientSpectrum(100, 1);
-
-            CoefficientSpectrum sum = 2 * s;
+            Spectrum.ISpectrum sum = s.ToIspectrum() * r;
 
             foreach (var c in sum.coefficients) {
                 Assert.That(c, Is.EqualTo(2));
             }
         }
         [Test]
-        public void TestDiv() {
-            var s = new CoefficientSpectrum(100, 1);
-            var r = new CoefficientSpectrum(100, 2);
+        public void TestScalarMalSampledSpectrum() {
+            var s = new SampledSpectrum(1);
 
-            CoefficientSpectrum sum = s / r;
+            Spectrum.ISpectrum sum = 2 * s.ToIspectrum();
+
+            foreach (var c in sum.coefficients) {
+                Assert.That(c, Is.EqualTo(2));
+            }
+        }
+        [Test]
+        public void TestDivSampledSpectrum() {
+            var s = new SampledSpectrum(1);
+            var r = new SampledSpectrum(2);
+
+            Spectrum.ISpectrum sum = s.ToIspectrum() / r;
 
             foreach (var c in sum.coefficients) {
                 Assert.That(c, Is.EqualTo(0.5));
             }
         }
         [Test]
-        public void TestNeg() {
-            var r = new CoefficientSpectrum(100, 2);
+        public void TestNegSampledSpectrum() {
+            var r = new SampledSpectrum(2);
 
-            CoefficientSpectrum sum = -r;
+            Spectrum.ISpectrum sum = -r.ToIspectrum();
 
             foreach (var c in sum.coefficients) {
                 Assert.That(c, Is.EqualTo(-2));

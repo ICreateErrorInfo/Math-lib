@@ -8,28 +8,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Math_lib.Spectrum;
 using System.Windows.Media;
+using Raytracing.Spectrum;
 
-namespace Raytracing
-{
+namespace Raytracing {
     public class Raytracer
     {
         private System.Windows.Controls.Image _image;
         private System.Windows.Controls.ProgressBar _progressBar;
         private System.Windows.Controls.TextBlock _time;
+        private SpectrumFactory _factory;
 
         public Raytracer(System.Windows.Controls.Image image,
                          System.Windows.Controls.ProgressBar progressBar,
-                         System.Windows.Controls.TextBlock time)
+                         System.Windows.Controls.TextBlock time,
+                         SpectrumFactory spectrumFactory)
         {
             _image = image;
             _progressBar = progressBar;
             _time = time;
+            _factory = spectrumFactory;
         }
 
-        public static void Init() {
-            SampledSpectrum.Init();
+        public void Init() {
+            SampledSpectrumConstants.Init();
         }
         public async void RenderScene(Scene scene)
         {
@@ -60,7 +62,7 @@ namespace Raytracing
             Point3D lookat = scene.Lookat;
             var vfov = scene.VFov;
             double aperture = scene.Aperture;
-            SampledSpectrum background = scene.Background;
+            ISpectrum background = scene.Background;
 
             int imageWidth = scene.ImageWidth;
             int imageHeight = scene.ImageHeight;
@@ -73,7 +75,7 @@ namespace Raytracing
 
             Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distToFocus, 0, 1);
 
-            SampledSpectrum[,] vArr = new SampledSpectrum[imageHeight, imageWidth];
+            ISpectrum[,] vArr = new ISpectrum[imageHeight, imageWidth];
 
             var totalCount = imageHeight;
             var current = 0;
@@ -92,7 +94,7 @@ namespace Raytracing
                 progress.Report(new ProgressData(totalCount, current));
                 for (int i = 0; i < imageWidth; i++)
                 {
-                    SampledSpectrum pixelColor = SampledSpectrum.FromRGB(new double[] {0, 0, 0 }, SampledSpectrum.SpectrumType.Reflectance);
+                    ISpectrum pixelColor = _factory.CreateFromRGB(new double[] {0, 0, 0 }, SpectrumMaterialType.Reflectance);
                     for (int s = 0; s < samplesPerPixel; s++)
                     {
                         var u = (i + ((double)RandX[s] / byte.MaxValue)) / (imageWidth - 1);
@@ -134,7 +136,7 @@ namespace Raytracing
         readonly struct ImageData
         {
 
-            public ImageData(SampledSpectrum[,] data, int width, int height, int samplesPerPixel)
+            public ImageData(ISpectrum[,] data, int width, int height, int samplesPerPixel)
             {
                 Data = data;
                 Width = width;
@@ -142,14 +144,14 @@ namespace Raytracing
                 SamplesPerPixel = samplesPerPixel;
             }
 
-            public SampledSpectrum[,] Data { get; }
+            public ISpectrum[,] Data { get; }
             public int Width { get; }
             public int Height { get; }
             public int SamplesPerPixel { get; }
 
         }
 
-        private static DirectBitmap ToBitmap(ImageData imageData)
+        private DirectBitmap ToBitmap(ImageData imageData)
         {
             DirectBitmap bmp = new DirectBitmap(imageData.Width, imageData.Height);
 
@@ -163,13 +165,13 @@ namespace Raytracing
 
             return bmp;
         }
-        public static SampledSpectrum ray_color(Ray r, SampledSpectrum background, Primitive world, int depth)
+        public ISpectrum ray_color(Ray r, ISpectrum background, Primitive world, int depth)
         {
             SurfaceInteraction isect = new SurfaceInteraction();
 
             if (depth <= 0)
             {
-                return SampledSpectrum.FromRGB(new double[] { 0, 0, 0 }, SampledSpectrum.SpectrumType.Reflectance);
+                return _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
             }
 
             if (!world.Intersect(r, out isect))
@@ -177,8 +179,8 @@ namespace Raytracing
                 return background;
             }
             Ray scattered = new Ray();
-            SampledSpectrum attenuation = new SampledSpectrum();
-            SampledSpectrum emitted = isect.Primitive.GetMaterial().Emitted(isect.U, isect.V, isect.P);
+            ISpectrum attenuation = _factory.CreateSpectrum();
+            ISpectrum emitted = isect.Primitive.GetMaterial().Emitted(isect.U, isect.V, isect.P);
 
             if (!isect.Primitive.GetMaterial().Scatter(r, ref isect, out attenuation, out scattered))
             {
@@ -187,7 +189,7 @@ namespace Raytracing
 
             return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
         }
-        public static System.Drawing.Color toColor(SampledSpectrum pixel_color, int samples_per_pixel)
+        public System.Drawing.Color toColor(ISpectrum pixel_color, int samples_per_pixel)
         {
             var scale = (double)1 / (double)samples_per_pixel;
             

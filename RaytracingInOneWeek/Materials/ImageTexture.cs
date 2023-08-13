@@ -1,10 +1,9 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
+using Raytracing.Spectrum;
 using System;
 using System.Drawing;
 
-namespace Raytracing.Materials
-{
+namespace Raytracing.Materials {
     class ImageTexture : Texture
     {
         public static int bytes_per_pixel = 3;
@@ -13,7 +12,7 @@ namespace Raytracing.Materials
         private int _width, _height;
         private int _bytesPerScanline;
 
-        public ImageTexture()
+        public ImageTexture(SpectrumFactory factory) : base(factory)
         {
             _data = null;
             _width = 0;
@@ -21,7 +20,7 @@ namespace Raytracing.Materials
             _bytesPerScanline = 0;
         }
 
-        public ImageTexture(string filename)
+        public ImageTexture(SpectrumFactory factory, string filename) : base(factory) 
         {
             Image img = Image.FromFile(filename);
             Bitmap bit = new Bitmap(img);
@@ -47,11 +46,11 @@ namespace Raytracing.Materials
             _bytesPerScanline = bytes_per_pixel * _width;
         }
 
-        public override SampledSpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v, Point3D p)
         {
             if (_data == null)
             {
-                return SampledSpectrum.FromRGB(new double[] { 0, 1, 1 }, SampledSpectrum.SpectrumType.Reflectance);
+                return Factory.CreateFromRGB(new double[] { 0, 1, 1 }, SpectrumMaterialType.Reflectance);
             }
 
             u = Math.Clamp(u, 0.0f, 1);
@@ -68,7 +67,7 @@ namespace Raytracing.Materials
             var index =  j * _bytesPerScanline + i * bytes_per_pixel;
             Vector3D pixel = new Vector3D(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
-            return SampledSpectrum.FromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SampledSpectrum.SpectrumType.Reflectance);
+            return Factory.CreateFromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SpectrumMaterialType.Reflectance);
         }
         public Vector3D GetPixel(int x, int y)
         {

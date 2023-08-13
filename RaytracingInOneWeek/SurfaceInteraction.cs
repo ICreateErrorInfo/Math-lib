@@ -1,13 +1,12 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
+using Raytracing.Spectrum;
 
-namespace Raytracing
-{
+namespace Raytracing {
     public struct SurfaceInteraction
     {
         public Primitive Primitive;
         public Ray Scattered;
-        public SampledSpectrum Attenuation;
+        public ISpectrum Attenuation;
         public Point3D P;
         public Normal3D Normal;
         public double U;

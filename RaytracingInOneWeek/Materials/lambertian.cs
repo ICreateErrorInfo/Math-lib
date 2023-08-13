@@ -1,22 +1,21 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
+using Raytracing.Spectrum;
 
-namespace Raytracing.Materials
-{
+namespace Raytracing.Materials {
     public class Lambertian : Material
     {
         private readonly Texture _albedo;
 
-        public Lambertian(SampledSpectrum a)
+        public Lambertian(SpectrumFactory factory, ISpectrum a) : base(factory)
         {
-            _albedo = new SolidColor(a);
+            _albedo = new SolidColor(factory, a);
         }
-        public Lambertian(Texture a)
+        public Lambertian(Texture a) : base(a.Factory)
         {
             _albedo = a;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out SampledSpectrum attenuation, out Ray scattered)
+        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
         {
             var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
 

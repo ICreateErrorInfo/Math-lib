@@ -1,16 +1,15 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
 using Raytracing.Materials;
+using Raytracing.Spectrum;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace Raytracing
-{
+namespace Raytracing {
     public class Importer
     {
-        public static TriangleMesh Obj(string path)
+        public static TriangleMesh Obj(SpectrumFactory factory ,string path)
         {
             var stringList = File.ReadAllLines(path);
 
@@ -52,7 +51,7 @@ namespace Raytracing
                 }
             }
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(SampledSpectrum.FromRGB(new double[] {.61, .61, .61 }, SampledSpectrum.SpectrumType.Reflectance), 0.7));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(factory, SampledSpectrum.FromRGB(new double[] {.61, .61, .61 }, SpectrumMaterialType.Reflectance), 0.7));
 
             return mesh;
         }

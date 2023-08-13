@@ -16,7 +16,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="26"/>
         </Grid.RowDefinitions>
-        <Image Grid.RowSpan="3" x:Name="image" Grid.ColumnSpan="2"/>
+        <Image Grid.RowSpan="3" x:Name="image" Grid.ColumnSpan="2" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
         <ProgressBar Grid.Row="2" x:Name="ProgressBar" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="Time" Text="" FontSize="18"/>
     </Grid>

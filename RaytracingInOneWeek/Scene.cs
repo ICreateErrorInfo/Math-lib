@@ -1,11 +1,11 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
 using Raytracing.Accelerators;
+using Raytracing.Spectrum;
 
-namespace Raytracing
-{
+namespace Raytracing {
     public struct Scene
     {
+        public ISpectrum Spectrum;
         public BVHAccelerator Accel;
         public int SamplesPerPixel;
         public int MaxDepth;
@@ -14,7 +14,7 @@ namespace Raytracing
         public Vector3D VUp;
         public int VFov;
         public double Aperture;
-        public SampledSpectrum Background;
+        public ISpectrum Background;
         public int ImageWidth;
         public int ImageHeight;
         public double FocusDistance;
@@ -27,7 +27,8 @@ namespace Raytracing
                      Vector3D       vUp,
                      int            vFov,
                      double         aperture,
-                     Vector3D       background,
+                     ISpectrum       background,
+                     ISpectrum spectrum,
                      double focusDistance = 0,
                      int            imageWidth = 400, 
                      int            imageHeight = 200)
@@ -48,10 +49,11 @@ namespace Raytracing
             Lookat = lookat;
             VFov = vFov;
             Aperture = aperture;
-            Background = SampledSpectrum.FromRGB(new double[] {background.X, background.Y, background.Z}, SampledSpectrum.SpectrumType.Reflectance);
+            Background = background;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
             VUp = vUp;
+            Spectrum = spectrum;
         }
     }
 }

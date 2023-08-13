@@ -1,31 +1,36 @@
 ﻿using System;
 using Math_lib;
-using Math_lib.Spectrum;
+using Raytracing.Spectrum;
 
-namespace Raytracing.Materials
-{
+namespace Raytracing.Materials {
     public abstract class Texture
     {
-        public abstract SampledSpectrum Value(double u, double v, Point3D p);
+        public SpectrumFactory Factory { get; }
+
+        protected Texture(SpectrumFactory factory) {
+            Factory = factory;
+        }
+
+        public abstract ISpectrum Value(double u, double v, Point3D p);
     }
     class SolidColor : Texture
     {
-        private readonly SampledSpectrum _colorValue;
+        private readonly ISpectrum _colorValue;
 
-        public SolidColor()
+        public SolidColor(SpectrumFactory factory) : base(factory)
         {
 
         }
-        public SolidColor(SampledSpectrum c)
+        public SolidColor(SpectrumFactory factory, ISpectrum c) : base(factory)
         {
             _colorValue = c;
         }
-        public SolidColor(double red, double green, double blue)
+        public SolidColor(SpectrumFactory factory, double red, double green, double blue) : base(factory)
         {
-            _colorValue = SampledSpectrum.FromRGB(new double[] { red, green, blue }, SampledSpectrum.SpectrumType.Reflectance);
+            _colorValue = factory.CreateFromRGB(new double[] { red, green, blue }, SpectrumMaterialType.Reflectance);
         }
 
-        public override SampledSpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v, Point3D p)
         {
             return _colorValue;
         }
@@ -35,22 +40,22 @@ namespace Raytracing.Materials
         private readonly Texture _odd;
         private readonly Texture _even;
 
-        public CheckerTexture()
+        public CheckerTexture(SpectrumFactory factory) : base(factory)
         {
 
         }
-        public CheckerTexture(Texture even, Texture odd)
+        public CheckerTexture(SpectrumFactory factory, Texture even, Texture odd) : base(factory)
         {
             _even = even;
             _odd = odd;
         }
-        public CheckerTexture(SampledSpectrum c1, SampledSpectrum c2)
+        public CheckerTexture(SpectrumFactory factory, ISpectrum c1, ISpectrum c2) : base(factory)
         {
-            _even = new SolidColor(c1);
-            _odd = new SolidColor(c2);
+            _even = new SolidColor(factory, c1);
+            _odd = new SolidColor(factory, c2);
         }
 
-        public override SampledSpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v, Point3D p)
         {
             var sines = Math.Sin(10 * p.X) * Math.Sin(10 * p.Y) * Math.Sin(10 * p.Z);
             if(sines < 0)
@@ -68,19 +73,19 @@ namespace Raytracing.Materials
         readonly public Perlin _noise = new Perlin();
         private readonly double _scale;
 
-        public NoiseTexture()
+        public NoiseTexture(SpectrumFactory factory) : base(factory)
         {
 
         }
-        public NoiseTexture(double scale)
+        public NoiseTexture(SpectrumFactory factory, double scale) : base(factory)
         {
             _scale = scale;
         }
 
-        public override SampledSpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v, Point3D p)
         {
             Vector3D rgb = new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
-            return SampledSpectrum.FromRGB(new double[] {rgb.X, rgb.Y, rgb.Z}, SampledSpectrum.SpectrumType.Reflectance);
+            return Factory.CreateFromRGB(new double[] {rgb.X, rgb.Y, rgb.Z}, SpectrumMaterialType.Reflectance);
         }
     }
 }

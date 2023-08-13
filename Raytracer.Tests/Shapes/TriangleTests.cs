@@ -1,12 +1,11 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
 using NUnit.Framework;
 using Raytracing.Materials;
 using Raytracing.Shapes;
+using Raytracing.Spectrum;
 using System.Collections.Generic;
 
-namespace Raytracing.Tests.Shapes
-{
+namespace Raytracing.Tests.Shapes {
     [TestFixture]
     public class TriangleTests
     {

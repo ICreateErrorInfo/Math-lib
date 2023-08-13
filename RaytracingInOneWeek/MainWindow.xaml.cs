@@ -1,41 +1,44 @@
 ﻿using Math_lib;
-using Math_lib.Spectrum;
 using Microsoft.Win32;
 using Raytracing.Materials;
 using Raytracing.Shapes;
+using Raytracing.Spectrum;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace Raytracing
-{
+namespace Raytracing {
     public partial class MainWindow : Window
     {
+        SpectrumFactory _factory = new SampledSpectrumFactory();
+        ISpectrum spectrum;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Raytracer.Init();
-            Raytracer r = new Raytracer(image, ProgressBar, Time);
-            r.RenderScene(FirstScene());
+            spectrum = _factory.CreateSpectrum();
+            Raytracer r = new Raytracer(image, ProgressBar, Time, _factory);
+
+            r.Init();
+            r.RenderScene(SimpleLight());
         }
 
         Scene TestSphere()
         {
-            var material = new Metal(SampledSpectrum.FromRGB(new double[] {.65, .7, .46 }, SampledSpectrum.SpectrumType.Reflectance), 0.7);
+            var material = new Metal(_factory, _factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360);
             Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360);
             HittableList h = new();
             h.Add(new GeometricPrimitive(s, material));
             h.Add(new GeometricPrimitive(s1, material));
 
-            Scene scene = new Scene(h, 100, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[]{.7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
 
             return scene;
         }
         Scene TestImporter()
         {
-            TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile());
+            TriangleMesh mesh = TriangleMesh.Import(_factory, ShowOpenFile());
             HittableList h = new();
 
             for (int i = 0; i < mesh.NTriangles; i++)
@@ -43,12 +46,12 @@ namespace Raytracing
                 h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[]{.7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
             return scene;
         }
         Scene TestTriangle()
         {
-            var material = new Metal(SampledSpectrum.FromRGB(new double[] {.65, .7, .46 }, SampledSpectrum.SpectrumType.Reflectance), 0.7);
+            var material = new Metal(_factory, _factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -64,40 +67,40 @@ namespace Raytracing
 
             HittableList h = new(new GeometricPrimitive(tri, mesh.Material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
 
             return scene;
         }
         Scene TestCone()
         {
-            var material = new Metal(SampledSpectrum.FromRGB(new double[] {1, 0.32, 0.36 }, SampledSpectrum.SpectrumType.Reflectance), 0);
-            var material2 = new Metal(SampledSpectrum.FromRGB(new double[] {0.90, 0.76, 0.46 }, SampledSpectrum.SpectrumType.Reflectance), 1);
+            var material = new Metal(_factory, _factory.CreateFromRGB(new double[] {1, 0.32, 0.36 }, SpectrumMaterialType.Reflectance), 0);
+            var material2 = new Metal(_factory, _factory.CreateFromRGB(new double[] { 0.90, 0.76, 0.46 }, SpectrumMaterialType.Reflectance), 1);
             Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360);
             Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360);
             HittableList h = new(new GeometricPrimitive(c, material));
             h.Add(new GeometricPrimitive(s, material2));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1), 18);
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum, 18);
 
             return scene;
         }
         Scene TestDisk()
         {
-            var material = new Metal(SampledSpectrum.FromRGB(new double[] {.65, .7, .46 }, SampledSpectrum.SpectrumType.Reflectance), 0.7);
+            var material = new Metal(_factory, _factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180);
             HittableList h = new(new GeometricPrimitive( d, material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
 
             return scene;
         }
         Scene TestCylinder()
         {
-            var material = new Metal(SampledSpectrum.FromRGB(new double[] {.65, .7, .46 }, SampledSpectrum.SpectrumType.Reflectance), 0.7);
+            var material = new Metal(_factory, _factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
             HittableList h = new(new GeometricPrimitive(s,material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, new Vector3D(.7, .8, 1));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
 
             return scene;
         }
@@ -105,13 +108,13 @@ namespace Raytracing
         {
             HittableList world = new HittableList();
 
-            var checker = new CheckerTexture(SampledSpectrum.FromRGB(new double[] {.2, .3, .1 }, SampledSpectrum.SpectrumType.Reflectance), SampledSpectrum.FromRGB(new double[] {.9, .9, .9 }, SampledSpectrum.SpectrumType.Reflectance));
+            var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {.2, .3, .1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {.9, .9, .9 }, SpectrumMaterialType.Reflectance));
 
-            var material  = new Metal(SampledSpectrum.FromRGB(new double[] {.7, .7, .7 }, SampledSpectrum.SpectrumType.Reflectance), 0.7);
-            var material1 = new Metal(SampledSpectrum.FromRGB(new double[] {1, 0.32, 0.36 }, SampledSpectrum.SpectrumType.Reflectance), 0);
-            var material2 = new Metal(SampledSpectrum.FromRGB(new double[] {0.90, 0.76, 0.46 }, SampledSpectrum.SpectrumType.Reflectance), 0);
-            var material3 = new Metal(SampledSpectrum.FromRGB(new double[] {0.65, 0.77, 0.97 }, SampledSpectrum.SpectrumType.Reflectance), 0);
-            var material4 = new Metal(SampledSpectrum.FromRGB(new double[] {0.90, 0.90, 0.90 }, SampledSpectrum.SpectrumType.Reflectance), 0);
+            var material  = new Metal(_factory, _factory.CreateFromRGB(new double[] {.7, .7, .7 }, SpectrumMaterialType.Reflectance), 0.7);
+            var material1 = new Metal(_factory, _factory.CreateFromRGB(new double[] {1, 0.32, 0.36 }, SpectrumMaterialType.Reflectance), 0);
+            var material2 = new Metal(_factory, _factory.CreateFromRGB(new double[] {0.90, 0.76, 0.46 }, SpectrumMaterialType.Reflectance), 0);
+            var material3 = new Metal(_factory, _factory.CreateFromRGB(new double[] {0.65, 0.77, 0.97 }, SpectrumMaterialType.Reflectance), 0);
+            var material4 = new Metal(_factory, _factory.CreateFromRGB(new double[] {0.90, 0.90, 0.90 }, SpectrumMaterialType.Reflectance), 0);
 
             var center2 = new Point3D(0, 0, -20) + new Vector3D(0, 0.5, 0);
 
@@ -121,7 +124,7 @@ namespace Raytracing
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, new Vector3D(.7, .8, 1), 20);
+            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum, 20);
 
             return scene;
         }
@@ -129,7 +132,7 @@ namespace Raytracing
         {
             HittableList objects = new HittableList();
 
-            var checker = new CheckerTexture(SampledSpectrum.FromRGB(new double[] {0.2, 0.3, 0.1 }, SampledSpectrum.SpectrumType.Reflectance), SampledSpectrum.FromRGB(new double[] {0.9, 0.9, 0.9 }, SampledSpectrum.SpectrumType.Reflectance));
+            var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {0.2, 0.3, 0.1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {0.9, 0.9, 0.9 }, SpectrumMaterialType.Reflectance));
 
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -10, 0), 10), new Lambertian(checker)));
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 10, 0), 10), new Lambertian(checker)));
@@ -142,7 +145,8 @@ namespace Raytracing
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: new Vector3D(1, 1, 1),
+                                    background: _factory.CreateFromRGB(new double[]{1, 1, 1 }, SpectrumMaterialType.Reflectance),
+                                    spectrum,
                                     focusDistance: 10);
 
             return scene;
@@ -151,7 +155,7 @@ namespace Raytracing
         {
             HittableList objects = new HittableList();
 
-            var pertext = new NoiseTexture(4);
+            var pertext = new NoiseTexture(_factory, 4);
 
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
@@ -164,13 +168,14 @@ namespace Raytracing
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: new Vector3D(.7, .8, 1));
+                                    background: _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance),
+                                    spectrum);
 
             return scene;
         }
         Scene Earth()
         {
-            var earthTexture = new ImageTexture("C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
+            var earthTexture = new ImageTexture(_factory, "C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
 
             var earthSurface = new Lambertian(earthTexture);
             var globe = new GeometricPrimitive(new Sphere(new Point3D(0, 0, 0), 2), earthSurface);
@@ -185,7 +190,8 @@ namespace Raytracing
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: new Vector3D(.7, .8, 1),
+                                    background: _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance),
+                                    spectrum,
                                     focusDistance: 0,
                                     imageWidth: 1920,
                                     imageHeight: 1080);
@@ -196,11 +202,11 @@ namespace Raytracing
         {
             HittableList objekts = new HittableList();
 
-            var pertext = new NoiseTexture(4);
+            var pertext = new NoiseTexture(_factory, 4);
             objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
             objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
 
-            var difflight = new DiffuseLight(SampledSpectrum.FromRGB(new double[] { 4, 4, 4 }, SampledSpectrum.SpectrumType.Reflectance));
+            var difflight = new DiffuseLight(_factory, _factory.CreateFromRGB(new double[] { 4, 4, 4 }, SpectrumMaterialType.Reflectance));
             objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
 
             Scene scene = new Scene(objs: objekts,
@@ -211,7 +217,8 @@ namespace Raytracing
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: new Vector3D(0, 0, 0));
+                                    background: _factory.CreateFromRGB(new double[]{0, 0, 0 }, SpectrumMaterialType.Reflectance),
+                                    spectrum);
 
             return scene;
         }
@@ -219,10 +226,10 @@ namespace Raytracing
         {
             HittableList objects = new HittableList();
 
-            var red =   new Lambertian(SampledSpectrum.FromRGB(new double[] {.65, .05, .05}, SampledSpectrum.SpectrumType.Reflectance));
-            var white = new Lambertian(SampledSpectrum.FromRGB(new double[] {.73, .73, .73}, SampledSpectrum.SpectrumType.Reflectance));
-            var green = new Lambertian(SampledSpectrum.FromRGB(new double[] {.12, .45, .15}, SampledSpectrum.SpectrumType.Reflectance));
-            var light = new DiffuseLight(SampledSpectrum.FromRGB(new double[] { 15, 15, 15 }, SampledSpectrum.SpectrumType.Reflectance));
+            var red =   new Lambertian(_factory, _factory.CreateFromRGB(new double[] { .65, .05, .05 }, SpectrumMaterialType.Reflectance));
+            var white = new Lambertian(_factory, _factory.CreateFromRGB(new double[] { .73, .73, .73 }, SpectrumMaterialType.Reflectance));
+            var green = new Lambertian(_factory, _factory.CreateFromRGB(new double[] { .12, .45, .15 }, SpectrumMaterialType.Reflectance));
+            var light = new DiffuseLight(_factory, _factory.CreateFromRGB(new double[] { 15, 15, 15 }, SpectrumMaterialType.Reflectance));
 
             //Box box1 = new Box(new Point3D(130, 0, 65), new Point3D(295, 165, 230), white);
             //Box box2 = new Box(new Point3D(265, 0, 295), new Point3D(430, 330, 460), white);
@@ -246,7 +253,8 @@ namespace Raytracing
                                     new(0, 1, 0),
                                     vFov: 40,
                                     aperture: 0.1,
-                                    background: new Vector3D(0, 0, 0),
+                                    background: _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance),
+                                    spectrum,
                                     imageWidth: 300,
                                     imageHeight: 300);
 
