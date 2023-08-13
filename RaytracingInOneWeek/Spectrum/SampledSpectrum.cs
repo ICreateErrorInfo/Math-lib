@@ -3,7 +3,7 @@ using System;
 using System.Collections.Immutable;
 
 namespace Raytracing.Spectrum;
-public partial class SampledSpectrum: ISpectrum {
+public class SampledSpectrum: ISpectrum {
     public double[] coefficients { get; set; }
     public int NumberSamples { get; set; }
 
@@ -20,8 +20,7 @@ public partial class SampledSpectrum: ISpectrum {
     }
 
     public ISpectrum CreateNew() {
-        var s = new SampledSpectrum();
-        return s;
+        return new SampledSpectrum();
     }
     public ISpectrum ToIspectrum() {
         ISpectrum s = this;
@@ -245,7 +244,7 @@ public partial class SampledSpectrum: ISpectrum {
             r = .86445f * r;
         }
 
-        var s = new SampledSpectrum(r.NumberSamples);
+        var s = new SampledSpectrum();
         r.Clamp();
         s.coefficients = r.coefficients;
 

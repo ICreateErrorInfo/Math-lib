@@ -9,7 +9,7 @@ using System.Windows;
 namespace Raytracing {
     public partial class MainWindow : Window
     {
-        SpectrumFactory _factory = new SampledSpectrumFactory();
+        SpectrumFactory _factory = new RGBSpectrumFactory();
 
         public MainWindow()
         {
