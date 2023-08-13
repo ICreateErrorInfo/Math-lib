@@ -12,9 +12,9 @@ namespace Raytracing.Materials {
             _ir = indexOfRefraction;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
+        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
         {
-            attenuation = Factory.CreateFromRGB(new double[] { 1, 1, 1 }, SpectrumMaterialType.Reflectance);
+            var attenuation = Factory.CreateFromRGB(new double[] { 1, 1, 1 }, SpectrumMaterialType.Reflectance);
             double refractionRatio = isect.FrontFace ? (1 / _ir) : _ir;
 
             Vector3D unitDirection = Vector3D.Normalize(rIn.D);
@@ -33,12 +33,13 @@ namespace Raytracing.Materials {
                 direction = Vector3D.Refract(unitDirection, (Vector3D)isect.Normal, refractionRatio);
             }
 
-            scattered = new Ray(isect.P, direction, double.PositiveInfinity, rIn.Time);
+            var scattered = new Ray(isect.P, direction, double.PositiveInfinity, rIn.Time);
 
             isect.Attenuation = attenuation;
-            isect.Scattered = scattered;
+            isect.ScatteredRay = scattered;
+            isect.HasScattered = true;
 
-            return true;
+            return isect;
         }
     }
 }

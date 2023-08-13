@@ -18,7 +18,7 @@ namespace Raytracing {
             Raytracer r = new Raytracer(_factory, image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(FirstScene());
+            r.RenderScene(SimpleLight());
         }
 
         Scene TestSphere()

@@ -14,6 +14,6 @@ namespace Raytracing.Materials {
         {
             return Factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
         }
-        public abstract bool Scatter(Ray rIn, ref SurfaceInteraction rec, out ISpectrum attenuation, out Ray scattered);
+        public abstract SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction rec);
     }
 }

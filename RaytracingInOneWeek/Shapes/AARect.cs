@@ -39,8 +39,8 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            isect.U = (x - _x0) / (_x1 - _x0);
-            isect.V = (y - _y0) / (_y1 - _y0);
+            isect.UCoordinate = (x - _x0) / (_x1 - _x0);
+            isect.VCoordinate = (y - _y0) / (_y1 - _y0);
             tMax = t;
 
             var outwardNormal = new Normal3D(0,0,1);
@@ -90,8 +90,8 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            isect.U = (x - _x0) / (_x1 - _x0);
-            isect.V = (z - _z0) / (_z1 - _z0);
+            isect.UCoordinate = (x - _x0) / (_x1 - _x0);
+            isect.VCoordinate = (z - _z0) / (_z1 - _z0);
             tMax = t;
             var outwardNormal = new Normal3D(0, 1, 0);
             isect.SetFaceNormal(ray, outwardNormal);
@@ -139,8 +139,8 @@ namespace Raytracing.Shapes
                 return false;
             }
 
-            isect.U = (y - _y0) / (_y1 - _y0);
-            isect.V = (z - _z0) / (_z1 - _z0);
+            isect.UCoordinate = (y - _y0) / (_y1 - _y0);
+            isect.VCoordinate = (z - _z0) / (_z1 - _z0);
             tMax = t;
             var outwardNormal = new Normal3D(1, 0, 0);
             isect.SetFaceNormal(ray, outwardNormal);

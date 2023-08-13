@@ -15,7 +15,7 @@ namespace Raytracing.Materials {
             _albedo = a;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
+        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
         {
             var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
 
@@ -24,10 +24,11 @@ namespace Raytracing.Materials {
                 scatterDirection = (Vector3D)isect.Normal;
             }
 
-            scattered = new Ray(isect.P, scatterDirection, double.PositiveInfinity, rIn.Time);
-            attenuation = _albedo.Value(isect.U, isect.V, isect.P);
-                
-            return true;
+            isect.ScatteredRay = new Ray(isect.P, scatterDirection, double.PositiveInfinity, rIn.Time);
+            isect.Attenuation = _albedo.Value(isect.UCoordinate, isect.VCoordinate, isect.P);
+            isect.HasScattered = true;    
+
+            return isect;
         }
     }
 }

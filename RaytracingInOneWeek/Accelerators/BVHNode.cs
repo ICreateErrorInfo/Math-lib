@@ -95,7 +95,7 @@ class BVHNode: Primitive {
     public override Bounds3D GetWorldBound() {
         return _box;
     }
-    public override bool Intersect(Ray ray, out SurfaceInteraction intersection) {
+    public override SurfaceInteraction Intersect(Ray ray, SurfaceInteraction intersection) {
         intersection = new SurfaceInteraction();
         double a = 0, b = 0;
         var foundBoxInsec = _box.IntersectP(ray, out a, out b);
@@ -103,13 +103,14 @@ class BVHNode: Primitive {
         ray.TMax = b;
 
         if (!foundBoxInsec) {
-            return false;
+            intersection.HasIntersection = false;
+            return intersection;
         }
 
-        var isectLeft = new SurfaceInteraction();
-        var hitLeft = _left.Intersect(ray, out isectLeft);
-        var isectRight = new SurfaceInteraction();
-        var hitRight = _right.Intersect(ray, out isectRight);
+        var isectLeft = _left.Intersect(ray, new SurfaceInteraction());
+        var hitLeft = isectLeft.HasIntersection;
+        var isectRight = _right.Intersect(ray, new SurfaceInteraction());
+        var hitRight = isectRight.HasIntersection;
 
         if (hitRight) {
             intersection = isectRight;
@@ -117,7 +118,9 @@ class BVHNode: Primitive {
             intersection = isectLeft;
         }
 
-        return hitLeft || hitRight;
+        intersection.HasIntersection = hitLeft || hitRight;
+
+        return intersection;
     }
     public override Material GetMaterial() {
         throw new NotImplementedException();

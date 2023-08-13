@@ -71,7 +71,7 @@ namespace Raytracing.Shapes
             Point3D _center = ObjectToWorld.m * new Point3D(0,0,0);
             Normal3D outwardNormal = (Normal3D)((isect.P - _center) / _radius);
             isect.SetFaceNormal(ray, outwardNormal);
-            (isect.U, isect.V) = GetSphereUV(outwardNormal);
+            (isect.UCoordinate, isect.VCoordinate) = GetSphereUV(outwardNormal);
 
             return true;
         }

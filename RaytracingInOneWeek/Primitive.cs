@@ -6,7 +6,7 @@ namespace Raytracing
     public abstract class Primitive
     {
         public abstract Bounds3D GetWorldBound();
-        public abstract bool Intersect(Ray r, out SurfaceInteraction intersection);
+        public abstract SurfaceInteraction Intersect(Ray r, SurfaceInteraction intersection);
         public abstract Material GetMaterial();
     }
 }

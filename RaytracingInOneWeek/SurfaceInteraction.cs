@@ -5,13 +5,15 @@ namespace Raytracing {
     public struct SurfaceInteraction
     {
         public Primitive Primitive;
-        public Ray Scattered;
+        public Ray ScatteredRay;
         public ISpectrum Attenuation;
         public Point3D P;
         public Normal3D Normal;
-        public double U;
-        public double V;
+        public double UCoordinate;
+        public double VCoordinate;
         public bool FrontFace;
+        public bool HasIntersection;
+        public bool HasScattered;
 
         public void SetFaceNormal(Ray r, Normal3D outwardNormal)
         {

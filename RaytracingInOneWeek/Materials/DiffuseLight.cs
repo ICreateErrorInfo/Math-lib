@@ -15,11 +15,13 @@ namespace Raytracing.Materials {
             _emit = new SolidColor(factory, c);
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
+        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
         {
-            attenuation = Factory.CreateSpectrum();
-            scattered = new Ray();
-            return false;
+            isect.Attenuation = Factory.CreateSpectrum();
+            isect.ScatteredRay = new Ray();
+            isect.HasScattered = false;
+
+            return isect;
         }
 
         public override ISpectrum Emitted(double u, double v, Point3D p)

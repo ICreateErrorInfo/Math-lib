@@ -356,7 +356,7 @@ namespace Raytracing.Accelerators
             return _nodes.Count() == 1 ? _nodes[0].Bounds : new Bounds3D();
         }
 
-        public override bool Intersect(Ray ray, out SurfaceInteraction intersection)
+        public override SurfaceInteraction Intersect(Ray ray, SurfaceInteraction intersection)
         {
             intersection = new SurfaceInteraction();
 
@@ -376,7 +376,8 @@ namespace Raytracing.Accelerators
                         for (int i = 0; i < node.NPrimitives; i++)
                         {
                             SurfaceInteraction oldSurfaceInteraction = intersection;
-                            if (_primitives[node.PrimitivesOffset + i].Intersect(ray, out intersection))
+                            intersection = _primitives[node.PrimitivesOffset + i].Intersect(ray, intersection);
+                            if (intersection.HasIntersection)
                             {
                                 hit = true;
                             }
@@ -409,7 +410,8 @@ namespace Raytracing.Accelerators
                 }
             }
 
-            return hit;
+            intersection.HasIntersection = hit;
+            return intersection;
         }
     }
 }

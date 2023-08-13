@@ -22,7 +22,7 @@ namespace Raytracing
             Objects.Add(obj);
         }
 
-        public override bool Intersect(Ray ray, out SurfaceInteraction intersection)
+        public override SurfaceInteraction Intersect(Ray ray, SurfaceInteraction intersection)
         {
             intersection = new SurfaceInteraction();
 
@@ -31,14 +31,16 @@ namespace Raytracing
 
             foreach (var Object in Objects)
             {
-                if (Object.Intersect(ray, out tempIsect))
+                tempIsect = Object.Intersect(ray, tempIsect);
+                if (tempIsect.HasIntersection)
                 {
                     hitAnything = true;
                     intersection = tempIsect;
                 }
             }
 
-            return hitAnything;
+            intersection.HasIntersection = hitAnything;
+            return intersection;
         }
         public override Bounds3D GetWorldBound()
         {

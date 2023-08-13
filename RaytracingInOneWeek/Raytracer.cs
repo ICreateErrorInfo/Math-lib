@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using Math_lib;
-using System.Drawing;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,8 +35,6 @@ namespace Raytracing {
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            //Init();
-
             var progress = new Progress<ProgressData>(OnProgress);
 
             var imageData = await Task.Run(() => RenderImageData(progress, scene));
@@ -52,7 +48,7 @@ namespace Raytracing {
             sw.Stop();
             _time.Text = (sw.ElapsedMilliseconds / 1000.0).ToString() + "s";
         }
-        private ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
+        ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
         {
             int samplesPerPixel = scene.SamplesPerPixel;
             int maxDepth = scene.MaxDepth;
@@ -101,7 +97,7 @@ namespace Raytracing {
                         var v = (j + ((double)RandX[s] / byte.MaxValue)) / (imageHeight - 1);
                         Ray r = cam.get_ray(u, v);
 
-                        pixelColor += ray_color(r, background, world, maxDepth);
+                        pixelColor += GetRayColor(r, background, world, maxDepth);
                     }
 
                     vArr[j, i] = pixelColor;
@@ -151,7 +147,7 @@ namespace Raytracing {
 
         }
 
-        private DirectBitmap ToBitmap(ImageData imageData)
+        DirectBitmap ToBitmap(ImageData imageData)
         {
             DirectBitmap bmp = new DirectBitmap(imageData.Width, imageData.Height);
 
@@ -159,13 +155,13 @@ namespace Raytracing {
             {
                 for (int i = 0; i < imageData.Width; i++)
                 {
-                    bmp.SetPixel(i, (j - (imageData.Height - 1)) * -1, toColor(imageData.Data[j, i], imageData.SamplesPerPixel));
+                    bmp.SetPixel(i, (j - (imageData.Height - 1)) * -1, ToColor(imageData.Data[j, i], imageData.SamplesPerPixel));
                 }
             }
 
             return bmp;
         }
-        public ISpectrum ray_color(Ray r, ISpectrum background, Primitive world, int depth)
+        ISpectrum GetRayColor(Ray r, ISpectrum background, Primitive world, int depth)
         {
             SurfaceInteraction isect = new SurfaceInteraction();
 
@@ -174,22 +170,23 @@ namespace Raytracing {
                 return _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
             }
 
-            if (!world.Intersect(r, out isect))
+            isect = world.Intersect(r, isect);
+            if (!isect.HasIntersection)
             {
                 return background;
             }
-            Ray scattered = new Ray();
-            ISpectrum attenuation = _factory.CreateSpectrum();
-            ISpectrum emitted = isect.Primitive.GetMaterial().Emitted(isect.U, isect.V, isect.P);
+            ISpectrum emitted = isect.Primitive.GetMaterial().Emitted(isect.UCoordinate, isect.VCoordinate, isect.P);
 
-            if (!isect.Primitive.GetMaterial().Scatter(r, ref isect, out attenuation, out scattered))
+            isect = isect.Primitive.GetMaterial().Scatter(r, isect);
+
+            if (!isect.HasScattered)
             {
                 return emitted;
             }
 
-            return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
+            return emitted + isect.Attenuation * GetRayColor(isect.ScatteredRay, background, world, depth - 1);
         }
-        public System.Drawing.Color toColor(ISpectrum pixel_color, int samples_per_pixel)
+        System.Drawing.Color ToColor(ISpectrum pixel_color, int samples_per_pixel)
         {
             var scale = (double)1 / (double)samples_per_pixel;
             
@@ -207,7 +204,7 @@ namespace Raytracing {
                                                  Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),
                                                  Convert.ToInt32(255 * Math.Clamp(b, 0, 0.999)));
         }
-        public static ImageSource ToImageSource(DirectBitmap bitmap) {
+        static ImageSource ToImageSource(DirectBitmap bitmap) {
 
             var bs = BitmapSource.Create(
                 pixelWidth: bitmap.Width,

@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Raytracing.Spectrum;
+using System.Windows.Media.Animation;
 
 namespace Raytracing.Materials {
     public class Metal : Material
@@ -13,14 +14,15 @@ namespace Raytracing.Materials {
             _fuzz = f < 1 ? f : 1;
         }
 
-        public override bool Scatter(Ray rIn, ref SurfaceInteraction isect, out ISpectrum attenuation, out Ray scattered)
+        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
         {
             Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rIn.D), (Vector3D)isect.Normal);
 
-            scattered   = new Ray(isect.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),double.PositiveInfinity, rIn.Time);
-            attenuation = _albedo;
+            isect.ScatteredRay   = new Ray(isect.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),double.PositiveInfinity, rIn.Time);
+            isect.Attenuation    = _albedo;
+            isect.HasScattered   = (Vector3D.Dot(isect.ScatteredRay.D, (Vector3D)isect.Normal) > 0.0);
 
-            return (Vector3D.Dot(scattered.D, (Vector3D)isect.Normal) > 0.0);
+            return isect;
         }
     }
 }
