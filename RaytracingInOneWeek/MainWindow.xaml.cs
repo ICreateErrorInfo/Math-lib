@@ -10,13 +10,11 @@ namespace Raytracing {
     public partial class MainWindow : Window
     {
         SpectrumFactory _factory = new SampledSpectrumFactory();
-        ISpectrum spectrum;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            spectrum = _factory.CreateSpectrum();
             Raytracer r = new Raytracer(image, ProgressBar, Time, _factory);
 
             r.Init();
@@ -32,7 +30,7 @@ namespace Raytracing {
             h.Add(new GeometricPrimitive(s, material));
             h.Add(new GeometricPrimitive(s1, material));
 
-            Scene scene = new Scene(h, 100, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[]{.7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
+            Scene scene = new Scene(h, 100, 10, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[]{.7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -46,7 +44,7 @@ namespace Raytracing {
                 h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[]{.7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
+            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, -15), new Point3D(1, 1, 1), new(1, -15, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, -15 }, SpectrumMaterialType.Reflectance));
             return scene;
         }
         Scene TestTriangle()
@@ -67,7 +65,7 @@ namespace Raytracing {
 
             HittableList h = new(new GeometricPrimitive(tri, mesh.Material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
+            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, -10), new Point3D(1, 1, 1), new(1, -10, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, -10 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -80,7 +78,7 @@ namespace Raytracing {
             HittableList h = new(new GeometricPrimitive(c, material));
             h.Add(new GeometricPrimitive(s, material2));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum, 18);
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 18);
 
             return scene;
         }
@@ -90,7 +88,7 @@ namespace Raytracing {
             Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180);
             HittableList h = new(new GeometricPrimitive( d, material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -100,7 +98,7 @@ namespace Raytracing {
             Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
             HittableList h = new(new GeometricPrimitive(s,material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum);
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -124,7 +122,7 @@ namespace Raytracing {
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), spectrum, 20);
+            Scene scene = new Scene(world, 100, 50, new Point3D(0, 0, 0), new Point3D(0, 0, -1), new(0, 1, 0), 50, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 20);
 
             return scene;
         }
@@ -146,7 +144,6 @@ namespace Raytracing {
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: _factory.CreateFromRGB(new double[]{1, 1, 1 }, SpectrumMaterialType.Reflectance),
-                                    spectrum,
                                     focusDistance: 10);
 
             return scene;
@@ -168,8 +165,7 @@ namespace Raytracing {
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance),
-                                    spectrum);
+                                    background: _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -191,7 +187,6 @@ namespace Raytracing {
                                     vFov: 20,
                                     aperture: 0.1,
                                     background: _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance),
-                                    spectrum,
                                     focusDistance: 0,
                                     imageWidth: 1920,
                                     imageHeight: 1080);
@@ -217,8 +212,7 @@ namespace Raytracing {
                                     new(0, 1, 0),
                                     vFov: 20,
                                     aperture: 0.1,
-                                    background: _factory.CreateFromRGB(new double[]{0, 0, 0 }, SpectrumMaterialType.Reflectance),
-                                    spectrum);
+                                    background: _factory.CreateFromRGB(new double[]{0, 0, 0 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -254,7 +248,6 @@ namespace Raytracing {
                                     vFov: 40,
                                     aperture: 0.1,
                                     background: _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance),
-                                    spectrum,
                                     imageWidth: 300,
                                     imageHeight: 300);
 

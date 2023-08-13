@@ -51,7 +51,7 @@ namespace Raytracing {
                 }
             }
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(factory, SampledSpectrum.FromRGB(new double[] {.61, .61, .61 }, SpectrumMaterialType.Reflectance), 0.7));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(factory, factory.CreateFromRGB(new double[] {.61, .61, .61 }, SpectrumMaterialType.Reflectance), 0.7));
 
             return mesh;
         }

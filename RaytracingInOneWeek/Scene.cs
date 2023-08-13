@@ -5,7 +5,6 @@ using Raytracing.Spectrum;
 namespace Raytracing {
     public struct Scene
     {
-        public ISpectrum Spectrum;
         public BVHAccelerator Accel;
         public int SamplesPerPixel;
         public int MaxDepth;
@@ -28,7 +27,6 @@ namespace Raytracing {
                      int            vFov,
                      double         aperture,
                      ISpectrum       background,
-                     ISpectrum spectrum,
                      double focusDistance = 0,
                      int            imageWidth = 400, 
                      int            imageHeight = 200)
@@ -53,7 +51,6 @@ namespace Raytracing {
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
             VUp = vUp;
-            Spectrum = spectrum;
         }
     }
 }
