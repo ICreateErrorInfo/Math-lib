@@ -18,7 +18,7 @@ namespace Raytracing {
             Raytracer r = new Raytracer(_factory, image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(SimpleLight());
+            r.RenderScene(FirstScene());
         }
 
         Scene TestSphere()
@@ -158,7 +158,7 @@ namespace Raytracing {
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
 
             Scene scene = new Scene(objs: objects,
-                                    spp: 1000,
+                                    spp: 100,
                                     maxD: 50,
                                     lookfrom: new Point3D(13, 2, 3),
                                     lookat: new Point3D(0, 0, 0),
@@ -171,7 +171,7 @@ namespace Raytracing {
         }
         Scene Earth()
         {
-            var earthTexture = new ImageTexture(_factory, "C:/Users/Moritz/source/repos/Raytracer/Resources/earthmap.jpg");
+            var earthTexture = new ImageTexture(_factory, "");
 
             var earthSurface = new Lambertian(earthTexture);
             var globe = new GeometricPrimitive(new Sphere(new Point3D(0, 0, 0), 2), earthSurface);
@@ -240,7 +240,7 @@ namespace Raytracing {
             objects.Add(new GeometricPrimitive(new XZRect(213, 343, 227, 332, 554), light));
 
             Scene scene = new Scene(objs: objects,
-                                    spp: 10,
+                                    spp: 100,
                                     maxD: 50,
                                     lookfrom: new Point3D(278, 278, -800),
                                     lookat: new Point3D(278, 278, 0),
