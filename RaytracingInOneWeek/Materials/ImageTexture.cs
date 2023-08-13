@@ -6,7 +6,7 @@ using System.Drawing;
 namespace Raytracing.Materials {
     class ImageTexture : Texture
     {
-        public static int bytes_per_pixel = 3;
+        public static int BytesPerPixel = 3;
 
         private byte[] _data;
         private int _width, _height;
@@ -27,7 +27,7 @@ namespace Raytracing.Materials {
             _width = img.Width;
             _height = img.Height;
 
-            _data = new byte[_width * _height * bytes_per_pixel];
+            _data = new byte[_width * _height * BytesPerPixel];
 
             for(int y = 0; y < _height; y++)
             {
@@ -37,13 +37,13 @@ namespace Raytracing.Materials {
                     var c = bit.GetPixel(x, y);
 
                     //data[p * bytes_per_pixel   ] = c.A;
-                    _data[p * bytes_per_pixel ] = c.R;
-                    _data[p * bytes_per_pixel +1] = c.G;
-                    _data[p * bytes_per_pixel +2] = c.B;
+                    _data[p * BytesPerPixel ] = c.R;
+                    _data[p * BytesPerPixel +1] = c.G;
+                    _data[p * BytesPerPixel +2] = c.B;
                 }
             }
 
-            _bytesPerScanline = bytes_per_pixel * _width;
+            _bytesPerScanline = BytesPerPixel * _width;
         }
 
         public override ISpectrum Value(double u, double v, Point3D p)
@@ -64,14 +64,14 @@ namespace Raytracing.Materials {
 
             var colorScale = 1.0 / 255;
 
-            var index =  j * _bytesPerScanline + i * bytes_per_pixel;
+            var index =  j * _bytesPerScanline + i * BytesPerPixel;
             Vector3D pixel = new Vector3D(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
             return Factory.CreateFromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SpectrumMaterialType.Reflectance);
         }
         public Vector3D GetPixel(int x, int y)
         {
-            var index = y * _bytesPerScanline + x * bytes_per_pixel;
+            var index = y * _bytesPerScanline + x * BytesPerPixel;
             Vector3D pixel = new Vector3D(_data[index], _data[index + 1], _data[index + 2]);
 
             return new Vector3D(pixel.X, pixel.Y, pixel.Z);

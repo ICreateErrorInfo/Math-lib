@@ -33,26 +33,26 @@ namespace Raytracing {
         }
         public async void RenderScene(Scene scene)
         {
-            Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch timer = Stopwatch.StartNew();
 
             var progress = new Progress<ProgressData>(OnProgress);
 
             var imageData = await Task.Run(() => RenderImageData(progress, scene));
 
-            var bmp = ToBitmap(imageData);
+            var bitmap = ToBitmap(imageData);
 
-            _image.Source = ToImageSource(bmp);
+            _image.Source = ToImageSource(bitmap);
 
             _progressBar.Visibility = Visibility.Collapsed;
 
-            sw.Stop();
-            _time.Text = (sw.ElapsedMilliseconds / 1000.0).ToString() + "s";
+            timer.Stop();
+            _time.Text = (timer.ElapsedMilliseconds / 1000.0).ToString() + "s";
         }
         ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
         {
             int samplesPerPixel = scene.SamplesPerPixel;
             int maxDepth = scene.MaxDepth;
-            var world = scene.Accel;
+            var worldBVHTree = scene.Accel;
 
             Point3D lookfrom = scene.Lookfrom;
             Point3D lookat = scene.Lookat;
@@ -67,11 +67,11 @@ namespace Raytracing {
 
             //Camera
             Vector3D vup = scene.VUp;
-            var distToFocus = scene.FocusDistance;
+            var distanceToFocus = scene.FocusDistance;
 
-            Camera cam = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distToFocus, 0, 1);
+            Camera camera = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distanceToFocus, 0, 1);
 
-            ISpectrum[,] vArr = new ISpectrum[imageHeight, imageWidth];
+            ISpectrum[,] pixelArray = new ISpectrum[imageHeight, imageWidth];
 
             var totalCount = imageHeight;
             var current = 0;
@@ -95,17 +95,17 @@ namespace Raytracing {
                     {
                         var u = (i + ((double)RandX[s] / byte.MaxValue)) / (imageWidth - 1);
                         var v = (j + ((double)RandX[s] / byte.MaxValue)) / (imageHeight - 1);
-                        Ray r = cam.get_ray(u, v);
+                        Ray r = camera.get_ray(u, v);
 
-                        pixelColor += GetRayColor(r, background, world, maxDepth);
+                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth);
                     }
 
-                    vArr[j, i] = pixelColor;
+                    pixelArray[j, i] = pixelColor;
                 }
             }
             );
             return new ImageData(
-                data: vArr,
+                data: pixelArray,
                 width: imageWidth,
                 height: imageHeight,
                 samplesPerPixel: samplesPerPixel);
@@ -161,30 +161,30 @@ namespace Raytracing {
 
             return bmp;
         }
-        ISpectrum GetRayColor(Ray r, ISpectrum background, Primitive world, int depth)
+        ISpectrum GetRayColor(Ray ray, ISpectrum background, Primitive world, int depth)
         {
-            SurfaceInteraction isect = new SurfaceInteraction();
+            SurfaceInteraction interaction = new SurfaceInteraction();
 
             if (depth <= 0)
             {
                 return _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
             }
 
-            isect = world.Intersect(r, isect);
-            if (!isect.HasIntersection)
+            interaction = world.Intersect(ray, interaction);
+            if (!interaction.HasIntersection)
             {
                 return background;
             }
-            ISpectrum emitted = isect.Primitive.GetMaterial().Emitted(isect.UCoordinate, isect.VCoordinate, isect.P);
+            ISpectrum emitted = interaction.Primitive.GetMaterial().Emitted(interaction.UCoordinate, interaction.VCoordinate, interaction.P);
 
-            isect = isect.Primitive.GetMaterial().Scatter(r, isect);
+            interaction = interaction.Primitive.GetMaterial().Scatter(ray, interaction);
 
-            if (!isect.HasScattered)
+            if (!interaction.HasScattered)
             {
                 return emitted;
             }
 
-            return emitted + isect.Attenuation * GetRayColor(isect.ScatteredRay, background, world, depth - 1);
+            return emitted + interaction.Attenuation * GetRayColor(interaction.ScatteredRay, background, world, depth - 1);
         }
         System.Drawing.Color ToColor(ISpectrum pixel_color, int samples_per_pixel)
         {

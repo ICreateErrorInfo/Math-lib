@@ -14,6 +14,6 @@ namespace Raytracing.Materials {
         {
             return Factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
         }
-        public abstract SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction rec);
+        public abstract SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction);
     }
 }

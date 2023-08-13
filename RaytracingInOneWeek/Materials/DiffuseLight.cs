@@ -10,18 +10,18 @@ namespace Raytracing.Materials {
         {
             _emit = a;
         }
-        public DiffuseLight(SpectrumFactory factory, ISpectrum c) : base(factory)
+        public DiffuseLight(SpectrumFactory factory, ISpectrum color) : base(factory)
         {
-            _emit = new SolidColor(factory, c);
+            _emit = new SolidColor(factory, color);
         }
 
-        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
+        public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            isect.Attenuation = Factory.CreateSpectrum();
-            isect.ScatteredRay = new Ray();
-            isect.HasScattered = false;
+            interaction.Attenuation = Factory.CreateSpectrum();
+            interaction.ScatteredRay = new Ray();
+            interaction.HasScattered = false;
 
-            return isect;
+            return interaction;
         }
 
         public override ISpectrum Emitted(double u, double v, Point3D p)

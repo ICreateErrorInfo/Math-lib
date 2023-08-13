@@ -8,21 +8,21 @@ namespace Raytracing.Materials {
         private readonly ISpectrum _albedo;
         private readonly double _fuzz;
 
-        public Metal(SpectrumFactory factory, ISpectrum a, double f) : base(factory)
+        public Metal(SpectrumFactory factory, ISpectrum color, double fuzz) : base(factory)
         {
-            _albedo = a;
-            _fuzz = f < 1 ? f : 1;
+            _albedo = color;
+            _fuzz = fuzz < 1 ? fuzz : 1;
         }
 
-        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
+        public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rIn.D), (Vector3D)isect.Normal);
+            Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rayIn.D), (Vector3D)interaction.Normal);
 
-            isect.ScatteredRay   = new Ray(isect.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),double.PositiveInfinity, rIn.Time);
-            isect.Attenuation    = _albedo;
-            isect.HasScattered   = (Vector3D.Dot(isect.ScatteredRay.D, (Vector3D)isect.Normal) > 0.0);
+            interaction.ScatteredRay   = new Ray(interaction.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),double.PositiveInfinity, rayIn.Time);
+            interaction.Attenuation    = _albedo;
+            interaction.HasScattered   = (Vector3D.Dot(interaction.ScatteredRay.D, (Vector3D)interaction.Normal) > 0.0);
 
-            return isect;
+            return interaction;
         }
     }
 }

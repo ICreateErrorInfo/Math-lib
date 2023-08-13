@@ -15,9 +15,9 @@ namespace Raytracing {
         public bool HasIntersection;
         public bool HasScattered;
 
-        public void SetFaceNormal(Ray r, Normal3D outwardNormal)
+        public void SetFaceNormal(Ray ray, Normal3D outwardNormal)
         {
-            FrontFace = Vector3D.Dot(r.D, (Vector3D)outwardNormal) < 0;
+            FrontFace = Vector3D.Dot(ray.D, (Vector3D)outwardNormal) < 0;
             Normal = FrontFace ? outwardNormal : -outwardNormal;
         }
     }

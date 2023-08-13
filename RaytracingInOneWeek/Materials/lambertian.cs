@@ -6,29 +6,29 @@ namespace Raytracing.Materials {
     {
         private readonly Texture _albedo;
 
-        public Lambertian(SpectrumFactory factory, ISpectrum a) : base(factory)
+        public Lambertian(SpectrumFactory factory, ISpectrum color) : base(factory)
         {
-            _albedo = new SolidColor(factory, a);
+            _albedo = new SolidColor(factory, color);
         }
         public Lambertian(Texture a) : base(a.Factory)
         {
             _albedo = a;
         }
 
-        public override SurfaceInteraction Scatter(Ray rIn, SurfaceInteraction isect)
+        public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            var scatterDirection = (Vector3D)isect.Normal + Vector3D.RandomInUnitSphere();
+            var scatterDirection = (Vector3D)interaction.Normal + Vector3D.RandomInUnitSphere();
 
             if (scatterDirection.NearZero())
             {
-                scatterDirection = (Vector3D)isect.Normal;
+                scatterDirection = (Vector3D)interaction.Normal;
             }
 
-            isect.ScatteredRay = new Ray(isect.P, scatterDirection, double.PositiveInfinity, rIn.Time);
-            isect.Attenuation = _albedo.Value(isect.UCoordinate, isect.VCoordinate, isect.P);
-            isect.HasScattered = true;    
+            interaction.ScatteredRay = new Ray(interaction.P, scatterDirection, double.PositiveInfinity, rayIn.Time);
+            interaction.Attenuation = _albedo.Value(interaction.UCoordinate, interaction.VCoordinate, interaction.P);
+            interaction.HasScattered = true;    
 
-            return isect;
+            return interaction;
         }
     }
 }

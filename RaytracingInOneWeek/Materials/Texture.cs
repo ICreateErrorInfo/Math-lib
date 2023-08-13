@@ -49,10 +49,10 @@ namespace Raytracing.Materials {
             _even = even;
             _odd = odd;
         }
-        public CheckerTexture(SpectrumFactory factory, ISpectrum c1, ISpectrum c2) : base(factory)
+        public CheckerTexture(SpectrumFactory factory, ISpectrum color1, ISpectrum color2) : base(factory)
         {
-            _even = new SolidColor(factory, c1);
-            _odd = new SolidColor(factory, c2);
+            _even = new SolidColor(factory, color1);
+            _odd = new SolidColor(factory, color2);
         }
 
         public override ISpectrum Value(double u, double v, Point3D p)
