@@ -18,7 +18,7 @@ namespace Raytracing {
             Raytracer r = new Raytracer(image, ProgressBar, Time, _factory);
 
             r.Init();
-            r.RenderScene(SimpleLight());
+            r.RenderScene(TestTriangle());
         }
 
         Scene TestSphere()
@@ -44,7 +44,7 @@ namespace Raytracing {
                 h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, -15), new Point3D(1, 1, 1), new(1, -15, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, -15 }, SpectrumMaterialType.Reflectance));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, -15), new Point3D(0, 1, 0), new(1, -15, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
             return scene;
         }
         Scene TestTriangle()
@@ -65,7 +65,7 @@ namespace Raytracing {
 
             HittableList h = new(new GeometricPrimitive(tri, mesh.Material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(1, 1, -10), new Point3D(1, 1, 1), new(1, -10, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, -10 }, SpectrumMaterialType.Reflectance));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
