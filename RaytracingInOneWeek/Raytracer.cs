@@ -19,10 +19,10 @@ namespace Raytracing {
         private System.Windows.Controls.TextBlock _time;
         private SpectrumFactory _factory;
 
-        public Raytracer(System.Windows.Controls.Image image,
+        public Raytracer(SpectrumFactory spectrumFactory,
+                         System.Windows.Controls.Image image,
                          System.Windows.Controls.ProgressBar progressBar,
-                         System.Windows.Controls.TextBlock time,
-                         SpectrumFactory spectrumFactory)
+                         System.Windows.Controls.TextBlock time)
         {
             _image = image;
             _progressBar = progressBar;

@@ -15,10 +15,10 @@ namespace Raytracing {
         {
             InitializeComponent();
 
-            Raytracer r = new Raytracer(image, ProgressBar, Time, _factory);
+            Raytracer r = new Raytracer(_factory, image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(TestTriangle());
+            r.RenderScene(FirstScene());
         }
 
         Scene TestSphere()

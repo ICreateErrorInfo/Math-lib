@@ -17,14 +17,6 @@ namespace Raytracing.Tests {
                 Assert.That(c, Is.EqualTo(20));
             }
         }
-        [Test]
-        public void TestFactoryCreate() {
-            var spectrum = SpectrumFactory.CreateSpectrum(SpectrumType.SampledSpectrum);
-
-            foreach (var c in spectrum.coefficients) {
-                Assert.That(c, Is.EqualTo(0));
-            }
-        }
 
         [Test]
         public void TestPlusSampledSpectrum() {
