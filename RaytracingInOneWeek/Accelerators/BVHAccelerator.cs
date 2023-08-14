@@ -1,10 +1,10 @@
 ﻿using Math_lib;
+using Raytracing.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Raytracing.Accelerators
-{
+namespace Raytracing.Accelerators {
     public partial class BVHAccelerator : Aggregate
     {
         private const int BucketCount = 12;

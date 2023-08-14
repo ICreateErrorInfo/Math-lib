@@ -2,24 +2,19 @@
 using Raytracing.Materials;
 using Raytracing.Shapes;
 
-namespace Raytracing
-{
-    public class GeometricPrimitive : Primitive
-    {
+namespace Raytracing.Primitives {
+    public class GeometricPrimitive: Primitive {
         private Shape _shape;
         private Material _material;
 
-        public GeometricPrimitive(Shapes.Shape shape, Material material)
-        {
+        public GeometricPrimitive(Shape shape, Material material) {
             _shape = shape;
             _material = material;
         }
 
-        public override SurfaceInteraction Intersect(Ray r, SurfaceInteraction interaction)
-        {
+        public override SurfaceInteraction Intersect(Ray r, SurfaceInteraction interaction) {
             double tHit = 0;
-            if (!_shape.Intersect(r, out tHit, out interaction))
-            {
+            if (!_shape.Intersect(r, out tHit, out interaction)) {
                 interaction.HasIntersection = false; //TODO theoretisch unnötig
                 return interaction;
             }
@@ -28,12 +23,10 @@ namespace Raytracing
             interaction.HasIntersection = true;
             return interaction;
         }
-        public override Material GetMaterial()
-        {
+        public override Material GetMaterial() {
             return _material;
         }
-        public override Bounds3D GetWorldBound()
-        {
+        public override Bounds3D GetWorldBound() {
             return _shape.ObjectToWorld.m * _shape.GetObjectBound();
         }
     }

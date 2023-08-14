@@ -1,8 +1,8 @@
 ﻿using Raytracing.Materials;
+using Raytracing.Primitives;
 using System;
 
-namespace Raytracing.Accelerators
-{
+namespace Raytracing.Accelerators {
     public abstract class Aggregate : Primitive
     {
         public override Material GetMaterial()

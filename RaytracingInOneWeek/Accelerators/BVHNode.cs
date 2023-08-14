@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Math_lib;
 using System.Diagnostics.CodeAnalysis;
 using Raytracing.Materials;
+using Raytracing.Primitives;
 
-namespace Raytracing.Accelerators; 
+namespace Raytracing.Accelerators;
 
 class BVHNode: Primitive {
     private Primitive _left;
@@ -14,7 +15,7 @@ class BVHNode: Primitive {
     public BVHNode() {
 
     }
-    public BVHNode(HittableList list, double time0, double time1) {
+    public BVHNode(PrimitiveList list, double time0, double time1) {
         var node = new BVHNode(list.Objects, 0, list.Objects.Count, time0, time1);
         _left = node._left;
         _right = node._right;

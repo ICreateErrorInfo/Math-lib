@@ -1,6 +1,7 @@
 ﻿using Math_lib;
 using Microsoft.Win32;
 using Raytracing.Materials;
+using Raytracing.Primitives;
 using Raytracing.Shapes;
 using Raytracing.Spectrum;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Raytracing {
             Raytracer r = new Raytracer(_factory, image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(FirstScene());
+            r.RenderScene(CornellBox());
         }
 
         Scene TestSphere()
@@ -26,7 +27,7 @@ namespace Raytracing {
             var material = new Metal(_factory, _factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360);
             Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360);
-            HittableList h = new();
+            PrimitiveList h = new();
             h.Add(new GeometricPrimitive(s, material));
             h.Add(new GeometricPrimitive(s1, material));
 
@@ -37,7 +38,7 @@ namespace Raytracing {
         Scene TestImporter()
         {
             TriangleMesh mesh = TriangleMesh.Import(_factory, ShowOpenFile());
-            HittableList h = new();
+            PrimitiveList h = new();
 
             for (int i = 0; i < mesh.NTriangles; i++)
             {
@@ -63,7 +64,7 @@ namespace Raytracing {
 
             Triangle tri = new Triangle(objToWorld, worldToObj, mesh, 0);
 
-            HittableList h = new(new GeometricPrimitive(tri, mesh.Material));
+            PrimitiveList h = new(new GeometricPrimitive(tri, mesh.Material));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, -10), new Point3D(0, 1, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
@@ -75,7 +76,7 @@ namespace Raytracing {
             var material2 = new Metal(_factory, _factory.CreateFromRGB(new double[] { 0.90, 0.76, 0.46 }, SpectrumMaterialType.Reflectance), 1);
             Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360);
             Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360);
-            HittableList h = new(new GeometricPrimitive(c, material));
+            PrimitiveList h = new(new GeometricPrimitive(c, material));
             h.Add(new GeometricPrimitive(s, material2));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 0), new Point3D(0, -1, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 18);
@@ -86,7 +87,7 @@ namespace Raytracing {
         {
             var material = new Metal(_factory, _factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180);
-            HittableList h = new(new GeometricPrimitive( d, material));
+            PrimitiveList h = new(new GeometricPrimitive( d, material));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 1, 0), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
@@ -96,7 +97,7 @@ namespace Raytracing {
         {
             var material = new Metal(_factory, _factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0.7);
             Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
-            HittableList h = new(new GeometricPrimitive(s,material));
+            PrimitiveList h = new(new GeometricPrimitive(s,material));
 
             Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
@@ -104,7 +105,7 @@ namespace Raytracing {
         }
         Scene FirstScene()
         {
-            HittableList world = new HittableList();
+            PrimitiveList world = new PrimitiveList();
 
             var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {.2, .3, .1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {.9, .9, .9 }, SpectrumMaterialType.Reflectance));
 
@@ -128,7 +129,7 @@ namespace Raytracing {
         }
         Scene TwoSpheres()
         {
-            HittableList objects = new HittableList();
+            PrimitiveList objects = new PrimitiveList();
 
             var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {0.2, 0.3, 0.1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {0.9, 0.9, 0.9 }, SpectrumMaterialType.Reflectance));
 
@@ -150,7 +151,7 @@ namespace Raytracing {
         }
         Scene TwoPerlinSpheres()
         {
-            HittableList objects = new HittableList();
+            PrimitiveList objects = new PrimitiveList();
 
             var pertext = new NoiseTexture(_factory, 4);
 
@@ -175,7 +176,7 @@ namespace Raytracing {
 
             var earthSurface = new Lambertian(earthTexture);
             var globe = new GeometricPrimitive(new Sphere(new Point3D(0, 0, 0), 2), earthSurface);
-            var ret = new HittableList();
+            var ret = new PrimitiveList();
             ret.Add(globe);
 
             Scene scene = new Scene(objs: ret,
@@ -195,7 +196,7 @@ namespace Raytracing {
         }
         Scene SimpleLight()
         {
-            HittableList objekts = new HittableList();
+            PrimitiveList objekts = new PrimitiveList();
 
             var pertext = new NoiseTexture(_factory, 4);
             objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
@@ -205,7 +206,7 @@ namespace Raytracing {
             objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
 
             Scene scene = new Scene(objs: objekts,
-                                    spp: 400,
+                                    spp: 100,
                                     maxD: 50,
                                     lookfrom: new Point3D(26, 3, 6),
                                     lookat: new Point3D(0, 2, 0),
@@ -218,7 +219,7 @@ namespace Raytracing {
         }
         Scene CornellBox()
         {
-            HittableList objects = new HittableList();
+            PrimitiveList objects = new PrimitiveList();
 
             var red =   new Lambertian(_factory, _factory.CreateFromRGB(new double[] { .65, .05, .05 }, SpectrumMaterialType.Reflectance));
             var white = new Lambertian(_factory, _factory.CreateFromRGB(new double[] { .73, .73, .73 }, SpectrumMaterialType.Reflectance));

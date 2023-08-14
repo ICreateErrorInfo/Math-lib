@@ -1,7 +1,7 @@
 ﻿using Math_lib;
+using Raytracing.Primitives;
 
-namespace Raytracing.Shapes
-{
+namespace Raytracing.Shapes {
     public class Triangle : Shape
     {
         private readonly TriangleMesh _mesh;

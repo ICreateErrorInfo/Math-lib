@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Raytracing.Spectrum;
+using Raytracing.Primitives;
 
 namespace Raytracing {
     public class Raytracer

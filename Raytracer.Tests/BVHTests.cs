@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Raytracing.Accelerators;
 using Raytracing.Materials;
+using Raytracing.Primitives;
 using Raytracing.Shapes;
 using Raytracing.Spectrum;
 using System.Collections.Generic;

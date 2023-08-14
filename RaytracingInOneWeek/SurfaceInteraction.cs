@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Raytracing.Primitives;
 using Raytracing.Spectrum;
 
 namespace Raytracing {

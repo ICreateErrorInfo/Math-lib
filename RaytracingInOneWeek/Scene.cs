@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Raytracing.Accelerators;
+using Raytracing.Primitives;
 using Raytracing.Spectrum;
 
 namespace Raytracing {
@@ -18,7 +19,7 @@ namespace Raytracing {
         public int ImageHeight;
         public double FocusDistance;
 
-        public Scene(HittableList   objs,
+        public Scene(PrimitiveList   objs,
                      int            spp,
                      int            maxD,
                      Point3D        lookfrom,
