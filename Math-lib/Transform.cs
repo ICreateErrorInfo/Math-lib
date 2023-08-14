@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Math_lib
 {
@@ -33,9 +34,9 @@ namespace Math_lib
 
 
         //Mehtods
-        public Transform Inverse(Transform t)
+        public Transform Inverse()
         {
-            return new Transform(t.mInv, t.m);
+            return new Transform(mInv, m);
         }
         public Transform Transpose(Transform t)
         {
@@ -143,6 +144,22 @@ namespace Math_lib
 
             return new Transform(m, Matrix.Transpose4x4(m));
         }
+        public static Transform Orthographic(double zNear, double zFar) {
+            return Scale(1, 1, 1 / (zFar - zNear)) *
+                   Translate(new Vector3D(0, 0, -zNear));
+        }
+        public static Transform Perspective(double fov, double near, double far) {
+            Matrix persp = new Matrix(new double[,] {
+                {1, 0, 0, 0 },
+                {0, 1, 0, 0 },
+                {0, 0, far/(far-near), -((far*near) / (far - near))},
+                {0, 0, 1,0 }
+            });
+
+            double invertTanAngle = (double)1 / Math.Tan(Mathe.ToRad(fov) / 2);
+
+            return Scale(invertTanAngle, invertTanAngle, 1) * new Transform(persp);
+        }
         public bool SwapsHandness()
         {
             double det = m[0, 0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1]) -
@@ -153,6 +170,19 @@ namespace Math_lib
 
 
         //override
+        public static Vector3D operator *(Transform t, Vector3D v) {
+            return t.m * v;
+        }
+        public static Point3D operator *(Transform t, Point3D p) {
+            return t.m * p;
+        }
+        public static Ray operator *(Transform t, Ray r) {
+            //TODO errorCalc
+            Point3D o = t * r.O;
+            Vector3D d = r.D;
+
+            return new Ray(o, d, r.TMax, r.Time);
+        }
         public static Transform operator *(Transform t, Transform t2)
         {
             return new Transform(t.m * t2.m, t2.mInv * t.mInv);

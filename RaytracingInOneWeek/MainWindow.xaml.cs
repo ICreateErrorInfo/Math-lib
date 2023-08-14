@@ -19,7 +19,7 @@ namespace Raytracing {
             Raytracer r = new Raytracer(_factory, image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(CornellBox());
+            r.RenderScene(FirstScene());
         }
 
         Scene TestSphere()
@@ -99,7 +99,7 @@ namespace Raytracing {
             Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
             PrimitiveList h = new(new GeometricPrimitive(s,material));
 
-            Scene scene = new Scene(h, 100, 50, new Point3D(0, 1, 0), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
+            Scene scene = new Scene(h, 100, 50, new Point3D(0, 0, 1), new Point3D(0, 0, 0), new(0, 0, 1), 20, 0.1, _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }

@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Raytracing.Spectrum;
 using Raytracing.Primitives;
+using Raytracing.Camera;
 
 namespace Raytracing {
     public class Raytracer
@@ -57,8 +58,6 @@ namespace Raytracing {
 
             Point3D lookfrom = scene.Lookfrom;
             Point3D lookat = scene.Lookat;
-            var vfov = scene.VFov;
-            double aperture = scene.Aperture;
             ISpectrum background = scene.Background;
 
             int imageWidth = scene.ImageWidth;
@@ -66,11 +65,13 @@ namespace Raytracing {
 
             double aspectRatio = imageWidth / (double)imageHeight;
 
-            //Camera
-            Vector3D vup = scene.VUp;
-            var distanceToFocus = scene.FocusDistance;
+            var h = 1;
+            var viewportHeight = 2 * h / 2;
+            var viewportWidth = aspectRatio * viewportHeight;
 
-            Camera camera = new Camera(lookfrom, lookat, vup, vfov, aspectRatio, aperture, distanceToFocus, 0, 1);
+            ICamera camera2 = new PerspectiveCamera(Math_lib.Transform.Translate(lookfrom.ToVector()),0, 1, imageWidth, imageHeight, new Bounds2D(new(viewportWidth, -viewportHeight), new(-viewportWidth, viewportHeight)), 0, 0, scene.VFov);
+
+            Math_lib.Transform rotation = new Math_lib.Transform(Math_lib.Matrix.LookAt(lookfrom, lookat, new(0, -1, 0)));
 
             ISpectrum[,] pixelArray = new ISpectrum[imageHeight, imageWidth];
 
@@ -94,9 +95,11 @@ namespace Raytracing {
                     ISpectrum pixelColor = _factory.CreateFromRGB(new double[] {0, 0, 0 }, SpectrumMaterialType.Reflectance);
                     for (int s = 0; s < samplesPerPixel; s++)
                     {
-                        var u = (i + ((double)RandX[s] / byte.MaxValue)) / (imageWidth - 1);
-                        var v = (j + ((double)RandX[s] / byte.MaxValue)) / (imageHeight - 1);
-                        Ray r = camera.get_ray(u, v);
+                        var u = (i + 0.5 - ((double)RandX[s] / byte.MaxValue));
+                        var v = (j + 0.5 - ((double)RandY[s] / byte.MaxValue));
+                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D(u, v)};
+                        Ray r = camera2.GenerateRay(sample).generatedRay;
+                        r = new(r.O, rotation * r.D, r.TMax, r.Time);
 
                         pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth);
                     }

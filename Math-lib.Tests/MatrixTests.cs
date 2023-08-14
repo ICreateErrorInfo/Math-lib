@@ -235,5 +235,19 @@ namespace Math_lib.Tests
             Assert.That(erg[1, 1], Is.EqualTo(-42));
             Assert.That(erg[1, 2], Is.EqualTo(10));
         }
+        [Test]
+        public void TestInverse() {
+            Matrix m = Transform.Perspective(20, 1e-2f, 1000).m;
+            Matrix mInv = Matrix.Inverse4x4(m);
+
+            Matrix m2 = new Matrix(4,4);
+            m2.Identity();
+
+            for (int i = 0; i < 4; i++) {
+                for(int j = 0; j < 4; j++) {
+                    Assert.That(Math.Round((m * mInv)[i,j], 6), Is.EqualTo(m2[i, j]));
+                }
+            }
+        }
     }
 }

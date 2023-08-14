@@ -3,7 +3,7 @@ using System;
 
 namespace Raytracing
 {
-    class Camera
+    class Camera1
     {
         readonly Point3D  _origin;
         readonly Point3D  _lowerLeftCorner;
@@ -16,7 +16,7 @@ namespace Raytracing
         readonly double _time0;
         readonly double _time1;
 
-        public Camera(Point3D  lookFrom,
+        public Camera1(Point3D  lookFrom,
                       Point3D  lookAt,
                       Vector3D vup, 
                       double   vFov, 
