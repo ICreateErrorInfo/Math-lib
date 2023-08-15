@@ -56,22 +56,10 @@ namespace Raytracing {
             int maxDepth = scene.MaxDepth;
             var worldBVHTree = scene.Accel;
 
-            Point3D lookfrom = scene.Lookfrom;
-            Point3D lookat = scene.Lookat;
             ISpectrum background = scene.Background;
 
             int imageWidth = scene.ImageWidth;
             int imageHeight = scene.ImageHeight;
-
-            double aspectRatio = imageWidth / (double)imageHeight;
-
-            var h = 1;
-            var viewportHeight = 2 * h / 2;
-            var viewportWidth = aspectRatio * viewportHeight;
-
-            ICamera camera2 = new PerspectiveCamera(Math_lib.Transform.Translate(lookfrom.ToVector()),0, 1, imageWidth, imageHeight, new Bounds2D(new(viewportWidth, -viewportHeight), new(-viewportWidth, viewportHeight)), 0, 0, scene.VFov);
-
-            Math_lib.Transform rotation = new Math_lib.Transform(Math_lib.Matrix.LookAt(lookfrom, lookat, new(0, -1, 0)));
 
             ISpectrum[,] pixelArray = new ISpectrum[imageHeight, imageWidth];
 
@@ -98,9 +86,7 @@ namespace Raytracing {
                         var u = (i + 0.5 - ((double)RandX[s] / byte.MaxValue));
                         var v = (j + 0.5 - ((double)RandY[s] / byte.MaxValue));
                         CameraSample sample = new CameraSample() { pointOnFilm = new Point2D(u, v)};
-                        Ray r = camera2.GenerateRay(sample).generatedRay;
-                        r = new(r.O, rotation * r.D, r.TMax, r.Time);
-
+                        Ray r = scene.Camera.GenerateRay(sample).generatedRay;
                         pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth);
                     }
 
