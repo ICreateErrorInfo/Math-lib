@@ -60,6 +60,8 @@ public readonly record struct Point3D<T>
         return new Vector3D<T>(X, Y, Z);
     }
 
+
+
     public static Point3D<T> SmalestComponents(Point3D<T> p, Point3D<T> p1) {
         return new Point3D<T>(T.Min(p.X, p1.X),
                               T.Min(p.Y, p1.Y),
@@ -71,6 +73,7 @@ public readonly record struct Point3D<T>
                               T.Max(p.Y, p1.Y),
                               T.Max(p.Z, p1.Z));
     } //TODO Naming, UnitTests
+
 
     public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
         X = left.X + right.X,

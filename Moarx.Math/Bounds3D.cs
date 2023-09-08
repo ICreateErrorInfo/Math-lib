@@ -1,4 +1,6 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.Intrinsics.X86;
 
 namespace Moarx.Math;
 
@@ -24,6 +26,7 @@ public readonly record struct Bounds3D<T>
         PMax = Point3D<T>.GreatestComponents(p1, p2);
     }
 
+
     public Point3D<T> PMin {
         get => _pMin;
         init {
@@ -45,6 +48,7 @@ public readonly record struct Bounds3D<T>
             _pMax = value;
         }
     }
+
 
     public Point3D<T> Corner(int corner) {
         if (!(corner >= 0 && corner < 8)) {
@@ -69,6 +73,13 @@ public readonly record struct Bounds3D<T>
         return new Bounds3D<T>(Point3D<T>.SmalestComponents(b.PMin, b1.PMin),
                                Point3D<T>.GreatestComponents(b.PMax, b1.PMax));
     }
+    public static Bounds3D<T> Intersect(Bounds3D<T> b1, Bounds3D<T> b2) {
+        Bounds3D<T> b = new Bounds3D<T>(
+            Point3D<T>.GreatestComponents(b1.PMin, b2.PMin),
+            Point3D<T>.SmalestComponents(b1.PMax, b2.PMax)
+            );
+        return b;
+    }
 
     public static bool Overlaps(Bounds3D<T> b, Bounds3D<T> b1) {
         bool x = (b.PMax.X >= b1.PMin.X) && (b.PMin.X <= b1.PMax.X);
@@ -82,6 +93,19 @@ public readonly record struct Bounds3D<T>
         return (p.X >= b.PMin.X && p.X <= b.PMax.X &&
                 p.Y >= b.PMin.Y && p.Y <= b.PMax.Y &&
                 p.Z >= b.PMin.Z && p.Z <= b.PMax.Z);
+    }
+    public static bool InsideExclusive(Point3D<T> p, Bounds3D<T> b) {
+        return (p.X >= b.PMin.X && p.X < b.PMax.X &&
+                p.Y >= b.PMin.Y && p.Y < b.PMax.Y &&
+                p.Z >= b.PMin.Z && p.Z < b.PMax.Z);
+    }
+
+    public T DistanceSquared<U>(Point3D<U> p) where U: struct, INumber<U> {
+        T dx = T.Max(PMin.X - (T)Convert.ChangeType(p.X, typeof(T)), (T)Convert.ChangeType(p.X, typeof(T)) - PMax.X);
+        T dy = T.Max(PMin.Y - (T)Convert.ChangeType(p.Y, typeof(T)), (T)Convert.ChangeType(p.Y, typeof(T)) - PMax.Y);
+        T dz = T.Max(PMin.Z - (T)Convert.ChangeType(p.Z, typeof(T)), (T)Convert.ChangeType(p.Z, typeof(T)) - PMax.Z);
+
+        return dx * dx + dy * dy + dz * dz;
     }
 
     public static Bounds3D<T> Expand(Bounds3D<T> b, T delta) {
@@ -107,7 +131,7 @@ public readonly record struct Bounds3D<T>
         return T.CreateChecked(2) * (d.X * d.Y + d.X * d.Z + d.Y * d.Z);
     }
 
-    public int MaximumExtent() {
+    public int MaxDimension() {
         Vector3D<T> d = Diagonal();
         if (d.X > d.Y && d.X > d.Z) {
             return 0;
@@ -116,6 +140,12 @@ public readonly record struct Bounds3D<T>
         } else {
             return 2;
         }
+    }
+
+    public Point3D<double> Lerp(Point3D<double> t) {
+        return new( MathmaticMethods.Lerp(t.X, Convert.ToDouble(PMin.X), Convert.ToDouble(PMax.X)),
+                    MathmaticMethods.Lerp(t.Y, Convert.ToDouble(PMin.Y), Convert.ToDouble(PMax.Y)),
+                    MathmaticMethods.Lerp(t.Z, Convert.ToDouble(PMin.Z), Convert.ToDouble(PMax.Z)));
     }
 
     public Vector3D<T> Offset(Point3D<T> p) {
@@ -131,6 +161,14 @@ public readonly record struct Bounds3D<T>
             newZ /= PMax.Z - PMin.Z;
 
         return new Vector3D<T>(newX, newY, newZ);
+    }
+
+    public (Point3D<T>, double) BoundingSphere() {
+
+        var center = (PMin + PMax.ToVector()) / T.CreateChecked(2);
+        var radius = Inside(center, this) ? (center - PMax).GetLength() : 0;
+
+        return (center, radius);
     }
 
     public Point3D<T> this[int i] {

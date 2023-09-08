@@ -83,6 +83,15 @@ public class Bounds3DTests {
         Assert.That(Bounds3D<double>.Union(b1, b2).PMax, Is.EqualTo(b3.PMax));
     }
     [Test]
+    public void TestIntersect() {
+        Bounds3D<double> b1 = new(new(-2, -3, -2), new(3, 1, 2));
+        Bounds3D<double> b2 = new(new(0, -4, -3), new(5, -1, 0));
+
+        Bounds3D<double> bExp = new(new(0, -3, -2), new(3, -1, 0));
+
+        Assert.That(Bounds3D<double>.Intersect(b1, b2), Is.EqualTo(bExp));
+    }
+    [Test]
     public void TestOverlap() {
         Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
         Point3D<double> pMax = new Point3D<double>(2.5, 1, 1);
@@ -105,9 +114,21 @@ public class Bounds3DTests {
 
         Point3D<double> p = new(1.5, 0.4, 0.3);
         Point3D<double> p1 = new(15, 0.4, 0.3);
+        Point3D<double> p2 = new Point3D<double>(-2.5, -1, -1.5);
 
         Assert.That(Bounds3D<double>.Inside(p, b1), Is.True);
         Assert.That(Bounds3D<double>.Inside(p1, b1), Is.False);
+        Assert.That(Bounds3D<double>.Inside(p2, b1), Is.True);
+    }
+    [Test]
+    public void TestInsideExclusive() {
+        Bounds3D<double> b1 = new(new(0, -4, -3), new(5, -1, 0));
+
+        Point3D<double> p = new(0, -1, -2);
+        Point3D<double> p1 = new(2, -2, -0.3);
+
+        Assert.That(Bounds3D<double>.InsideExclusive(p, b1), Is.False);
+        Assert.That(Bounds3D<double>.InsideExclusive(p1, b1), Is.True);
     }
     [Test]
     public void TestExpand() {
@@ -161,8 +182,8 @@ public class Bounds3DTests {
 
         Bounds3D<double> b1 = new Bounds3D<double>(pMin, pMax);
 
-        Assert.That(b1.MaximumExtent(), Is.EqualTo(0));
-        Assert.That(b1.MaximumExtent(), !Is.EqualTo(1));
+        Assert.That(b1.MaxDimension(), Is.EqualTo(0));
+        Assert.That(b1.MaxDimension(), !Is.EqualTo(1));
     }
     //[Test]
     //public void TestLerp() {

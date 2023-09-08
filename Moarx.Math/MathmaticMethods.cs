@@ -33,4 +33,7 @@ public class MathmaticMethods {
     public static void Swap(ref double d, ref double d1) {
         (d1, d) = (d, d1);
     }
+    public static double Lerp(double x, double a, double b) {
+        return (1 - x) * a + x * b;
+    }
 }

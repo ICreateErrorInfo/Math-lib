@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.Numerics;
 
 
 namespace Moarx.Math;
