@@ -1,5 +1,6 @@
 ﻿using Math_lib;
 using Raytracing.Materials;
+using Raytracing.Mathmatic;
 using Raytracing.Shapes;
 
 namespace Raytracing.Primitives {

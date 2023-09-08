@@ -4,6 +4,7 @@ using Math_lib;
 using System.Diagnostics.CodeAnalysis;
 using Raytracing.Materials;
 using Raytracing.Primitives;
+using Raytracing.Mathmatic;
 
 namespace Raytracing.Accelerators;
 

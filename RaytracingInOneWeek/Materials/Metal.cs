@@ -1,4 +1,5 @@
 ﻿using Math_lib;
+using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 using System.Windows.Media.Animation;
 

@@ -1,8 +1,8 @@
 ﻿using Math_lib;
+using Raytracing.Mathmatic;
 using System;
 
-namespace Raytracing.Shapes
-{
+namespace Raytracing.Shapes {
     public class Disk : Shape
     {
         private readonly double _height;

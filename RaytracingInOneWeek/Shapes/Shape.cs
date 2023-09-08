@@ -1,7 +1,7 @@
 ﻿using Math_lib;
+using Raytracing.Mathmatic;
 
-namespace Raytracing.Shapes
-{
+namespace Raytracing.Shapes {
     public abstract class Shape
     {
         public Transform WorldToObject;

@@ -1,5 +1,6 @@
 ﻿using System;
 using Math_lib;
+using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
 namespace Raytracing.Materials {

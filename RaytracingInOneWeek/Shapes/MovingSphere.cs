@@ -1,8 +1,8 @@
 ﻿using System;
 using Math_lib;
+using Raytracing.Mathmatic;
 
-namespace Raytracing.Shapes
-{
+namespace Raytracing.Shapes {
     public class MovingSphere : Shape
     {
         private readonly Point3D  _center0;

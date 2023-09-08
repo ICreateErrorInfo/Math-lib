@@ -1,11 +1,11 @@
 using Math_lib;
 using NUnit.Framework;
 using Raytracing.Materials;
+using Raytracing.Mathmatic;
 using Raytracing.Shapes;
 using System;
 
-namespace Raytracing.Tests.Shapes
-{
+namespace Raytracing.Tests.Shapes {
     [TestFixture]
     public class SphereTests
     {

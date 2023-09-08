@@ -2,6 +2,7 @@
 using System.Linq;
 using Math_lib;
 using Raytracing.Materials;
+using Raytracing.Mathmatic;
 
 namespace Raytracing.Primitives {
     public class PrimitiveList: Primitive {

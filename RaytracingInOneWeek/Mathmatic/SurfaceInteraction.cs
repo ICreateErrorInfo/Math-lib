@@ -2,9 +2,8 @@
 using Raytracing.Primitives;
 using Raytracing.Spectrum;
 
-namespace Raytracing {
-    public struct SurfaceInteraction
-    {
+namespace Raytracing.Mathmatic {
+    public struct SurfaceInteraction {
         public Primitive Primitive;
         public Ray ScatteredRay;
         public ISpectrum Attenuation;
@@ -16,8 +15,7 @@ namespace Raytracing {
         public bool HasIntersection;
         public bool HasScattered;
 
-        public void SetFaceNormal(Ray ray, Normal3D outwardNormal)
-        {
+        public void SetFaceNormal(Ray ray, Normal3D outwardNormal) {
             FrontFace = Vector3D.Dot(ray.D, (Vector3D)outwardNormal) < 0;
             Normal = FrontFace ? outwardNormal : -outwardNormal;
         }

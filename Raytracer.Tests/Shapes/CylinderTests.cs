@@ -1,6 +1,7 @@
 ﻿using Math_lib;
 using NUnit.Framework;
 using Raytracing.Materials;
+using Raytracing.Mathmatic;
 using Raytracing.Shapes;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Raytracing.Tests.Shapes
-{
+namespace Raytracing.Tests.Shapes {
     [TestFixture]
     public class CylinderTests
     {

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Raytracing.Spectrum;
 using Raytracing.Primitives;
 using Raytracing.Camera;
+using Raytracing.Mathmatic;
 
 namespace Raytracing {
     public class Raytracer
