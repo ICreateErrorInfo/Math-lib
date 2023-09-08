@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 
 namespace Raytracing.Accelerators
 {
@@ -7,14 +7,14 @@ namespace Raytracing.Accelerators
         struct PrimitiveInfo
         {
             public int PrimitiveNumber;
-            public Bounds3D Bounds;
-            public Point3D Centroid;
+            public Bounds3D<double> Bounds;
+            public Point3D<double> Centroid;
 
-            public PrimitiveInfo(int primitiveNumber, Bounds3D bounds)
+            public PrimitiveInfo(int primitiveNumber, Bounds3D<double> bounds)
             {
                 PrimitiveNumber = primitiveNumber;
                 Bounds = bounds;
-                Centroid = 0.5 * bounds.pMin + 0.5 * bounds.pMax;
+                Centroid = 0.5 * bounds.PMin + 0.5 * bounds.PMax;
             }
         }
     }

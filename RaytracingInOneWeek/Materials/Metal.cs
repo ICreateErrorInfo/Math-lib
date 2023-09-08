@@ -1,7 +1,6 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
-using System.Windows.Media.Animation;
 
 namespace Raytracing.Materials {
     public class Metal : Material
@@ -17,11 +16,11 @@ namespace Raytracing.Materials {
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            Vector3D reflected = Vector3D.Reflect(Vector3D.Normalize(rayIn.D), (Vector3D)interaction.Normal);
+            Vector3D<double> reflected = Vector3D<double>.Reflect((rayIn.Direction).Normalize(), interaction.Normal.ToVector());
 
-            interaction.ScatteredRay   = new Ray(interaction.P, reflected + _fuzz * Vector3D.RandomInUnitSphere(),double.PositiveInfinity, rayIn.Time);
+            interaction.ScatteredRay   = new Ray(interaction.P, reflected + _fuzz * Vector3D<double>.RandomInUnitSphere(),double.PositiveInfinity, rayIn.Time);
             interaction.Attenuation    = _albedo;
-            interaction.HasScattered   = (Vector3D.Dot(interaction.ScatteredRay.D, (Vector3D)interaction.Normal) > 0.0);
+            interaction.HasScattered   = ((interaction.ScatteredRay.Direction * interaction.Normal.ToVector()) > 0.0);
 
             return interaction;
         }

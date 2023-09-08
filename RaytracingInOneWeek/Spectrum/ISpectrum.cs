@@ -98,7 +98,7 @@ public interface ISpectrum {
         var sum = s1.CreateNew();
         for (var i = 0; i < s1.NumberSamples; i++) {
             Debug.Assert(s2.coefficients[i] != 0);
-            sum.coefficients[i] /= s2.coefficients[i];
+            sum.coefficients[i] = s1.coefficients[i] / s2.coefficients[i];
         }
         return sum;
     }

@@ -1,11 +1,11 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using System;
 
 namespace Raytracing.Camera;
 
 public struct CameraSample {
-    public Point2D pointOnFilm;
-    public Point2D pointOnLense;
+    public Point2D<double> pointOnFilm;
+    public Point2D<double> pointOnLense;
     public double time;
 }
 public struct CameraRayInformation {

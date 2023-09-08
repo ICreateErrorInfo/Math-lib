@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Moarx.Math;
 
@@ -68,12 +69,54 @@ public readonly record struct Vector3D<T>
     }
     public T GetLengthSquared() => this * this;
     public bool IsNormalized() => GetLengthSquared() == T.CreateChecked(1); //TODO round bug
+    public static Vector3D<T> Permute(Vector3D<T> p, int x, int y, int z) {
+        return new Vector3D<T>(p[x], p[y], p[z]);
+    }
+    public static int MaxDimension(Vector3D<T> v) { 
+        return (v.X > v.Y) ? ((v.X > v.Z) ? 0 : 2) : ((v.Y > v.Z) ? 1 : 2);
+    }
+    public static Vector3D<T> Abs(Vector3D<T> v) {
+        return new(T.Abs(v.X),
+                   T.Abs(v.Y),
+                   T.Abs(v.Z));
+    }
+    public static Vector3D<T> Reflect(Vector3D<T> v, Vector3D<T> v1) {
+        return v - T.CreateChecked(2) * (v * v1) * v1;
+    }
+    public static Vector3D<U> Refract<U>(Vector3D<U> v, Vector3D<U> v1, U eta) where U : struct, INumber<U>, IRootFunctions<U> {
+        U cosi = -v * v1;
+        U cost2 = U.CreateChecked(1) - eta * eta * (U.CreateChecked(1) - cosi * cosi);
+        Vector3D<U> t = eta * v + (new Vector3D<U>(eta * cosi) - U.Sqrt(U.Abs(cost2)) * v1);
+        if (cost2 > U.CreateChecked(0)) {
+            return t * U.CreateChecked(1);
+        } else {
+            return new Vector3D<U>(U.CreateChecked(0));
+        }
+    }
     public static double AngleBetween(Vector3D<T> v1, Vector3D<T> v2) {
         if((v1 * v2) < T.CreateChecked(0)) {
             return System.Math.PI - 2 * MathmaticMethods.SafeASin((v1 + v2).GetLength() / 2);
         } else {
             return 2 * MathmaticMethods.SafeASin((v2 - v1).GetLength() / 2);
         }
+    }
+    public static Vector3D<double> Random(int min, int max) {
+        Debug.Assert(!double.IsNaN(min));
+        Debug.Assert(!double.IsNaN(max));
+
+        return new Vector3D<double>(MathmaticMethods.GetRandomDouble(min, max), MathmaticMethods.GetRandomDouble(min, max), MathmaticMethods.GetRandomDouble(min, max));
+    }
+    public static Vector3D<double> RandomInUnitSphere() {
+        while (true) {
+            Vector3D<double> p = Random(-1, 1);
+            if (p.GetLengthSquared() >= 1)
+                continue;
+            return p;
+        }
+    }
+    public bool NearZero() {
+        var s = T.CreateChecked(1e-8);
+        return (T.Abs(X) < s) && (T.Abs(Y) < s) && (T.Abs(Z) < s);
     }
 
     public Point3D<T> ToPoint() {

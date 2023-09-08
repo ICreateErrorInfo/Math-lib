@@ -1,5 +1,5 @@
 ﻿using System;
-using Math_lib;
+using Moarx.Math;
 using Raytracing.Mathmatic;
 
 namespace Raytracing.Shapes {
@@ -10,7 +10,7 @@ namespace Raytracing.Shapes {
         private readonly double   _radius;
 
         public Sphere() { }
-        public Sphere(Point3D center, double radius)
+        public Sphere(Point3D<double> center, double radius)
         {
             _radius = radius;
             _zMin = -radius;
@@ -18,19 +18,19 @@ namespace Raytracing.Shapes {
             _thetaMax = 1;
             _thetaMin = -1;
             _phiMax = 360;
-            WorldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
-            ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
+            WorldToObject = Transform.Translate(new Point3D<double>(0, 0, 0) - center);
+            ObjectToWorld = Transform.Translate(center - new Point3D<double>(0, 0, 0));
         }
-        public Sphere(Point3D center, double radius, double zMin, double zMax, double phiMax) 
+        public Sphere(Point3D<double> center, double radius, double zMin, double zMax, double phiMax) 
         {
             _radius = radius;
             _zMin = Math.Clamp(Math.Min(zMin, zMax), -radius, radius);
             _zMax = Math.Clamp(Math.Max(zMin, zMax), -radius, radius);
             _thetaMin = Math.Acos(Math.Clamp(zMin / radius, -1, 1));
             _thetaMax = Math.Acos(Math.Clamp(zMax / radius, -1, 1));
-            _phiMax = Mathe.ToRad(Math.Clamp(phiMax, 0, 360));
-            WorldToObject = Transform.Translate(new Point3D(0, 0, 0) - center);
-            ObjectToWorld = Transform.Translate(center - new Point3D(0, 0, 0));
+            _phiMax = MathmaticMethods.ConvertToRadians(Math.Clamp(phiMax, 0, 360));
+            WorldToObject = Transform.Translate(new Point3D<double>(0, 0, 0) - center);
+            ObjectToWorld = Transform.Translate(center - new Point3D<double>(0, 0, 0));
         }
 
         public override bool Intersect(Ray ray, out double tMax, out SurfaceInteraction interaction)
@@ -38,14 +38,14 @@ namespace Raytracing.Shapes {
             tMax = 0;
             interaction = new SurfaceInteraction();
 
-            Ray rTransformed = WorldToObject.m * ray;
+            Ray rTransformed = WorldToObject * ray;
 
-            var a = rTransformed.D.GetLengthSqrt();
-            var halfB = Vector3D.Dot(rTransformed.O.ToVector(), rTransformed.D);
-            var c = (rTransformed.O.ToVector()).GetLengthSqrt() - _radius * _radius;
+            var a = rTransformed.Direction.GetLengthSquared();
+            var halfB = rTransformed.Origin.ToVector() * rTransformed.Direction;
+            var c = (rTransformed.Origin.ToVector()).GetLengthSquared() - _radius * _radius;
 
             double t0;
-            if(!Mathe.SolveQuadratic(a, halfB, c, out t0, 0.01, ray.TMax))
+            if(!MathmaticMethods.SolveQuadratic(a, halfB, c, out t0, 0.01, ray.TMax))
             {
                 return false;
             }
@@ -68,19 +68,19 @@ namespace Raytracing.Shapes {
 
             tMax = t0;
             interaction.P = ray.At(t0);
-            Point3D _center = ObjectToWorld.m * new Point3D(0,0,0);
-            Normal3D outwardNormal = (Normal3D)((interaction.P - _center) / _radius);
+            Point3D<double> _center = ObjectToWorld * new Point3D<double>(0,0,0);
+            Normal3D<double> outwardNormal = new(((interaction.P - _center) / _radius));
             interaction.SetFaceNormal(ray, outwardNormal);
             (interaction.UCoordinate, interaction.VCoordinate) = GetSphereUV(outwardNormal);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            return new Bounds3D(new Point3D(-_radius, -_radius, _zMin),
-                                new Point3D( _radius,  _radius, _zMax));
+            return new Bounds3D<double>(new Point3D<double>(-_radius, -_radius, _zMin),
+                                new Point3D<double>( _radius,  _radius, _zMax));
         }
-        private (double u, double v) GetSphereUV(Normal3D p)
+        private (double u, double v) GetSphereUV(Normal3D<double> p)
         {
             var theta = Math.Acos(-p.Y);
             var phi = Math.Atan2(-p.Z, p.X) + Math.PI;

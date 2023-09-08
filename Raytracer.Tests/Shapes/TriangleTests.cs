@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using NUnit.Framework;
 using Raytracing.Materials;
 using Raytracing.Mathmatic;
@@ -22,40 +22,42 @@ namespace Raytracing.Tests.Shapes {
         public void IntersectionTest()
         {
             SpectrumFactory factory = new SampledSpectrumFactory();
+            SampledSpectrumConstants.Init();
 
             var material = new Metal(factory, factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
-            List<Point3D> Points = new List<Point3D>() { new(1, 0, 0), new(0, 1, 0), new(0, 0, 1) };
+            List<Point3D<double>> Points = new List<Point3D<double>>() { new(1, 0, 0), new(0, 1, 0), new(0, 0, 1) };
 
-            Transform objToWorld = Transform.Translate(new Vector3D(0, 1, 0));
-            Transform worldToObj = Transform.Translate(new Vector3D(0, -1, 0));
+            Transform objToWorld = Transform.Translate(new Vector3D<double>(0, 1, 0));
+            Transform worldToObj = Transform.Translate(new Vector3D<double>(0, -1, 0));
 
             TriangleMesh mesh = new TriangleMesh(objToWorld, nTri, indices, nVert, Points, material);
 
-            Point3D p0 = worldToObj.m * mesh.Point[0];
-            Point3D p1 = worldToObj.m * mesh.Point[1];
-            Point3D p2 = worldToObj.m * mesh.Point[2];
+            Point3D<double> p0 = worldToObj * mesh.Point[0];
+            Point3D<double> p1 = worldToObj * mesh.Point[1];
+            Point3D<double> p2 = worldToObj * mesh.Point[2];
 
-            Assert.That(p0, Is.EqualTo(new Point3D(1,0,0)));
-            Assert.That(p1, Is.EqualTo(new Point3D(0,1,0)));
-            Assert.That(p2, Is.EqualTo(new Point3D(0,0,1)));
+            Assert.That(p0, Is.EqualTo(new Point3D<double>(1,0,0)));
+            Assert.That(p1, Is.EqualTo(new Point3D<double>(0,1,0)));
+            Assert.That(p2, Is.EqualTo(new Point3D<double>(0,0,1)));
         }
         [Test]
         public void IntersectionTest1()
         {
             SpectrumFactory factory = new SampledSpectrumFactory();
+            SampledSpectrumConstants.Init();
 
             var material = new Metal(factory, factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
-            List<Point3D> Points = new List<Point3D>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
+            List<Point3D<double>> Points = new List<Point3D<double>>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
 
-            Transform objToWorld = Transform.Translate(new Vector3D(0));
-            Transform worldToObj = Transform.Translate(new Vector3D(0));
+            Transform objToWorld = Transform.Translate(new Vector3D<double>(0));
+            Transform worldToObj = Transform.Translate(new Vector3D<double>(0));
 
             TriangleMesh mesh = new TriangleMesh(objToWorld, nTri, indices, nVert, Points, material);
 
@@ -73,16 +75,17 @@ namespace Raytracing.Tests.Shapes {
         public void IntersectionTest2()
         {
             SpectrumFactory factory = new SampledSpectrumFactory();
+            SampledSpectrumConstants.Init();
 
             var material = new Metal(factory, factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
-            List<Point3D> Points = new List<Point3D>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
+            List<Point3D<double>> Points = new List<Point3D<double>>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
 
-            Transform objToWorld = Transform.Translate(new Vector3D(0));
-            Transform worldToObj = Transform.Translate(new Vector3D(0));
+            Transform objToWorld = Transform.Translate(new Vector3D<double>(0));
+            Transform worldToObj = Transform.Translate(new Vector3D<double>(0));
 
             TriangleMesh mesh = new TriangleMesh(objToWorld, nTri, indices, nVert, Points, material);
 
@@ -102,22 +105,22 @@ namespace Raytracing.Tests.Shapes {
         {
             SpectrumFactory factory = new SampledSpectrumFactory();
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
             var t = new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, 0);
 
-            Assert.That(t.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2, -1, 0)));
-            Assert.That(t.GetObjectBound().pMax, Is.EqualTo(new Point3D(2, 3, 1)));
+            Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
+            Assert.That(t.GetObjectBound().PMax, Is.EqualTo(new Point3D<double>(2, 3, 1)));
         }
         [Test]
         public void TestObjectBound2()
         {
             SpectrumFactory factory = new SampledSpectrumFactory();
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
             var t = new Triangle(Transform.Translate(new(1)), Transform.Translate(new(-1)), mesh, 0);
 
-            Assert.That(t.GetObjectBound().pMin, Is.EqualTo(new Point3D(-2, -1, 0)));
-            Assert.That(t.GetObjectBound().pMax, Is.EqualTo(new Point3D(2, 3, 1)));
+            Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
+            Assert.That(t.GetObjectBound().PMax, Is.EqualTo(new Point3D<double>(2, 3, 1)));
         }
     }
 }

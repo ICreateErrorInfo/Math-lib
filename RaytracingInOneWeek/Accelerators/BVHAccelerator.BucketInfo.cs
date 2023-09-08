@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 
 namespace Raytracing.Accelerators
 {
@@ -7,7 +7,7 @@ namespace Raytracing.Accelerators
         struct BucketInfo
         {
             public int Count;
-            public Bounds3D Bounds;
+            public Bounds3D<double> Bounds;
         }
     }
 }

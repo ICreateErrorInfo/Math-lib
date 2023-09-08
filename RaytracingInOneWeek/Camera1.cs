@@ -1,24 +1,24 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using System;
 
 namespace Raytracing
 {
     class Camera1
     {
-        readonly Point3D  _origin;
-        readonly Point3D  _lowerLeftCorner;
-        readonly Vector3D _horizontal;
-        readonly Vector3D _vertical;
-        readonly Vector3D _u;
-        readonly Vector3D _v;
-        readonly Vector3D _w;
+        readonly Point3D<double>  _origin;
+        readonly Point3D<double>  _lowerLeftCorner;
+        readonly Vector3D<double> _horizontal;
+        readonly Vector3D<double> _vertical;
+        readonly Vector3D<double> _u;
+        readonly Vector3D<double> _v;
+        readonly Vector3D<double> _w;
         readonly double _lensRadius;
         readonly double _time0;
         readonly double _time1;
 
-        public Camera1(Point3D  lookFrom,
-                      Point3D  lookAt,
-                      Vector3D vup, 
+        public Camera1(Point3D<double> lookFrom,
+                      Point3D<double> lookAt,
+                      Vector3D<double> vup, 
                       double   vFov, 
                       double   aspectRatio, 
                       double   aperture,
@@ -26,14 +26,14 @@ namespace Raytracing
                       double   time0 = 0,
                       double   time1 = 0)
         {
-            var theta = Mathe.ToRad(vFov);
+            var theta = MathmaticMethods.ConvertToRadians(vFov);
             var h = Math.Tan(theta / 2);
             var viewportHeight = 2 * h;
             var viewportWidth = aspectRatio * viewportHeight;
 
-            _w = Vector3D.Normalize(lookFrom - lookAt);
-            _u = Vector3D.Normalize(Vector3D.Cross(vup, _w));
-            _v = Vector3D.Cross(_w, _u);
+            _w = (lookFrom - lookAt).Normalize();
+            _u = (Vector3D<double>.CrossProduct(vup, _w)).Normalize();
+            _v = Vector3D<double>.CrossProduct(_w, _u);
 
             _origin = lookFrom;
             _horizontal = focusDistance * viewportWidth * _u;
@@ -47,12 +47,12 @@ namespace Raytracing
 
         public Ray get_ray(double s, double t)
         {
-            Vector3D rd = _lensRadius * Vector3D.RandomInUnitSphere();
-            Vector3D offset = _u * rd.X + _v * rd.Y;
+            Vector3D<double> rd = _lensRadius * Vector3D<double>.RandomInUnitSphere();
+            Vector3D<double> offset = _u * rd.X + _v * rd.Y;
 
             return new Ray(_origin + offset,
                            _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset, double.PositiveInfinity,
-                           Mathe.GetRandomDouble(_time0, _time1));
+                           MathmaticMethods.GetRandomDouble(_time0, _time1));
         }
     }
 }

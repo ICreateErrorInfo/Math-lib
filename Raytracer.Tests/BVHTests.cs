@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using NUnit.Framework;
 using Raytracing.Accelerators;
 using Raytracing.Materials;
@@ -26,11 +26,11 @@ namespace Raytracing.Tests {
             var material3 = new Metal(factory, factory.CreateFromRGB(new double[] {0.65, 0.77, 0.97}, SpectrumMaterialType.Reflectance), 0);
             var material4 = new Metal(factory, factory.CreateFromRGB(new double[] {0.90, 0.90, 0.90}, SpectrumMaterialType.Reflectance), 0);
 
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -15), 2), material2));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(2, 0, -18), 3), material3));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0.0, -10004, -20), 10000), new Lambertian(checker)));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -15), 2), material2));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(2, 0, -18), 3), material3));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
             BVHAccelerator BVH = new BVHAccelerator(primitives, 4, BVHSplitMethod.SAH);
         }
@@ -49,11 +49,11 @@ namespace Raytracing.Tests {
             var material3 = new Metal(factory, factory.CreateFromRGB(new double[] {0.65, 0.77, 0.97}, SpectrumMaterialType.Reflectance), 0);
             var material4 = new Metal(factory, factory.CreateFromRGB(new double[] {0.90, 0.90, 0.90}, SpectrumMaterialType.Reflectance), 0);
 
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -15), 2), material2));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(2, 0, -18), 3), material3));
-            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0.0, -10004, -20), 10000), new Lambertian(checker)));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -15), 2), material2));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(2, 0, -18), 3), material3));
+            primitives.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
             BVHAccelerator BVH = new BVHAccelerator(primitives, 4, BVHSplitMethod.Middle);
         }

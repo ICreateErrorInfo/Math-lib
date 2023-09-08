@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using System;
 using System.Collections.Immutable;
 
@@ -161,7 +161,7 @@ public class SampledSpectrum: ISpectrum {
 
         Func<double, int, double> interp = (double w, int i) =>
         {
-            return Mathe.Lerp((double)(w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i], vals[i + 1]);
+            return MathmaticMethods.Lerp((double)(w - lambda[i]) / (lambda[i + 1] - lambda[i]), vals[i], vals[i + 1]);
         };
 
         for (; i + 1 < n && lambdaEnd >= lambda[i]; ++i) {

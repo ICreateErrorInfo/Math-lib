@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Materials;
 using Raytracing.Mathmatic;
 using Raytracing.Shapes;
@@ -27,8 +27,8 @@ namespace Raytracing.Primitives {
         public override Material GetMaterial() {
             return _material;
         }
-        public override Bounds3D GetWorldBound() {
-            return _shape.ObjectToWorld.m * _shape.GetObjectBound();
+        public override Bounds3D<double> GetWorldBound() {
+            return _shape.ObjectToWorld * _shape.GetObjectBound();
         }
     }
 }

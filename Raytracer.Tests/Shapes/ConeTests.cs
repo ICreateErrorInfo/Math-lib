@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using NUnit.Framework;
 using Raytracing.Materials;
 using Raytracing.Mathmatic;
@@ -46,8 +46,8 @@ namespace Raytracing.Tests.Shapes {
             var s = new Cone(new(0), 1, 1, 360);
 
 
-            Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-1,-1,0)));
-            Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D( 1, 1,1)));
+            Assert.That(s.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-1,-1,0)));
+            Assert.That(s.GetObjectBound().PMax, Is.EqualTo(new Point3D<double>( 1, 1,1)));
         }
         [Test]
         public void TestObjectBound2()
@@ -55,8 +55,8 @@ namespace Raytracing.Tests.Shapes {
             var s = new Cone(new(1), 1, 1, 360);
 
 
-            Assert.That(s.GetObjectBound().pMin, Is.EqualTo(new Point3D(-1, -1, 0)));
-            Assert.That(s.GetObjectBound().pMax, Is.EqualTo(new Point3D(1, 1, 1)));
+            Assert.That(s.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-1, -1, 0)));
+            Assert.That(s.GetObjectBound().PMax, Is.EqualTo(new Point3D<double>(1, 1, 1)));
         }
     }
 }

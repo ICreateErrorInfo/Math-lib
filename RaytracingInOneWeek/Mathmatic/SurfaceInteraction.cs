@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Primitives;
 using Raytracing.Spectrum;
 
@@ -7,16 +7,16 @@ namespace Raytracing.Mathmatic {
         public Primitive Primitive;
         public Ray ScatteredRay;
         public ISpectrum Attenuation;
-        public Point3D P;
-        public Normal3D Normal;
+        public Point3D<double> P;
+        public Normal3D<double> Normal;
         public double UCoordinate;
         public double VCoordinate;
         public bool FrontFace;
         public bool HasIntersection;
         public bool HasScattered;
 
-        public void SetFaceNormal(Ray ray, Normal3D outwardNormal) {
-            FrontFace = Vector3D.Dot(ray.D, (Vector3D)outwardNormal) < 0;
+        public void SetFaceNormal(Ray ray, Normal3D<double> outwardNormal) {
+            FrontFace = (ray.Direction * outwardNormal.ToVector()) < 0;
             Normal = FrontFace ? outwardNormal : -outwardNormal;
         }
     }

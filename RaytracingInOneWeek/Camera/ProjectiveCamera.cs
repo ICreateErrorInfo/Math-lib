@@ -1,9 +1,4 @@
-﻿using Math_lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Moarx.Math;
 
 namespace Raytracing.Camera;
 public class ProjectiveCamera: ICamera {
@@ -19,7 +14,7 @@ public class ProjectiveCamera: ICamera {
                             double resolutionWidth,
                             double resolutionHeight,
                             Transform CameraToScreen,
-                            Bounds2D screenWindow,
+                            Bounds2D<double> screenWindow,
                             double lensRadius,
                             double focalDistance) : base(cameraToWorld, shutterOpenTime, shutterCloseTime, resolutionWidth, resolutionHeight) {
 
@@ -28,10 +23,10 @@ public class ProjectiveCamera: ICamera {
         _FocalDistance = focalDistance;
         
         _ScreenToRaster = Transform.Scale(ResolutionWidth, resolutionHeight, 1) * 
-                          Transform.Scale(1 / (screenWindow.pMax.X - screenWindow.pMin.X),
-                                          1 / (screenWindow.pMin.Y - screenWindow.pMax.Y),
+                          Transform.Scale(1 / (screenWindow.PMax.X - screenWindow.PMin.X),
+                                          1 / (screenWindow.PMin.Y - screenWindow.PMax.Y),
                                           1) * 
-                          Transform.Translate(new Vector3D(-screenWindow.pMin.X, -screenWindow.pMax.Y, 0));
+                          Transform.Translate(new Vector3D<double>(-screenWindow.PMin.X, -screenWindow.PMax.Y, 0));
         _RasterToScreen = _ScreenToRaster.Inverse();
 
         _RasterToCamera = CameraToScreen.Inverse() * _RasterToScreen;

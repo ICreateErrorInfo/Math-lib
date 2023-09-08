@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Math_lib;
+using Moarx.Math;
 using Raytracing.Materials;
 using Raytracing.Mathmatic;
 
@@ -35,18 +35,18 @@ namespace Raytracing.Primitives {
             interaction.HasIntersection = hitAnything;
             return interaction;
         }
-        public override Bounds3D GetWorldBound() {
-            var bound = new Bounds3D();
+        public override Bounds3D<double> GetWorldBound() {
+            var bound = new Bounds3D<double>();
             if (!Objects.Any()) {
                 return bound;
             }
 
-            var currentBoundingBox = new Bounds3D();
+            var currentBoundingBox = new Bounds3D<double>();
             var isFirstBox = true;
 
             foreach (var _object in Objects) {
                 currentBoundingBox = _object.GetWorldBound();
-                bound = isFirstBox ? currentBoundingBox : Bounds3D.Union(bound, currentBoundingBox);
+                bound = isFirstBox ? currentBoundingBox : Bounds3D<double>.Union(bound, currentBoundingBox);
                 isFirstBox = false;
 
             }

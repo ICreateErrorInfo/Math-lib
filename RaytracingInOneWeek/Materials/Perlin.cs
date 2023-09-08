@@ -1,22 +1,22 @@
 ﻿using System;
-using Math_lib;
+using Moarx.Math;
 
 namespace Raytracing.Materials
 {
     public class Perlin
     {
         private static int pointCount = 256;
-        private readonly Vector3D[] _randomFloat;
+        private readonly Vector3D<double>[] _randomFloat;
         private readonly int[] _permX;
         private readonly int[] _permY;
         private readonly int[] _permZ;
 
         public Perlin()
         {
-            _randomFloat = new Vector3D[pointCount];
+            _randomFloat = new Vector3D<double>[pointCount];
             for(int i = 0; i < pointCount; i++)
             {
-                _randomFloat[i] = Vector3D.Normalize(Vector3D.Random(-1, 1));
+                _randomFloat[i] = (Vector3D<double>.Random(-1, 1)).Normalize();
             }
 
             _permX = PerlinGeneratePerm();
@@ -24,7 +24,7 @@ namespace Raytracing.Materials
             _permZ = PerlinGeneratePerm();
         }
 
-        public double Noise(Vector3D p)
+        public double Noise(Vector3D<double> p)
         {
             var u = p.X - Math.Floor(p.X);
             var v = p.Y - Math.Floor(p.Y);
@@ -33,7 +33,7 @@ namespace Raytracing.Materials
             var i = Convert.ToInt32(Math.Floor(p.X));
             var j = Convert.ToInt32(Math.Floor(p.Y));
             var k = Convert.ToInt32(Math.Floor(p.Z));
-            Vector3D[,,] c = new Vector3D[2,2,2];
+            Vector3D<double>[,,] c = new Vector3D<double>[2,2,2];
 
             for(int di = 0; di < 2; di++)
             {
@@ -52,7 +52,7 @@ namespace Raytracing.Materials
 
             return PerlinInterp(c, u, v, w);
         }
-        public double Turb(Vector3D p, int depth = 7)
+        public double Turb(Vector3D<double> p, int depth = 7)
         {
             double accum = 0;
             var tempP = p;
@@ -67,7 +67,7 @@ namespace Raytracing.Materials
 
             return Math.Abs(accum);
         }
-        private static double PerlinInterp(Vector3D[,,] c, double u, double v, double w)
+        private static double PerlinInterp(Vector3D<double>[,,] c, double u, double v, double w)
         {
             var uu = u * u * (3 - 2 * u);
             var vv = v * v * (3 - 2 * v);
@@ -80,11 +80,11 @@ namespace Raytracing.Materials
                 {
                     for (int k = 0; k < 2; k++)
                     {
-                        Vector3D weight_v = new Vector3D(u-i, v-j, w-k);
+                        Vector3D<double> weight_v = new Vector3D<double>(u-i, v-j, w-k);
                         accum += (i * uu + (1 - i) * (1 - uu)) *
                                  (j * vv + (1 - j) * (1 - vv)) *
                                  (k * ww + (1 - k) * (1 - ww)) * 
-                                 Vector3D.Dot(c[i,j,k], weight_v);
+                                 (c[i,j,k] * weight_v);
                     }
                 }
             }
@@ -106,7 +106,7 @@ namespace Raytracing.Materials
         {
             for(int i = n - 1; i > 0; i--)
             {
-                int target = Convert.ToInt32(Mathe.GetRandomDouble(1, i));
+                int target = Convert.ToInt32(MathmaticMethods.GetRandomDouble(1, i));
                 int tmp = p[i];
                 p[i] = p[target];
                 p[target] = tmp;

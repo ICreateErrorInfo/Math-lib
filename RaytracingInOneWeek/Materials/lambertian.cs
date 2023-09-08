@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -18,11 +18,11 @@ namespace Raytracing.Materials {
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            var scatterDirection = (Vector3D)interaction.Normal + Vector3D.RandomInUnitSphere();
+            var scatterDirection = interaction.Normal.ToVector() + Vector3D<double>.RandomInUnitSphere();
 
             if (scatterDirection.NearZero())
             {
-                scatterDirection = (Vector3D)interaction.Normal;
+                scatterDirection = interaction.Normal.ToVector();
             }
 
             interaction.ScatteredRay = new Ray(interaction.P, scatterDirection, double.PositiveInfinity, rayIn.Time);

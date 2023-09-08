@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace Math_lib
 {
-
     public class DirectBitmap {
 
         int BytesPerPixel = 3;
@@ -39,7 +38,7 @@ namespace Math_lib
         public void Clear() {
             Array.Clear(Bits, 0, Bits.Length);
         }
-        public void FloodFill(int x, int y, Color newColor) {
+        public void FloodiFill(int x, int y, Color newColor) {
 
             newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...
 
@@ -100,6 +99,21 @@ namespace Math_lib
         public static DirectBitmap FromArray(byte[] data, int width, int height)
         {
             return new DirectBitmap(width, height, data, 1);
+        }
+        public System.Windows.Media.ImageSource ToImageSource() {
+
+            var bs = System.Windows.Media.Imaging.BitmapSource.Create(
+                pixelWidth: Width,
+                pixelHeight: Height,
+                dpiX: 96,
+                dpiY: 96,
+                pixelFormat: System.Windows.Media.PixelFormats.Bgr24,
+                palette: null,
+                pixels: Bits,
+                stride: Stride);
+
+            return bs;
+
         }
 
         public Color this[int x, int y] {

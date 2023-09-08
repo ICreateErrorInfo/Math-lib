@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Math_lib;
 using System.Diagnostics.CodeAnalysis;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Mathmatic;
+using Moarx.Math;
 
 namespace Raytracing.Accelerators;
 
 class BVHNode: Primitive {
     private Primitive _left;
     private Primitive _right;
-    private Bounds3D _box;
+    private Bounds3D<double> _box;
 
     public BVHNode() {
 
@@ -23,7 +23,7 @@ class BVHNode: Primitive {
         _box = node._box;
     }
     public BVHNode(List<Primitive> objects, int start, int end, double time0, double time1) {
-        var axis = Mathe.GetRandomInt(0, 2);
+        var axis = MathmaticMethods.GetRandomInt(0, 2);
 
         IComparer<Primitive> comparator;
         if (axis == 0) {
@@ -54,38 +54,38 @@ class BVHNode: Primitive {
             _right = new BVHNode(objects, mid, end, time0, time1);
         }
 
-        var boxLeft = new Bounds3D();
-        var boxRight = new Bounds3D();
+        var boxLeft = new Bounds3D<double>();
+        var boxRight = new Bounds3D<double>();
 
         boxLeft = _left.GetWorldBound();
         boxRight = _right.GetWorldBound();
 
-        _box = Bounds3D.Union(boxLeft, boxRight);
+        _box = Bounds3D<double>.Union(boxLeft, boxRight);
     }
 
     public static int box_compare(Primitive a, Primitive b, int axis) {
-        var boxA = new Bounds3D();
-        var boxB = new Bounds3D();
+        var boxA = new Bounds3D<double>();
+        var boxB = new Bounds3D<double>();
 
         boxA = a.GetWorldBound();
         boxB = b.GetWorldBound();
 
         if (axis == 0) {
-            if (boxA.pMin.X < boxB.pMin.X) {
+            if (boxA.PMin.X < boxB.PMin.X) {
                 return -1;
             } else {
                 return 1;
             }
         }
         if (axis == 1) {
-            if (boxA.pMin.Y < boxB.pMin.Y) {
+            if (boxA.PMin.Y < boxB.PMin.Y) {
                 return -1;
             } else {
                 return 1;
             }
         }
         if (axis == 2) {
-            if (boxA.pMin.Z < boxB.pMin.Z) {
+            if (boxA.PMin.Z < boxB.PMin.Z) {
                 return -1;
             } else {
                 return 1;
@@ -94,7 +94,7 @@ class BVHNode: Primitive {
 
         return 0;
     }
-    public override Bounds3D GetWorldBound() {
+    public override Bounds3D<double> GetWorldBound() {
         return _box;
     }
     public override SurfaceInteraction Intersect(Ray ray, SurfaceInteraction intersection) {

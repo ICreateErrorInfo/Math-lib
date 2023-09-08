@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 
 namespace Raytracing.Shapes {
@@ -8,6 +8,6 @@ namespace Raytracing.Shapes {
         public Transform ObjectToWorld;
 
         public abstract bool Intersect(Ray r, out double tMax, out SurfaceInteraction interaction);
-        public abstract Bounds3D GetObjectBound();
+        public abstract Bounds3D<double> GetObjectBound();
     }
 }

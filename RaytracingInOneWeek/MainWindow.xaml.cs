@@ -1,12 +1,11 @@
-﻿using Math_lib;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using Moarx.Math;
 using Raytracing.Camera;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Shapes;
 using Raytracing.Spectrum;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 
 namespace Raytracing {
@@ -54,10 +53,10 @@ namespace Raytracing {
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
-            List<Point3D> Points = new List<Point3D>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
+            List<Point3D<double>> Points = new List<Point3D<double>>() { new(-2, 0, 0), new(2, 0, 0), new(0, 2, 0) };
 
-            Transform objToWorld = Transform.Translate(new Vector3D(0));
-            Transform worldToObj = Transform.Translate(new Vector3D(0));
+            Transform objToWorld = Transform.Translate(new Vector3D<double>(0));
+            Transform worldToObj = Transform.Translate(new Vector3D<double>(0));
 
             TriangleMesh mesh = new TriangleMesh(objToWorld, nTri, indices, nVert, Points, material);
 
@@ -77,7 +76,7 @@ namespace Raytracing {
             PrimitiveList h = new(new GeometricPrimitive(c, material));
             h.Add(new GeometricPrimitive(s, material2));
 
-            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,0), new(0,-1,0.001), 20), _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 18);
+            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,0), new(0,-1,0.001), 20), _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance));
 
             return scene;
         }
@@ -110,13 +109,13 @@ namespace Raytracing {
             var material3 = new Metal(_factory, _factory.CreateFromRGB(new double[] {0.65, 0.77, 0.97 }, SpectrumMaterialType.Reflectance), 0);
             var material4 = new Metal(_factory, _factory.CreateFromRGB(new double[] {0.90, 0.90, 0.90 }, SpectrumMaterialType.Reflectance), 0);
 
-            var center2 = new Point3D(0, 0, -20) + new Vector3D(0, 0.5, 0);
+            var center2 = new Point3D<double>(0, 0, -20) + new Vector3D<double>(0, 0.5, 0);
 
-            world.Add(new GeometricPrimitive(new Sphere(new Point3D(0.0, -10004, -20), 10000), new Lambertian(checker)));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0.0, -10004, -20), 10000), new Lambertian(checker)));
             //world.Add(new GeometricPrimitive(new MovingSphere(new Point3D(0, 0, -20), center2, 0, 1, 4), material1));
-            world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, -1, -15), 2), material2));
-            world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
-            world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, -1, -15), 2), material2));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
+            world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
             Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50, 20), _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 400, 200);
 
@@ -127,8 +126,8 @@ namespace Raytracing {
 
             var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {0.2, 0.3, 0.1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {0.9, 0.9, 0.9 }, SpectrumMaterialType.Reflectance));
 
-            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -10, 0), 10), new Lambertian(checker)));
-            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 10, 0), 10), new Lambertian(checker)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -10, 0), 10), new Lambertian(checker)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 10, 0), 10), new Lambertian(checker)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 100,
@@ -143,8 +142,8 @@ namespace Raytracing {
 
             var pertext = new NoiseTexture(_factory, 4);
 
-            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
-            objects.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
+            objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
 
             Scene scene = new Scene(objs: objects,
                                     spp: 100,
@@ -158,7 +157,7 @@ namespace Raytracing {
             var earthTexture = new ImageTexture(_factory, "");
 
             var earthSurface = new Lambertian(earthTexture);
-            var globe = new GeometricPrimitive(new Sphere(new Point3D(0, 0, 0), 2), earthSurface);
+            var globe = new GeometricPrimitive(new Sphere(new Point3D<double>(0, 0, 0), 2), earthSurface);
             var ret = new PrimitiveList();
             ret.Add(globe);
 
@@ -176,8 +175,8 @@ namespace Raytracing {
             PrimitiveList objekts = new PrimitiveList();
 
             var pertext = new NoiseTexture(_factory, 4);
-            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, -1000, 0), 1000), new Lambertian(pertext)));
-            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D(0, 2, 0), 2), new Lambertian(pertext)));
+            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
+            objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
 
             var difflight = new DiffuseLight(_factory, _factory.CreateFromRGB(new double[] { 4, 4, 4 }, SpectrumMaterialType.Reflectance));
             objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
@@ -223,7 +222,7 @@ namespace Raytracing {
             return scene;
         }
 
-        private PerspectiveCamera CreateCamera(int width, int height, Point3D origin, Point3D lookAt, int fov, double focusDistance = 0) {
+        private PerspectiveCamera CreateCamera(int width, int height, Point3D<double> origin, Point3D<double> lookAt, int fov, double focusDistance = 0) {
             double aspectRatio = width / (double)height;
             var h = 1;
             var viewportHeight = 2 * h / 2;

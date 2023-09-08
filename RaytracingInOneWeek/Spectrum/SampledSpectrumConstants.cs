@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using System.Collections.Immutable;
 
 namespace Raytracing.Spectrum; 
@@ -985,9 +985,9 @@ public readonly struct SampledSpectrumConstants {
         rgbIllum2SpectBlue = new SampledSpectrum();
 
         for (var i = 0; i < nSpectralSamples; ++i) {
-            var wl0 = Mathe.Lerp(i / (double)nSpectralSamples,
+            var wl0 = MathmaticMethods.Lerp(i / (double)nSpectralSamples,
                              sampledLambdaStart, sampledLambdaEnd);
-            var wl1 = Mathe.Lerp((i + 1) / (double)nSpectralSamples,
+            var wl1 = MathmaticMethods.Lerp((i + 1) / (double)nSpectralSamples,
                              sampledLambdaStart, sampledLambdaEnd);
 
             X.coefficients[i] = SampledSpectrum.AverageSpectrumSamples(CIELambda, CIEX, nCIESamples,
@@ -999,9 +999,9 @@ public readonly struct SampledSpectrumConstants {
         }
 
         for (var i = 0; i < nSpectralSamples; ++i) {
-            var wl0 = Mathe.Lerp(i / (double)nSpectralSamples,
+            var wl0 = MathmaticMethods.Lerp(i / (double)nSpectralSamples,
                          sampledLambdaStart, sampledLambdaEnd);
-            var wl1 = Mathe.Lerp((i + 1) / (double)nSpectralSamples,
+            var wl1 = MathmaticMethods.Lerp((i + 1) / (double)nSpectralSamples,
                          sampledLambdaStart, sampledLambdaEnd);
             rgbRefl2SpectWhite.coefficients[i] =
                 SampledSpectrum.AverageSpectrumSamples(RGB2SpectLambda, RGBRefl2SpectWhite,

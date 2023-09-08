@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -11,7 +11,7 @@ namespace Raytracing.Materials {
             Factory = factory;
         }
 
-        public virtual ISpectrum Emitted(double u, double v, Point3D p)
+        public virtual ISpectrum Emitted(double u, double v,Point3D<double> p)
         {
             return Factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
         }

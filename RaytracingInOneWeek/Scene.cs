@@ -1,5 +1,4 @@
-﻿using Math_lib;
-using Raytracing.Accelerators;
+﻿using Raytracing.Accelerators;
 using Raytracing.Camera;
 using Raytracing.Primitives;
 using Raytracing.Spectrum;

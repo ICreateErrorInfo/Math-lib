@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Primitives;
 using System;
@@ -51,10 +51,10 @@ namespace Raytracing.Accelerators {
             BuildNode node = new BuildNode();
             totalNodes++;
 
-            Bounds3D bounds = new Bounds3D();
+            Bounds3D<double> bounds = new Bounds3D<double>();
             for (int i = start; i < end; i++)
             {
-                bounds = Bounds3D.Union(bounds, primitiveInfos[i].Bounds);
+                bounds = Bounds3D<double>.Union(bounds, primitiveInfos[i].Bounds);
             }
 
             int nPrimitives = end - start;
@@ -71,15 +71,15 @@ namespace Raytracing.Accelerators {
             }
             else
             {
-                Bounds3D centroidBounds = new Bounds3D();
+                Bounds3D<double> centroidBounds = new Bounds3D<double>();
                 for (int i = start; i < end; i++)
                 {
-                    centroidBounds = Bounds3D.Union(centroidBounds, primitiveInfos[i].Centroid);
+                    centroidBounds = Bounds3D<double>.Union(centroidBounds, primitiveInfos[i].Centroid);
                 }
-                int dim = centroidBounds.MaximumExtent();
+                int dim = centroidBounds.MaxDimension();
 
                 int mid = (start + end) / 2;
-                if (centroidBounds.pMax[dim] == centroidBounds.pMin[dim])
+                if (centroidBounds.PMax[dim] == centroidBounds.PMin[dim])
                 {
                     int firstPrimitiveOffset = orderedPrimitives.Count;
                     for (int i = start; i < end; i++)
@@ -96,9 +96,9 @@ namespace Raytracing.Accelerators {
                     {
                         case BVHSplitMethod.Middle:
                             {
-                                double pmid = (centroidBounds.pMin[dim] + centroidBounds.pMax[dim]) / 2;
+                                double pmid = (centroidBounds.PMin[dim] + centroidBounds.PMax[dim]) / 2;
 
-                                primitiveInfos = Mathe.Partition(primitiveInfos, start, end, pi => pi.Centroid[dim] < pmid, out mid);
+                                primitiveInfos = MathmaticMethods.Partition(primitiveInfos, start, end, pi => pi.Centroid[dim] < pmid, out mid);
 
                                 if (mid != start && mid != end)
                                 {
@@ -129,7 +129,7 @@ namespace Raytracing.Accelerators {
                                     BucketInfo[] buckets = new BucketInfo[BucketCount];
                                     for (int i = 0; i < buckets.Length; i++)
                                     {
-                                        buckets[i].Bounds = new Bounds3D(new(0));
+                                        buckets[i].Bounds = new Bounds3D<double>(new(0));
                                     }
 
                                     for (int i = start; i < end; ++i)
@@ -137,25 +137,25 @@ namespace Raytracing.Accelerators {
                                         int b = (int)(BucketCount * centroidBounds.Offset(primitiveInfos[i].Centroid)[dim]);
                                         if (b == BucketCount) b = BucketCount - 1;
                                         buckets[b].Count++;
-                                        buckets[b].Bounds = Bounds3D.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
+                                        buckets[b].Bounds = Bounds3D<double>.Union(buckets[b].Bounds, primitiveInfos[i].Bounds);
                                     }
 
                                     double[] cost = new double[BucketCount - 1];
                                     for (int i = 0; i < BucketCount - 1; ++i)
                                     {
-                                        Bounds3D b0 = new Bounds3D();
-                                        Bounds3D b1 = new Bounds3D();
+                                        Bounds3D<double> b0 = new Bounds3D<double>();
+                                        Bounds3D<double> b1 = new Bounds3D<double>();
 
                                         int count0 = 0, count1 = 0;
                                         for (int j = 0; j <= i; ++j)
                                         {
-                                            b0 = Bounds3D.Union(b0, buckets[j].Bounds);
+                                            b0 = Bounds3D<double>.Union(b0, buckets[j].Bounds);
                                             count0 += buckets[j].Count;
                                         }
 
                                         for (int j = i + 1; j < BucketCount; ++j)
                                         {
-                                            b1 = Bounds3D.Union(b1, buckets[j].Bounds);
+                                            b1 = Bounds3D<double>.Union(b1, buckets[j].Bounds);
                                             count1 += buckets[j].Count;
                                         }
 
@@ -177,7 +177,7 @@ namespace Raytracing.Accelerators {
                                     double leafCost = nPrimitives;
                                     if (nPrimitives > _maxPrimitivesInNode || minCost < leafCost)
                                     {
-                                        primitiveInfos = Mathe.Partition(primitiveInfos, start, end, pi =>
+                                        primitiveInfos = MathmaticMethods.Partition(primitiveInfos, start, end, pi =>
                                         {
                                             int b = (int)(BucketCount * centroidBounds.Offset(pi.Centroid)[dim]);
                                             if (b == BucketCount) b = BucketCount - 1;
@@ -303,7 +303,7 @@ namespace Raytracing.Accelerators {
             x = (x | (x << 2)) & 0b00001001001001001001001001001001;
             return x;
         }
-        private Int32 EncodeMorton3(Vector3D v)
+        private Int32 EncodeMorton3(Vector3D<double> v)
         {
             return (LeftShift3((Int32)v.Z) << 2 |
                    (LeftShift3((Int32)v.Y) << 1) |
@@ -352,9 +352,9 @@ namespace Raytracing.Accelerators {
         }
         */
 
-        public override Bounds3D GetWorldBound()
+        public override Bounds3D<double> GetWorldBound()
         {
-            return _nodes.Count() == 1 ? _nodes[0].Bounds : new Bounds3D();
+            return _nodes.Count() == 1 ? _nodes[0].Bounds : new Bounds3D<double>();
         }
 
         public override SurfaceInteraction Intersect(Ray ray, SurfaceInteraction intersection)
@@ -362,7 +362,7 @@ namespace Raytracing.Accelerators {
             intersection = new SurfaceInteraction();
 
             bool hit = false;
-            Vector3D invDir = new Vector3D(1 / ray.D.X, 1 / ray.D.Y, 1 / ray.D.Z);
+            Vector3D<double> invDir = new Vector3D<double>(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
             bool[] dirIsNeg = new bool[] { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
 
             int toVisitOffset = 0, currentNodeIndex = 0;

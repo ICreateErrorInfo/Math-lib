@@ -1,5 +1,5 @@
 ﻿using System;
-using Math_lib;
+using Moarx.Math;
 using Raytracing.Spectrum;
 
 namespace Raytracing.Materials {
@@ -11,7 +11,7 @@ namespace Raytracing.Materials {
             Factory = factory;
         }
 
-        public abstract ISpectrum Value(double u, double v, Point3D p);
+        public abstract ISpectrum Value(double u, double v,Point3D<double> p);
     }
     class SolidColor : Texture
     {
@@ -30,7 +30,7 @@ namespace Raytracing.Materials {
             _colorValue = factory.CreateFromRGB(new double[] { red, green, blue }, SpectrumMaterialType.Reflectance);
         }
 
-        public override ISpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v,Point3D<double> p)
         {
             return _colorValue;
         }
@@ -55,7 +55,7 @@ namespace Raytracing.Materials {
             _odd = new SolidColor(factory, color2);
         }
 
-        public override ISpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v,Point3D<double> p)
         {
             var sines = Math.Sin(10 * p.X) * Math.Sin(10 * p.Y) * Math.Sin(10 * p.Z);
             if(sines < 0)
@@ -82,9 +82,9 @@ namespace Raytracing.Materials {
             _scale = scale;
         }
 
-        public override ISpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v,Point3D<double> p)
         {
-            Vector3D rgb = new Vector3D(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
+            Vector3D<double> rgb = new Vector3D<double>(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
             return Factory.CreateFromRGB(new double[] {rgb.X, rgb.Y, rgb.Z}, SpectrumMaterialType.Reflectance);
         }
     }

@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Primitives;
 
@@ -23,33 +23,33 @@ namespace Raytracing.Shapes {
             interaction = new SurfaceInteraction();
 
             //Get Triangle Points
-            Point3D p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
-            Point3D p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
-            Point3D p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
+           Point3D<double> p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+           Point3D<double> p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+           Point3D<double> p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
             //Translate
-            Point3D p0t = p0 - ray.O.ToVector();
-            Point3D p1t = p1 - ray.O.ToVector();
-            Point3D p2t = p2 - ray.O.ToVector();
+           Point3D<double> p0t = p0 - ray.Origin.ToVector();
+           Point3D<double> p1t = p1 - ray.Origin.ToVector();
+           Point3D<double> p2t = p2 - ray.Origin.ToVector();
 
             //Permute
-            int kz = Vector3D.MaxDimension(Vector3D.Abs(ray.D));
+            int kz = Vector3D<double>.MaxDimension(Vector3D<double>.Abs(ray.Direction));
             int kx = kz + 1; if (kx == 3) kx = 0;
             int ky = kx + 1; if (ky == 3) ky = 0;
-            Vector3D d = Vector3D.Permute(ray.D, kx, ky, kz);
-            p0t = Point3D.Permute(p0t, kx, ky, kz);
-            p1t = Point3D.Permute(p1t, kx, ky, kz);
-            p2t = Point3D.Permute(p2t, kx, ky, kz);
+            Vector3D<double> d = Vector3D<double>.Permute(ray.Direction, kx, ky, kz);
+            p0t = Point3D<double>.Permute(p0t, kx, ky, kz);
+            p1t = Point3D<double>.Permute(p1t, kx, ky, kz);
+            p2t = Point3D<double>.Permute(p2t, kx, ky, kz);
 
             //Shear
             double sx = -d.X / d.Z;
             double sy = -d.Y / d.Z;
             double sz = 1.0 / d.Z;
-            p0t += new Point3D(sx * p0t.Z,
+            p0t += new Point3D<double>(sx * p0t.Z,
                                sy * p0t.Z, 0);
-            p1t += new Point3D(sx * p1t.Z,
+            p1t += new Point3D<double>(sx * p1t.Z,
                                sy * p1t.Z, 0);
-            p2t += new Point3D(sx * p2t.Z,
+            p2t += new Point3D<double>(sx * p2t.Z,
                                sy * p2t.Z, 0);
 
             //edge function coefficients
@@ -67,9 +67,9 @@ namespace Raytracing.Shapes {
                 return false;
             }
 
-            p0t *= new Point3D(1, 1, sz);
-            p1t *= new Point3D(1, 1, sz);
-            p2t *= new Point3D(1, 1, sz);
+            p0t *= new Point3D<double>(1, 1, sz);
+            p1t *= new Point3D<double>(1, 1, sz);
+            p2t *= new Point3D<double>(1, 1, sz);
             double tScaled = e0 * p0t.Z + e1 * p1t.Z + e2 * p2t.Z;
             if (det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
             {
@@ -88,27 +88,27 @@ namespace Raytracing.Shapes {
 
             tMax = t;
             interaction.P = b0 * p0 + b1 * p1 + b2 * p2;
-            Normal3D outwardNormal = (Normal3D)Vector3D.Normalize(Vector3D.Cross(p1 - p0, p2 - p0));
+            Normal3D<double> outwardNormal = new((Vector3D<double>.CrossProduct(p1 - p0, p2 - p0)).Normalize());
             interaction.SetFaceNormal(ray, outwardNormal);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            Point3D p0 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
-            Point3D p1 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
-            Point3D p2 = WorldToObject.m * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
+           Point3D<double> p0 = WorldToObject * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+           Point3D<double> p1 = WorldToObject * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+           Point3D<double> p2 = WorldToObject * _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
-            return Bounds3D.Union(new Bounds3D(p0, p1), p2);
+            return Bounds3D<double>.Union(new Bounds3D<double>(p0, p1), p2);
         }
 
         public double Area()
         {
-            Point3D p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
-            Point3D p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
-            Point3D p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
+           Point3D<double> p0 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex]];
+           Point3D<double> p1 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 1]];
+           Point3D<double> p2 = _mesh.Point[_mesh.VertexIndices[_firstVertexIndex + 2]];
 
-            return 0.5 * Vector3D.Cross(p1 - p0, p2 - p0).GetLength();
+            return 0.5 * Vector3D<double>.CrossProduct(p1 - p0, p2 - p0).GetLength();
         }
     }
 }

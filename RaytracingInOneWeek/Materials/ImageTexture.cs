@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Spectrum;
 using System;
 using System.Drawing;
@@ -46,7 +46,7 @@ namespace Raytracing.Materials {
             _bytesPerScanline = BytesPerPixel * _width;
         }
 
-        public override ISpectrum Value(double u, double v, Point3D p)
+        public override ISpectrum Value(double u, double v,Point3D<double> p)
         {
             if (_data == null)
             {
@@ -65,16 +65,16 @@ namespace Raytracing.Materials {
             var colorScale = 1.0 / 255;
 
             var index =  j * _bytesPerScanline + i * BytesPerPixel;
-            Vector3D pixel = new Vector3D(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
+            Vector3D<double> pixel = new Vector3D<double>(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
             return Factory.CreateFromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SpectrumMaterialType.Reflectance);
         }
-        public Vector3D GetPixel(int x, int y)
+        public Vector3D<double> GetPixel(int x, int y)
         {
             var index = y * _bytesPerScanline + x * BytesPerPixel;
-            Vector3D pixel = new Vector3D(_data[index], _data[index + 1], _data[index + 2]);
+            Vector3D<double> pixel = new Vector3D<double>(_data[index], _data[index + 1], _data[index + 2]);
 
-            return new Vector3D(pixel.X, pixel.Y, pixel.Z);
+            return new Vector3D<double>(pixel.X, pixel.Y, pixel.Z);
         }
         public Bitmap ToBitmap()
         {
@@ -85,7 +85,7 @@ namespace Raytracing.Materials {
                 for (int x = 0; x < _width; x++)
                 {
                     var p = y * _width + x;
-                    Vector3D c = GetPixel(x, y);
+                    Vector3D<double> c = GetPixel(x, y);
                     bmp.SetPixel(x, y, Color.FromArgb(255, (int)c.X, (int)c.Y, (int)c.Z));
                 }
             }

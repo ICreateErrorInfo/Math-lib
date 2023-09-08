@@ -73,9 +73,20 @@ public readonly record struct Point3D<T>
                               T.Max(p.Y, p1.Y),
                               T.Max(p.Z, p1.Z));
     } //TODO Naming, UnitTests
+    public static Point3D<double> Permute(Point3D<double> p, int x, int y, int z) {
+        return new Point3D<double>(p[x], p[y], p[z]);
+    }
+    public static Point3D<double> Round(Point3D<double> p, int decimals) {
+        return new((double)System.Math.Round((decimal)p.X, decimals), (double)System.Math.Round((decimal)p.Y, decimals), (double)System.Math.Round((decimal)p.Z, decimals));
+    }
 
 
     public static Point3D<T> operator +(Point3D<T> left, Vector3D<T> right) => new() {
+        X = left.X + right.X,
+        Y = left.Y + right.Y,
+        Z = left.Z + right.Z
+    };
+    public static Point3D<T> operator +(Point3D<T> left, Point3D<T> right) => new() {
         X = left.X + right.X,
         Y = left.Y + right.Y,
         Z = left.Z + right.Z
@@ -120,6 +131,11 @@ public readonly record struct Point3D<T>
             Z = right.Z * scalar
         };
     }
+    public static Point3D<T> operator *(Point3D<T> left, Point3D<T> right) => new() {
+        X = left.X * right.X,
+        Y = left.Y * right.Y,
+        Z = left.Z * right.Z
+    };
 
     public static Point3D<T> operator /(Point3D<T> left, T scalar) {
         if (T.IsNaN(scalar))

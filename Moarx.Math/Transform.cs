@@ -219,7 +219,23 @@ public class Transform {
         SquareMatrix cameraFromWorld = new SquareMatrix(worldFromCamera).Inverse().Value;
         return new Transform(cameraFromWorld, new SquareMatrix(worldFromCamera));
     }
-    
+    public static Transform Orthographic(double zNear, double zFar) {
+        return Scale(1, 1, 1 / (zFar - zNear)) *
+               Translate(new Vector3D<double>(0, 0, -zNear));
+    }
+    public static Transform Perspective(double fov, double near, double far) {
+        SquareMatrix persp = new SquareMatrix(new double[,] {
+                {1, 0, 0, 0 },
+                {0, 1, 0, 0 },
+                {0, 0, far/(far-near), -((far*near) / (far - near))},
+                {0, 0, 1,0 }
+            });
+
+        double invertTanAngle = (double)1 / System.Math.Tan(MathmaticMethods.ConvertToRadians(fov) / 2);
+
+        return Scale(invertTanAngle, invertTanAngle, 1) * new Transform(persp);
+    }
+
 
     public static Point3D<double> operator *(Transform t, Point3D<double> p) {
         SquareMatrix m = t.GetMatrix();
@@ -252,7 +268,7 @@ public class Transform {
         Point3D<double> o = t * r.Origin;
         Vector3D<double> d = t * r.Direction;
 
-        return new Ray(o, d);
+        return new Ray(o, d, r.TMax, r.Time);
     }
     public static Bounds3D<double> operator *(Transform t, Bounds3D<double> b) {
         Bounds3D<double> bt = new Bounds3D<double>();

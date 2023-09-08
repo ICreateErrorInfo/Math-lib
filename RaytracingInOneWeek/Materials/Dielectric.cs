@@ -1,5 +1,5 @@
 ﻿using System;
-using Math_lib;
+using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -18,20 +18,20 @@ namespace Raytracing.Materials {
             var attenuation = Factory.CreateFromRGB(new double[] { 1, 1, 1 }, SpectrumMaterialType.Reflectance);
             double refractionRatio = interaction.FrontFace ? (1 / _ir) : _ir;
 
-            Vector3D unitDirection = Vector3D.Normalize(rayIn.D);
-            double cosTheta = Math.Min(Vector3D.Dot(unitDirection * -1, (Vector3D)interaction.Normal), 1);
+            Vector3D<double> unitDirection = (rayIn.Direction).Normalize();
+            double cosTheta = Math.Min(((unitDirection * -1) * interaction.Normal.ToVector()), 1);
             double sinTheta = Math.Sqrt(1 - cosTheta * cosTheta);
 
             bool cannotRefract = refractionRatio * sinTheta > 1;
-            Vector3D direction;
+            Vector3D<double> direction;
 
             if (cannotRefract)
             {
-                direction = Vector3D.Reflect(unitDirection, (Vector3D)interaction.Normal);
+                direction = Vector3D<double>.Reflect(unitDirection, interaction.Normal.ToVector());
             }
             else
             {
-                direction = Vector3D.Refract(unitDirection, (Vector3D)interaction.Normal, refractionRatio);
+                direction = Vector3D<double>.Refract(unitDirection, interaction.Normal.ToVector(), refractionRatio);
             }
 
             var scattered = new Ray(interaction.P, direction, double.PositiveInfinity, rayIn.Time);

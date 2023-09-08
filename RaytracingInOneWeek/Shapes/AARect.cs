@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 
 namespace Raytracing.Shapes {
@@ -25,15 +25,15 @@ namespace Raytracing.Shapes {
         {
             tMax = 0;
             interaction = new SurfaceInteraction();
-            var t = (_k - ray.O.Z) / ray.D.Z;
+            var t = (_k - ray.Origin.Z) / ray.Direction.Z;
 
             if(t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
 
-            var x = ray.O.X + t * ray.D.X;
-            var y = ray.O.Y + t * ray.D.Y;
+            var x = ray.Origin.X + t * ray.Direction.X;
+            var y = ray.Origin.Y + t * ray.Direction.Y;
 
             if(x < _x0 || x > _x1 || y < _y0 || y > _y1)
             {
@@ -44,15 +44,15 @@ namespace Raytracing.Shapes {
             interaction.VCoordinate = (y - _y0) / (_y1 - _y0);
             tMax = t;
 
-            var outwardNormal = new Normal3D(0,0,1);
+            var outwardNormal = new Normal3D<double>(0,0,1);
             interaction.SetFaceNormal(ray, outwardNormal);
             interaction.P = ray.At(t);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            return new Bounds3D(new Point3D(_x0, _y0, _k - 0.0001), new Point3D(_x1, _y1, _k + 0.0001));
+            return new Bounds3D<double>(new Point3D<double>(_x0, _y0, _k - 0.0001), new Point3D<double>(_x1, _y1, _k + 0.0001));
         }
     }
     class XZRect : Shape
@@ -78,15 +78,15 @@ namespace Raytracing.Shapes {
         {
             tMax = 0;
             interaction = new SurfaceInteraction();
-            var t = (_k - ray.O.Y) / ray.D.Y;
+            var t = (_k - ray.Origin.Y) / ray.Direction.Y;
 
             if (t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
 
-            var x = ray.O.X + t * ray.D.X;
-            var z = ray.O.Z + t * ray.D.Z;
+            var x = ray.Origin.X + t * ray.Direction.X;
+            var z = ray.Origin.Z + t * ray.Direction.Z;
 
             if (x < _x0 || x > _x1 || z < _z0 || z > _z1)
             {
@@ -96,15 +96,15 @@ namespace Raytracing.Shapes {
             interaction.UCoordinate = (x - _x0) / (_x1 - _x0);
             interaction.VCoordinate = (z - _z0) / (_z1 - _z0);
             tMax = t;
-            var outwardNormal = new Normal3D(0, 1, 0);
+            var outwardNormal = new Normal3D<double>(0, 1, 0);
             interaction.SetFaceNormal(ray, outwardNormal);
             interaction.P = ray.At(t);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            return new Bounds3D(new Point3D(_x0, _k - 0.0001, _z0), new Point3D(_x1, _k + 0.0001, _z1));
+            return new Bounds3D<double>(new Point3D<double>(_x0, _k - 0.0001, _z0), new Point3D<double>(_x1, _k + 0.0001, _z1));
         }
     }
     class YZRect : Shape
@@ -130,14 +130,14 @@ namespace Raytracing.Shapes {
         {
             tMax = 0;
             isect = new SurfaceInteraction();
-            var t = (_k - ray.O.X) / ray.D.X;
+            var t = (_k - ray.Origin.X) / ray.Direction.X;
             if (t < 0.01 || t > ray.TMax)
             {
                 return false;
             }
 
-            var y = ray.O.Y + t * ray.D.Y;
-            var z = ray.O.Z + t * ray.D.Z;
+            var y = ray.Origin.Y + t * ray.Direction.Y;
+            var z = ray.Origin.Z + t * ray.Direction.Z;
 
             if (y < _y0 || y > _y1 || z < _z0 || z > _z1)
             {
@@ -147,15 +147,15 @@ namespace Raytracing.Shapes {
             isect.UCoordinate = (y - _y0) / (_y1 - _y0);
             isect.VCoordinate = (z - _z0) / (_z1 - _z0);
             tMax = t;
-            var outwardNormal = new Normal3D(1, 0, 0);
+            var outwardNormal = new Normal3D<double>(1, 0, 0);
             isect.SetFaceNormal(ray, outwardNormal);
             isect.P = ray.At(t);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            return new Bounds3D(new Point3D(_k - 0.0001, _y0, _z0), new Point3D(_k + 0.0001,_y1, _z1));
+            return new Bounds3D<double>(new Point3D<double>(_k - 0.0001, _y0, _z0), new Point3D<double>(_k + 0.0001,_y1, _z1));
         }
     }
 }

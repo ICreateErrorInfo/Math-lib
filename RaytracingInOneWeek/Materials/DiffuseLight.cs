@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -25,7 +25,7 @@ namespace Raytracing.Materials {
             return interaction;
         }
 
-        public override ISpectrum Emitted(double u, double v, Point3D p)
+        public override ISpectrum Emitted(double u, double v,Point3D<double> p)
         {
             return _emit.Value(u, v, p);
         }

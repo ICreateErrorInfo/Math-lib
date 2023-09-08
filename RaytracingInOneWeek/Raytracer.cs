@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using Math_lib;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +10,8 @@ using Raytracing.Spectrum;
 using Raytracing.Primitives;
 using Raytracing.Camera;
 using Raytracing.Mathmatic;
+using Moarx.Math;
+using Moarx.Rasterizer;
 
 namespace Raytracing {
     public class Raytracer
@@ -86,7 +87,7 @@ namespace Raytracing {
                     {
                         var u = (i + 0.5 - ((double)RandX[s] / byte.MaxValue));
                         var v = (j + 0.5 - ((double)RandY[s] / byte.MaxValue));
-                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D(u, v)};
+                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v)};
                         Ray r = scene.Camera.GenerateRay(sample).generatedRay;
                         pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth);
                     }
@@ -140,13 +141,14 @@ namespace Raytracing {
 
         DirectBitmap ToBitmap(ImageData imageData)
         {
-            DirectBitmap bmp = new DirectBitmap(imageData.Width, imageData.Height);
+            DirectBitmap bmp = DirectBitmap.Create(imageData.Width, imageData.Height);
 
             for (int j = 0; j < imageData.Height; j++)
             {
                 for (int i = 0; i < imageData.Width; i++)
                 {
-                    bmp.SetPixel(i, (j - (imageData.Height - 1)) * -1, ToColor(imageData.Data[j, i], imageData.SamplesPerPixel));
+                    var color = ToColor(imageData.Data[j, i], imageData.SamplesPerPixel);
+                    bmp.SetPixel(i, (j - (imageData.Height - 1)) * -1, DirectColor.FromRgb(color.R, color.G, color.B));
                 }
             }
 
@@ -202,9 +204,9 @@ namespace Raytracing {
                 pixelHeight: bitmap.Height,
                 dpiX: 96,
                 dpiY: 96,
-                pixelFormat: PixelFormats.Bgr24,
+                pixelFormat: PixelFormats.Bgra32,
                 palette: null,
-                pixels: bitmap.Bits,
+                pixels: bitmap.GetBytes(),
                 stride: bitmap.Stride);
 
             return bs;

@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
     <ProjectReference Include="..\RaytracingInOneWeek\Raytracing.csproj" />
   </ItemGroup>
 

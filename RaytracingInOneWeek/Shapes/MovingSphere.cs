@@ -1,12 +1,12 @@
 ﻿using System;
-using Math_lib;
+using Moarx.Math;
 using Raytracing.Mathmatic;
 
 namespace Raytracing.Shapes {
     public class MovingSphere : Shape
     {
-        private readonly Point3D  _center0;
-        private readonly Point3D  _center1;
+        private readonly Point3D<double>  _center0;
+        private readonly Point3D<double>  _center1;
         private readonly double   _time0;
         private readonly double   _time1;
         private readonly double   _radius;
@@ -15,7 +15,7 @@ namespace Raytracing.Shapes {
         {
 
         }
-        public MovingSphere(Point3D center0, Point3D center1, double time0, double time1, double radius)
+        public MovingSphere(Point3D<double>  center0,Point3D<double> center1, double time0, double time1, double radius)
         {
             _center0 = center0;
             _center1 = center1;
@@ -29,10 +29,10 @@ namespace Raytracing.Shapes {
             tMax = 0;
             interaction = new SurfaceInteraction();
 
-            Vector3D oc = ray.O - Center(ray.Time);
-            var a = ray.D.GetLengthSqrt();
-            var halfB = Vector3D.Dot(oc, ray.D);
-            var c = oc.GetLengthSqrt() - _radius * _radius;
+            Vector3D<double> oc = ray.Origin - Center(ray.Time);
+            var a = ray.Direction.GetLengthSquared();
+            var halfB = oc * ray.Direction;
+            var c = oc.GetLengthSquared() - _radius * _radius;
             var discriminant = halfB * halfB - a * c;
 
             if (discriminant < 0)
@@ -53,20 +53,20 @@ namespace Raytracing.Shapes {
 
             tMax = root;
             interaction.P = ray.At(root);
-            Normal3D outward_normal = (Normal3D)(Vector3D)((interaction.P - Center(ray.Time)) / _radius);
+            Normal3D<double> outward_normal = new((interaction.P - Center(ray.Time)) / _radius);
             interaction.SetFaceNormal(ray, outward_normal);
 
             return true;
         }
-        public override Bounds3D GetObjectBound()
+        public override Bounds3D<double> GetObjectBound()
         {
-            Bounds3D box0 = new Bounds3D(Center(_time0) - new Vector3D(_radius, _radius, _radius),
-                                         Center(_time0) + new Vector3D(_radius, _radius, _radius));
-            Bounds3D box1 = new Bounds3D(Center(_time1) - new Vector3D(_radius, _radius, _radius),
-                                         Center(_time1) + new Vector3D(_radius, _radius, _radius));
-            return Bounds3D.Union(box0, box1);
+            Bounds3D<double> box0 = new Bounds3D<double>(Center(_time0) - new Vector3D<double>(_radius, _radius, _radius),
+                                         Center(_time0) + new Vector3D<double>(_radius, _radius, _radius));
+            Bounds3D<double> box1 = new Bounds3D<double>(Center(_time1) - new Vector3D<double>(_radius, _radius, _radius),
+                                         Center(_time1) + new Vector3D<double>(_radius, _radius, _radius));
+            return Bounds3D<double>.Union(box0, box1);
         }
-        public virtual Point3D Center(double time)
+        public virtual Point3D<double> Center(double time)
         {
             return _center0 + ((time - _time0) / (_time1 - _time0)) * (_center1 - _center0);
         }

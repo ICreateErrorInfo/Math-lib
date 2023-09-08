@@ -48,6 +48,57 @@ public readonly record struct Bounds3D<T>
     }
 
 
+    public bool IntersectP(Ray ray, out double hitt0, out double hitt1) {
+        double t0 = 0;
+        double t1 = ray.TMax;
+        for (int i = 0; i < 3; i++) {
+            double invRayDir = 1 / ray.Direction[i];
+            double tNear = (Convert.ToDouble(PMin[i]) - ray.Origin[i]) * invRayDir;
+            double tFar = (Convert.ToDouble(PMax[i]) - ray.Origin[i]) * invRayDir;
+            if (tNear > tFar) {
+                MathmaticMethods.Swap(ref tNear, ref tFar);
+            }
+            t0 = tNear > t0 ? tNear : t0;
+            t1 = tFar < t1 ? tFar : t1;
+            if (t0 > t1) {
+                hitt0 = double.NegativeInfinity;
+                hitt1 = double.NegativeInfinity;
+                return false;
+            }
+        }
+        hitt0 = t0;
+        hitt1 = t1;
+        return true;
+    }
+    public bool IntersectP(Ray ray, Vector3D<double> invDir, bool[] dirIsNegBool) {
+        int[] dirIsNeg = { dirIsNegBool[0] == true ? 1 : 0,
+                               dirIsNegBool[1] == true ? 1 : 0,
+                               dirIsNegBool[2] == true ? 1 : 0 };
+
+        double tMin =  (Convert.ToDouble(this[dirIsNeg[0]].X) - ray.Origin.X) * invDir.X;
+        double tMax =  (Convert.ToDouble(this[1 - dirIsNeg[0]].X) - ray.Origin.X) * invDir.X;
+        double tyMin = (Convert.ToDouble(this[dirIsNeg[1]].Y) - ray.Origin.Y) * invDir.Y;
+        double tyMax = (Convert.ToDouble(this[1 - dirIsNeg[1]].Y) - ray.Origin.Y) * invDir.Y;
+
+        if (tMin > tyMax || tyMin > tMax)
+            return false;
+        if (tyMin > tMin)
+            tMin = tyMin;
+        if (tyMax < tMax)
+            tMax = tyMax;
+
+        double tzMin = (Convert.ToDouble(this[dirIsNeg[2]].Z) - ray.Origin.Z) * invDir.Z;
+        double tzMax = (Convert.ToDouble(this[1 - dirIsNeg[2]].Z) - ray.Origin.Z) * invDir.Z;
+
+        if (tMin > tzMax || tzMin > tMax)
+            return false;
+        if (tzMin > tMin)
+            tMin = tzMin;
+        if (tzMax < tMax)
+            tMax = tzMax;
+        return (tMin < ray.TMax) && (tMax > 0);
+    }
+
     public Point3D<T> Corner(int corner) {
         if (!(corner >= 0 && corner < 8)) {
             throw new IndexOutOfRangeException(nameof(corner));

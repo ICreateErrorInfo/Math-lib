@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Spectrum;
@@ -15,7 +15,7 @@ namespace Raytracing {
             var stringList = File.ReadAllLines(path);
 
             List<int> indices = new List<int>();
-            List<Point3D> points = new List<Point3D>();
+            List<Point3D<double>> points = new List<Point3D<double>>();
             int nTriangles = 0;
             int nVertices  = 0;
 
@@ -47,7 +47,7 @@ namespace Raytracing {
                 }
                 if (zeile[0] == "v")
                 {
-                    points.Add(new Point3D(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider)));
+                    points.Add(new Point3D<double>(Convert.ToDouble(zeile[1], provider), Convert.ToDouble(zeile[2], provider), Convert.ToDouble(zeile[3], provider)));
                     nVertices++;
                 }
             }

@@ -1,4 +1,4 @@
-﻿using Math_lib;
+﻿using Moarx.Math;
 using System;
 
 namespace Raytracing.Accelerators
@@ -7,7 +7,7 @@ namespace Raytracing.Accelerators
     {
         struct LinearBVHNode
         {
-            public Bounds3D Bounds;
+            public Bounds3D<double> Bounds;
             public int PrimitivesOffset;
             public int SecondChildOffset;
             public Int16 NPrimitives;
