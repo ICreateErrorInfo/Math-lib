@@ -10,15 +10,13 @@ public readonly record struct Normal3D<T>
     public Normal3D(T x, T y, T z) {
         if (x == T.CreateChecked(0) && y == T.CreateChecked(0) && z == T.CreateChecked(0))
             throw new ArgumentException("Normal cant be [0, 0, 0]");
-
-        _vector = new Vector3D<T>(x, y, z).Normalize();
+        _vector = new Vector3D<T>(x, y, z);
     }
 
     public Normal3D(Vector3D<T> vector) {
         if (vector.X == T.CreateChecked(0) && vector.Y == T.CreateChecked(0) && vector.Z == T.CreateChecked(0))
             throw new ArgumentException("Normal cant be [0, 0, 0]");
-
-        _vector = vector.Normalize();
+        _vector = vector;
     }
 
     public Normal3D() {

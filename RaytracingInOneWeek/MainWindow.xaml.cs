@@ -102,7 +102,7 @@ namespace Raytracing {
         Scene FirstScene() {
             PrimitiveList world = new PrimitiveList();
 
-            var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {.2, .3, .1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {.9, .9, .9 }, SpectrumMaterialType.Reflectance), 20);
+            var checker = new CheckerTexture(_factory, _factory.CreateFromRGB(new double[] {.2, .3, .1 }, SpectrumMaterialType.Reflectance), _factory.CreateFromRGB(new double[] {.9, .9, .9 }, SpectrumMaterialType.Reflectance));
 
             var material  = new Metal(_factory, _factory.CreateFromRGB(new double[] {.7, .7, .7 }, SpectrumMaterialType.Reflectance), 0.7);
             var material1 = new Metal(_factory, _factory.CreateFromRGB(new double[] {1, 0.32, 0.36 }, SpectrumMaterialType.Reflectance), 0);
@@ -118,7 +118,7 @@ namespace Raytracing {
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50), _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 400, 200);
+            Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50, 20), _factory.CreateFromRGB(new double[] { .7, .8, 1 }, SpectrumMaterialType.Reflectance), 400, 200);
 
             return scene;
         }

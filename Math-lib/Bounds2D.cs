@@ -8,7 +8,6 @@ namespace Math_lib
         //Properties
         public Point2D pMin, pMax;
 
-
         //Ctors
         public Bounds2D()
         {

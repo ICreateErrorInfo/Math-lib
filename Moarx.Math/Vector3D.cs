@@ -56,6 +56,7 @@ public readonly record struct Vector3D<T>
         }
     }
 
+
     public static Vector3D<T> CrossProduct(Vector3D<T> vector1, Vector3D<T> vector2) {
         Vector3D<T> vector = new() {
             X = (vector1.Y * vector2.Z) - (vector1.Z * vector2.Y),
@@ -65,13 +66,20 @@ public readonly record struct Vector3D<T>
 
         return vector;
     }
-
     public T GetLengthSquared() => this * this;
     public bool IsNormalized() => GetLengthSquared() == T.CreateChecked(1); //TODO round bug
+    public static double AngleBetween(Vector3D<T> v1, Vector3D<T> v2) {
+        if((v1 * v2) < T.CreateChecked(0)) {
+            return System.Math.PI - 2 * MathmaticMethods.SafeASin((v1 + v2).GetLength() / 2);
+        } else {
+            return 2 * MathmaticMethods.SafeASin((v2 - v1).GetLength() / 2);
+        }
+    }
 
     public Point3D<T> ToPoint() {
         return new Point3D<T>(X, Y, Z);
     }
+
 
     public static Vector3D<T> operator +(Vector3D<T> left, Vector3D<T> right) => new() {
         X = left.X + right.X,

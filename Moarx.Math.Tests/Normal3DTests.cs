@@ -51,13 +51,9 @@ public class Normal3DTests {
         var p1 = new Normal3D<double>(new(0, 1, 0));
         var p2 = new Normal3D<double>(new(1, 0, 0));
 
-        var n = new Vector3D<double>(1,1,0).Normalize().ToNormal();
+        var n = new Normal3D<double>(1,1,0);       
 
-        Assert.That(System.Math.Round((p1 + p2).X, 9), Is.EqualTo(System.Math.Round(n.X, 9)));
-        Assert.That(System.Math.Round((p1 + p2).Y, 9), Is.EqualTo(System.Math.Round(n.Y, 9)));
-        Assert.That(System.Math.Round((p1 + p2).Z, 9), Is.EqualTo(System.Math.Round(n.Z, 9)));
-
-        Assert.That((p1 + p2).ToVector().IsNormalized(), Is.True);
+        Assert.That(p1 + p2, Is.EqualTo(n));
     }
     [Test]
     public void TestMinus() {
@@ -65,13 +61,9 @@ public class Normal3DTests {
         var p1 = new Normal3D<double>(new(0, 1, 0));
         var p2 = new Normal3D<double>(new(1, 0, 0));
 
-        var n = new Vector3D<double>(-1,1,0).Normalize().ToNormal();
+        var n = new Normal3D<double>(-1,1,0);
 
-        Assert.That(System.Math.Round((p1 - p2).X, 9), Is.EqualTo(System.Math.Round(n.X, 9)));
-        Assert.That(System.Math.Round((p1 - p2).Y, 9), Is.EqualTo(System.Math.Round(n.Y, 9)));
-        Assert.That(System.Math.Round((p1 - p2).Z, 9), Is.EqualTo(System.Math.Round(n.Z, 9)));
-
-        Assert.That((p1 - p2).ToVector().IsNormalized(), Is.True);
+        Assert.That(p1 - p2, Is.EqualTo(n));
     }
     [Test]
     public void TestNegate() {

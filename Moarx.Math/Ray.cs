@@ -2,32 +2,20 @@
 
 namespace Moarx.Math;
 
-public static class Ray {
+public readonly record struct Ray{
 
-    public static Ray<T> Create<T>(Point3D<T> origin, Vector3D<T> direction) where T : struct, INumber<T> {
-        return new(origin, direction);
-    }
-
-    public static Ray<T> Empty<T>() where T : struct, INumber<T> {
-        return new();
-    }
-}
-
-public readonly record struct Ray<T>
-    where T : struct, INumber<T> {
-
-    public readonly Point3D<T>  Origin;
-    public readonly Vector3D<T> Direction;
+    public readonly Point3D<double>  Origin;
+    public readonly Vector3D<double> Direction;
 
     public Ray() {
     }
 
-    public Ray(Point3D<T> origin, Vector3D<T> direction) {
+    public Ray(Point3D<double> origin, Vector3D<double> direction) {
         Origin    = origin;
         Direction = direction;
     }
 
-    public Point3D<T> At(T t) {
+    public Point3D<double> At(double t) {
         return Origin + Direction * t;
     }
 
