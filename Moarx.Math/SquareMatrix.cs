@@ -2,7 +2,7 @@
 
 
 namespace Moarx.Math;
-public readonly record struct SquareMatrix{
+public readonly struct SquareMatrix{
 
     public readonly double[,] _matrix;
     public readonly int _size;
@@ -332,6 +332,21 @@ public readonly record struct SquareMatrix{
             }
         }
         return m;
+    }
+
+    public static bool operator ==(SquareMatrix m1, SquareMatrix m2) {
+        for (int i = 0; i < m1._size; ++i)
+            for (int j = 0; j < m1._size; ++j)
+                if (m1._matrix[i,j] != m2._matrix[i,j])
+                    return false;
+        return true;
+    }
+    public static bool operator !=(SquareMatrix m1, SquareMatrix m2) {
+        for (int i = 0; i < m1._size; ++i)
+            for (int j = 0; j < m1._size; ++j)
+                if (m1._matrix[i, j] != m2._matrix[i, j])
+                    return true;
+        return false;
     }
 
     public double this[int i, int j] {

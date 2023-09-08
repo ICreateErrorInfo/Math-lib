@@ -1,6 +1,4 @@
 ﻿using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.Intrinsics.X86;
 
 namespace Moarx.Math;
 

@@ -6,6 +6,9 @@ public class MathmaticMethods {
     public static double SafeACos(double x) {
         return System.Math.Acos(System.Math.Clamp(x, -1, 1));
     }
+    public static double SafeSqrt(double x) {
+        return System.Math.Sqrt(System.Math.Max(0, x));
+    }
 
     public static double DifferenceOfProducts(double a, double b, double c, double d) {
         var cd  = c * d;
@@ -35,5 +38,11 @@ public class MathmaticMethods {
     }
     public static double Lerp(double x, double a, double b) {
         return (1 - x) * a + x * b;
+    }
+    public static double ConvertToRadians(double deg) {
+        return (System.Math.PI / 180) * deg;
+    }
+    public static double ConvertToDegrees(double rad) {
+        return (180 / System.Math.PI) * rad;
     }
 }
