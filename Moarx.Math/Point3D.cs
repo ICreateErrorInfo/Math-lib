@@ -73,8 +73,8 @@ public readonly record struct Point3D<T>
                               T.Max(p.Y, p1.Y),
                               T.Max(p.Z, p1.Z));
     } //TODO Naming, UnitTests
-    public static Point3D<double> Permute(Point3D<double> p, int x, int y, int z) {
-        return new Point3D<double>(p[x], p[y], p[z]);
+    public static Point3D<T> Permute(Point3D<T> p, int x, int y, int z) {
+        return new Point3D<T>(p[x], p[y], p[z]);
     }
     public static Point3D<double> Round(Point3D<double> p, int decimals) {
         return new((double)System.Math.Round((decimal)p.X, decimals), (double)System.Math.Round((decimal)p.Y, decimals), (double)System.Math.Round((decimal)p.Z, decimals));

@@ -38,7 +38,7 @@ namespace Math_lib
         public void Clear() {
             Array.Clear(Bits, 0, Bits.Length);
         }
-        public void FloodiFill(int x, int y, Color newColor) {
+        public void FloodFill(int x, int y, Color newColor) {
 
             newColor = Color.FromArgb(newColor.ToArgb()); // get rid of named Color...
 
