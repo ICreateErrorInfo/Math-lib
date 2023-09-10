@@ -38,7 +38,11 @@ public readonly record struct Normal3D<T>
     public Vector3D<T> ToVector() => _vector;
 
     public T GetLengthSquared() => T.CreateChecked(1);
-    public T GetLength() => T.CreateChecked(1);
+    public T GetLength() => T.CreateChecked(1); //TODO
+    public Normal3D<T> FaceForward(Vector3D<T> v) {
+        return (this.ToVector() * v < T.CreateChecked(0)) ? -this : this;
+    }
+
 
     public override string ToString() {
         return _vector.ToString();
@@ -50,5 +54,6 @@ public readonly record struct Normal3D<T>
     public static Normal3D<T> operator -(Normal3D<T> vector) => new(-vector._vector);
 
     public static T operator *(Normal3D<T> left, Normal3D<T> right) => left._vector * right._vector;
+    public static Normal3D<T> operator *(Normal3D<T> left, T right) => new Normal3D<T>(left._vector * right);
 
 }

@@ -20,7 +20,7 @@ public struct FluidSimulationData {
 }
 
 public class NavierStokesSim { 
-    FluidSimulationData _data;
+    public FluidSimulationData _data;
 
     readonly double dx;
     readonly double dy;
@@ -32,10 +32,20 @@ public class NavierStokesSim {
         dy = (double)2 / (_data._cellsY - 1);
     }
 
-    public FluidInformation Solve() {
+    public FluidInformation Solve(FluidInformation InitialCondition = new()) {
         double[,] u = new double[_data._cellsX,_data._cellsY];
         double[,] v = new double[_data._cellsX,_data._cellsY];
         double[,] p = new double[_data._cellsX,_data._cellsY];
+
+        if (InitialCondition.uVectorField != null) {
+            u = InitialCondition.uVectorField;
+        }
+        if (InitialCondition.vVectorField != null) {
+            v = InitialCondition.vVectorField;
+        }
+        if (InitialCondition.pressureGradient != null) {
+            p = InitialCondition.pressureGradient;
+        }
 
         double[,] b = new double[_data._cellsX,_data._cellsY];
 
@@ -47,13 +57,13 @@ public class NavierStokesSim {
                 for (int j = 1; j < _data._cellsY - 1; j++) {
 
                     b[i, j] = CalculateB(
-                        uIp1J: u[i+1, j],
-                        uIm1J: u[i-1, j],
-                        uIJp1: u[i, j+1],
-                        uIJm1: u[i, j-1],
-                        vIp1J: v[i+1, j],
-                        vIJp1: v[i, j+1],
-                        vIJm1: v[i, j-1]);
+                        uIp1J: u[i + 1, j],
+                        uIm1J: u[i - 1, j],
+                        uIJp1: u[i, j + 1],
+                        uIJm1: u[i, j - 1],
+                        vIp1J: v[i + 1, j],
+                        vIJp1: v[i, j + 1],
+                        vIJm1: v[i, j - 1]);
                 }
             }
 
@@ -100,8 +110,12 @@ public class NavierStokesSim {
     }
 
     double CalculateB(double uIp1J, double uIm1J, double uIJp1, double uIJm1, double vIp1J, double vIJp1, double vIJm1) {
-        return  _data._rho * ((uIp1J - uIm1J) / 2 / dx + (vIJp1 - vIJm1) / 2 / dy) / _data._timestep + Math.Pow(((uIp1J - uIm1J) / 2 / dx), 2) +
-                2 * (uIJp1 - uIJm1) / 2 / dy * (vIp1J - vIJm1) / 2 / dx + Math.Pow(((vIJp1 - vIJm1) / 2 / dy), 2);
+        return  _data._rho * (((uIp1J - uIm1J) / (2 * dx)) + ((vIJp1 - vIJm1) / (2 * dy))) / _data._timestep + Math.Pow((uIp1J - uIm1J) / (2 * dx), 2) +
+                (2 * ((uIJp1 - uIJm1) / (2 * dy)) * ((vIp1J - vIJm1) / (2 * dx))) + Math.Pow((vIJp1 - vIJm1) / (2 * dy), 2);
+    }
+    double CalculateB2(double uIp1J, double uIm1J, double uIJp1, double uIJm1, double vIp1J, double vIm1J, double vIJp1, double vIJm1) {
+        return -_data._rho *(Math.Pow((uIp1J - uIm1J) / (2 * dx), 2) + 2 *((uIJp1 - uIJm1) / (2 * dy)) * ((vIp1J - vIm1J) / (2*dx)) + Math.Pow((vIJp1 - vIJm1) / (2*dy), 2)) + 
+               _data._rho * (1 / _data._timestep) * (((uIp1J - uIm1J) / (2 * dx)) + ((vIJp1 - vIJm1) / (2 * dy)));
     }
 
     double CalculateU(double uIJ, double uIm1J, double uIp1J, double uIJm1, double uIJp1, double vIJ, double pIp1J, double pIm1J) {
@@ -123,7 +137,7 @@ public class NavierStokesSim {
 
             for (int i = 1; i < _data._cellsX - 1; i++) {
                 for (int j = 1; j < _data._cellsY - 1; j++) {
-                    p[i, j] = ((pn[i + 1, j] + pn[i - 1, j]) * (dy * dy) + (pn[i, j + 1] + pn[i, j - 1]) * (dx * dx) - b[i, j] * (dx * dx * dy * dy)) / (dx * dx + dy * dy) / 2;
+                    p[i, j] = ((pn[i + 1, j] + pn[i - 1, j]) * (dy * dy) + (pn[i, j + 1] + pn[i, j - 1]) * (dx * dx) - b[i, j] * ((dx * dx) * (dy * dy))) / (2*((dx * dx) + (dy * dy)));
                 }
             }
 

@@ -2,6 +2,7 @@
 using Moarx.Rasterizer;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,14 +18,40 @@ public partial class MainWindow: Window {
             _cellsX = 20,
             _cellsY = 20,
             _numberIterations = 100,
-            _numberTimesteps = 500,
+            _numberTimesteps = 10,
             _rho = 1,
             _viscosityFactor = .1,
             _timestep = 0.01
         };
 
-        data.boundaryConditions = new BoundaryConditionData[data._cellsX, data._cellsY];
+        data.boundaryConditions = GetSimpleIntakeBoundaryConditions(data, 1);
 
+        NavierStokesSim simulation = new NavierStokesSim(data);
+
+        SimulateFluid(simulation);
+    }
+
+    public async void SimulateFluid(NavierStokesSim sim) {
+        FluidInformation information = new();
+
+        for (int j = 1; j < 1000; j++) {
+            information = await Task.Run(() => sim.Solve(information));
+
+            ClearGrid();
+            CreatePictureFromNegativArray(information.pressureGradient);
+            DrawVectorField(information.uVectorField, information.vVectorField);
+
+            //sim._data.boundaryConditions = GetSimpleIntakeBoundaryConditions(sim._data, (double)200 / j);
+            //if (j == 200) {
+            //    j = 1;
+            //}
+
+            await Task.Delay(10);
+        }
+    }
+
+    //Boundary conditions
+    public BoundaryConditionData[,] GetCavityFlowBoundaryConditions(FluidSimulationData data) {
         Rectangle2D<double> rectangleDomain = new Rectangle2D<double>(new(0, 0), new(2, 2));
         Rectangle2D<double> rectangleLeftWall = new Rectangle2D<double>(new(0, 0), new(0, 2));
         Rectangle2D<double> rectangleBottomWall = new Rectangle2D<double>(new(0, 2), new(2, 2));
@@ -65,12 +92,49 @@ public partial class MainWindow: Window {
             };
         }
 
-        NavierStokesSim simulation = new NavierStokesSim(data);
+        return data.boundaryConditions;
+    }
+    public BoundaryConditionData[,] GetSimpleIntakeBoundaryConditions(FluidSimulationData data, double time) {
+        double dx = (double)2 / (data._cellsX - 1);
+        double dy = (double)2 / (data._cellsY - 1);
 
-        FluidInformation information = simulation.Solve();
+        double lerp = 1.5 / time;
+        if (time == 0) {
+            lerp = 0;
+        }
 
-        DrawVectorField(information.uVectorField, information.vVectorField);
-        CreatePictureFromNegativArray(information.pressureGradient);
+        Rectangle2D<double> rectangleDomain = new Rectangle2D<double>(new(0, 0), new(2, 2));
+        Rectangle2D<double> rectangleLeftWall = new Rectangle2D<double>(new(0, 0), new(0, 2));
+        Rectangle2D<double> rectangleLeftIn = new Rectangle2D<double>(new(0 + dx, 0 + lerp), new(0 + dx, 0.5 + lerp));
+        Rectangle2D<double> rectangleBottomWall = new Rectangle2D<double>(new(0, 2), new(2, 2));
+        Rectangle2D<double> rectangleRightWall = new Rectangle2D<double>(new(2, 0), new(2, 2));
+        Rectangle2D<double> rectangleRightOut = new Rectangle2D<double>(new(2 - dx, 1.5), new(2 - dx, 2));
+        Rectangle2D<double> rectangleTopWall = new Rectangle2D<double>(new(0, 0), new(2, 0));
+
+        Rectangle2D<double> rectangleMiddleWall = new Rectangle2D<double>(new(1, 0.7), new(1, 2));
+
+        FluidObject domain = new FluidObject() {Geometry = new() { rectangleDomain}, Type = FluidObjectType.Domain};
+        FluidObject leftWall = new FluidObject() {Geometry = new() { rectangleLeftWall}, Type = FluidObjectType.Collision};
+        FluidObject leftIn = new FluidObject() {Geometry = new() { rectangleLeftIn}, Type = FluidObjectType.Inflow};
+        FluidObject bottomWall = new FluidObject() {Geometry = new() { rectangleBottomWall}, Type = FluidObjectType.Collision};
+        FluidObject rightWall = new FluidObject() {Geometry = new() { rectangleRightWall}, Type = FluidObjectType.Collision};
+        FluidObject rightout = new FluidObject() {Geometry = new() { rectangleRightOut}, Type = FluidObjectType.Outflow};
+        FluidObject topWall = new FluidObject() {Geometry = new() { rectangleTopWall}, Type = FluidObjectType.Collision};
+
+        FluidObject MiddleWall = new FluidObject() {Geometry = new() { rectangleMiddleWall}, Type = FluidObjectType.Collision};
+
+        MeshGenerator generator = new MeshGenerator(domain, data._cellsX, data._cellsY);
+        generator.AddObject(leftWall);
+        generator.AddObject(bottomWall);
+        generator.AddObject(rightWall);
+        generator.AddObject(topWall);
+        generator.AddObject(leftIn);
+        generator.AddObject(rightout);
+        generator.AddObject(MiddleWall);
+
+        data.boundaryConditions = generator.GetBoundaryConditions();
+
+        return data.boundaryConditions;
     }
 
     //Navier Stoke 2D
@@ -1029,6 +1093,11 @@ public partial class MainWindow: Window {
     }
 
 
+    public void ClearGrid() {
+        if(Grid.Children.Count > 1) {
+            Grid.Children.RemoveAt(1);
+        }
+    }
     public void CreatePlot(double XSize, double YSize, PointCollection points) {
         var polyLine = new Polyline();
         polyLine.StrokeThickness = 2;

@@ -1,7 +1,7 @@
 ﻿using Moarx.Math;
 
 namespace Raytracing.Mathmatic; 
-public struct Interaction {
+public class Interaction {
     public Point3D<double> Pi;
     public double Time;
     public Vector3D<double> WO;
