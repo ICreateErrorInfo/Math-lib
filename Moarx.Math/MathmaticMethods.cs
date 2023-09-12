@@ -66,6 +66,19 @@ public class MathmaticMethods {
     public static double ConvertToDegrees(double rad) {
         return (180 / System.Math.PI) * rad;
     }
+    public static int FindInterval(int size, Predicate<int> pred) {
+        int first = 1;
+        int ssize = size - 2;
+
+        while(ssize > 0) {
+            int half = ssize >> 1, middle = first + half;
+            bool predResult = pred(middle);
+            first = predResult ? middle + 1 : first;
+            ssize = predResult ? ssize - (half + 1) : half;
+        }
+
+        return System.Math.Clamp(first - 1, 0, size - 2);
+    } 
     public static List<T> Partition<T>(List<T> primitiveInfos, int start, int end, Func<T, bool> predicate, out int mid) {
         List<T> elementsToSort = new List<T>();
         for (int i = start; i < end; i++) {

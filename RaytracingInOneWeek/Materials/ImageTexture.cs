@@ -76,20 +76,20 @@ namespace Raytracing.Materials {
 
             return new Vector3D<double>(pixel.X, pixel.Y, pixel.Z);
         }
-        public Bitmap ToBitmap()
-        {
-            Bitmap bmp = new Bitmap(_width, _height);
+        //public Bitmap ToBitmap()
+        //{
+        //    Bitmap bmp = new Bitmap(_width, _height);
 
-            for (int y = 0; y < _height; y++)
-            {
-                for (int x = 0; x < _width; x++)
-                {
-                    var p = y * _width + x;
-                    Vector3D<double> c = GetPixel(x, y);
-                    bmp.SetPixel(x, y, Color.FromArgb(255, (int)c.X, (int)c.Y, (int)c.Z));
-                }
-            }
-            return bmp;
-        }
+        //    for (int y = 0; y < _height; y++)
+        //    {
+        //        for (int x = 0; x < _width; x++)
+        //        {
+        //            var p = y * _width + x;
+        //            Vector3D<double> c = GetPixel(x, y);
+        //            bmp.SetPixel(x, y, Color.FromArgb(255, (int)c.X, (int)c.Y, (int)c.Z));
+        //        }
+        //    }
+        //    return bmp;
+        //}
     }
 }
