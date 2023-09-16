@@ -1,5 +1,6 @@
 ﻿using Moarx.Math;
 using NUnit.Framework;
+using Raytracing.Color;
 using Raytracing.Materials;
 using Raytracing.Mathmatic;
 using Raytracing.Primitives;
@@ -21,10 +22,10 @@ namespace Raytracing.Tests.Shapes {
         [Test]
         public void IntersectionTest()
         {
-            SpectrumFactory factory = new SampledSpectrumFactory();
             SampledSpectrumConstants.Init();
 
-            var material = new Metal(factory, factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
+            var cs = RGBColorSpace.sRGB;
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0);
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
@@ -46,10 +47,10 @@ namespace Raytracing.Tests.Shapes {
         [Test]
         public void IntersectionTest1()
         {
-            SpectrumFactory factory = new SampledSpectrumFactory();
             SampledSpectrumConstants.Init();
+            var cs = RGBColorSpace.sRGB;
 
-            var material = new Metal(factory, factory.CreateFromRGB(new double[] {.65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -74,10 +75,10 @@ namespace Raytracing.Tests.Shapes {
         [Test]
         public void IntersectionTest2()
         {
-            SpectrumFactory factory = new SampledSpectrumFactory();
             SampledSpectrumConstants.Init();
+            var cs = RGBColorSpace.sRGB;
 
-            var material = new Metal(factory, factory.CreateFromRGB(new double[] { .65, .7, .46 }, SpectrumMaterialType.Reflectance), 0);
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new( .65, .7, .46 )), 0);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -103,9 +104,9 @@ namespace Raytracing.Tests.Shapes {
         [Test]
         public void TestObjectBound()
         {
-            SpectrumFactory factory = new SampledSpectrumFactory();
+            var cs = RGBColorSpace.sRGB;
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1));
             var t = new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, 0);
 
             Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
@@ -114,9 +115,9 @@ namespace Raytracing.Tests.Shapes {
         [Test]
         public void TestObjectBound2()
         {
-            SpectrumFactory factory = new SampledSpectrumFactory();
+            var cs = RGBColorSpace.sRGB;
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(factory, new SampledSpectrum(), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1));
             var t = new Triangle(Transform.Translate(new(1)), Transform.Translate(new(-1)), mesh, 0);
 
             Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
