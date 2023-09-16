@@ -12,6 +12,7 @@ using Raytracing.Camera;
 using Raytracing.Mathmatic;
 using Moarx.Math;
 using Moarx.Rasterizer;
+using Raytracing.Color;
 
 namespace Raytracing {
     public class Raytracer
@@ -19,21 +20,22 @@ namespace Raytracing {
         private System.Windows.Controls.Image _image;
         private System.Windows.Controls.ProgressBar _progressBar;
         private System.Windows.Controls.TextBlock _time;
-        private SpectrumFactory _factory;
+        public static RGBColorSpace ColorSpace;
 
-        public Raytracer(SpectrumFactory spectrumFactory,
-                         System.Windows.Controls.Image image,
+        public Raytracer(System.Windows.Controls.Image image,
                          System.Windows.Controls.ProgressBar progressBar,
                          System.Windows.Controls.TextBlock time)
         {
             _image = image;
             _progressBar = progressBar;
             _time = time;
-            _factory = spectrumFactory;
         }
 
         public void Init() {
             SampledSpectrumConstants.Init();
+            RGBToSpectrumTable.Init();
+            RGBColorSpace.Init();
+            ColorSpace = RGBColorSpace.sRGB;
         }
         public async void RenderScene(Scene scene)
         {
@@ -63,7 +65,7 @@ namespace Raytracing {
             int imageWidth = scene.ImageWidth;
             int imageHeight = scene.ImageHeight;
 
-            ISpectrum[,] pixelArray = new ISpectrum[imageHeight, imageWidth];
+            RGB[,] pixelArray = new RGB[imageHeight, imageWidth];
 
             var totalCount = imageHeight;
             var current = 0;
@@ -82,17 +84,16 @@ namespace Raytracing {
                 progress.Report(new ProgressData(totalCount, current));
                 for (int i = 0; i < imageWidth; i++)
                 {
-                    ISpectrum pixelColor = _factory.CreateFromRGB(new double[] {0, 0, 0 }, SpectrumMaterialType.Reflectance);
-                    for (int s = 0; s < samplesPerPixel; s++)
-                    {
+                    RGB pixelColor = new RGB(0,0,0);
+                    for (int s = 0; s < samplesPerPixel; s++) {
                         var u = (i + 0.5 - ((double)RandX[s] / byte.MaxValue));
                         var v = (j + 0.5 - ((double)RandY[s] / byte.MaxValue));
                         CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v)};
                         Ray r = scene.Camera.GenerateRay(sample).generatedRay;
-                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth);
+                        SampledWavelengths lambda = SampledWavelengths.SampleUnifrom(((double)RandX[s] / byte.MaxValue));
+                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, ColorSpace);
                     }
-
-                    pixelArray[j, i] = pixelColor;
+                    pixelArray[j, i] = pixelColor / samplesPerPixel;
                 }
             }
             );
@@ -124,7 +125,7 @@ namespace Raytracing {
         readonly struct ImageData
         {
 
-            public ImageData(ISpectrum[,] data, int width, int height, int samplesPerPixel)
+            public ImageData(RGB[,] data, int width, int height, int samplesPerPixel)
             {
                 Data = data;
                 Width = width;
@@ -132,7 +133,7 @@ namespace Raytracing {
                 SamplesPerPixel = samplesPerPixel;
             }
 
-            public ISpectrum[,] Data { get; }
+            public RGB[,] Data { get; }
             public int Width { get; }
             public int Height { get; }
             public int SamplesPerPixel { get; }
@@ -154,19 +155,30 @@ namespace Raytracing {
 
             return bmp;
         }
-        ISpectrum GetRayColor(Ray ray, ISpectrum background, Primitive world, int depth)
+
+        RGB ToSensorRGB(SampledSpectrum L, SampledWavelengths lambda, double imagingRatio) {
+            L = SampledSpectrum.SafeDiv(L, lambda.PDF());
+            return imagingRatio * new RGB((SampledSpectrumConstants.XNew.Sample(lambda) * L).Average(),
+                                          (SampledSpectrumConstants.YNew.Sample(lambda) * L).Average(),
+                                          (SampledSpectrumConstants.ZNew.Sample(lambda) * L).Average());
+        }
+
+        SampledSpectrum GetRayColor(Ray ray, ISpectrum background, Primitive world, int depth, SampledWavelengths lambda)
         {
             SurfaceInteraction interaction = new SurfaceInteraction();
 
             if (depth <= 0)
             {
-                return _factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
+                return new RGBAlbedoSpectrum(ColorSpace, new(0,0,0)).Sample(lambda);
             }
 
             interaction = world.Intersect(ray, interaction);
             if (!interaction.HasIntersection)
             {
-                return background;
+                if(depth == 50) {
+
+                }
+                return background.Sample(lambda);
             }
             ISpectrum emitted = interaction.Primitive.GetMaterial().Emitted(interaction.UCoordinate, interaction.VCoordinate, interaction.P);
 
@@ -174,24 +186,16 @@ namespace Raytracing {
 
             if (!interaction.HasScattered)
             {
-                return emitted;
+                return 20 * emitted.Sample(lambda);
             }
 
-            return emitted + interaction.Attenuation * GetRayColor(interaction.ScatteredRay, background, world, depth - 1);
+            return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * GetRayColor(interaction.ScatteredRay, background, world, depth - 1, lambda);
         }
-        System.Drawing.Color ToColor(ISpectrum pixel_color, int samples_per_pixel)
+        System.Drawing.Color ToColor(RGB pixel_color, int samples_per_pixel)
         {
-            var scale = (double)1 / (double)samples_per_pixel;
-            
-            for (int i = 0; i < pixel_color.NumberSamples; i++) {
-                pixel_color.coefficients[i] = Math.Sqrt(scale * pixel_color.coefficients[i]);
-            }
-
-            double[] rgb = pixel_color.ToRGB();
-
-            var r = rgb[0];
-            var g = rgb[1];
-            var b = rgb[2];
+            var r = pixel_color[0];
+            var g = pixel_color[1];
+            var b = pixel_color[2];
 
             return System.Drawing.Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
                                                  Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),

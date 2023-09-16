@@ -1,5 +1,5 @@
 ﻿namespace Raytracing.Spectrum;
-public class ConstantSpectrum: ISpectrumNew {
+public class ConstantSpectrum: ISpectrum {
 
     public ConstantSpectrum(double c) {
         _c = c;
@@ -11,8 +11,8 @@ public class ConstantSpectrum: ISpectrumNew {
     public double MaxValue() {
         return _c;
     }
-    public SampledSpectrumNew Sample(SampledWavelengths lambda) {
-        return new SampledSpectrumNew(_c);
+    public SampledSpectrum Sample(SampledWavelengths lambda) {
+        return new SampledSpectrum(_c);
     }
 
     private double _c;

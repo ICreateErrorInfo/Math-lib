@@ -5,29 +5,19 @@ using Raytracing.Spectrum;
 namespace Raytracing.Materials {
     public abstract class Texture
     {
-        public SpectrumFactory Factory { get; }
-
-        protected Texture(SpectrumFactory factory) {
-            Factory = factory;
-        }
-
         public abstract ISpectrum Value(double u, double v,Point3D<double> p);
     }
     class SolidColor : Texture
     {
         private readonly ISpectrum _colorValue;
 
-        public SolidColor(SpectrumFactory factory) : base(factory)
-        {
-
-        }
-        public SolidColor(SpectrumFactory factory, ISpectrum c) : base(factory)
+        public SolidColor(ISpectrum c)
         {
             _colorValue = c;
         }
-        public SolidColor(SpectrumFactory factory, double red, double green, double blue) : base(factory)
+        public SolidColor(double red, double green, double blue)
         {
-            _colorValue = factory.CreateFromRGB(new double[] { red, green, blue }, SpectrumMaterialType.Reflectance);
+            _colorValue = new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(red, green, blue));
         }
 
         public override ISpectrum Value(double u, double v,Point3D<double> p)
@@ -40,19 +30,15 @@ namespace Raytracing.Materials {
         private readonly Texture _odd;
         private readonly Texture _even;
 
-        public CheckerTexture(SpectrumFactory factory) : base(factory)
-        {
-
-        }
-        public CheckerTexture(SpectrumFactory factory, Texture even, Texture odd) : base(factory)
+        public CheckerTexture(Texture even, Texture odd)
         {
             _even = even;
             _odd = odd;
         }
-        public CheckerTexture(SpectrumFactory factory, ISpectrum color1, ISpectrum color2) : base(factory)
+        public CheckerTexture(ISpectrum color1, ISpectrum color2)
         {
-            _even = new SolidColor(factory, color1);
-            _odd = new SolidColor(factory, color2);
+            _even = new SolidColor(color1);
+            _odd = new SolidColor(color2);
         }
 
         public override ISpectrum Value(double u, double v,Point3D<double> p)
@@ -73,11 +59,7 @@ namespace Raytracing.Materials {
         readonly public Perlin _noise = new Perlin();
         private readonly double _scale;
 
-        public NoiseTexture(SpectrumFactory factory) : base(factory)
-        {
-
-        }
-        public NoiseTexture(SpectrumFactory factory, double scale) : base(factory)
+        public NoiseTexture(double scale)
         {
             _scale = scale;
         }
@@ -85,7 +67,7 @@ namespace Raytracing.Materials {
         public override ISpectrum Value(double u, double v,Point3D<double> p)
         {
             Vector3D<double> rgb = new Vector3D<double>(1,1,1) * 0.5 * (1 + Math.Sin(_scale * p.Z + 10*_noise.Turb(_scale * p.ToVector())));
-            return Factory.CreateFromRGB(new double[] {rgb.X, rgb.Y, rgb.Z}, SpectrumMaterialType.Reflectance);
+            return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(rgb.X, rgb.Y, rgb.Z));
         }
     }
 }

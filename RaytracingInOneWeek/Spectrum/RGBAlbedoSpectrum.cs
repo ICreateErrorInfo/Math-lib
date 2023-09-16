@@ -1,7 +1,7 @@
 ﻿using Raytracing.Color;
 
 namespace Raytracing.Spectrum; 
-public class RGBAlbedoSpectrum: ISpectrumNew {
+public class RGBAlbedoSpectrum: ISpectrum {
 
     public RGBAlbedoSpectrum(RGBColorSpace cs, RGB rgb) {
         rsp = cs.ToRGBCoeffs(rgb);
@@ -13,9 +13,9 @@ public class RGBAlbedoSpectrum: ISpectrumNew {
     public double MaxValue() {
        return rsp.MaxValue();
     }
-    public SampledSpectrumNew Sample(SampledWavelengths lambda) {
-        SampledSpectrumNew s = new SampledSpectrumNew();
-        for(int i = 0; i < ISpectrumNew.NSpectrumSamples; i++) {
+    public SampledSpectrum Sample(SampledWavelengths lambda) {
+        SampledSpectrum s = new SampledSpectrum();
+        for(int i = 0; i < ISpectrum.NSpectrumSamples; i++) {
             s[i] = rsp.GetValueAtLambda(lambda[i]);
         }
         return s;

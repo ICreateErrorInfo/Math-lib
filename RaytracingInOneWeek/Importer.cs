@@ -10,7 +10,7 @@ using System.IO;
 namespace Raytracing {
     public class Importer
     {
-        public static TriangleMesh Obj(SpectrumFactory factory ,string path)
+        public static TriangleMesh Obj(string path)
         {
             var stringList = File.ReadAllLines(path);
 
@@ -51,8 +51,8 @@ namespace Raytracing {
                     nVertices++;
                 }
             }
-
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(factory, factory.CreateFromRGB(new double[] {.61, .61, .61 }, SpectrumMaterialType.Reflectance), 0.7));
+            
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.61, .61, .61)), 0.7));
 
             return mesh;
         }

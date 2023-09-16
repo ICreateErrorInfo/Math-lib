@@ -7,18 +7,17 @@ namespace Raytracing.Materials {
     {
         private readonly Texture _emit;
 
-        public DiffuseLight(Texture a) : base(a.Factory)
+        public DiffuseLight(Texture a)
         {
             _emit = a;
         }
-        public DiffuseLight(SpectrumFactory factory, ISpectrum color) : base(factory)
+        public DiffuseLight(ISpectrum color)
         {
-            _emit = new SolidColor(factory, color);
+            _emit = new SolidColor(color);
         }
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            interaction.Attenuation = Factory.CreateSpectrum();
             interaction.ScatteredRay = new Ray();
             interaction.HasScattered = false;
 

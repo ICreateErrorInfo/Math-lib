@@ -15,10 +15,10 @@ public class RGBToSpectrumTable {
 
     public RGBSigmoidPolynomial ToPolynom(RGB rgb) {
         if (rgb.R == rgb.G && rgb.G == rgb.B) {
-            return new RGBSigmoidPolynomial(0, 0, (rgb.R - .5f) / System.Math.Sqrt(rgb.R * (1 - rgb.R)));
+            return new RGBSigmoidPolynomial(0, 0, (rgb[0] - .5f) / Math.Sqrt(rgb[0] * (1 - rgb[0])));
         }
 
-        int maxc = (rgb.R > rgb.G) ? ((rgb.R > rgb.B) ? 0 : 2) : ((rgb.G > rgb.B) ? 1 : 2);
+        int maxc = (rgb[0] > rgb[1]) ? ((rgb[0] > rgb[2]) ? 0 : 2) : ((rgb[1] > rgb[2]) ? 1 : 2);
         double z = rgb[maxc];
         double x = rgb[(maxc + 1) % 3] * (Res - 1) / z;
         double y = rgb[(maxc + 2) % 3] * (Res - 1) / z;

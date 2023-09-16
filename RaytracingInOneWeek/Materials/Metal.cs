@@ -8,7 +8,7 @@ namespace Raytracing.Materials {
         private readonly ISpectrum _albedo;
         private readonly double _fuzz;
 
-        public Metal(SpectrumFactory factory, ISpectrum color, double fuzz) : base(factory)
+        public Metal(ISpectrum color, double fuzz)
         {
             _albedo = color;
             _fuzz = fuzz < 1 ? fuzz : 1;

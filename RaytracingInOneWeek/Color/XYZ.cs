@@ -7,10 +7,10 @@ public class XYZ {
         X = x; Y = y; Z = z;
     }
 
-    public static XYZ SpectrumToXYZ(ISpectrumNew s) {
-        return new XYZ(ISpectrumNew.InnerProduct(SampledSpectrumConstants.XNew, s),
-                       ISpectrumNew.InnerProduct(SampledSpectrumConstants.YNew, s),
-                       ISpectrumNew.InnerProduct(SampledSpectrumConstants.ZNew, s)) / SampledSpectrumConstants.CIE_Y_integral;
+    public static XYZ SpectrumToXYZ(ISpectrum s) {
+        return new XYZ(ISpectrum.InnerProduct(SampledSpectrumConstants.XNew, s),
+                       ISpectrum.InnerProduct(SampledSpectrumConstants.YNew, s),
+                       ISpectrum.InnerProduct(SampledSpectrumConstants.ZNew, s)) / SampledSpectrumConstants.CIE_Y_integral;
     }
     public Point2D<double> xy() {
         return new Point2D<double>(X / (X + Y + Z), Y / (X + Y + Z));
@@ -19,7 +19,7 @@ public class XYZ {
         if(xy.Y == 0) {
             return new XYZ(0, 0, 0);
         }
-        return new XYZ(xy.X * Y / xy.Y, Y, (1 - xy.Y - xy.Y) * Y / xy.Y);
+        return new XYZ(xy.X * Y / xy.Y, Y, (1 - xy.X - xy.Y) * Y / xy.Y);
     }
 
     public static XYZ operator /(XYZ xyz, double a) {

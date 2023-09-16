@@ -7,11 +7,11 @@ namespace Raytracing.Materials {
     {
         private readonly Texture _albedo;
 
-        public Lambertian(SpectrumFactory factory, ISpectrum color) : base(factory)
+        public Lambertian(ISpectrum color)
         {
-            _albedo = new SolidColor(factory, color);
+            _albedo = new SolidColor(color);
         }
-        public Lambertian(Texture a) : base(a.Factory)
+        public Lambertian(Texture a)
         {
             _albedo = a;
         }

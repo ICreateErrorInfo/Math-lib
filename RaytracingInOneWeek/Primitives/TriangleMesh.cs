@@ -33,8 +33,8 @@ namespace Raytracing.Primitives {
             }
         }
 
-        public static TriangleMesh Import(SpectrumFactory factory, string path) {
-            return Importer.Obj(factory, path);
+        public static TriangleMesh Import(string path) {
+            return Importer.Obj(path);
         }
     }
 }

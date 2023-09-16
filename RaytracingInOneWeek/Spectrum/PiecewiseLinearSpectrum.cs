@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Raytracing.Spectrum;
-public class PiecewiseLinearSpectrum: ISpectrumNew {
+public class PiecewiseLinearSpectrum: ISpectrum {
 
     public PiecewiseLinearSpectrum(double[] lambdas, double[] values) {
         _lambdas = lambdas;
@@ -14,23 +14,23 @@ public class PiecewiseLinearSpectrum: ISpectrumNew {
         int n = samples.Length / 2;
         List<double> lambda = new List<double>(), v = new List<double>();
 
-        if (samples[0] > ISpectrumNew.LambdaMin) {
-            lambda.Add(ISpectrumNew.LambdaMin - 1);
+        if (samples[0] > ISpectrum.LambdaMin) {
+            lambda.Add(ISpectrum.LambdaMin - 1);
             v.Add(samples[1]);
         }
         for(int i = 0; i < n; i++) {
             lambda.Add(samples[2 * i]);
             v.Add(samples[2 * i + 1]);
         }
-        if (lambda.Last() < ISpectrumNew.LambdaMax) {
-            lambda.Add(ISpectrumNew.LambdaMax + 1);
+        if (lambda.Last() < ISpectrum.LambdaMax) {
+            lambda.Add(ISpectrum.LambdaMax + 1);
             v.Add(v.Last());
         }
 
         PiecewiseLinearSpectrum spec = new PiecewiseLinearSpectrum(lambda.ToArray(), v.ToArray());
 
         if (normalize) {
-            spec.Scale(SampledSpectrumConstants.CIE_Y_integral / ISpectrumNew.InnerProduct(spec, SampledSpectrumConstants.YNew));
+            spec.Scale(SampledSpectrumConstants.CIE_Y_integral / ISpectrum.InnerProduct(spec, SampledSpectrumConstants.YNew));
         }
 
         return spec;
@@ -55,9 +55,9 @@ public class PiecewiseLinearSpectrum: ISpectrumNew {
         }
         return _values.Max();
     }
-    public SampledSpectrumNew Sample(SampledWavelengths lambda) {
-        SampledSpectrumNew s = new SampledSpectrumNew();
-        for(int i = 0; i < ISpectrumNew.NSpectrumSamples; i++) {
+    public SampledSpectrum Sample(SampledWavelengths lambda) {
+        SampledSpectrum s = new SampledSpectrum();
+        for(int i = 0; i < ISpectrum.NSpectrumSamples; i++) {
             s[i] = GetValueAtLambda(lambda[i]);
         }
         return s;

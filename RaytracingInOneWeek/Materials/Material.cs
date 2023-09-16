@@ -5,15 +5,9 @@ using Raytracing.Spectrum;
 namespace Raytracing.Materials {
     public abstract class Material
     {
-        protected SpectrumFactory Factory { get; }
-
-        public Material(SpectrumFactory factory) {
-            Factory = factory;
-        }
-
         public virtual ISpectrum Emitted(double u, double v,Point3D<double> p)
         {
-            return Factory.CreateFromRGB(new double[] { 0, 0, 0 }, SpectrumMaterialType.Reflectance);
+            return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0,0,0));
         }
         public abstract SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction);
     }

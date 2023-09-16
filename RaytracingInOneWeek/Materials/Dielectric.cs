@@ -8,14 +8,14 @@ namespace Raytracing.Materials {
     {
         private readonly double _ir;
 
-        public Dielectric(SpectrumFactory factory, double indexOfRefraction) : base(factory)
+        public Dielectric(double indexOfRefraction)
         {
             _ir = indexOfRefraction;
         }
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            var attenuation = Factory.CreateFromRGB(new double[] { 1, 1, 1 }, SpectrumMaterialType.Reflectance);
+            var attenuation = new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(1,1,1));
             double refractionRatio = interaction.FrontFace ? (1 / _ir) : _ir;
 
             Vector3D<double> unitDirection = (rayIn.Direction).Normalize();

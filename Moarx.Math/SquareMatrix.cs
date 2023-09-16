@@ -264,7 +264,6 @@ public readonly struct SquareMatrix{
     public T[] Mul<T>(T[] v) where T : INumber<T> {
         T[] result = new T[_size];
         for (int i = 0; i < _size; ++i) {
-            result[i] = T.CreateChecked(0);
             for (int j = 0; j < _size; ++j)
                 result[i] += (T)Convert.ChangeType(_matrix[i, j], typeof(T)) * v[j];
         }

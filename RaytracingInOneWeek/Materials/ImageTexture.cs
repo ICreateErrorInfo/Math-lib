@@ -12,7 +12,7 @@ namespace Raytracing.Materials {
         private int _width, _height;
         private int _bytesPerScanline;
 
-        public ImageTexture(SpectrumFactory factory) : base(factory)
+        public ImageTexture()
         {
             _data = null;
             _width = 0;
@@ -20,7 +20,7 @@ namespace Raytracing.Materials {
             _bytesPerScanline = 0;
         }
 
-        public ImageTexture(SpectrumFactory factory, string filename) : base(factory) 
+        public ImageTexture(string filename)
         {
             Image img = Image.FromFile(filename);
             Bitmap bit = new Bitmap(img);
@@ -50,7 +50,7 @@ namespace Raytracing.Materials {
         {
             if (_data == null)
             {
-                return Factory.CreateFromRGB(new double[] { 0, 1, 1 }, SpectrumMaterialType.Reflectance);
+                return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0, 1, 1));
             }
 
             u = Math.Clamp(u, 0.0f, 1);
@@ -67,7 +67,7 @@ namespace Raytracing.Materials {
             var index =  j * _bytesPerScanline + i * BytesPerPixel;
             Vector3D<double> pixel = new Vector3D<double>(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
-            return Factory.CreateFromRGB(new double[] { pixel.X, pixel.Y, pixel.Z }, SpectrumMaterialType.Reflectance);
+            return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(pixel.X, pixel.Y, pixel.Z));
         }
         public Vector3D<double> GetPixel(int x, int y)
         {

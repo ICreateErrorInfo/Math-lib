@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 
 namespace Raytracing.Spectrum;
-public class DenselySampledSpectrum: ISpectrumNew {
+public class DenselySampledSpectrum: ISpectrum {
 
-    public DenselySampledSpectrum(ISpectrumNew spectrum, int lambdaMin = ISpectrumNew.LambdaMin, int lambdaMax = ISpectrumNew.LambdaMax) {
+    public DenselySampledSpectrum(ISpectrum spectrum, int lambdaMin = ISpectrum.LambdaMin, int lambdaMax = ISpectrum.LambdaMax) {
         _lambdaMin = lambdaMin;
         _lambdaMax = lambdaMax;
 
@@ -24,9 +24,9 @@ public class DenselySampledSpectrum: ISpectrumNew {
     public double MaxValue() {
         return values.Max();
     }
-    public SampledSpectrumNew Sample(SampledWavelengths lambda) {
-        SampledSpectrumNew s = new SampledSpectrumNew();
-        for(int i = 0; i < ISpectrumNew.NSpectrumSamples; i++) {
+    public SampledSpectrum Sample(SampledWavelengths lambda) {
+        SampledSpectrum s = new SampledSpectrum();
+        for(int i = 0; i < ISpectrum.NSpectrumSamples; i++) {
             int offset = (int)System.Math.Round(lambda[i]) - _lambdaMin;
             if(offset < 0 || offset >= values.Length) {
                 s[i] = 0;

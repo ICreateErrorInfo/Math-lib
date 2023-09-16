@@ -19,7 +19,7 @@ public class RGBSigmoidPolynomial {
     }
     public static double Sigmoid(double x) {
         if(double.IsInfinity(x)) return x > 0 ? 1 : 0;
-        return 0.5 * x / (2 * System.Math.Sqrt(1 + (x * x)));
+        return 0.5 + x / (2 * System.Math.Sqrt(1 + (x * x)));
     }
 
     double _c0, _c1, _c2;

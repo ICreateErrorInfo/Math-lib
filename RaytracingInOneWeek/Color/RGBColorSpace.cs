@@ -6,7 +6,7 @@ using System.Windows.Automation;
 namespace Raytracing.Color; 
 public class RGBColorSpace {
 
-    public RGBColorSpace(Point2D<double> r, Point2D<double> g, Point2D<double> b, ISpectrumNew illuminant, RGBToSpectrumTable rgbToSpectrumTable) {
+    public RGBColorSpace(Point2D<double> r, Point2D<double> g, Point2D<double> b, ISpectrum illuminant, RGBToSpectrumTable rgbToSpectrumTable) {
         R = r; G = g; B = b;
         Illuminant = illuminant;
         RGBToSpectrumTable = rgbToSpectrumTable;
@@ -56,7 +56,7 @@ public class RGBColorSpace {
     }
 
     public Point2D<double> R, G, B, W;
-    public ISpectrumNew Illuminant;
+    public ISpectrum Illuminant;
     public SquareMatrix XYZFromRGB, RGBFromXYZ;
     public RGBToSpectrumTable RGBToSpectrumTable;
     public static RGBColorSpace sRGB, DCI_P3, Rec2020, ACES2065_1;
