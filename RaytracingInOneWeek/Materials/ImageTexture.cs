@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Spectrum;
 using System;
 using System.Drawing;
@@ -12,7 +13,7 @@ namespace Raytracing.Materials {
         private int _width, _height;
         private int _bytesPerScanline;
 
-        public ImageTexture()
+        public ImageTexture(RGBColorSpace colorspace) : base(colorspace)
         {
             _data = null;
             _width = 0;
@@ -20,7 +21,7 @@ namespace Raytracing.Materials {
             _bytesPerScanline = 0;
         }
 
-        public ImageTexture(string filename)
+        public ImageTexture(string filename, RGBColorSpace colorspace) : base(colorspace)
         {
             Image img = Image.FromFile(filename);
             Bitmap bit = new Bitmap(img);
@@ -50,7 +51,7 @@ namespace Raytracing.Materials {
         {
             if (_data == null)
             {
-                return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0, 1, 1));
+                return new RGBAlbedoSpectrum(_ColorSpace, new(0, 1, 1));
             }
 
             u = Math.Clamp(u, 0.0f, 1);
@@ -67,7 +68,7 @@ namespace Raytracing.Materials {
             var index =  j * _bytesPerScanline + i * BytesPerPixel;
             Vector3D<double> pixel = new Vector3D<double>(_data[index] * colorScale, _data[index + 1] * colorScale, _data[index + 2] * colorScale);
 
-            return new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(pixel.X, pixel.Y, pixel.Z));
+            return new RGBAlbedoSpectrum(_ColorSpace, new(pixel.X, pixel.Y, pixel.Z));
         }
         public Vector3D<double> GetPixel(int x, int y)
         {

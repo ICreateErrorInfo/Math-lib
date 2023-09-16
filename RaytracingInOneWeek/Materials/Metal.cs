@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -8,7 +9,7 @@ namespace Raytracing.Materials {
         private readonly ISpectrum _albedo;
         private readonly double _fuzz;
 
-        public Metal(ISpectrum color, double fuzz)
+        public Metal(ISpectrum color, double fuzz, RGBColorSpace colorSpace) : base(colorSpace)
         {
             _albedo = color;
             _fuzz = fuzz < 1 ? fuzz : 1;

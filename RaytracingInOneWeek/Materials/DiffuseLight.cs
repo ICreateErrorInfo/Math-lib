@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -7,13 +8,13 @@ namespace Raytracing.Materials {
     {
         private readonly Texture _emit;
 
-        public DiffuseLight(Texture a)
+        public DiffuseLight(Texture a) : base(a._ColorSpace)
         {
             _emit = a;
         }
-        public DiffuseLight(ISpectrum color)
+        public DiffuseLight(ISpectrum color, RGBColorSpace colorspace) : base(colorspace)
         {
-            _emit = new SolidColor(color);
+            _emit = new SolidColor(color, colorspace);
         }
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)

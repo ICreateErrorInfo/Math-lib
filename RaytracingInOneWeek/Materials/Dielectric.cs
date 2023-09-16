@@ -1,5 +1,6 @@
 ﻿using System;
 using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -8,14 +9,14 @@ namespace Raytracing.Materials {
     {
         private readonly double _ir;
 
-        public Dielectric(double indexOfRefraction)
+        public Dielectric(double indexOfRefraction, RGBColorSpace colorspace) : base(colorspace)
         {
             _ir = indexOfRefraction;
         }
 
         public override SurfaceInteraction Scatter(Ray rayIn, SurfaceInteraction interaction)
         {
-            var attenuation = new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(1,1,1));
+            var attenuation = new RGBAlbedoSpectrum(_ColorSpace, new(1,1,1));
             double refractionRatio = interaction.FrontFace ? (1 / _ir) : _ir;
 
             Vector3D<double> unitDirection = (rayIn.Direction).Normalize();

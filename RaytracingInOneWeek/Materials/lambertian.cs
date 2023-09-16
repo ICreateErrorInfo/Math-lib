@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Mathmatic;
 using Raytracing.Spectrum;
 
@@ -7,11 +8,11 @@ namespace Raytracing.Materials {
     {
         private readonly Texture _albedo;
 
-        public Lambertian(ISpectrum color)
+        public Lambertian(ISpectrum color, RGBColorSpace colorspace) : base(colorspace)
         {
-            _albedo = new SolidColor(color);
+            _albedo = new SolidColor(color, colorspace);
         }
-        public Lambertian(Texture a)
+        public Lambertian(Texture a) : base(a._ColorSpace)
         {
             _albedo = a;
         }

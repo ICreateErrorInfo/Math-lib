@@ -2,6 +2,7 @@
 using Moarx.Math;
 using Raytracing;
 using Raytracing.Camera;
+using Raytracing.Color;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Shapes;
@@ -12,6 +13,8 @@ using System.Windows;
 namespace Raytracing {
     public partial class MainWindow : Window
     {
+        RGBColorSpace colorSpace;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,34 +22,37 @@ namespace Raytracing {
             Raytracer r = new Raytracer(image, ProgressBar, Time);
 
             r.Init();
-            r.RenderScene(FirstScene());
+
+            colorSpace = RGBColorSpace.DCI_P3;
+
+            r.RenderScene(FirstScene(), colorSpace);
         }
 
         Scene TestSphere() {
-            var material = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.65, .7, .46)), 0.7);
+            var material = new Metal(new RGBAlbedoSpectrum(colorSpace, new(.65, .7, .46)), 0.7, colorSpace);
             Sphere s = new Sphere(new(0, 0.1, 0), 0.1, -0.1, 0.1, 360);
             Sphere s1 = new Sphere(new(0.2, 0, 0), 0.1, -0.08, 0.08, 360);
             PrimitiveList h = new();
             h.Add(new GeometricPrimitive(s, material));
             h.Add(new GeometricPrimitive(s1, material));
 
-            Scene scene = new Scene(h, 100, 10, CreateCamera(400, 200, new(0,0,1), new(0,0,0), 20),  new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )), 400, 200);
+            Scene scene = new Scene(h, 100, 10, CreateCamera(400, 200, new(0,0,1), new(0,0,0), 20),  new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )), 400, 200);
 
             return scene;
         }
         Scene TestImporter() {
-            TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile());
+            TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile(), colorSpace);
             PrimitiveList h = new();
 
             for (int i = 0; i < mesh.NTriangles; i++) {
                 h.Add(new GeometricPrimitive(new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, i), mesh.Material));
             }
 
-            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,-15), new(0,1,0), 20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,-15), new(0,1,0), 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
             return scene;
         }
         Scene TestTriangle() {
-            var material = new Metal( new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.65, .7, .46)), 0.7);
+            var material = new Metal( new RGBAlbedoSpectrum(colorSpace, new(.65, .7, .46)), 0.7, colorSpace);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -62,50 +68,50 @@ namespace Raytracing {
 
             PrimitiveList h = new(new GeometricPrimitive(tri, mesh.Material));
 
-            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,1,-10), new(0,1,0),20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,1,-10), new(0,1,0),20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
 
             return scene;
         }
         Scene TestCone() {
-            var material = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(1, 0.32, 0.36 )), 0);
-            var material2 = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( 0.90, 0.76, 0.46 )), 1);
+            var material = new Metal(new RGBAlbedoSpectrum(colorSpace, new(1, 0.32, 0.36 )), 0, colorSpace);
+            var material2 = new Metal(new RGBAlbedoSpectrum(colorSpace, new( 0.90, 0.76, 0.46 )), 1, colorSpace);
             Cone c = new Cone(new(0, -10, -1.5), 1, 1, 360);
             Sphere s = new Sphere(new(2, -10, 0), 1, -2, 2, 360);
             PrimitiveList h = new(new GeometricPrimitive(c, material));
             h.Add(new GeometricPrimitive(s, material2));
 
-            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,0), new(0,-1,0.001), 20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+            Scene scene = new Scene(h, 100, 50, CreateCamera(400, 200, new(0,0,0), new(0,-1,0.001), 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
 
             return scene;
         }
         Scene TestDisk() {
-            var material = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( .65, .7, .46 )), 0.7);
+            var material = new Metal(new RGBAlbedoSpectrum(colorSpace, new( .65, .7, .46 )), 0.7, colorSpace);
             Disk d = new Disk(new(0, 0, 0), 0, 0.1, 0.05, 180);
             PrimitiveList h = new(new GeometricPrimitive( d, material));
 
-            Scene scene = new Scene(h, 100, 50,CreateCamera(400, 200, new(0,0,1), new(0,0,0), 20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+            Scene scene = new Scene(h, 100, 50,CreateCamera(400, 200, new(0,0,1), new(0,0,0), 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
 
             return scene;
         }
         Scene TestCylinder() {
-            var material = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( .65, .7, .46 )), 0.7);
+            var material = new Metal(new RGBAlbedoSpectrum(colorSpace, new( .65, .7, .46 )), 0.7, colorSpace);
             Cylinder s = new Cylinder(new(0.1, 0, 0), 0.1, -0.1, 0.1, 360);
             PrimitiveList h = new(new GeometricPrimitive(s,material));
 
-            Scene scene = new Scene(h, 100, 50,CreateCamera(400, 200, new(0,1,0), new(0,0,0.001), 20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+            Scene scene = new Scene(h, 100, 50,CreateCamera(400, 200, new(0,1,0), new(0,0,0.001), 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
 
             return scene;
         }
         Scene FirstScene() {
             PrimitiveList world = new PrimitiveList();
 
-            var checker = new CheckerTexture(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.2, .3, .1)), new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.9, .9, .9)));
+            var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(.2, .3, .1)), new RGBAlbedoSpectrum(colorSpace, new(.9, .9, .9)), colorSpace);
 
-            var material  = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.7, .7, .7 )), 0.7);
-            var material1 = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(1, 0.32, 0.36 )), 0);
-            var material2 = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0.90, 0.76, 0.46 )), 0);
-            var material3 = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0.65, 0.77, 0.97 )), 0);
-            var material4 = new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0.90, 0.90, 0.90 )), 0);
+            var material  = new Metal(new RGBAlbedoSpectrum(colorSpace, new(.7, .7, .7 )), 0.7, colorSpace);
+            var material1 = new Metal(new RGBAlbedoSpectrum(colorSpace, new(1, 0.32, 0.36 )), 0, colorSpace);
+            var material2 = new Metal(new RGBAlbedoSpectrum(colorSpace, new(0.90, 0.76, 0.46 )), 0,colorSpace);
+            var material3 = new Metal(new RGBAlbedoSpectrum(colorSpace, new(0.65, 0.77, 0.97 )), 0, colorSpace);
+            var material4 = new Metal(new RGBAlbedoSpectrum(colorSpace, new(0.90, 0.90, 0.90 )), 0,colorSpace);
 
             var center2 = new Point3D<double>(0, 0, -20) + new Vector3D<double>(0, 0.5, 0);
 
@@ -115,14 +121,14 @@ namespace Raytracing {
             world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50, 20), new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )), 400, 200);
+            Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50, 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )), 400, 200);
 
             return scene;
         }
         Scene TwoSpheres() {
             PrimitiveList objects = new PrimitiveList();
 
-            var checker = new CheckerTexture(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0.2,0.3,0.1)), new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0.9,0.9,0.9)));
+            var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(0.2,0.3,0.1)), new RGBAlbedoSpectrum(colorSpace, new(0.9,0.9,0.9)), colorSpace);
 
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -10, 0), 10), new Lambertian(checker)));
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 10, 0), 10), new Lambertian(checker)));
@@ -131,14 +137,14 @@ namespace Raytracing {
                                     spp: 100,
                                     maxD: 50,
                                     CreateCamera(400, 200, new(13,2,3), new(0,0,0), 20, 10),
-                                    background: new RGBIlluminantSpectrum(Raytracer.ColorSpace, new(1,1,1)));
+                                    background: new RGBIlluminantSpectrum(colorSpace, new(1,1,1)));
 
             return scene;
         }
         Scene TwoPerlinSpheres() {
             PrimitiveList objects = new PrimitiveList();
 
-            var pertext = new NoiseTexture(4);
+            var pertext = new NoiseTexture(4, colorSpace);
 
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
             objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
@@ -147,12 +153,12 @@ namespace Raytracing {
                                     spp: 100,
                                     maxD: 50,
                                     CreateCamera(400, 200, new(13,2,3),new(0,0,0),20),
-                                    background: new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )));
+                                    background: new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )));
 
             return scene;
         }
         Scene Earth() {
-            var earthTexture = new ImageTexture( "");
+            var earthTexture = new ImageTexture( "", colorSpace);
 
             var earthSurface = new Lambertian(earthTexture);
             var globe = new GeometricPrimitive(new Sphere(new Point3D<double>(0, 0, 0), 2), earthSurface);
@@ -163,7 +169,7 @@ namespace Raytracing {
                                     spp: 10,
                                     maxD: 50,
                                     CreateCamera(1920, 1080, new(13,2,3), new(0,0,0), 20),
-                                    background: new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( .7, .8, 1 )),
+                                    background: new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )),
                                     imageWidth: 1920,
                                     imageHeight: 1080) ;
 
@@ -172,28 +178,28 @@ namespace Raytracing {
         Scene SimpleLight() {
             PrimitiveList objekts = new PrimitiveList();
 
-            var pertext = new NoiseTexture(4);
+            var pertext = new NoiseTexture(4, colorSpace);
             objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
             objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
 
-            var difflight = new DiffuseLight(new RGBIlluminantSpectrum(Raytracer.ColorSpace, new(10,10,10)));
+            var difflight = new DiffuseLight(new RGBIlluminantSpectrum(colorSpace, new(10,10,10)), colorSpace);
             objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
 
             Scene scene = new Scene(objs: objekts,
                                     spp: 1000,
                                     maxD: 50,
                                     CreateCamera(400,200,new(26,3,6),new(0,2,0),20),
-                                    background: new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(0,0,0)));
+                                    background: new RGBAlbedoSpectrum(colorSpace, new(0,0,0)));
 
             return scene;
         }
         Scene CornellBox() {
             PrimitiveList objects = new PrimitiveList();
 
-            var red =   new Lambertian  (new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( .65, .05, .05 )));
-            var white = new Lambertian  (new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( .73, .73, .73 )));
-            var green = new Lambertian  (new RGBAlbedoSpectrum(Raytracer.ColorSpace, new( .12, .45, .15 )));
-            var light = new DiffuseLight(new RGBIlluminantSpectrum(Raytracer.ColorSpace, new( 15, 15, 15 )));
+            var red =   new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .65, .05, .05 )), colorSpace);
+            var white = new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .73, .73, .73 )), colorSpace);
+            var green = new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .12, .45, .15 )), colorSpace);
+            var light = new DiffuseLight(new RGBIlluminantSpectrum(colorSpace, new( 15, 15, 15 )), colorSpace);
 
             //Box box1 = new Box(new Point3D(130, 0, 65), new Point3D(295, 165, 230), white);
             //Box box2 = new Box(new Point3D(265, 0, 295), new Point3D(430, 330, 460), white);
@@ -213,7 +219,7 @@ namespace Raytracing {
                                     spp: 100,
                                     maxD: 50,
                                     CreateCamera(300,300, new(278, 278, -800), new(278,278,0), 40),
-                                    background: new RGBIlluminantSpectrum(Raytracer.ColorSpace, new(0,0,0)),
+                                    background: new RGBIlluminantSpectrum(colorSpace, new(0,0,0)),
                                     imageWidth: 300,
                                     imageHeight: 300);
 

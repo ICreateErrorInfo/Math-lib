@@ -20,7 +20,7 @@ namespace Raytracing {
         private System.Windows.Controls.Image _image;
         private System.Windows.Controls.ProgressBar _progressBar;
         private System.Windows.Controls.TextBlock _time;
-        public static RGBColorSpace ColorSpace;
+        RGBColorSpace _ColorSpace;
 
         public Raytracer(System.Windows.Controls.Image image,
                          System.Windows.Controls.ProgressBar progressBar,
@@ -35,10 +35,10 @@ namespace Raytracing {
             SampledSpectrumConstants.Init();
             RGBToSpectrumTable.Init();
             RGBColorSpace.Init();
-            ColorSpace = RGBColorSpace.DCI_P3;
         }
-        public async void RenderScene(Scene scene)
+        public async void RenderScene(Scene scene, RGBColorSpace colorspace)
         {
+            _ColorSpace = colorspace;
             Stopwatch timer = Stopwatch.StartNew();
 
             var progress = new Progress<ProgressData>(OnProgress);
@@ -91,7 +91,7 @@ namespace Raytracing {
                         CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v)};
                         Ray r = scene.Camera.GenerateRay(sample).generatedRay;
                         SampledWavelengths lambda = SampledWavelengths.SampleUnifrom(((double)RandX[s] / byte.MaxValue));
-                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, ColorSpace);
+                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, _ColorSpace);
                     }
                     pixelArray[j, i] = pixelColor / samplesPerPixel;
                 }
@@ -169,7 +169,7 @@ namespace Raytracing {
 
             if (depth <= 0)
             {
-                return new RGBAlbedoSpectrum(ColorSpace, new(0,0,0)).Sample(lambda);
+                return new RGBAlbedoSpectrum(_ColorSpace, new(0,0,0)).Sample(lambda);
             }
 
             interaction = world.Intersect(ray, interaction);

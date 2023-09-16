@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Materials;
 using Raytracing.Spectrum;
 using System.Collections.Generic;
@@ -33,8 +34,8 @@ namespace Raytracing.Primitives {
             }
         }
 
-        public static TriangleMesh Import(string path) {
-            return Importer.Obj(path);
+        public static TriangleMesh Import(string path, RGBColorSpace colorspace) {
+            return Importer.Obj(path, colorspace);
         }
     }
 }

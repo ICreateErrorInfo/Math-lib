@@ -1,4 +1,5 @@
 ﻿using Moarx.Math;
+using Raytracing.Color;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Spectrum;
@@ -10,7 +11,7 @@ using System.IO;
 namespace Raytracing {
     public class Importer
     {
-        public static TriangleMesh Obj(string path)
+        public static TriangleMesh Obj(string path, RGBColorSpace colorSpace)
         {
             var stringList = File.ReadAllLines(path);
 
@@ -52,7 +53,7 @@ namespace Raytracing {
                 }
             }
             
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(new RGBAlbedoSpectrum(Raytracer.ColorSpace, new(.61, .61, .61)), 0.7));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), nTriangles, indices, nVertices, points, new Metal(new RGBAlbedoSpectrum(colorSpace, new(.61, .61, .61)), 0.7, colorSpace));
 
             return mesh;
         }
