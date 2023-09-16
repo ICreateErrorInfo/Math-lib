@@ -47,6 +47,7 @@ public class RGBToSpectrumTable {
     }
     public static void Init() {
         sRGB = new RGBToSpectrumTable(sRGBConstants.sRGBToSpectrumTableScale, sRGBConstants.sRGBToSpectrumTableData);
+        DCI_P3 = new RGBToSpectrumTable(DCPI_P3Constants.DCI_P3ToSpectrumTableScale, DCPI_P3Constants.DCI_P3ToSpectrumTableData);
     }
 
 

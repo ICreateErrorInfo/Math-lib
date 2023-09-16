@@ -8,9 +8,9 @@ public class XYZ {
     }
 
     public static XYZ SpectrumToXYZ(ISpectrum s) {
-        return new XYZ(ISpectrum.InnerProduct(SampledSpectrumConstants.XNew, s),
-                       ISpectrum.InnerProduct(SampledSpectrumConstants.YNew, s),
-                       ISpectrum.InnerProduct(SampledSpectrumConstants.ZNew, s)) / SampledSpectrumConstants.CIE_Y_integral;
+        return new XYZ(ISpectrum.InnerProduct(SampledSpectrumConstants.X, s),
+                       ISpectrum.InnerProduct(SampledSpectrumConstants.Y, s),
+                       ISpectrum.InnerProduct(SampledSpectrumConstants.Z, s)) / SampledSpectrumConstants.CIE_Y_integral;
     }
     public Point2D<double> xy() {
         return new Point2D<double>(X / (X + Y + Z), Y / (X + Y + Z));

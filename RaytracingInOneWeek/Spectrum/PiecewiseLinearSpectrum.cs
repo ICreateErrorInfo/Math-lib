@@ -30,7 +30,7 @@ public class PiecewiseLinearSpectrum: ISpectrum {
         PiecewiseLinearSpectrum spec = new PiecewiseLinearSpectrum(lambda.ToArray(), v.ToArray());
 
         if (normalize) {
-            spec.Scale(SampledSpectrumConstants.CIE_Y_integral / ISpectrum.InnerProduct(spec, SampledSpectrumConstants.YNew));
+            spec.Scale(SampledSpectrumConstants.CIE_Y_integral / ISpectrum.InnerProduct(spec, SampledSpectrumConstants.Y));
         }
 
         return spec;

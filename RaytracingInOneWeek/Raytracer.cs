@@ -35,7 +35,7 @@ namespace Raytracing {
             SampledSpectrumConstants.Init();
             RGBToSpectrumTable.Init();
             RGBColorSpace.Init();
-            ColorSpace = RGBColorSpace.sRGB;
+            ColorSpace = RGBColorSpace.DCI_P3;
         }
         public async void RenderScene(Scene scene)
         {
@@ -158,9 +158,9 @@ namespace Raytracing {
 
         RGB ToSensorRGB(SampledSpectrum L, SampledWavelengths lambda, double imagingRatio) {
             L = SampledSpectrum.SafeDiv(L, lambda.PDF());
-            return imagingRatio * new RGB((SampledSpectrumConstants.XNew.Sample(lambda) * L).Average(),
-                                          (SampledSpectrumConstants.YNew.Sample(lambda) * L).Average(),
-                                          (SampledSpectrumConstants.ZNew.Sample(lambda) * L).Average());
+            return imagingRatio * new RGB((SampledSpectrumConstants.X.Sample(lambda) * L).Average(),
+                                          (SampledSpectrumConstants.Y.Sample(lambda) * L).Average(),
+                                          (SampledSpectrumConstants.Z.Sample(lambda) * L).Average());
         }
 
         SampledSpectrum GetRayColor(Ray ray, ISpectrum background, Primitive world, int depth, SampledWavelengths lambda)

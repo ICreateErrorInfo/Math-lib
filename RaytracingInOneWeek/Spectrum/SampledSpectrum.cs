@@ -45,9 +45,9 @@ public class SampledSpectrum {
         return sum / ISpectrum.NSpectrumSamples;
     }
     public XYZ ToXYZ(SampledWavelengths lambda) {
-        SampledSpectrum X = SampledSpectrumConstants.XNew.Sample(lambda);
-        SampledSpectrum Y = SampledSpectrumConstants.YNew.Sample(lambda);
-        SampledSpectrum Z = SampledSpectrumConstants.ZNew.Sample(lambda);
+        SampledSpectrum X = SampledSpectrumConstants.X.Sample(lambda);
+        SampledSpectrum Y = SampledSpectrumConstants.Y.Sample(lambda);
+        SampledSpectrum Z = SampledSpectrumConstants.Z.Sample(lambda);
 
         SampledSpectrum pdf = lambda.PDF();
         return new XYZ(SafeDiv((X * this), pdf).Average(),

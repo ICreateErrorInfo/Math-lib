@@ -586,17 +586,7 @@ public readonly struct SampledSpectrumConstants {
         1.5769743995852967e-01,  1.9069090525482305e-01
     }.ToImmutableArray();
 
-    public static SampledSpectrum rgbRefl2SpectWhite, rgbRefl2SpectCyan;
-    public static SampledSpectrum rgbRefl2SpectMagenta, rgbRefl2SpectYellow;
-    public static SampledSpectrum rgbRefl2SpectRed, rgbRefl2SpectGreen;
-    public static SampledSpectrum rgbRefl2SpectBlue;
-    public static SampledSpectrum rgbIllum2SpectWhite, rgbIllum2SpectCyan;
-    public static SampledSpectrum rgbIllum2SpectMagenta, rgbIllum2SpectYellow;
-    public static SampledSpectrum rgbIllum2SpectRed, rgbIllum2SpectGreen;
-    public static SampledSpectrum rgbIllum2SpectBlue;
-
-    public static SampledSpectrum X, Y, Z;
-    public static DenselySampledSpectrum XNew, YNew, ZNew;
+    public static DenselySampledSpectrum X, Y, Z;
     public static PiecewiseLinearSpectrum Illumd65;
     public static PiecewiseLinearSpectrum IllumAcesD60;
 
@@ -605,9 +595,9 @@ public readonly struct SampledSpectrumConstants {
     public const int nSpectralSamples = 60;
 
     public static void Init() {
-        XNew = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEX.ToArray()));
-        YNew = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEY.ToArray()));
-        ZNew = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEZ.ToArray()));    
+        X = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEX.ToArray()));
+        Y = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEY.ToArray()));
+        Z = new DenselySampledSpectrum(new PiecewiseLinearSpectrum(CIELambda.ToArray(), CIEZ.ToArray()));    
 
         Illumd65 = PiecewiseLinearSpectrum.FromInterleaved(CIE_Illum_D6500.ToArray(), true);
         IllumAcesD60 = PiecewiseLinearSpectrum.FromInterleaved(ACES_Illum_D60.ToArray(), true);
