@@ -57,7 +57,7 @@ public class SampledSpectrum {
     public RGB ToRGB(SampledWavelengths lambda, RGBColorSpace cs) {
         XYZ xyz = ToXYZ(lambda);
         var tmp = cs.ToRGB(xyz);
-        tmp[0] *= 0.8;
+        //tmp[0] *= 0.8;
 
         return tmp;
     }

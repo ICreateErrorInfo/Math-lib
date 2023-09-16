@@ -1,7 +1,7 @@
 ﻿namespace Raytracing.Spectrum;
 public interface ISpectrum {
     const int LambdaMin = 360, LambdaMax = 830;
-    const int NSpectrumSamples = 40;
+    const int NSpectrumSamples = 8;
 
     public static double Blackbody(double lambda, double t) {
         if(t <= 0) {

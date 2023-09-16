@@ -186,7 +186,7 @@ namespace Raytracing {
 
             if (!interaction.HasScattered)
             {
-                return 20 * emitted.Sample(lambda);
+                return emitted.Sample(lambda);
             }
 
             return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * GetRayColor(interaction.ScatteredRay, background, world, depth - 1, lambda);
