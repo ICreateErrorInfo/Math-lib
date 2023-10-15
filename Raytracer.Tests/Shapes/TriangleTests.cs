@@ -25,7 +25,7 @@ namespace Raytracing.Tests.Shapes {
             SampledSpectrumConstants.Init();
 
             var cs = RGBColorSpace.sRGB;
-            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0);
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0, cs);
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
             int nVert = 3;
@@ -50,7 +50,7 @@ namespace Raytracing.Tests.Shapes {
             SampledSpectrumConstants.Init();
             var cs = RGBColorSpace.sRGB;
 
-            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0);
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new(.65, .7, .46 )), 0, cs);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -78,7 +78,7 @@ namespace Raytracing.Tests.Shapes {
             SampledSpectrumConstants.Init();
             var cs = RGBColorSpace.sRGB;
 
-            var material = new Metal(new RGBAlbedoSpectrum(cs, new( .65, .7, .46 )), 0);
+            var material = new Metal(new RGBAlbedoSpectrum(cs, new( .65, .7, .46 )), 0, cs);
 
             int nTri = 1;
             List<int> indices = new List<int>() { 0, 1, 2 };
@@ -106,7 +106,7 @@ namespace Raytracing.Tests.Shapes {
         {
             var cs = RGBColorSpace.sRGB;
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(0)), 1, new List<int> { 0,1,2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1, cs));
             var t = new Triangle(Transform.Translate(new(0)), Transform.Translate(new(0)), mesh, 0);
 
             Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
@@ -117,7 +117,7 @@ namespace Raytracing.Tests.Shapes {
         {
             var cs = RGBColorSpace.sRGB;
 
-            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1));
+            TriangleMesh mesh = new TriangleMesh(Transform.Translate(new(1)), 1, new List<int> { 0, 1, 2 }, 3, new List<Point3D<double>> { new(-2, 3, 0), new(2, 0, 0), new(-2, -1, 1) }, new Metal(new RGBAlbedoSpectrum(cs, new(0,0,0)), 1, cs));
             var t = new Triangle(Transform.Translate(new(1)), Transform.Translate(new(-1)), mesh, 0);
 
             Assert.That(t.GetObjectBound().PMin, Is.EqualTo(new Point3D<double>(-2, -1, 0)));
