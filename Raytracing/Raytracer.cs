@@ -148,8 +148,10 @@ namespace Raytracing {
             {
                 for (int i = 0; i < imageData.Width; i++)
                 {
-                    var color = ToColor(imageData.Data[j, i], imageData.SamplesPerPixel);
-                    bmp.SetPixel(i, (j - (imageData.Height - 1)) * -1, DirectColor.FromRgb(color.R, color.G, color.B));
+                    bmp.SetPixel(
+                        x:     i,
+                        y:     (j - (imageData.Height - 1)) * -1,
+                        color: DirectColor.FromRgb(imageData.Data[j, i]));
                 }
             }
 
@@ -190,16 +192,6 @@ namespace Raytracing {
             }
 
             return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * GetRayColor(interaction.ScatteredRay, background, world, depth - 1, lambda);
-        }
-        System.Drawing.Color ToColor(RGB pixel_color, int samples_per_pixel)
-        {
-            var r = pixel_color[0];
-            var g = pixel_color[1];
-            var b = pixel_color[2];
-
-            return System.Drawing.Color.FromArgb(Convert.ToInt32(255 * Math.Clamp(r, 0, 0.999)),
-                                                 Convert.ToInt32(255 * Math.Clamp(g, 0, 0.999)),
-                                                 Convert.ToInt32(255 * Math.Clamp(b, 0, 0.999)));
         }
         static ImageSource ToImageSource(DirectBitmap bitmap) {
 
