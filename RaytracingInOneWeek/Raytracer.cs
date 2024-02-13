@@ -86,9 +86,9 @@ namespace Raytracing {
                 {
                     RGB pixelColor = new RGB(0,0,0);
                     for (int s = 0; s < samplesPerPixel; s++) {
-                        var u = (i + 0.5 - ((double)RandX[s] / byte.MaxValue));
-                        var v = (j + 0.5 - ((double)RandY[s] / byte.MaxValue));
-                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v)};
+                        var u = (i + ((double)RandX[s] / byte.MaxValue));
+                        var v = (j + ((double)RandY[s] / byte.MaxValue));
+                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v), pointOnLense = new Point2D<double>((double)RandX[s] / byte.MaxValue, (double)RandY[s] / byte.MaxValue)};
                         Ray r = scene.Camera.GenerateRay(sample).generatedRay;
                         SampledWavelengths lambda = SampledWavelengths.SampleUnifrom(((double)RandX[s] / byte.MaxValue));
                         pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, _ColorSpace);

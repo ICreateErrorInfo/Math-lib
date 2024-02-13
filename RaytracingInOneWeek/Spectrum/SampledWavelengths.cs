@@ -50,6 +50,10 @@ public class SampledWavelengths {
         get {
             return lambda[i];
         }
+        set {
+            lambda[i] = value;
+            return;
+        }
     }
 
     double[] lambda, pdf;

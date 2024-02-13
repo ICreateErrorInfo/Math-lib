@@ -15,7 +15,7 @@ public partial class MainWindow: Window {
 
     public MainWindow() {
         InitializeComponent();
-        ParticleSystem system = new ParticleSystem();
+        ParticleSystem system = new ParticleSystem(10);
 
         Start(system);
     }

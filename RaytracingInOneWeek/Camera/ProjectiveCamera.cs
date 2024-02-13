@@ -22,9 +22,9 @@ public class ProjectiveCamera: ICamera {
         _LensRadius = lensRadius;
         _FocalDistance = focalDistance;
         
-        _ScreenToRaster = Transform.Scale(ResolutionWidth, resolutionHeight, 1) * 
+        _ScreenToRaster = Transform.Scale(ResolutionWidth, -ResolutionHeight, 1) * 
                           Transform.Scale(1 / (screenWindow.PMax.X - screenWindow.PMin.X),
-                                          1 / (screenWindow.PMin.Y - screenWindow.PMax.Y),
+                                          1 / (screenWindow.PMax.Y - screenWindow.PMin.Y),
                                           1) * 
                           Transform.Translate(new Vector3D<double>(-screenWindow.PMin.X, -screenWindow.PMax.Y, 0));
         _RasterToScreen = _ScreenToRaster.Inverse();

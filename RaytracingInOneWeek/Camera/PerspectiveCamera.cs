@@ -30,15 +30,20 @@ public class PerspectiveCamera: ProjectiveCamera {
         Point3D<double> pointOnFilm = new(sample.pointOnFilm.X, sample.pointOnFilm.Y, 0);
         Point3D<double> pCamera = _RasterToCamera * pointOnFilm;
 
-        Ray ray = new Ray(new(0,0,0), (pCamera.ToVector()).Normalize());
+        Ray ray = new Ray(new(0,0,0), rotationMatrix * (pCamera.ToVector()).Normalize());
 
         if (_LensRadius > 0) {
-            throw new NotImplementedException("Depth of field not implemented");
+            Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);
+
+            double ft = _FocalDistance / ray.Direction.Z;
+            Point3D<double> pFocus = ray.At(ft);
+
+            ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
         ray = CameraToWorld * ray;
-        ray = new(ray.Origin, rotationMatrix * ray.Direction, ray.TMax, ray.Time);
+        ray = new(ray.Origin, ray.Direction, ray.TMax, ray.Time);
         return new CameraRayInformation { generatedRay = ray, arrivedRadiance = 1 };
     }
 }

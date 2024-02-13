@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using Moarx.Math;
-using Raytracing;
 using Raytracing.Camera;
 using Raytracing.Color;
 using Raytracing.Materials;
@@ -23,7 +22,7 @@ namespace Raytracing {
 
             r.Init();
 
-            colorSpace = RGBColorSpace.DCI_P3;
+            colorSpace = RGBColorSpace.sRGB;
 
             r.RenderScene(FirstScene(), colorSpace);
         }
@@ -105,6 +104,9 @@ namespace Raytracing {
         Scene FirstScene() {
             PrimitiveList world = new PrimitiveList();
 
+            int width = 1920;
+            int height = 1080;
+
             var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(.2, .3, .1)), new RGBAlbedoSpectrum(colorSpace, new(.9, .9, .9)), colorSpace);
 
             var material  = new Metal(new RGBAlbedoSpectrum(colorSpace, new(.7, .7, .7 )), 0.7, colorSpace);
@@ -121,7 +123,7 @@ namespace Raytracing {
             world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
             world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
-            Scene scene = new Scene(world, 100, 50,CreateCamera(400, 200, new(0,0,0), new(0,0,-1), 50, 20), new RGBIlluminantSpectrum(colorSpace, new( .7, .8, 1 )), 400, 200);
+            Scene scene = new Scene(world, 500, 50,CreateCamera(width, height, new(0,0,0), new(0,0,-1), 50, -20), new RGBIlluminantSpectrum(colorSpace, new( .8039, .8863, 1 )), width, height);
 
             return scene;
         }
@@ -228,11 +230,28 @@ namespace Raytracing {
 
         private PerspectiveCamera CreateCamera(int width, int height, Point3D<double> origin, Point3D<double> lookAt, int fov, double focusDistance = 0) {
             double aspectRatio = width / (double)height;
-            var h = 1;
-            var viewportHeight = 2 * h / 2;
-            var viewportWidth = aspectRatio * viewportHeight;
 
-            return new PerspectiveCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, new(new(-viewportWidth, viewportHeight), new(viewportWidth, -viewportHeight)), 0, 0, fov, lookAt);
+            Bounds2D<double> screen = new();
+
+            if(aspectRatio > 1) {
+                screen = new Bounds2D<double>(
+                new(-aspectRatio, -1),
+                new(aspectRatio, 1)
+                );
+            } else {
+                screen = new Bounds2D<double>(
+                new(-1, -1 / aspectRatio),
+                new(1, 1 / aspectRatio)
+                );
+            }
+
+            double lensRadius = 0;
+
+            if (focusDistance != 0) {
+                lensRadius = 0.1;
+            }
+
+            return new PerspectiveCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, fov, lookAt);
         }
 
         private string ShowOpenFile()

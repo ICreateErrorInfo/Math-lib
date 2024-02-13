@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 namespace SPH_FluidSim; 
 public class ParticleSystem {
 
-    Particle particle;
+    Particle[] particles;
     DirectGraphics graphics;
     DirectBitmap bitmap;
 
-    public ParticleSystem() {
-        particle = new Particle() { Position = new(1920/2, 1080/2), Velocity = new(0)};
+    public ParticleSystem(int particleCount) {
+        particles = new Particle[particleCount];
+
+        for(int i = 0; i < particleCount; i++) {
+            particles[i] = new Particle() { Position = new(1920 / 2 + i * 50, 1080 / 2 + i * 50), Velocity = new(0) };
+        }
+
         bitmap = DirectBitmap.Create(1920, 1080);
         bitmap.Clear(DirectColors.Black);
         graphics = DirectGraphics.Create(bitmap);
@@ -18,11 +23,14 @@ public class ParticleSystem {
 
     public async Task Update(double deltaTime) {
         bitmap.Clear(DirectColors.Black);
-        particle.Velocity += new Vector2D<double>(0, 1) * 9.81 * deltaTime;
-        particle.Position += particle.Velocity * deltaTime;
-        particle = ResolveCollision(particle);
 
-        particle.Draw(graphics);
+        for (int i = 0; i < particles.Length;i++) {
+            particles[i].Velocity += new Vector2D<double>(0, 1) * 9.81 * deltaTime;
+            particles[i].Position += particles[i].Velocity * deltaTime;
+            particles[i] = ResolveCollision(particles[i]);
+
+            particles[i].Draw(graphics);
+        }
     }
 
     Particle ResolveCollision(Particle particle) {

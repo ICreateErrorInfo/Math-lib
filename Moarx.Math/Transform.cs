@@ -227,9 +227,10 @@ public class Transform {
         SquareMatrix persp = new SquareMatrix(new double[,] {
                 {1, 0, 0, 0 },
                 {0, 1, 0, 0 },
-                {0, 0, far/(far-near), -((far*near) / (far - near))},
+                {0, 0, far/(far-near), (-(far*near)) / (far - near)},
                 {0, 0, 1,0 }
             });
+
 
         double invertTanAngle = (double)1 / System.Math.Tan(MathmaticMethods.ConvertToRadians(fov) / 2);
 

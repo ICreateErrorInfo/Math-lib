@@ -3,6 +3,9 @@ public class MathmaticMethods {
     [ThreadStatic]
     private static Random _random;
 
+    const double PiOver2 = 1.57079632679489661923;
+    const double PiOver4 = 0.78539816339744830961;
+
     public static Random Random {
         get {
             if (_random == null) {
@@ -19,6 +22,22 @@ public class MathmaticMethods {
     }
     public static int GetRandomInt(int minimum, int maximum) {
         return Random.Next(minimum, maximum);
+    }
+
+    public static Point2D<double> SampleUniformDiskConcentric(Point2D<double> u) {
+        Point2D<double> uOffset = 2 * u - new Vector2D<double>(1, 1);
+        if (uOffset.X == 0 && uOffset.Y == 0)
+            return new Point2D<double>(0, 0);
+
+        double theta, r;
+        if (System.Math.Abs(uOffset.X) > System.Math.Abs(uOffset.Y)) {
+            r = uOffset.X;
+            theta = PiOver4 * (uOffset.Y / uOffset.X);
+        } else {
+            r = uOffset.Y;
+            theta = PiOver2 - PiOver4 * (uOffset.X / uOffset.Y);
+        }
+        return r * new Point2D<double>(System.Math.Cos(theta), System.Math.Sin(theta));
     }
 
     public static double SafeASin(double x) {
