@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Math-lib.Tests", "Math-lib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection", "Projection\Projection.csproj", "{48F639F6-2261-487B-AF0C-B683A211896D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracing", "RaytracingInOneWeek\Raytracing.csproj", "{6A59690D-B3C5-48CE-A463-5FD5DE4882AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracing", "Raytracing\Raytracing.csproj", "{6A59690D-B3C5-48CE-A463-5FD5DE4882AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RasterizerTest", "RasterizerTest\RasterizerTest.csproj", "{3ED4ED21-8362-416B-9FA4-7C2DA83744C8}"
 EndProject
@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Rasterizer.Tests", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluidSimulation", "FluidSimulation\FluidSimulation.csproj", "{F199406C-A9DE-46CC-864C-C4751C25F436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPH_FluidSim", "SPH_FluidSim\SPH_FluidSim.csproj", "{23BB3F14-4152-4806-92BC-AF7B3CBBF4AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPH_FluidSim", "SPH_FluidSim\SPH_FluidSim.csproj", "{23BB3F14-4152-4806-92BC-AF7B3CBBF4AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
