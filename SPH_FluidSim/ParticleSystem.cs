@@ -1,8 +1,9 @@
 ﻿using Moarx.Math;
 using Moarx.Graphics;
 using System.Threading.Tasks;
+using Moarx.Graphics.Color;
 
-namespace SPH_FluidSim; 
+namespace SPH_FluidSim;
 public class ParticleSystem {
 
     Particle[] particles;

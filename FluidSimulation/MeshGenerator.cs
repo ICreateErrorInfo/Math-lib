@@ -2,6 +2,7 @@
 using Moarx.Graphics;
 using System;
 using System.Collections.Generic;
+using Moarx.Graphics.Color;
 
 namespace FluidSimulation;
 

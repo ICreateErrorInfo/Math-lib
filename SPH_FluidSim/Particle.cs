@@ -1,7 +1,8 @@
 ﻿using Moarx.Math;
 using Moarx.Graphics;
+using Moarx.Graphics.Color;
 
-namespace SPH_FluidSim; 
+namespace SPH_FluidSim;
 public struct Particle
 {
     public Point2D<double> Position;

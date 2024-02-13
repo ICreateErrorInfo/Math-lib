@@ -1,4 +1,4 @@
-﻿namespace Moarx.Graphics {
+﻿namespace Moarx.Graphics.Color {
 
     [Serializable]
     public readonly record struct DirectColor {
@@ -20,11 +20,11 @@
             get {
 
                 return channel switch {
-                    BlueChannel  => B,
+                    BlueChannel => B,
                     GreenChannel => G,
-                    RedChannel   => R,
+                    RedChannel => R,
                     AlphaChannel => A,
-                    _            => throw new ArgumentOutOfRangeException(nameof(channel), channel, $"valid range is [{MinChannelValue}, {MaxChannelValue}]")
+                    _ => throw new ArgumentOutOfRangeException(nameof(channel), channel, $"valid range is [{MinChannelValue}, {MaxChannelValue}]")
                 };
             }
         }
@@ -52,9 +52,9 @@
                 // Farbe b hat keinen alpha Kanal
                 var newAlphaB = 1 - alphaA;
                 return FromRgb(
-                    red: (byte)(alphaA   * a.R + newAlphaB * b.R),
+                    red: (byte)(alphaA * a.R + newAlphaB * b.R),
                     green: (byte)(alphaA * a.G + newAlphaB * b.G),
-                    blue: (byte)(alphaA  * a.B + newAlphaB * b.B)
+                    blue: (byte)(alphaA * a.B + newAlphaB * b.B)
                 );
             } else {
                 // Farbe a und b haben einen Alphawert < 255
@@ -66,9 +66,9 @@
                 var invAlphaC = 1 / alphaC;
 
                 return FromRgba(
-                    red: (byte)(invAlphaC       * (alphaA * a.R + newAlphaB * b.R)),
-                    green: (byte)(invAlphaC     * (alphaA * a.G + newAlphaB * b.G)),
-                    blue: (byte)(invAlphaC      * (alphaA * a.B + newAlphaB * b.B)),
+                    red: (byte)(invAlphaC * (alphaA * a.R + newAlphaB * b.R)),
+                    green: (byte)(invAlphaC * (alphaA * a.G + newAlphaB * b.G)),
+                    blue: (byte)(invAlphaC * (alphaA * a.B + newAlphaB * b.B)),
                     alpha: (byte)(MaxChannelValue * alphaC)
                 );
             }

@@ -1,4 +1,5 @@
-﻿using Moarx.Math;
+﻿using Moarx.Graphics.Color;
+using Moarx.Math;
 using System.Drawing;
 using System.Numerics;
 using System.Security;

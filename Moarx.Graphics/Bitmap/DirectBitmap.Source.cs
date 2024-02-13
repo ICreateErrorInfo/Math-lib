@@ -1,4 +1,6 @@
-﻿namespace Moarx.Graphics {
+﻿using Moarx.Graphics.Color;
+
+namespace Moarx.Graphics {
 
     public abstract partial class DirectBitmap {
 

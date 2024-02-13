@@ -1,4 +1,4 @@
-﻿namespace Moarx.Graphics {
+﻿namespace Moarx.Graphics.Color {
 
     #region Powershell Script
     /* 

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Moarx.Graphics.Color;
+using NUnit.Framework;
 
 namespace Moarx.Graphics.Tests {
 

@@ -13,6 +13,7 @@ using Raytracing.Mathmatic;
 using Moarx.Math;
 using Moarx.Graphics;
 using Raytracing.Color;
+using Moarx.Graphics.Color;
 
 namespace Raytracing {
     public class Raytracer

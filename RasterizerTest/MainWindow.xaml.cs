@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;
+using Moarx.Graphics.Color;
 
 namespace RasterizerTest {
 
