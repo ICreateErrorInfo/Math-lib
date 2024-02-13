@@ -1,7 +1,6 @@
-﻿using Moarx.Math;
-using Raytracing.Color;
+﻿using Moarx.Graphics.Color;
+using Moarx.Math;
 using Raytracing.Materials;
-using Raytracing.Spectrum;
 using System.Collections.Generic;
 
 namespace Raytracing.Primitives {

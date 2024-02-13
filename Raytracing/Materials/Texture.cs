@@ -1,7 +1,7 @@
 ﻿using System;
+using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
 using Moarx.Math;
-using Raytracing.Color;
-using Raytracing.Spectrum;
 
 namespace Raytracing.Materials {
     public abstract class Texture

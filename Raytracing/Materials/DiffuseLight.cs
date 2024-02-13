@@ -1,7 +1,7 @@
-﻿using Moarx.Math;
-using Raytracing.Color;
+﻿using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
+using Moarx.Math;
 using Raytracing.Mathmatic;
-using Raytracing.Spectrum;
 
 namespace Raytracing.Materials {
     class DiffuseLight : Material

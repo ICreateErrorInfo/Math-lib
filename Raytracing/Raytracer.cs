@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using Raytracing.Spectrum;
 using Raytracing.Primitives;
 using Raytracing.Camera;
 using Raytracing.Mathmatic;
 using Moarx.Math;
 using Moarx.Graphics;
-using Raytracing.Color;
 using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
 
 namespace Raytracing {
     public class Raytracer

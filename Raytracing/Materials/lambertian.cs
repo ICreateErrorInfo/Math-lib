@@ -1,7 +1,7 @@
 ﻿using Moarx.Math;
-using Raytracing.Color;
 using Raytracing.Mathmatic;
-using Raytracing.Spectrum;
+using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
 
 namespace Raytracing.Materials {
     public class Lambertian : Material

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RaytracingInOneWeek\Raytracing.csproj" />
+    <ProjectReference Include="..\Moarx.Graphics\Moarx.Graphics.csproj" />
     <ProjectReference Include="..\Raytracing\Raytracing.csproj" />
   </ItemGroup>
 

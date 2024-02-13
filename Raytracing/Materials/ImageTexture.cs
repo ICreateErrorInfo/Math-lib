@@ -1,6 +1,6 @@
-﻿using Moarx.Math;
-using Raytracing.Color;
-using Raytracing.Spectrum;
+﻿using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
+using Moarx.Math;
 using System;
 using System.Drawing;
 

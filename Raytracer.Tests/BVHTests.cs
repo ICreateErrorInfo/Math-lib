@@ -1,12 +1,12 @@
 ﻿using Moarx.Math;
 using NUnit.Framework;
 using Raytracing.Accelerators;
-using Raytracing.Color;
 using Raytracing.Materials;
 using Raytracing.Primitives;
 using Raytracing.Shapes;
-using Raytracing.Spectrum;
 using System.Collections.Generic;
+using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
 
 namespace Raytracing.Tests {
     [TestFixture]

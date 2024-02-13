@@ -1,7 +1,7 @@
-﻿using Raytracing.Accelerators;
+﻿using Moarx.Graphics.Spectrum;
+using Raytracing.Accelerators;
 using Raytracing.Camera;
 using Raytracing.Primitives;
-using Raytracing.Spectrum;
 
 namespace Raytracing {
     public struct Scene

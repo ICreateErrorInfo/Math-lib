@@ -1,8 +1,8 @@
-﻿using Moarx.Math;
-using Raytracing.Color;
+﻿using Moarx.Graphics.Color;
+using Moarx.Graphics.Spectrum;
+using Moarx.Math;
 using Raytracing.Materials;
 using Raytracing.Primitives;
-using Raytracing.Spectrum;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

@@ -1,6 +1,6 @@
-﻿using Moarx.Math;
+﻿using Moarx.Graphics.Spectrum;
+using Moarx.Math;
 using Raytracing.Primitives;
-using Raytracing.Spectrum;
 
 namespace Raytracing.Mathmatic {
     public struct SurfaceInteraction {
