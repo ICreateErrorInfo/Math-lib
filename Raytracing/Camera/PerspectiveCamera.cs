@@ -35,10 +35,10 @@ public class PerspectiveCamera: ProjectiveCamera {
         if (_LensRadius > 0) {
             Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);
 
-            double ft = _FocalDistance / ray.Direction.Z;
-            Point3D<double> pFocus = ray.At(ft);
+            double tFocus = _FocalDistance / ray.Direction.Z;
+            Point3D<double> pointOfFocus = ray.At(tFocus);
 
-            ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
+            ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pointOfFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);

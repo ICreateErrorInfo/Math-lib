@@ -18,13 +18,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        Raytracer r = new Raytracer(image, ProgressBar, Time);
+        Raytracer raytracer = new Raytracer(image, ProgressBar, Time);
 
-        r.Init();
+        raytracer.Init();
 
         colorSpace = RGBColorSpace.sRGB;
 
-        r.RenderScene(FirstScene(), colorSpace);
+        raytracer.RenderScene(FirstScene(), colorSpace);
     }
 
     Scene TestSphere() {

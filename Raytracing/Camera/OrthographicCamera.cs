@@ -27,7 +27,12 @@ public class OrthographicCamera: ProjectiveCamera {
         Ray ray = new Ray(pCamera, new Vector3D<double>(0, 0, -1));
 
         if (_LensRadius > 0) {
-            throw new NotImplementedException("Depth of field not implemented");
+            Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);
+
+            double tFocus = _FocalDistance / ray.Direction.Z;
+            Point3D<double> pointOfFocus = ray.At(tFocus);
+
+            ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pointOfFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
