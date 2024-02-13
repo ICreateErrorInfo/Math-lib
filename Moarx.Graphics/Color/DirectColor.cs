@@ -105,6 +105,15 @@
             };
         }
 
+        public static DirectColor FromRgb(RGB rgb) {
+            return new() {
+                R = (byte)(rgb.R * MaxChannelValue),
+                G = (byte)(rgb.G * MaxChannelValue),
+                B = (byte)(rgb.B * MaxChannelValue),
+                A = MaxChannelValue
+            };
+        }
+
     }
 
 }
