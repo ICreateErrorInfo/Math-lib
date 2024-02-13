@@ -1,5 +1,5 @@
 ﻿using Moarx.Math;
-using Moarx.Rasterizer;
+using Moarx.Graphics;
 
 namespace SPH_FluidSim; 
 public struct Particle

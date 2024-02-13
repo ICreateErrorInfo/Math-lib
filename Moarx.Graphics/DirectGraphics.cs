@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Security;
 
-namespace Moarx.Rasterizer;
+namespace Moarx.Graphics;
 
 public class DirectGraphics {
 

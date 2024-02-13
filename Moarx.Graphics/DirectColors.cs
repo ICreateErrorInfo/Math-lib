@@ -1,4 +1,4 @@
-﻿namespace Moarx.Rasterizer {
+﻿namespace Moarx.Graphics {
 
     #region Powershell Script
     /* 

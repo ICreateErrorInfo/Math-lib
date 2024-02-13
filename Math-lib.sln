@@ -34,9 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Math.Tests", "Moarx.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recognizer", "Recognizer\Recognizer.csproj", "{6BCE3B47-F3BE-4D1B-AEB7-8E4247E10AC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Rasterizer", "Moarx.Rasterizer\Moarx.Rasterizer.csproj", "{106460FC-7DE8-492F-93F7-B8F34FE42192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Graphics", "Moarx.Graphics\Moarx.Graphics.csproj", "{106460FC-7DE8-492F-93F7-B8F34FE42192}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Rasterizer.Tests", "Moarx.Rasterizer.Tests\Moarx.Rasterizer.Tests.csproj", "{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moarx.Graphics.Tests", "Moarx.Graphics.Tests\Moarx.Graphics.Tests.csproj", "{C7951BF6-4D1C-4B7B-AB3F-A10CDAFB7055}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluidSimulation", "FluidSimulation\FluidSimulation.csproj", "{F199406C-A9DE-46CC-864C-C4751C25F436}"
 EndProject

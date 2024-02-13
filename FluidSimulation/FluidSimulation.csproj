@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moarx.Graphics\Moarx.Graphics.csproj" />
     <ProjectReference Include="..\Moarx.Math\Moarx.Math.csproj" />
-    <ProjectReference Include="..\Moarx.Rasterizer\Moarx.Rasterizer.csproj" />
+    <ProjectReference Include="..\Moarx.Rasterizer\Moarx.Graphics.csproj" />
   </ItemGroup>
 
 </Project>

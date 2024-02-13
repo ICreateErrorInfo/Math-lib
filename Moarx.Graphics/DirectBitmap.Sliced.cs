@@ -1,6 +1,6 @@
 ﻿using Moarx.Math;
 
-namespace Moarx.Rasterizer {
+namespace Moarx.Graphics {
 
     public abstract partial class DirectBitmap {
 

@@ -11,7 +11,7 @@ using Raytracing.Primitives;
 using Raytracing.Camera;
 using Raytracing.Mathmatic;
 using Moarx.Math;
-using Moarx.Rasterizer;
+using Moarx.Graphics;
 using Raytracing.Color;
 
 namespace Raytracing {

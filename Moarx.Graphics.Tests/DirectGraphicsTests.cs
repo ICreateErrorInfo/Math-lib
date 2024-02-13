@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Moarx.Rasterizer.Tests;
+namespace Moarx.Graphics.Tests;
 
 [TestFixture]
 public class DirectGraphicsTests {
