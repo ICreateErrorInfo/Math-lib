@@ -23,14 +23,15 @@ public class PerspectiveCamera: ProjectiveCamera {
         dyCamera = (_RasterToCamera* new Point3D<double>(0, 1, 0) -
                     _RasterToCamera* new Point3D<double>(0, 0, 0));
 
-        rotationMatrix = Transform.LookAt(cameraToWorld * new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
+        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, 1, 0));
+        CameraToWorld *= rotationMatrix;
     }
 
     public override CameraRayInformation GenerateRay(CameraSample sample) {
         Point3D<double> pointOnFilm = new(sample.pointOnFilm.X, sample.pointOnFilm.Y, 0);
         Point3D<double> pCamera = _RasterToCamera * pointOnFilm;
 
-        Ray ray = new Ray(new(0,0,0), rotationMatrix * (pCamera.ToVector()).Normalize());
+        Ray ray = new Ray(new(0,0,0), (pCamera.ToVector()).Normalize());
 
         if (_LensRadius > 0) {
             Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);

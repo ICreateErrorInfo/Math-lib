@@ -104,8 +104,8 @@ public partial class MainWindow : Window
     Scene FirstScene() {
         PrimitiveList world = new PrimitiveList();
 
-        int width = 400;
-        int height = 200;
+        int width = 1920;
+        int height = 1080;
 
         var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(.2, .3, .1)), new RGBAlbedoSpectrum(colorSpace, new(.9, .9, .9)), colorSpace);
 
@@ -123,7 +123,7 @@ public partial class MainWindow : Window
         world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(5, 0, -25), 3), material3));
         world.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(-5.5, 0, -15), 3), material4));
 
-        Scene scene = new Scene(world, 100, 50,CreateCamera(width, height, new(0,0,0), new(0,0,-1), 50, -20), new RGBIlluminantSpectrum(colorSpace, new( .8039, .8863, 1 )), width, height);
+        Scene scene = new Scene(world, 100, 50,CreateCamera(width, height, new(0,0,-10), new(0,0,1), 50, -20), new RGBIlluminantSpectrum(colorSpace, new( .8039, .8863, 1 )), width, height);
 
         return scene;
     }
@@ -228,15 +228,15 @@ public partial class MainWindow : Window
         return scene;
     }
 
-    private PerspectiveCamera CreateCamera(int width, int height, Point3D<double> origin, Point3D<double> lookAt, int fov, double focusDistance = 0) {
+    private ICamera CreateCamera(int width, int height, Point3D<double> origin, Point3D<double> lookAt, int fov, double focusDistance = 0) {
         double aspectRatio = width / (double)height;
 
         Bounds2D<double> screen = new();
 
         if(aspectRatio > 1) {
             screen = new Bounds2D<double>(
-            new(-aspectRatio, -1),
-            new(aspectRatio, 1)
+            new Point2D<double>(-aspectRatio, -1),
+            new Point2D<double>(aspectRatio, 1)  
             );
         } else {
             screen = new Bounds2D<double>(
@@ -252,6 +252,7 @@ public partial class MainWindow : Window
         }
 
         return new PerspectiveCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, fov, lookAt);
+        //return new OrthographicCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, lookAt);
     }
 
     private string ShowOpenFile()

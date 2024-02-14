@@ -220,7 +220,7 @@ public class Transform {
         return new Transform(cameraFromWorld, new SquareMatrix(worldFromCamera));
     }
     public static Transform Orthographic(double zNear, double zFar) {
-        return Scale(1, 1, 1 / (zFar - zNear)) *
+        return Scale(1, 1, (double)1 / (zFar - zNear)) *
                Translate(new Vector3D<double>(0, 0, -zNear));
     }
     public static Transform Perspective(double fov, double near, double far) {
