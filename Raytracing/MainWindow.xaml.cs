@@ -104,8 +104,8 @@ public partial class MainWindow : Window
     Scene FirstScene() {
         PrimitiveList world = new PrimitiveList();
 
-        int width = 400;
-        int height = 200;
+        int width = 1920;
+        int height = 1080;
 
         var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(.2, .3, .1)), new RGBAlbedoSpectrum(colorSpace, new(.9, .9, .9)), colorSpace);
 
@@ -248,7 +248,7 @@ public partial class MainWindow : Window
         double lensRadius = 0;
 
         if (focusDistance != 0) {
-            lensRadius = 0.2;
+            //lensRadius = 0.1;
         }
 
         return new PerspectiveCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, fov, lookAt);

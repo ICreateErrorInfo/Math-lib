@@ -42,7 +42,7 @@ public class RGB {
     }
 
     public static bool operator ==(RGB a, RGB b) {
-        if(a.R == b.R && a.G == b.G && a.B == b.B) {
+        if (a.R == b.R && a.G == b.G && a.B == b.B) {
             return true;
         }
         return false;

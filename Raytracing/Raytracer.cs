@@ -13,6 +13,7 @@ using Moarx.Math;
 using Moarx.Graphics;
 using Moarx.Graphics.Color;
 using Moarx.Graphics.Spectrum;
+using Raytracing.Integrators;
 
 namespace Raytracing {
     public class Raytracer
@@ -45,7 +46,7 @@ namespace Raytracing {
 
             var imageData = await Task.Run(() => RenderImageData(progress, scene));
 
-            var bitmap = ToBitmap(imageData);
+            var bitmap = ToBitmap(imageData, scene.SamplesPerPixel);
 
             _image.Source = ToImageSource(bitmap);
 
@@ -65,40 +66,46 @@ namespace Raytracing {
             int imageWidth = scene.ImageWidth;
             int imageHeight = scene.ImageHeight;
 
-            RGB[,] pixelArray = new RGB[imageHeight, imageWidth];
+            RandomWalkIntegrator integrator = new RandomWalkIntegrator(scene.Camera, worldBVHTree, _ColorSpace, 50);
 
-            var totalCount = imageHeight;
-            var current = 0;
-            progress.Report(new ProgressData(totalCount, current));
+            integrator.Render(scene, progress);
 
-            //random numbers
-            RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
-            byte[] RandX = new byte[samplesPerPixel];
-            byte[] RandY = new byte[samplesPerPixel];
-            crypto.GetBytes(RandX);
-            crypto.GetBytes(RandY);
+            RGB[,] pixelArray = new RGB[imageWidth, imageHeight];
 
-            Parallel.For(0, imageHeight, j => {
-                //for (int j = 0; j < imageHeight; j++) {
-                Interlocked.Increment(ref current);
-                progress.Report(new ProgressData(totalCount, current));
-                for (int i = 0; i < imageWidth; i++)
-                {
-                    RGB pixelColor = new RGB(0,0,0);
-                    for (int s = 0; s < samplesPerPixel; s++) {
-                        var u = (i + ((double)RandX[s] / byte.MaxValue));
-                        var v = (j + ((double)RandY[s] / byte.MaxValue));
-                        CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v), pointOnLense = new Point2D<double>((double)RandX[s] / byte.MaxValue, (double)RandY[s] / byte.MaxValue)};
-                        Ray r = scene.Camera.GenerateRay(sample).generatedRay;
-                        SampledWavelengths lambda = SampledWavelengths.SampleUnifrom(((double)RandX[s] / byte.MaxValue));
-                        pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, _ColorSpace);
-                    }
-                    pixelArray[j, i] = pixelColor / samplesPerPixel;
-                }
-            }
-            );
+            //var totalCount = imageHeight;
+            //var current = 0;
+            //progress.Report(new ProgressData(totalCount, current));
+
+            ////random numbers
+            //RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+            //byte[] RandX = new byte[samplesPerPixel];
+            //byte[] RandY = new byte[samplesPerPixel];
+            //crypto.GetBytes(RandX);
+            //crypto.GetBytes(RandY);
+
+            //Parallel.For(0, imageHeight, j => {
+            //    //for (int j = 0; j < imageHeight; j++) {
+            //    Interlocked.Increment(ref current);
+            //    progress.Report(new ProgressData(totalCount, current));
+            //    for (int i = 0; i < imageWidth; i++) {
+            //        RGB pixelColor = new RGB(0,0,0);
+            //        for (int s = 0; s < samplesPerPixel; s++) {
+            //            var u = (i + ((double)RandX[s] / byte.MaxValue));
+            //            var v = (j + ((double)RandY[s] / byte.MaxValue));
+            //            CameraSample sample = new CameraSample() { pointOnFilm = new Point2D<double>(u, v), pointOnLense = new Point2D<double>((double)RandX[s] / byte.MaxValue, (double)RandY[s] / byte.MaxValue)};
+            //            Ray r = scene.Camera.GenerateRay(sample).generatedRay;
+            //            SampledWavelengths lambda = SampledWavelengths.SampleUnifrom(((double)RandX[s] / byte.MaxValue));
+            //            pixelColor += GetRayColor(r, background, worldBVHTree, maxDepth, lambda).ToRGB(lambda, _ColorSpace);
+            //        }
+            //        pixelArray[i, j] = pixelColor / samplesPerPixel;
+            //    }
+            //}
+            //);
+            //scene.Camera.Film.Pixel = pixelArray;
+
+
             return new ImageData(
-                data: pixelArray,
+                data: scene.Camera.Film.Pixel,
                 width: imageWidth,
                 height: imageHeight,
                 samplesPerPixel: samplesPerPixel);
@@ -109,7 +116,7 @@ namespace Raytracing {
             _progressBar.Maximum = d.TotalCount;
             _progressBar.Value = d.Current;
         }
-        readonly struct ProgressData
+        public readonly struct ProgressData
         {
 
             public ProgressData(int totalCount, int current)
@@ -140,7 +147,7 @@ namespace Raytracing {
 
         }
 
-        DirectBitmap ToBitmap(ImageData imageData)
+        DirectBitmap ToBitmap(ImageData imageData, int spp)
         {
             DirectBitmap bmp = DirectBitmap.Create(imageData.Width, imageData.Height);
 
@@ -151,7 +158,7 @@ namespace Raytracing {
                     bmp.SetPixel(
                         x:     i,
                         y:     (j - (imageData.Height - 1)) * -1,
-                        color: DirectColor.FromRgb(imageData.Data[j, i].ClampZero().ClampOne()));
+                        color: DirectColor.FromRgb((imageData.Data[i, j] / spp).ClampZero().ClampOne()));
                 }
             }
 
