@@ -14,6 +14,7 @@ using Moarx.Graphics;
 using Moarx.Graphics.Color;
 using Moarx.Graphics.Spectrum;
 using Raytracing.Integrators;
+using static Raytracing.Raytracer;
 
 namespace Raytracing {
     public class Raytracer
@@ -115,6 +116,11 @@ namespace Raytracing {
 
             _progressBar.Maximum = d.TotalCount;
             _progressBar.Value = d.Current;
+
+            if(d.Data.Data is not null) {
+                var bitmap = ToBitmap(d.Data, d.Data.SamplesPerPixel);
+                _image.Source = ToImageSource(bitmap);
+            }
         }
         public readonly struct ProgressData
         {
@@ -125,11 +131,18 @@ namespace Raytracing {
                 Current = current;
             }
 
+            public ProgressData(int totalCount, int current, ImageData data) {
+                TotalCount = totalCount;
+                Current = current;
+                Data = data;
+            }
+
             public int TotalCount { get; }
             public int Current { get; }
+            public ImageData Data { get; }
 
         }
-        readonly struct ImageData
+        public readonly struct ImageData
         {
 
             public ImageData(RGB[,] data, int width, int height, int samplesPerPixel)
@@ -147,7 +160,7 @@ namespace Raytracing {
 
         }
 
-        DirectBitmap ToBitmap(ImageData imageData, int spp)
+        public DirectBitmap ToBitmap(ImageData imageData, int spp)
         {
             DirectBitmap bmp = DirectBitmap.Create(imageData.Width, imageData.Height);
 
@@ -200,7 +213,7 @@ namespace Raytracing {
 
             return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * GetRayColor(interaction.ScatteredRay, background, world, depth - 1, lambda);
         }
-        static ImageSource ToImageSource(DirectBitmap bitmap) {
+        public static ImageSource ToImageSource(DirectBitmap bitmap) {
 
             var bs = BitmapSource.Create(
                 pixelWidth: bitmap.Width,

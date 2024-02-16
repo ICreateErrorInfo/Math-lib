@@ -45,7 +45,7 @@ public abstract class ImageTileIntegrator: IIntegrator {
                 }
             });
 
-            progress.Report(new(totalCount, waveEnd - waveStart));
+            progress.Report(new(totalCount, waveEnd - waveStart, new(_camera.Film.Pixel, (int)_camera.ResolutionWidth, (int)_camera.ResolutionHeight, waveEnd)));
 
             waveStart = waveEnd;
             waveEnd = System.Math.Min(spp, waveEnd + nextWaveSize);
