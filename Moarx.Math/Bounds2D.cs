@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Moarx.Math;
 public readonly record struct Bounds2D<T>
@@ -46,6 +47,13 @@ public readonly record struct Bounds2D<T>
 
     public Rectangle2D<T> ToRectangle() {
         return new Rectangle2D<T>(PMin, PMax);
+    }
+    public Vector2D<T> Diagonal() {
+        return _pMax - _pMin;
+    }
+    public static Bounds2D<T> Intersect(Bounds2D<T> b1, Bounds2D<T> b2) {
+        return new Bounds2D<T>(Point2D<T>.Max(b1.PMin, b2.PMin),
+                               Point2D<T>.Min(b1.PMax, b2.PMax));
     }
 
     public Point2D<T> this[int i] {

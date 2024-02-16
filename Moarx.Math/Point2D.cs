@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Moarx.Math;
 
@@ -44,6 +45,14 @@ public readonly record struct Point2D<T>
 
     public Vector2D<T> ToVector() {
         return new Vector2D<T>(X, Y);
+    }
+    public static Point2D<T> Min(Point2D<T> p, Point2D<T> p1) {
+        return new Point2D<T>(T.Min(p.X, p1.X),
+                              T.Min(p.Y, p1.Y));
+    }
+    public static Point2D<T> Max(Point2D<T> p, Point2D<T> p1) {
+        return new Point2D<T>(T.Max(p.X, p1.X),
+                              T.Max(p.Y, p1.Y));
     }
 
 

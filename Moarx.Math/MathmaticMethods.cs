@@ -196,4 +196,33 @@ public class MathmaticMethods {
 
         return true;
     }
+
+    public static void ParallelFor2D(Bounds2D<int> extent, Action<Bounds2D<int>> func) {
+
+        int tileSize = System.Math.Clamp((int)(System.Math.Sqrt(extent.Diagonal().X * extent.Diagonal().Y /
+                                       (8 * Environment.ProcessorCount))),
+                                        1, 32);
+
+        Point2D<int> nextStart = extent.PMin;
+
+        int sumTiles = (int)(System.Math.Ceiling((double)extent.PMax.X / tileSize) * System.Math.Ceiling((double)extent.PMax.Y / tileSize));
+
+        Bounds2D<int>[] tiles = new Bounds2D<int>[sumTiles];
+
+        for(int i = 0; i < sumTiles; i++) {
+            Point2D<int> end = nextStart + new Vector2D<int>(tileSize, tileSize);
+            Bounds2D<int> b = Bounds2D<int>.Intersect(new Bounds2D<int>(nextStart, end), extent);
+
+            nextStart = new(nextStart.X + tileSize, nextStart.Y);
+            if (nextStart.X >= extent.PMax.X) {
+                nextStart = new(extent.PMin.X, nextStart.Y + tileSize);
+            }
+
+            tiles[i] = b;
+        }
+
+        Parallel.For(0, sumTiles, (i) => {
+            func(tiles[i]);
+        });
+    }
 }
