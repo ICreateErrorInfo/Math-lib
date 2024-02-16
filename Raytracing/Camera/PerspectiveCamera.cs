@@ -6,6 +6,7 @@ public class PerspectiveCamera: ProjectiveCamera {
 
     private Vector3D<double> dxCamera, dyCamera;
     private readonly Transform rotationMatrix;
+    private readonly double cosTotalWidth;
 
     public PerspectiveCamera(Transform cameraToWorld,
                              double shutterOpenTime,
@@ -23,7 +24,12 @@ public class PerspectiveCamera: ProjectiveCamera {
         dyCamera = (_RasterToCamera* new Point3D<double>(0, 1, 0) -
                     _RasterToCamera* new Point3D<double>(0, 0, 0));
 
-        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, 1, 0));
+        Point2D<double> radius = new Point2D<double>(0, 0); //TODO radius filter
+        Point3D<double> pCorner = new(-radius.X, -radius.Y, 0);
+        Vector3D<double> wCornerCamera = (_RasterToCamera * pCorner).ToVector().Normalize();
+        cosTotalWidth = wCornerCamera.Z;
+
+        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
         CameraToWorld *= rotationMatrix;
     }
 
@@ -31,7 +37,7 @@ public class PerspectiveCamera: ProjectiveCamera {
         Point3D<double> pointOnFilm = new(sample.pointOnFilm.X, sample.pointOnFilm.Y, 0);
         Point3D<double> pCamera = _RasterToCamera * pointOnFilm;
 
-        Ray ray = new Ray(new(0,0,0), (pCamera.ToVector()).Normalize());
+        Ray ray = new Ray(new(0,0,0), pCamera.ToVector().Normalize());
 
         if (_LensRadius > 0) {
             Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);
@@ -39,12 +45,14 @@ public class PerspectiveCamera: ProjectiveCamera {
             double tFocus = _FocalDistance / ray.Direction.Z;
             Point3D<double> pointOfFocus = ray.At(tFocus);
 
-            ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pointOfFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
+            Point3D<double> origin = new Point3D<double>(pLens.X, pLens.Y, 0);
+            Vector3D<double> direction = (pointOfFocus - origin).Normalize();
+
+            ray = new Ray(origin, direction);
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
         ray = CameraToWorld * ray;
-        ray = new(ray.Origin, ray.Direction, ray.TMax, ray.Time);
         return new CameraRayInformation { generatedRay = ray, arrivedRadiance = 1 };
     }
 }

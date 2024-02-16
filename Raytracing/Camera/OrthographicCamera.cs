@@ -22,23 +22,29 @@ public class OrthographicCamera: ProjectiveCamera {
         dyCamera = _RasterToCamera * new Vector3D<double>(0, 1, 0);
 
 
-        rotationMatrix = Transform.LookAt(cameraToWorld * new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
+        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
+
+        CameraToWorld *= rotationMatrix;
     }
 
     public override CameraRayInformation GenerateRay(CameraSample sample) {
         Point3D<double> pointOnFilm = new(sample.pointOnFilm.X, sample.pointOnFilm.Y, 0);
         Point3D<double> pCamera = _RasterToCamera * pointOnFilm;
 
-        Ray ray = new Ray(new(pCamera.X, -pCamera.Y, pCamera.Z), rotationMatrix * new Vector3D<double>(0, 0, 1));
+        Ray ray = new Ray(pCamera, new Vector3D<double>(0, 0, 1));
 
         if (_LensRadius > 0) {
-            //TODO
+            //TODO depth of Field
+
             //Point2D<double> pLens = _LensRadius * MathmaticMethods.SampleUniformDiskConcentric(sample.pointOnLense);
 
             //double tFocus = _FocalDistance / ray.Direction.Z;
             //Point3D<double> pointOfFocus = ray.At(tFocus);
 
-            //ray = new Ray(new Point3D<double>(pLens.X, pLens.Y, 0), (pointOfFocus - new Point3D<double>(pLens.X, pLens.Y, 0)).Normalize());
+            //Point3D<double> origin = new Point3D<double>(pLens.X, pLens.Y, 0);
+            //Vector3D<double> direction = (pointOfFocus - origin).Normalize();
+
+            //ray = new Ray(origin, direction);
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
