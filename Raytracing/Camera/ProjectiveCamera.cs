@@ -8,7 +8,7 @@ public class ProjectiveCamera: ICamera {
     protected double _LensRadius, _FocalDistance;
 
 
-    public ProjectiveCamera(Transform cameraToWorld,
+    public ProjectiveCamera(CameraTransform cameraToWorld,
                             double shutterOpenTime,
                             double shutterCloseTime,
                             double resolutionWidth,

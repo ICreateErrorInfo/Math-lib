@@ -16,23 +16,23 @@ public struct CameraRayInformation {
 public abstract class ICamera {
 
     public Film Film;
-    public Transform CameraToWorld;
+    public CameraTransform CameraTransfrom;
     public double ShutterOpenTime, ShutterCloseTime;
     public double ResolutionWidth, ResolutionHeight;
 
-    public ICamera( Transform cameraToWorld,
+    public ICamera( CameraTransform cameraTransfrom,
                     double shutterOpenTime,
                     double shutterCloseTime,
                     double resolutionWidth,
                     double resolutionHeight) {
 
-        CameraToWorld = cameraToWorld;
         ShutterOpenTime = shutterOpenTime;
         ShutterCloseTime = shutterCloseTime;
         ResolutionWidth = resolutionWidth;
         ResolutionHeight = resolutionHeight;
 
         Film = new Film((int)resolutionWidth, (int)resolutionHeight);
+        CameraTransfrom = cameraTransfrom;
     }
 
     public virtual CameraRayInformation GenerateRay(CameraSample sample) {

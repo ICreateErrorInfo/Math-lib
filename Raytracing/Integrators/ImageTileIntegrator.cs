@@ -32,6 +32,17 @@ public abstract class ImageTileIntegrator: IIntegrator {
 
         while(waveStart < spp) {
 
+            //for (int i = pixelBounds.PMin.X; i < pixelBounds.PMax.X; i++) {
+            //    for (int j = pixelBounds.PMin.Y; j < pixelBounds.PMax.Y; j++) {
+            //        Point2D<int> currentPixel = new Point2D<int>(i, j);
+
+            //        for (int sampleIndex = waveStart; sampleIndex < waveEnd; ++sampleIndex) {
+
+            //            EvaluatePixelSample(currentPixel, sampleIndex);
+            //        }
+            //    }
+            //}
+
             MathmaticMethods.ParallelFor2D(pixelBounds, (Bounds2D<int> tileBounds) => {
                 for (int i = tileBounds.PMin.X; i < tileBounds.PMax.X; i++) {
                     for (int j = tileBounds.PMin.Y; j < tileBounds.PMax.Y; j++) {

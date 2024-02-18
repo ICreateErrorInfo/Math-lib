@@ -5,10 +5,9 @@ namespace Raytracing.Camera;
 public class PerspectiveCamera: ProjectiveCamera {
 
     private Vector3D<double> dxCamera, dyCamera;
-    private readonly Transform rotationMatrix;
     private readonly double cosTotalWidth;
 
-    public PerspectiveCamera(Transform cameraToWorld,
+    public PerspectiveCamera(CameraTransform cameraToWorld,
                              double shutterOpenTime,
                              double shutterCloseTime,
                              double resolutionWidth,
@@ -28,9 +27,6 @@ public class PerspectiveCamera: ProjectiveCamera {
         Point3D<double> pCorner = new(-radius.X, -radius.Y, 0);
         Vector3D<double> wCornerCamera = (_RasterToCamera * pCorner).ToVector().Normalize();
         cosTotalWidth = wCornerCamera.Z;
-
-        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
-        CameraToWorld *= rotationMatrix;
     }
 
     public override CameraRayInformation GenerateRay(CameraSample sample) {
@@ -52,7 +48,7 @@ public class PerspectiveCamera: ProjectiveCamera {
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
-        ray = CameraToWorld * ray;
+        ray = CameraTransfrom.renderFromCamera * ray;
         return new CameraRayInformation { generatedRay = ray, arrivedRadiance = 1 };
     }
 }

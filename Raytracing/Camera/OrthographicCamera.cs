@@ -6,9 +6,8 @@ namespace Raytracing.Camera;
 public class OrthographicCamera: ProjectiveCamera {
 
     private Vector3D<double> dxCamera, dyCamera;
-    private readonly Transform rotationMatrix;
 
-    public OrthographicCamera(Transform cameraToWorld,
+    public OrthographicCamera(CameraTransform cameraToWorld,
                               double shutterOpenTime,
                               double shutterCloseTime,
                               double resolutionWidth,
@@ -20,11 +19,6 @@ public class OrthographicCamera: ProjectiveCamera {
     
         dxCamera = _RasterToCamera * new Vector3D<double>(1, 0, 0);
         dyCamera = _RasterToCamera * new Vector3D<double>(0, 1, 0);
-
-
-        rotationMatrix = Transform.LookAt(new Point3D<double>(0, 0, 0), lookAt, new(0, -1, 0));
-
-        CameraToWorld *= rotationMatrix;
     }
 
     public override CameraRayInformation GenerateRay(CameraSample sample) {
@@ -48,7 +42,7 @@ public class OrthographicCamera: ProjectiveCamera {
         }
 
         ray.Time = MathmaticMethods.Lerp(sample.time, ShutterOpenTime, ShutterCloseTime);
-        ray = CameraToWorld * ray;
+        ray = CameraTransfrom.renderFromCamera * ray;
         return new CameraRayInformation { generatedRay = ray, arrivedRadiance = 1 };
     }
 }

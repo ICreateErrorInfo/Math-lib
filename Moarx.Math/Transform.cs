@@ -216,8 +216,9 @@ public class Transform {
         worldFromCamera[2,2] = dir.Z;
         worldFromCamera[3,2] = 0;
 
-        SquareMatrix cameraFromWorld = new SquareMatrix(worldFromCamera).Inverse().Value;
-        return new Transform(cameraFromWorld, new SquareMatrix(worldFromCamera));
+        SquareMatrix worldFromCameraTransform = new SquareMatrix(worldFromCamera);
+        SquareMatrix cameraFromWorldTransform = worldFromCameraTransform.Inverse().Value;
+        return new Transform(cameraFromWorldTransform, worldFromCameraTransform);
     }
     public static Transform Orthographic(double zNear, double zFar) {
         return Scale(1, 1, (double)1 / (zFar - zNear)) *

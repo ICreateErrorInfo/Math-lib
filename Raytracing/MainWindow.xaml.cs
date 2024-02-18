@@ -133,7 +133,7 @@ public partial class MainWindow : Window
         var checker = new CheckerTexture(new RGBAlbedoSpectrum(colorSpace, new(0.2,0.3,0.1)), new RGBAlbedoSpectrum(colorSpace, new(0.9,0.9,0.9)), colorSpace);
 
         objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -10, 0), 10), new Lambertian(checker)));
-        objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 10, 0), 10), new Lambertian(checker)));
+        objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 10.1, 0), 10), new Lambertian(checker)));
 
         Scene scene = new Scene(objs: objects,
                                 spp: 100,
@@ -149,7 +149,7 @@ public partial class MainWindow : Window
         var pertext = new NoiseTexture(4, colorSpace);
 
         objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
-        objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
+        objects.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2.1, 0), 2), new Lambertian(pertext)));
 
         Scene scene = new Scene(objs: objects,
                                 spp: 100,
@@ -182,7 +182,7 @@ public partial class MainWindow : Window
 
         var pertext = new NoiseTexture(4, colorSpace);
         objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, -1000, 0), 1000), new Lambertian(pertext)));
-        objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2, 0), 2), new Lambertian(pertext)));
+        objekts.Add(new GeometricPrimitive(new Sphere(new Point3D<double>(0, 2.1, 0), 2), new Lambertian(pertext)));
 
         var difflight = new DiffuseLight(new RGBIlluminantSpectrum(colorSpace, new(10,10,10)), colorSpace);
         objekts.Add(new GeometricPrimitive(new XYRect(3, 5, 1, 3, -2), difflight));
@@ -231,12 +231,12 @@ public partial class MainWindow : Window
     private ICamera CreateCamera(int width, int height, Point3D<double> origin, Point3D<double> lookAt, int fov, double focusDistance = 0) {
         double aspectRatio = width / (double)height;
 
-        Bounds2D<double> screen = new();
+        Bounds2D<double> screen;
 
         if(aspectRatio > 1) {
             screen = new Bounds2D<double>(
-            new Point2D<double>(-aspectRatio, -1)*1,
-            new Point2D<double>(aspectRatio, 1)  *1
+            new Point2D<double>(-aspectRatio, -1),
+            new Point2D<double>(aspectRatio, 1)  
             );
         } else {
             screen = new Bounds2D<double>(
@@ -251,8 +251,10 @@ public partial class MainWindow : Window
             lensRadius = 0.1;
         }
 
-        return new PerspectiveCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, fov, lookAt);
-        //return new OrthographicCamera(Transform.Translate(origin.ToVector()), 0, 1, width, height, screen, lensRadius, focusDistance, lookAt);
+        CameraTransform cameraToWorld = new CameraTransform(Transform.LookAt(origin, lookAt, new(0, -1, 0)).Inverse());
+
+        return new PerspectiveCamera(cameraToWorld, 0, 1, width, height, screen, lensRadius, focusDistance, fov, lookAt);
+        //return new OrthographicCamera(cameraToWorld, 0, 1, width, height, screen, lensRadius, focusDistance, lookAt);
     }
 
     private string ShowOpenFile()
