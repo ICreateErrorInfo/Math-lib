@@ -6,7 +6,8 @@ namespace BenchmarkTests
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<VertexBenchmarks>();
+            //BenchmarkRunner.Run<VertexBenchmarks>();
+            BenchmarkRunner.Run<RandomBenchmarks>();
         }
     }
 }

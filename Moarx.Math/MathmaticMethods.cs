@@ -1,12 +1,15 @@
 ﻿namespace Moarx.Math;
 public class MathmaticMethods {
+
     [ThreadStatic]
     private static Random _random;
+    [ThreadStatic]
+    private static rng _rng;
 
     const double PiOver2 = 1.57079632679489661923;
     const double PiOver4 = 0.78539816339744830961;
 
-    public static Random Random {
+    private static Random Random {
         get {
             if (_random == null) {
                 _random = new System.Random();
@@ -14,11 +17,25 @@ public class MathmaticMethods {
             return _random;
         }
     }
+    private static rng RandomRng {
+        get {
+            if (_rng == null) {
+                _rng = new rng();
+            }
+            return _rng;
+        }
+    }
+
     public static double Random1Tom1() {
         return GetRandomDouble(-1, 1);
     }
     public static double GetRandomDouble(double minimum, double maximum) {
-        return Random.NextDouble() * (maximum - minimum) + minimum;
+
+        if(minimum == 0 && maximum == 1) {
+            return RandomRng.Uniform();
+        }
+
+        return RandomRng.Uniform() * (maximum - minimum) + minimum;
     }
     public static int GetRandomInt(int minimum, int maximum) {
         return Random.Next(minimum, maximum);
