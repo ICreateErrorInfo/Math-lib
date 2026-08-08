@@ -328,4 +328,12 @@ internal class SquareMatrixTests {
 
         Assert.That(m.Inverse(), Is.Null);
     }
+    [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var m = new SquareMatrix(3);
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = m[3, 0]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = m[0, 3]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = m[-1, 0]);
+    }
 }

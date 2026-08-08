@@ -39,6 +39,13 @@ public class Normal3DTests {
         Assert.That(p1[2], Is.EqualTo(0));
     }
     [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var p1 = new Normal3D<double>(new(0, 1, 0));
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p1[3]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p1[-1]);
+    }
+    [Test]
     public void TestLength() {
 
         var p1 = new Normal3D<double>(new(12, -1, 3));

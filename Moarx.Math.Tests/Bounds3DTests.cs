@@ -236,6 +236,13 @@ public class Bounds3DTests {
         Assert.That(b1[1], Is.EqualTo(pMax));
     }
     [Test]
+    public void TestGetThrowsOnOutOfRange() {
+        Bounds3D<double> b1 = new(new(0, 0, 0), new(1, 1, 1));
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = b1[2]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = b1[-1]);
+    }
+    [Test]
     public void TestDistanceSquaredForPointInsideIsZero() {
         Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
 

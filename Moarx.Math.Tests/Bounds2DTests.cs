@@ -93,4 +93,12 @@ public class Bounds2DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = b[2]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = b[-1]);
     }
+    [Test]
+    public void TestInvertedBoundsDiagonalIsNegative() {
+        // The two-point ctor always sorts PMin/PMax, but object-initializer syntax bypasses that,
+        // producing an inverted box. Diagonal() is not guarded against this.
+        Bounds2D<double> b = new() { PMin = new Point2D<double>(5, 5), PMax = new Point2D<double>(1, 1) };
+
+        Assert.That(b.Diagonal(), Is.EqualTo(new Vector2D<double>(-4, -4)));
+    }
 }

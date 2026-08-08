@@ -167,13 +167,15 @@ Verifiziert: `Moarx.Math.Tests` (326/326 grün) und `Raytracing` bauen fehlerfre
 
 Kein Bug gefunden.
 
-## 4. Edge Cases (typübergreifend)
+## 4. Edge Cases (typübergreifend) — ✅ erledigt (2026-08-08)
 
-- [ ] Zero-Vektoren bei `Normalize`/`GetLength` (Division durch 0 → NaN/Infinity)
-- [ ] Degenerierte/invertierte `Bounds2D`/`Bounds3D`
-- [ ] `Infinity`-Werte (z.B. `Ray.TMax`-Default, `Bounds3D`-Sentinel via `MinValue`/`MaxValue`)
-- [ ] Singuläre Matrix bei `SquareMatrix.Inverse()`
-- [ ] Indexer Out-of-Range (`IndexOutOfRangeException`) für alle Typen mit `this[int]`
+- [x] Zero-Vektoren bei `Normalize`/`GetLength` (bereits in Punkt 2 erledigt — wirft `ArgumentOutOfRangeException` statt stillem NaN, s. `VectorExtensionsTests`)
+- [x] Degenerierte/invertierte `Bounds2D`/`Bounds3D` (`Bounds3D` bereits in Punkt 3 erledigt; `Bounds2D` jetzt ergänzt: `TestInvertedBoundsDiagonalIsNegative`)
+- [x] `Infinity`-Werte — `Ray.TMax`-Default bereits in Punkt 3 erledigt (`RayTests`), `Bounds2D`/`Bounds3D`-Sentinel via `MinValue`/`MaxValue` bereits abgedeckt (`TestEmptyBounds2D`/`TestEmptyBound3D`)
+- [x] Singuläre Matrix bei `SquareMatrix.Inverse()` (bereits in Punkt 3 erledigt)
+- [x] Indexer Out-of-Range für alle Typen mit `this[int]` — Audit aller Indexer-Typen ergab drei bislang ungetestete: `Bounds3D`, `Normal3D`, `SquareMatrix` (2D-Indexer `this[int,int]`, ungeprüfter Zugriff auf das darunterliegende Array). Alle drei jetzt ergänzt (`Vector2D`/`Vector3D`/`Point2D`/`Point3D`/`Bounds2D`/`CubicBezierCurve2D`/`QuadBezierCurve2D` waren bereits in früheren Punkten abgedeckt).
+
+Kein neuer Bug gefunden. Verifiziert: `Moarx.Math.Tests` (330/330 grün).
 
 ## 5. Generics-Abdeckung (systemische Lücke)
 
