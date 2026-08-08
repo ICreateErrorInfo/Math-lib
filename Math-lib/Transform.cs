@@ -13,7 +13,7 @@ namespace Math_lib
         //Ctors
         public Transform()
         {
-            m.Identity();
+            m = new Matrix(4, 4);
             mInv = Matrix.Inverse4x4(m);
         }
         public Transform(double[,] mat)
