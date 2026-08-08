@@ -111,5 +111,44 @@ public class Point2DTests {
 
         Assert.That(expectedPoint, Is.EqualTo(point1.ToVector()));
     }
+    [Test]
+    public void TestMin() {
+        var p1 = new Point2D<double>(1, 5);
+        var p2 = new Point2D<double>(3, 2);
+
+        Assert.That(Point2D<double>.Min(p1, p2), Is.EqualTo(new Point2D<double>(1, 2)));
+    }
+    [Test]
+    public void TestMax() {
+        var p1 = new Point2D<double>(1, 5);
+        var p2 = new Point2D<double>(3, 2);
+
+        Assert.That(Point2D<double>.Max(p1, p2), Is.EqualTo(new Point2D<double>(3, 5)));
+    }
+    [Test]
+    public void TestExplicitCastToInt() {
+        var p = new Point2D<double>(1.7, 2.2);
+
+        var casted = (Point2D<int>)p;
+
+        Assert.That(casted.X, Is.EqualTo(2));
+        Assert.That(casted.Y, Is.EqualTo(2));
+    }
+    [Test]
+    public void TestExplicitCastToDouble() {
+        var p = new Point2D<int>(1, 2);
+
+        var casted = (Point2D<double>)p;
+
+        Assert.That(casted.X, Is.EqualTo(1));
+        Assert.That(casted.Y, Is.EqualTo(2));
+    }
+    [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var p = new Point2D<double>(1, 2);
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p[2]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p[-1]);
+    }
 }
 

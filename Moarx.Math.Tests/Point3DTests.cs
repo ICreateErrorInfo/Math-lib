@@ -117,4 +117,38 @@ public class Point3DTests {
 
         Assert.That(expectedPoint, Is.EqualTo(point1.ToVector()));
     }
+    [Test]
+    public void TestSmalestComponents() {
+        var p1 = new Point3D<double>(1, 5, -2);
+        var p2 = new Point3D<double>(3, 2, -7);
+
+        Assert.That(Point3D<double>.SmalestComponents(p1, p2), Is.EqualTo(new Point3D<double>(1, 2, -7)));
+    }
+    [Test]
+    public void TestGreatestComponents() {
+        var p1 = new Point3D<double>(1, 5, -2);
+        var p2 = new Point3D<double>(3, 2, -7);
+
+        Assert.That(Point3D<double>.GreatestComponents(p1, p2), Is.EqualTo(new Point3D<double>(3, 5, -2)));
+    }
+    [Test]
+    public void TestPermute() {
+        var p = new Point3D<double>(10, 20, 30);
+
+        Assert.That(Point3D<double>.Permute(p, 2, 0, 1), Is.EqualTo(new Point3D<double>(30, 10, 20)));
+        Assert.That(Point3D<double>.Permute(p, 0, 1, 2), Is.EqualTo(p));
+    }
+    [Test]
+    public void TestRound() {
+        var p = new Point3D<double>(1.2345, 2.6789, -3.14159);
+
+        Assert.That(Point3D<double>.Round(p, 2), Is.EqualTo(new Point3D<double>(1.23, 2.68, -3.14)));
+    }
+    [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var p = new Point3D<double>(1, 2, 3);
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p[3]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = p[-1]);
+    }
 }

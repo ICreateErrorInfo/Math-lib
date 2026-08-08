@@ -70,14 +70,19 @@ unangetastet gelassen. Neue Tests: `TestRefractAtNormalIncidenceIsUnchanged`, `T
 
 Verifiziert: `Moarx.Math.Tests` (256/256 grün) und `Raytracing` bauen fehlerfrei.
 
-### Point2D
-- [ ] `Min`
-- [ ] `Max`
+### Point2D — ✅ erledigt (2026-08-08)
+- [x] `Min`
+- [x] `Max`
+- [x] Explizite Casts (`(Point2D<int>)`, `(Point2D<double>)`)
+- [x] Indexer Out-of-Range
 
-### Point3D
-- [ ] `SmalestComponents` / `GreatestComponents`
-- [ ] `Permute`
-- [ ] `Round`
+### Point3D — ✅ erledigt (2026-08-08)
+- [x] `SmalestComponents` / `GreatestComponents`
+- [x] `Permute`
+- [x] `Round`
+- [x] Indexer Out-of-Range
+
+Kein Bug gefunden. Verifiziert: `Moarx.Math.Tests` (266/266 grün).
 
 ### Normal3D
 - [ ] `FaceForward`
