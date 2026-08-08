@@ -84,22 +84,26 @@ Verifiziert: `Moarx.Math.Tests` (256/256 grün) und `Raytracing` bauen fehlerfre
 
 Kein Bug gefunden. Verifiziert: `Moarx.Math.Tests` (266/266 grün).
 
-### Normal3D
-- [ ] `FaceForward`
-- [ ] echte `GetLength`/`GetLengthSquared`-Tests (nach Bugfix aus Punkt 1)
+### Normal3D — ✅ erledigt (2026-08-08)
+- [x] `FaceForward`
+- [x] echte `GetLength`/`GetLengthSquared`-Tests (bereits in Punkt 1 ergänzt, zusammen mit dem Ctor-Normalisierungs-Fix)
 
-### Bounds3D
-- [ ] `IntersectP(Ray, out, out)` — Ray-Intersection (wichtigste Methode des Typs, komplett ungetestet)
-- [ ] `IntersectP(Ray, Vector3D, bool[])`
-- [ ] `BoundingSphere()`
-- [ ] `TestLerp` reaktivieren (aktuell auskommentiert in `Bounds3DTests.cs:188-200`) — Referenzwerte ggf. aus `Math-lib.Tests\Bound3DTests.cs` übernehmen
-- [ ] NaN-Guard auf `PMin`/`PMax` verifizieren
-- [ ] Degenerierte/invertierte Bounds (PMin > PMax, Volumen 0)
+### Bounds3D — ✅ erledigt (2026-08-08)
+- [x] `IntersectP(Ray, out, out)` — Hit- und Miss-Fall (Miss-Fall nutzt achsenparallelen Strahl mit 0-Richtungskomponente, deckt die Infinity-Handhabung ab)
+- [x] `IntersectP(Ray, Vector3D, bool[])` — Hit- und Miss-Fall
+- [x] `BoundingSphere()` — Normalfall + Degenerierte-Bounds-Fall (Default-Ctor: Center liegt nicht in den eigenen Sentinel-Bounds → Radius 0)
+- [x] `TestLerp` reaktiviert (referenzierte zuvor eine nicht existierende `Mathe`-Klasse, jetzt `MathmaticMethods.Lerp`)
+- [x] NaN-Guard auf `PMin`/`PMax` verifiziert
+- [x] Degenerierte/invertierte Bounds — dokumentiert: Object-Initializer-Syntax umgeht die Sortier-Logik des Zwei-Punkt-Ctors, `Volume()` kann dadurch negativ werden (kein Bug-Fix beauftragt, nur als bestehendes Verhalten getestet)
 
-### SquareMatrix
-- [ ] `Mul<T>(T[] v)` (Matrix-Vektor-Multiplikation) — Referenzwerte ggf. aus `Math-lib.Tests\MatrixTests.cs`
-- [ ] `==` / `!=`
-- [ ] `Inverse()` bei singulärer Matrix (Determinante 0 → `null`)
+Kein Bug gefunden. Verifiziert: `Moarx.Math.Tests` (284/284 grün) und `Raytracing` bauen fehlerfrei.
+
+### SquareMatrix — ✅ erledigt (2026-08-08)
+- [x] `Mul<T>(T[] v)` (Matrix-Vektor-Multiplikation, inkl. Identitätsmatrix-Fall)
+- [x] `==` / `!=`
+- [x] `Inverse()` bei singulärer Matrix für 3x3, 4x4 und NxN (5x5) → `null`
+
+Kein Bug gefunden.
 
 ### Transform
 - [ ] `Transpose()`

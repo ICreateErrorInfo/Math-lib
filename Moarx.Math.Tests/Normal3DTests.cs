@@ -92,6 +92,27 @@ public class Normal3DTests {
 
         Assert.That(p1 * p2, Is.EqualTo(n));
     }
+    [Test]
+    public void TestFaceForwardKeepsNormalWhenAlreadyFacingSameDirection() {
+        var n = new Normal3D<double>(new(0, 1, 0));
+        var v = new Vector3D<double>(0, 1, 0);
+
+        Assert.That(n.FaceForward(v), Is.EqualTo(n));
+    }
+    [Test]
+    public void TestFaceForwardFlipsNormalWhenFacingAway() {
+        var n = new Normal3D<double>(new(0, 1, 0));
+        var v = new Vector3D<double>(0, -1, 0);
+
+        Assert.That(n.FaceForward(v), Is.EqualTo(-n));
+    }
+    [Test]
+    public void TestFaceForwardKeepsNormalWhenPerpendicular() {
+        var n = new Normal3D<double>(new(0, 1, 0));
+        var v = new Vector3D<double>(1, 0, 0);
+
+        Assert.That(n.FaceForward(v), Is.EqualTo(n));
+    }
 
 }
 

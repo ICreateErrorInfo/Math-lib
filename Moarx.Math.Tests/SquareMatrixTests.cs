@@ -264,4 +264,68 @@ internal class SquareMatrixTests {
         Assert.That((m / 2)._matrix, Is.EqualTo(mExp._matrix));
 
     }
+    [Test]
+    public void TestMul() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 2 },
+            { 3, 4 }
+        });
+
+        double[] result = m.Mul(new double[] { 5, 6 });
+
+        Assert.That(result[0], Is.EqualTo(17));
+        Assert.That(result[1], Is.EqualTo(39));
+    }
+    [Test]
+    public void TestMulWithIdentityReturnsSameVector() {
+        var m = new SquareMatrix(3);
+
+        double[] result = m.Mul(new double[] { 5, 6, 7 });
+
+        Assert.That(result, Is.EqualTo(new double[] { 5, 6, 7 }));
+    }
+    [Test]
+    public void TestEqualityOperators() {
+        var m1 = new SquareMatrix(new double[,] { { 1, 2 }, { 3, 4 } });
+        var m2 = new SquareMatrix(new double[,] { { 1, 2 }, { 3, 4 } });
+        var m3 = new SquareMatrix(new double[,] { { 1, 2 }, { 3, 5 } });
+
+        Assert.That(m1 == m2, Is.True);
+        Assert.That(m1 != m2, Is.False);
+        Assert.That(m1 == m3, Is.False);
+        Assert.That(m1 != m3, Is.True);
+    }
+    [Test]
+    public void TestInverse3x3OfSingularMatrixReturnsNull() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 2, 3 },
+            { 1, 2, 3 },
+            { 4, 5, 6 }
+        });
+
+        Assert.That(m.Inverse(), Is.Null);
+    }
+    [Test]
+    public void TestInverse4x4OfSingularMatrixReturnsNull() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 2, 3, 4 },
+            { 1, 2, 3, 4 },
+            { 5, 6, 7, 8 },
+            { 9, 10, 11, 12 }
+        });
+
+        Assert.That(m.Inverse(), Is.Null);
+    }
+    [Test]
+    public void TestInverseNxNOfSingularMatrixReturnsNull() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 2, 3, 4, 5 },
+            { 1, 2, 3, 4, 5 },
+            { 6, 7, 8, 9, 10 },
+            { 11, 12, 13, 14, 15 },
+            { 16, 17, 18, 19, 20 }
+        });
+
+        Assert.That(m.Inverse(), Is.Null);
+    }
 }

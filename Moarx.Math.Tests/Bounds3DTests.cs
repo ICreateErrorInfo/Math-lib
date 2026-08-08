@@ -185,19 +185,22 @@ public class Bounds3DTests {
         Assert.That(b1.MaxDimension(), Is.EqualTo(0));
         Assert.That(b1.MaxDimension(), !Is.EqualTo(1));
     }
-    //[Test]
-    //public void TestLerp() {
-    //    Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
-    //    Point3D<double> pMax = new Point3D<double>(2.5, 1, 1);
+    [Test]
+    public void TestLerp() {
+        Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
+        Point3D<double> pMax = new Point3D<double>(2.5, 1, 1);
 
-    //    Bounds3D<double> b1 = new Bounds3D<double>(pMin, pMax);
+        Bounds3D<double> b1 = new Bounds3D<double>(pMin, pMax);
 
-    //    Point3D<double> p = new Point3D<double>(1,1,1);
+        Point3D<double> t = new Point3D<double>(0.25, 0.5, 0.75);
 
-    //    Point3D<double> ex = new(Mathe.Lerp(1, pMin.X, pMax.X), Mathe.Lerp(1, pMin.Y, pMax.Y), Mathe.Lerp(1, pMin.Z, pMax.Z));
+        Point3D<double> expected = new(
+            MathmaticMethods.Lerp(t.X, pMin.X, pMax.X),
+            MathmaticMethods.Lerp(t.Y, pMin.Y, pMax.Y),
+            MathmaticMethods.Lerp(t.Z, pMin.Z, pMax.Z));
 
-    //    Assert.That(b1.Lerp(p), Is.EqualTo(ex));
-    //}
+        Assert.That(b1.Lerp(t), Is.EqualTo(expected));
+    }
     [Test]
     public void TestOffset() {
         Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
@@ -256,5 +259,80 @@ public class Bounds3DTests {
         Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
 
         Assert.That(b.DistanceSquared(new Point3D<double>(3, 3, 3)), Is.EqualTo(12));
+    }
+    [Test]
+    public void TestIntersectPHit() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 0, 0), new Vector3D<double>(1, 0, 0));
+
+        bool hit = b.IntersectP(ray, out double hitt0, out double hitt1);
+
+        Assert.That(hit, Is.True);
+        Assert.That(hitt0, Is.EqualTo(4));
+        Assert.That(hitt1, Is.EqualTo(6));
+    }
+    [Test]
+    public void TestIntersectPMiss() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        // Parallel to the box along X, but offset outside its Y range.
+        Ray ray = new(new Point3D<double>(-5, 5, 0), new Vector3D<double>(1, 0, 0));
+
+        bool hit = b.IntersectP(ray, out _, out _);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirHit() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 0, 0), new Vector3D<double>(1, 0, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { ray.Direction.X < 0, ray.Direction.Y < 0, ray.Direction.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.True);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirMiss() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 5, 0), new Vector3D<double>(1, 0, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { ray.Direction.X < 0, ray.Direction.Y < 0, ray.Direction.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestBoundingSphere() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+
+        var (center, radius) = b.BoundingSphere();
+
+        Assert.That(center, Is.EqualTo(new Point3D<double>(0, 0, 0)));
+        Assert.That(radius, Is.EqualTo(System.Math.Sqrt(3)).Within(1e-10));
+    }
+    [Test]
+    public void TestBoundingSphereForDegenerateBoundsReturnsZeroRadius() {
+        // The default ctor's sentinel PMin/PMax never contain their own center point.
+        Bounds3D<double> b = new();
+
+        var (center, radius) = b.BoundingSphere();
+
+        Assert.That(center, Is.EqualTo(new Point3D<double>(0, 0, 0)));
+        Assert.That(radius, Is.EqualTo(0));
+    }
+    [Test]
+    public void TestPMinPMaxThrowOnNaN() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Bounds3D<double> { PMin = new Point3D<double>(double.NaN, 0, 0) });
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Bounds3D<double> { PMax = new Point3D<double>(0, double.NaN, 0) });
+    }
+    [Test]
+    public void TestInvertedBoundsVolumeIsNegative() {
+        // The two-point ctor always sorts PMin/PMax, but object-initializer syntax bypasses that,
+        // producing an inverted box. Volume/SurfaceArea are not guarded against this.
+        Bounds3D<double> b = new() { PMin = new Point3D<double>(5, 5, 5), PMax = new Point3D<double>(1, 1, 1) };
+
+        Assert.That(b.Volume(), Is.EqualTo(-64));
     }
 }
