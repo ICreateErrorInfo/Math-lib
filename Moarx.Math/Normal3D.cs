@@ -10,13 +10,14 @@ public readonly record struct Normal3D<T>
     public Normal3D(T x, T y, T z) {
         if (x == T.CreateChecked(0) && y == T.CreateChecked(0) && z == T.CreateChecked(0))
             throw new ArgumentException("Normal cant be [0, 0, 0]");
-        _vector = new Vector3D<T>(x, y, z);
+        var vector = new Vector3D<T>(x, y, z);
+        _vector = vector / T.Sqrt(vector.GetLengthSquared());
     }
 
     public Normal3D(Vector3D<T> vector) {
         if (vector.X == T.CreateChecked(0) && vector.Y == T.CreateChecked(0) && vector.Z == T.CreateChecked(0))
             throw new ArgumentException("Normal cant be [0, 0, 0]");
-        _vector = vector;
+        _vector = vector / T.Sqrt(vector.GetLengthSquared());
     }
 
     public Normal3D() {
@@ -38,7 +39,7 @@ public readonly record struct Normal3D<T>
     public Vector3D<T> ToVector() => _vector;
 
     public T GetLengthSquared() => T.CreateChecked(1);
-    public T GetLength() => T.CreateChecked(1); //TODO
+    public T GetLength() => T.CreateChecked(1);
     public Normal3D<T> FaceForward(Vector3D<T> v) {
         return (this.ToVector() * v < T.CreateChecked(0)) ? -this : this;
     }

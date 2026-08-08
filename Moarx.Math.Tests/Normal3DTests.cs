@@ -44,6 +44,12 @@ public class Normal3DTests {
         var p1 = new Normal3D<double>(new(12, -1, 3));
         Assert.That(p1.GetLengthSquared(), Is.EqualTo(1));
         Assert.That(p1.GetLength(), Is.EqualTo(1));
+
+        var length = System.Math.Sqrt((12 * 12) + (-1 * -1) + (3 * 3));
+        Assert.That(p1.X, Is.EqualTo(12 / length).Within(1e-10));
+        Assert.That(p1.Y, Is.EqualTo(-1 / length).Within(1e-10));
+        Assert.That(p1.Z, Is.EqualTo(3 / length).Within(1e-10));
+        Assert.That(p1.ToVector().IsNormalized(), Is.True);
     }
     [Test]
     public void TestAdd() {

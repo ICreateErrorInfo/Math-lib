@@ -9,11 +9,11 @@ public class DirectionCone {
         CosTheta = double.PositiveInfinity;
     }
     public DirectionCone(Vector3D<double> w, double cosTheta) {
-        w = w.Normalize();
+        W = w.Normalize();
         CosTheta = cosTheta;
     }
     public DirectionCone(Vector3D<double> w) {
-        w = w.Normalize();
+        W = w.Normalize();
         CosTheta = 1;
     }
 
@@ -66,7 +66,7 @@ public class DirectionCone {
             return EntireSphere();
         }
 
-        return null;
-        //var w = Rotate(Degrees(thetaR), wr); //TODO
+        throw new NotImplementedException("DirectionCone.Union: rotating wr by thetaR around the cross-product axis is not yet implemented.");
+        //var w = Rotate(Degrees(thetaR), wr);
     }
 }

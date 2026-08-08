@@ -68,7 +68,7 @@ public readonly record struct Vector3D<T>
         return vector;
     }
     public T GetLengthSquared() => this * this;
-    public bool IsNormalized() => GetLengthSquared() == T.CreateChecked(1); //TODO round bug
+    public bool IsNormalized() => System.Math.Abs(Convert.ToDouble(GetLengthSquared()) - 1) < 1e-6;
     public static Vector3D<T> Permute(Vector3D<T> p, int x, int y, int z) {
         return new Vector3D<T>(p[x], p[y], p[z]);
     }
