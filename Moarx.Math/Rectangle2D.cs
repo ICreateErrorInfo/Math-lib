@@ -100,7 +100,7 @@ public readonly record struct Rectangle2D<T>
         return new Rectangle2D<T>(x: x1, y: y1, width: x2 - x1, height: y2 - y1);
     }
 
-    public void Offset(Point2D<T> pos) => Offset(pos.X, pos.Y);
+    public Rectangle2D<T> Offset(Point2D<T> pos) => Offset(pos.X, pos.Y);
 
     public Rectangle2D<T> Offset(T x, T y) {
         return new(X + x, Y + y, Width, Height);
@@ -112,7 +112,7 @@ public readonly record struct Rectangle2D<T>
 
     public bool Contains(Rectangle2D<T> rect) =>
         (X <= rect.X) && (rect.Right  <= Right) &&
-        (Y <= rect.Y) && (rect.Bottom <= Right);
+        (Y <= rect.Y) && (rect.Bottom <= Bottom);
 
     public Rectangle2D<T> Inflate(T value) {
         return Inflate(value, value);

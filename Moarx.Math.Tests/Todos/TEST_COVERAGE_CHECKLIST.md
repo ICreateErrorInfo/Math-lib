@@ -134,20 +134,38 @@ Fix mit `DivideByZeroException` fehlgeschlagen.
 
 Verifiziert: `Moarx.Math.Tests` (304/304 grün) und `Raytracing` bauen fehlerfrei.
 
-### Rectangle2D
-- [ ] `Intersect`
-- [ ] `Union`
-- [ ] `IntersectsWith`
-- [ ] `Contains` (3 Overloads)
-- [ ] `Inflate` (2 Overloads)
-- [ ] `Offset` (2 Overloads)
-- [ ] `IsEmpty` / `Empty`
-- [ ] `ToString`
-- [ ] statische `Rectangle2D.Create`-Overloads (3 Stück)
+### Rectangle2D — ✅ erledigt (2026-08-08)
+- [x] `Intersect`
+- [x] `Union`
+- [x] `IntersectsWith`
+- [x] `Contains` (3 Overloads) — **Bug gefunden und gefixt** (siehe unten)
+- [x] `Inflate` (2 Overloads)
+- [x] `Offset` (2 Overloads) — **Bug gefunden und gefixt** (siehe unten)
+- [x] `IsEmpty` / `Empty`
+- [x] `ToString`
+- [x] statische `Rectangle2D.Create`-Overloads (3 Stück)
 
-### Ray
-- [ ] `TMax`/`Time` Default-Werte und Verwendung
-- [ ] `ToString`
+**Bug gefunden und gefixt (1/2):** `Contains(Rectangle2D<T> rect)` verglich im letzten Check `rect.Bottom`
+(Y-Achse) fälschlich gegen `Right` (X-Achse) statt gegen `Bottom` — Kopierfehler. Beispiel: äußeres Rechteck
+`(X=0,Y=0,W=10,H=3)` (`Right=10, Bottom=3`), inneres Rechteck `(X=2,Y=2,W=2,H=2)` (`Bottom=4`, ragt über den
+unteren Rand hinaus) — `Contains` lieferte fälschlich `true`, weil `4 <= Right(10)` zufällig zutraf, statt
+korrekt gegen `Bottom(3)` zu prüfen. Fix: `rect.Bottom <= Right` → `rect.Bottom <= Bottom`. Regressionstest:
+`TestContainsRectangleExtendingBeyondBottomIsNotContained`.
+
+**Bug gefunden und gefixt (2/2):** `Offset(Point2D<T> pos)` war als `void` deklariert und rief intern
+`Offset(x, y)` auf, das ein neues (verschobenes) `Rectangle2D<T>` **zurückgibt** — auf dem unveränderlichen
+`readonly record struct` wurde dieser Rückgabewert einfach verworfen, wodurch der Aufruf ein kompletter,
+stiller No-Op war. Fix: Signatur zu `public Rectangle2D<T> Offset(Point2D<T> pos) => Offset(pos.X, pos.Y);`
+geändert. Regressionstest: `TestOffsetByPoint`. Beide Bugs waren zum Fundzeitpunkt nirgends im Code
+aufgerufen (kein aktiver Rendering-Bug).
+
+Verifiziert: `Moarx.Math.Tests` (326/326 grün) und `Raytracing` bauen fehlerfrei.
+
+### Ray — ✅ erledigt (2026-08-08)
+- [x] `TMax`/`Time` Default-Werte und Verwendung
+- [x] `ToString`
+
+Kein Bug gefunden.
 
 ## 4. Edge Cases (typübergreifend)
 
