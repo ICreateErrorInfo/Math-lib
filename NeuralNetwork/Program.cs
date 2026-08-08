@@ -14,7 +14,7 @@ namespace NeuralNetwork
             List<List<DataPoint>> Batches = new List<List<DataPoint>>();
             NeuralNetwork network = new NeuralNetwork(new[] { 784, 16, 16, 10 });
 
-            int miniBatchSize = 1;
+            int miniBatchSize = 50;
             List<DataPoint> miniBatch = new List<DataPoint>();
 
             int counter = 0;
@@ -32,8 +32,8 @@ namespace NeuralNetwork
                 TestBatch.Add(dataPoint);
             }
 
-            double learningRate = 0.1;
-            int evolutions = 6;
+            double learningRate = 1;
+            int evolutions = 20;
 
             for (int j = 0; j < evolutions; j++)
             {
@@ -45,6 +45,7 @@ namespace NeuralNetwork
                 Console.WriteLine(network.Cost(TestBatch.ToArray()));
             }
 
+            Console.WriteLine("ENDE Training");
             counter = 0;
             foreach (var dataPoint in MnistReader.ReadTestData())
             {
