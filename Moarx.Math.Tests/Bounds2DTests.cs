@@ -101,4 +101,13 @@ public class Bounds2DTests {
 
         Assert.That(b.Diagonal(), Is.EqualTo(new Vector2D<double>(-4, -4)));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        Bounds2D<float> b = new(new(-2.5f, -1f), new(2.5f, 1f));
+
+        Assert.That(b.Diagonal(), Is.EqualTo(new Vector2D<float>(5f, 2f)));
+        Assert.That(b.ToRectangle(), Is.EqualTo(new Rectangle2D<float>(new(-2.5f, -1f), new(2.5f, 1f))));
+        Assert.That(Bounds2D<float>.Intersect(b, new Bounds2D<float>(new(0f, -1f), new(5f, 1f))),
+            Is.EqualTo(new Bounds2D<float>(new(0f, -1f), new(2.5f, 1f))));
+    }
 }

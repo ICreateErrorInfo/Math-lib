@@ -151,4 +151,15 @@ public class Point3DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = p[3]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = p[-1]);
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var p = new Point3D<float>(1.5f, -2.5f, 3f);
+        var v = new Vector3D<float>(1f, 1f, 1f);
+
+        Assert.That(p + v, Is.EqualTo(new Point3D<float>(2.5f, -1.5f, 4f)));
+        Assert.That(p * 2f, Is.EqualTo(new Point3D<float>(3f, -5f, 6f)));
+        Assert.That(Point3D<float>.SmalestComponents(p, new Point3D<float>(0f, 0f, 5f)), Is.EqualTo(new Point3D<float>(0f, -2.5f, 3f)));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Point3D<float>(float.NaN, 2f, 3f));
+    }
 }

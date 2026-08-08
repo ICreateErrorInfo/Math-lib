@@ -152,4 +152,15 @@ internal class Rectangle2DTests {
 
         Assert.That(rect.ToString(), Is.EqualTo("{X=1,Y=2,Width=3,Height=4}"));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var rect = new Rectangle2D<float>(1.5f, 1.5f, 3f, 2f);
+
+        Assert.That(rect.Right, Is.EqualTo(4.5f));
+        Assert.That(rect.Bottom, Is.EqualTo(3.5f));
+        Assert.That(rect.Contains(2f, 2f), Is.True);
+
+        var inflated = rect.Inflate(0.5f);
+        Assert.That(inflated, Is.EqualTo(new Rectangle2D<float>(1f, 1f, 4f, 3f)));
+    }
 }

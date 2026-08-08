@@ -33,4 +33,12 @@ public class Ellipse2DTests {
 
         Assert.That(e, Is.EqualTo(new Ellipse2D<double>(new Point2D<double>(1, 2), 5)));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var e = new Ellipse2D<float>(new Point2D<float>(1f, 2f), 3f, 4f);
+
+        Assert.That(e.MidPoint, Is.EqualTo(new Point2D<float>(1f, 2f)));
+        Assert.That(e.HorizontalStretch, Is.EqualTo(3f));
+        Assert.That(e.VerticalStretch, Is.EqualTo(4f));
+    }
 }

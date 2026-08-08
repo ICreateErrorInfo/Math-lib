@@ -177,10 +177,12 @@ Kein Bug gefunden.
 
 Kein neuer Bug gefunden. Verifiziert: `Moarx.Math.Tests` (330/330 grün).
 
-## 5. Generics-Abdeckung (systemische Lücke)
+## 5. Generics-Abdeckung (systemische Lücke) — ✅ erledigt (2026-08-08)
 
-- [ ] Mindestens einen generischen Testtyp pro Klasse zusätzlich mit `float` instanziieren (aktuell fast ausschließlich `double`, s. CLAUDE.md: „work with float/double interchangeably")
-- [ ] `int`-Instanziierung für mind. eine weitere Klasse zusätzlich zu `Rectangle2D<int>` (z.B. Verhalten bei Integer-Division prüfen)
+- [x] Mindestens einen generischen Testtyp pro Klasse zusätzlich mit `float` instanziieren (aktuell fast ausschließlich `double`, s. CLAUDE.md: „work with float/double interchangeably"). Ergänzt für alle 13 generischen Record-Structs: `Point2D`, `Point3D`, `Normal3D`, `Vector2D`, `Vector3D`, `Bounds2D`, `Bounds3D`, `Rectangle2D` (war zuvor ausschließlich mit `int` getestet), `Triangle2D`, `Line2D`, `Ellipse2D`, `CubicBezierCurve2D`, `QuadBezierCurve2D` — jeweils ein neuer `TestFloatInstantiation`-Test mit typspezifischer Kernlogik (Arithmetik, NaN-Guard, Bounds/Bounding-Box, Cast, o.ä.). `SquareMatrix`, `Transform`, `Ray`, `DirectionCone`, `rng`, `MathmaticMethods` sind nicht generisch (kein `<T>`) und daher nicht betroffen; `VectorExtensions` hatte den float-Fastpath bereits in Punkt 2 abgedeckt.
+- [x] `int`-Instanziierung für mind. eine weitere Klasse zusätzlich zu `Rectangle2D<int>`: `Vector2D<int>` (`TestIntInstantiationTruncatesOnDivision`). Deckt einen realen Stolperstein auf: `operator /` berechnet den Kehrwert `T.CreateChecked(1) / scalar` **vor** der Multiplikation, was bei `int` für jeden `|scalar| > 1` zu `inv = 0` truncatet (Integer-Division `1/2 == 0`) — der Vektor wird dadurch für Divisoren außer `±1` still auf `(0,0)` genullt statt komponentenweise (ganzzahlig) dividiert zu werden. Kein Fix beauftragt (dokumentiertes bestehendes Verhalten, betrifft aktuell keinen aktiven Aufrufer mit `int`-Divisor), nur als Test festgehalten.
+
+Kein neuer Bug in aktiv genutztem Code gefunden (die Int-Division-Falle in `Vector2D<T>.operator/` ist ein latenter, aber unbenutzter Fallstrick). Verifiziert: `Moarx.Math.Tests` (344/344 grün).
 
 ## 6. Portierbare Legacy-Tests (Math-lib.Tests → Moarx.Math.Tests)
 

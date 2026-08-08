@@ -120,6 +120,19 @@ public class Normal3DTests {
 
         Assert.That(n.FaceForward(v), Is.EqualTo(n));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var n = new Normal3D<float>(new(12f, -1f, 3f));
+
+        Assert.That(n.GetLengthSquared(), Is.EqualTo(1f));
+
+        var length = MathF.Sqrt((12f * 12f) + (-1f * -1f) + (3f * 3f));
+        Assert.That(n.X, Is.EqualTo(12f / length).Within(1e-6));
+        Assert.That(n.Y, Is.EqualTo(-1f / length).Within(1e-6));
+        Assert.That(n.Z, Is.EqualTo(3f / length).Within(1e-6));
+
+        Assert.Throws<ArgumentException>(() => _ = new Normal3D<float>(0, 0, 0));
+    }
 
 }
 

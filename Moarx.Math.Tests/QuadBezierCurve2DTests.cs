@@ -49,4 +49,14 @@ public class QuadBezierCurve2DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = c[3]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = c[-1]);
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var c = new QuadBezierCurve2D<float>(
+            new Point2D<float>(0f, 0f),
+            new Point2D<float>(1f, 1f),
+            new Point2D<float>(2f, 0f));
+
+        Assert.That(c[0], Is.EqualTo(c.StartPoint));
+        Assert.That(c[2], Is.EqualTo(c.EndPoint));
+    }
 }

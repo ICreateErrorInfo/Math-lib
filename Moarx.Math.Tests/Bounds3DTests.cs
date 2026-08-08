@@ -342,4 +342,13 @@ public class Bounds3DTests {
 
         Assert.That(b.Volume(), Is.EqualTo(-64));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        Bounds3D<float> b = new(new(-1f, -1f, -1f), new(1f, 1f, 1f));
+
+        Assert.That(b.Diagonal(), Is.EqualTo(new Vector3D<float>(2f, 2f, 2f)));
+        Assert.That(b.Volume(), Is.EqualTo(8f));
+        Assert.That(b.DistanceSquared(new Point3D<float>(3f, 0f, 0f)), Is.EqualTo(4f));
+        Assert.That(Bounds3D<float>.Inside(new Point3D<float>(0f, 0f, 0f), b), Is.True);
+    }
 }

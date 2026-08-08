@@ -150,5 +150,16 @@ public class Point2DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = p[2]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = p[-1]);
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var p = new Point2D<float>(1.5f, -2.5f);
+        var v = new Vector2D<float>(1f, 1f);
+
+        Assert.That(p + v, Is.EqualTo(new Point2D<float>(2.5f, -1.5f)));
+        Assert.That(p * 2f, Is.EqualTo(new Point2D<float>(3f, -5f)));
+        Assert.That(Point2D<float>.Min(p, new Point2D<float>(0f, 0f)), Is.EqualTo(new Point2D<float>(0f, -2.5f)));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Point2D<float>(float.NaN, 2f));
+    }
 }
 

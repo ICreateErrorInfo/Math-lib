@@ -147,5 +147,28 @@ public class Vector2DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = v[2]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = v[-1]);
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var v1 = new Vector2D<float>(1.5f, -2.5f);
+        var v2 = new Vector2D<float>(1f, 1f);
+
+        Assert.That(v1 + v2, Is.EqualTo(new Vector2D<float>(2.5f, -1.5f)));
+        Assert.That(v1 * v2, Is.EqualTo(-1f));
+        Assert.That(v1.GetLengthSquared(), Is.EqualTo((1.5f * 1.5f) + (-2.5f * -2.5f)));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Vector2D<float>(float.NaN, 2f));
+    }
+    [Test]
+    public void TestIntInstantiationTruncatesOnDivision() {
+        // Division multiplies by the reciprocal (T.CreateChecked(1) / scalar), which
+        // truncates to 0 for any int|scalar| > 1 -- this silently zeroes the vector
+        // instead of doing a component-wise integer division.
+        var v = new Vector2D<int>(7, -7);
+
+        Assert.That(v / 1, Is.EqualTo(new Vector2D<int>(7, -7)));
+        Assert.That(v / 2, Is.EqualTo(new Vector2D<int>(0, 0)));
+
+        Assert.Throws<DivideByZeroException>(() => _ = v / 0);
+    }
 }
 

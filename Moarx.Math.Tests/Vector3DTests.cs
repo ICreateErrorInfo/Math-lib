@@ -266,4 +266,15 @@ public class Vector3DTests {
         Assert.Throws<IndexOutOfRangeException>(() => _ = v[3]);
         Assert.Throws<IndexOutOfRangeException>(() => _ = v[-1]);
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var v1 = new Vector3D<float>(3f, 4f, 1f);
+        var v2 = new Vector3D<float>(1f, -4f, 2f);
+
+        Assert.That(Vector3D<float>.CrossProduct(v1, v2), Is.EqualTo(new Vector3D<float>(12f, -5f, -16f)));
+        Assert.That(v1.GetLengthSquared(), Is.EqualTo(26f));
+        Assert.That(Vector3D<float>.Abs(new Vector3D<float>(-1f, 2f, -3f)), Is.EqualTo(new Vector3D<float>(1f, 2f, 3f)));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Vector3D<float>(float.NaN, 2f, 3f));
+    }
 }

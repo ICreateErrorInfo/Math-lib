@@ -36,4 +36,13 @@ public class Line2DTests {
         Assert.That(moved.StartPoint, Is.EqualTo(new Point2D<double>(11, -3)));
         Assert.That(moved.EndPoint, Is.EqualTo(new Point2D<double>(13, -1)));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var l = new Line2D<float>(new Point2D<float>(1f, 2f), new Point2D<float>(3f, 4f));
+
+        var moved = l.Transform(new Vector2D<float>(10f, -5f));
+
+        Assert.That(moved.StartPoint, Is.EqualTo(new Point2D<float>(11f, -3f)));
+        Assert.That(moved.EndPoint, Is.EqualTo(new Point2D<float>(13f, -1f)));
+    }
 }

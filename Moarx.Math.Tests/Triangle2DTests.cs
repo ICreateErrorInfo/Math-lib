@@ -38,4 +38,13 @@ public class Triangle2DTests {
         Assert.That(moved.Point2, Is.EqualTo(new Point2D<double>(11, -5)));
         Assert.That(moved.Point3, Is.EqualTo(new Point2D<double>(10, -4)));
     }
+    [Test]
+    public void TestFloatInstantiation() {
+        var t = new Triangle2D<float>(new Point2D<float>(3f, -1f), new Point2D<float>(-2f, 4f), new Point2D<float>(1f, 1f));
+
+        var bounds = t.GetBoundingBox();
+
+        Assert.That(bounds.PMin, Is.EqualTo(new Point2D<float>(-2f, -1f)));
+        Assert.That(bounds.PMax, Is.EqualTo(new Point2D<float>(3f, 4f)));
+    }
 }
