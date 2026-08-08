@@ -285,6 +285,36 @@ internal class SquareMatrixTests {
         Assert.That(result, Is.EqualTo(new double[] { 5, 6, 7 }));
     }
     [Test]
+    public void TestMulAgainstPoint3D() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 0, 0 },
+            { 2, 1, 4 },
+            { 0, 0, 1 }
+        });
+
+        Point3D<double> p = new(1, 2, 3);
+
+        double[] result = m.Mul(new double[] { p.X, p.Y, p.Z });
+        Point3D<double> transformed = new(result[0], result[1], result[2]);
+
+        Assert.That(transformed, Is.EqualTo(new Point3D<double>(1, 16, 3)));
+    }
+    [Test]
+    public void TestMulAgainstVector3D() {
+        var m = new SquareMatrix(new double[,] {
+            { 1, 0, 0 },
+            { 2, 1, 4 },
+            { 0, 0, 1 }
+        });
+
+        Vector3D<double> v = new(1, 2, 3);
+
+        double[] result = m.Mul(new double[] { v.X, v.Y, v.Z });
+        Vector3D<double> transformed = new(result[0], result[1], result[2]);
+
+        Assert.That(transformed, Is.EqualTo(new Vector3D<double>(1, 16, 3)));
+    }
+    [Test]
     public void TestEqualityOperators() {
         var m1 = new SquareMatrix(new double[,] { { 1, 2 }, { 3, 4 } });
         var m2 = new SquareMatrix(new double[,] { { 1, 2 }, { 3, 4 } });
