@@ -10,13 +10,21 @@ public class Film {
         Pixel = new RGB[width, height];
     }
 
-    public void AddSample(RGB L, Point2D<int> currentpixel) {        
+    public void AddSample(RGB l, Point2D<int> currentpixel) {
 
         if (Pixel[currentpixel.X, currentpixel.Y] is null) {
-            Pixel[currentpixel.X, currentpixel.Y] = L;
+            Pixel[currentpixel.X, currentpixel.Y] = l;
         } else {
-            Pixel[currentpixel.X, currentpixel.Y] = Pixel[currentpixel.X, currentpixel.Y] + L;
+            Pixel[currentpixel.X, currentpixel.Y] = Pixel[currentpixel.X, currentpixel.Y] + l;
         }
 
+    }
+
+    public RGB ToSensorRGB(SampledSpectrum l, SampledWavelengths lambda) {
+        l = SampledSpectrum.SafeDiv(l, lambda.PDF());
+
+        return new RGB((SampledSpectrumConstants.X.Sample(lambda) * l).Average(),
+                       (SampledSpectrumConstants.Y.Sample(lambda) * l).Average(),
+                       (SampledSpectrumConstants.Z.Sample(lambda) * l).Average());
     }
 }

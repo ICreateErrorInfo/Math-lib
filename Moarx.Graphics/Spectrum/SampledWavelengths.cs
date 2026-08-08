@@ -22,7 +22,7 @@ public class SampledWavelengths {
         }
 
         for (var i = 0; i < ISpectrum.NSpectrumSamples; i++) {
-            swl.pdf[i] = 1 / (lambdaMax - lambdaMin);
+            swl.pdf[i] = (double)1 / (lambdaMax - lambdaMin);
         }
 
         return swl;

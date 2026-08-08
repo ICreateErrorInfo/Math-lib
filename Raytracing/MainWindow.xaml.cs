@@ -196,12 +196,16 @@ public partial class MainWindow : Window
         return scene;
     }
     Scene CornellBox() {
+
+        int width = 300;
+        int heigth = 300;
+
         PrimitiveList objects = new PrimitiveList();
 
         var red =   new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .65, .05, .05 )), colorSpace);
         var white = new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .73, .73, .73 )), colorSpace);
         var green = new Lambertian  (new RGBAlbedoSpectrum(colorSpace, new( .12, .45, .15 )), colorSpace);
-        var light = new DiffuseLight(new RGBIlluminantSpectrum(colorSpace, new( 15, 15, 15 )), colorSpace);
+        var light = new DiffuseLight(new RGBIlluminantSpectrum(colorSpace, new( 20, 20, 20 )), colorSpace);
 
         //Box box1 = new Box(new Point3D(130, 0, 65), new Point3D(295, 165, 230), white);
         //Box box2 = new Box(new Point3D(265, 0, 295), new Point3D(430, 330, 460), white);
@@ -220,10 +224,10 @@ public partial class MainWindow : Window
         Scene scene = new Scene(objs: objects,
                                 spp: 100,
                                 maxD: 50,
-                                CreateCamera(300,300, new(278, 278, -800), new(278,278,0), 40),
+                                CreateCamera(width,heigth, new(278, 278, -800), new(278,278,0), 40),
                                 background: new RGBIlluminantSpectrum(colorSpace, new(0,0,0)),
-                                imageWidth: 300,
-                                imageHeight: 300);
+                                imageWidth: width,
+                                imageHeight: heigth);
 
         return scene;
     }

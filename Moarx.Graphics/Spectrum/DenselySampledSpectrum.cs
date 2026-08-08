@@ -27,7 +27,7 @@ public class DenselySampledSpectrum: ISpectrum {
     public SampledSpectrum Sample(SampledWavelengths lambda) {
         var s = new SampledSpectrum();
         for (var i = 0; i < ISpectrum.NSpectrumSamples; i++) {
-            var offset = (int)System.Math.Round(lambda[i]) - _lambdaMin;
+            int offset = (int)System.Math.Round(lambda[i]) - _lambdaMin;
             if (offset < 0 || offset >= values.Length) {
                 s[i] = 0;
             } else {
