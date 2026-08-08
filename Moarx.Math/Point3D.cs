@@ -86,12 +86,6 @@ public readonly record struct Point3D<T>
         Y = left.Y + right.Y,
         Z = left.Z + right.Z
     };
-    public static Point3D<T> operator +(Point3D<T> left, Point3D<T> right) => new() {
-        X = left.X + right.X,
-        Y = left.Y + right.Y,
-        Z = left.Z + right.Z
-    };
-
     public static Vector3D<T> operator -(Point3D<T> left, Point3D<T> right) => new() {
         X = left.X - right.X,
         Y = left.Y - right.Y,
@@ -131,12 +125,6 @@ public readonly record struct Point3D<T>
             Z = right.Z * scalar
         };
     }
-    public static Point3D<T> operator *(Point3D<T> left, Point3D<T> right) => new() {
-        X = left.X * right.X,
-        Y = left.Y * right.Y,
-        Z = left.Z * right.Z
-    };
-
     public static Point3D<T> operator /(Point3D<T> left, T scalar) {
         if (T.IsNaN(scalar))
             throw new ArgumentOutOfRangeException(nameof(scalar), "scalar is NaN");

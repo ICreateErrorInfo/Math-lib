@@ -274,9 +274,32 @@ festgehalten und mit den drei Tests abgesichert.
 
 Verifiziert: `Moarx.Math.Tests` (371/371 grün).
 
-## 10. Point3D<T> — erst API-Frage klären, dann ggf. testen (Coverage-Lauf 2026-08-08)
+## 10. Point3D<T> — API-Frage geklärt, Operatoren entfernt — ✅ erledigt (2026-08-08)
 
-- [ ] `operator+(Point3D, Point3D)` und `operator*(Point3D, Point3D)` (Zeilen 89–93, 134–138) sind komplett ungetestet und mathematisch unüblich (Punkt+Punkt/Punkt·Punkt ist keine Standardoperation, anders als Punkt±Vektor). Erst klären, ob das beabsichtigte API ist oder totes Leftover — je nach Antwort Test ergänzen oder Methode entfernen.
+- [x] `operator+(Point3D, Point3D)` und `operator*(Point3D, Point3D)` (Zeilen 89–93, 134–138) waren komplett
+  ungetestet und mathematisch unüblich (Punkt+Punkt/Punkt·Punkt ist keine Standardoperation, anders als
+  Punkt±Vektor). Erste Annahme "totes Leftover" war falsch: eine Recherche ergab, dass beide Operatoren aktiv in
+  `Raytracing/Shapes/Triangle.cs` (Shear/Scale-Schritt der pbrt-artigen Dreiecks-Intersection) genutzt wurden —
+  dort stand ein `Point3D<double>` zweckentfremdet als komponentenweiser Skalierungs-/Offset-Faktor. Nach
+  Rückfrage beim User: Operatoren entfernt und die Aufrufstellen auf den korrekten Typ umgestellt.
+
+**Refactoring (kein Bug, reine Typkorrektur, mathematisch/bitgenau identisches Ergebnis):**
+- `Triangle.cs` Shear-Schritt: `p_t += new Point3D<double>(...)` → `p_t += new Vector3D<double>(...)` (nutzt die
+  bereits vorhandene, getestete `operator+(Point3D, Vector3D)`-Überladung statt Punkt+Punkt).
+- `Triangle.cs` Scale-Schritt: `p_t *= new Point3D<double>(1, 1, sz)` (multiplizierte X/Y ohnehin nur mit 1) →
+  direkt `p_t = new Point3D<double>(p_t.X, p_t.Y, p_t.Z * sz)`.
+- `Triangle.cs` baryzentrische Interpolation (`interaction.P = b0*p0 + b1*p1 + b2*p2`, beim Build-Versuch als
+  zweite Fundstelle entdeckt — von der ursprünglichen Recherche übersehen, da nur nach dem Shear/Scale-Schritt
+  gesucht wurde): → `(b0*p0.ToVector() + b1*p1.ToVector() + b2*p2.ToVector()).ToPoint()`.
+- `BVHAccelerator.PrimitiveInfo.cs` Centroid-Berechnung (`0.5*bounds.PMin + 0.5*bounds.PMax`, ebenfalls erst beim
+  Build-Versuch gefunden): → `(0.5*bounds.PMin.ToVector() + 0.5*bounds.PMax.ToVector()).ToPoint()`.
+
+Beide entfernten Operatoren aus `Point3D.cs` gelöscht. Keine bestehenden Tests referenzierten sie.
+
+Verifiziert: Volle Solution (`Math-lib.sln`) baut fehlerfrei (0 Fehler), `Moarx.Math.Tests` (371/371 grün),
+`Raytracer.Tests` (33/33 grün). Für die vier geänderten Zeilen selbst gibt es aktuell keine direkten Tests
+(`Triangle.Intersect()` ist laut `Raytracing/TODO.md` generell ungetestet) — die Ersetzungen sind aber
+nachweislich bitgenau äquivalente Umformulierungen derselben Komponenten-Arithmetik, keine Verhaltensänderung.
 
 ## 11. Code-Coverage-Lücken: Bounds2D<T> (Coverage-Lauf 2026-08-08: 95.6% Lines / 66.7% Branches)
 

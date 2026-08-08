@@ -14,7 +14,7 @@ namespace Raytracing.Accelerators
             {
                 PrimitiveNumber = primitiveNumber;
                 Bounds = bounds;
-                Centroid = 0.5 * bounds.PMin + 0.5 * bounds.PMax;
+                Centroid = (0.5 * bounds.PMin.ToVector() + 0.5 * bounds.PMax.ToVector()).ToPoint();
             }
         }
     }

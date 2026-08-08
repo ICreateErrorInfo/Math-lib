@@ -45,11 +45,11 @@ namespace Raytracing.Shapes {
             double sx = -d.X / d.Z;
             double sy = -d.Y / d.Z;
             double sz = 1.0 / d.Z;
-            p0t += new Point3D<double>(sx * p0t.Z,
+            p0t += new Vector3D<double>(sx * p0t.Z,
                                sy * p0t.Z, 0);
-            p1t += new Point3D<double>(sx * p1t.Z,
+            p1t += new Vector3D<double>(sx * p1t.Z,
                                sy * p1t.Z, 0);
-            p2t += new Point3D<double>(sx * p2t.Z,
+            p2t += new Vector3D<double>(sx * p2t.Z,
                                sy * p2t.Z, 0);
 
             //edge function coefficients
@@ -67,9 +67,9 @@ namespace Raytracing.Shapes {
                 return false;
             }
 
-            p0t *= new Point3D<double>(1, 1, sz);
-            p1t *= new Point3D<double>(1, 1, sz);
-            p2t *= new Point3D<double>(1, 1, sz);
+            p0t = new Point3D<double>(p0t.X, p0t.Y, p0t.Z * sz);
+            p1t = new Point3D<double>(p1t.X, p1t.Y, p1t.Z * sz);
+            p2t = new Point3D<double>(p2t.X, p2t.Y, p2t.Z * sz);
             double tScaled = e0 * p0t.Z + e1 * p1t.Z + e2 * p2t.Z;
             if (det < 0 && (tScaled >= 0 || tScaled < ray.TMax * det))
             {
@@ -87,7 +87,7 @@ namespace Raytracing.Shapes {
             double t = tScaled * invDet;
 
             tMax = t;
-            interaction.P = b0 * p0 + b1 * p1 + b2 * p2;
+            interaction.P = (b0 * p0.ToVector() + b1 * p1.ToVector() + b2 * p2.ToVector()).ToPoint();
             Normal3D<double> outwardNormal = new((Vector3D<double>.CrossProduct(p1 - p0, p2 - p0)).Normalize());
             interaction.SetFaceNormal(ray, outwardNormal);
 
