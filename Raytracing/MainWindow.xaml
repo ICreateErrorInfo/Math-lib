@@ -20,19 +20,27 @@
             <TextBlock Text="Scene" Margin="0,0,0,2"/>
             <ComboBox x:Name="SceneComboBox" Margin="0,0,0,10" SelectionChanged="SceneComboBox_SelectionChanged" DisplayMemberPath="Name"/>
 
-            <TextBlock Text="Image Width" Margin="0,0,0,2"/>
-            <TextBox x:Name="WidthTextBox" Margin="0,0,0,10"/>
+            <StackPanel x:Name="MeshPanel" Visibility="Collapsed" Margin="0,0,0,10">
+                <TextBlock Text="Mesh File" Margin="0,0,0,2"/>
+                <TextBox x:Name="MeshFilePathTextBox" IsReadOnly="True" Margin="0,0,0,4"/>
+                <Button x:Name="BrowseMeshButton" Content="Durchsuchen..." Height="26" Click="BrowseMeshButton_Click"/>
+            </StackPanel>
 
-            <TextBlock Text="Image Height" Margin="0,0,0,2"/>
-            <TextBox x:Name="HeightTextBox" Margin="0,0,0,10"/>
+            <StackPanel x:Name="SettingsPanel">
+                <TextBlock Text="Image Width" Margin="0,0,0,2"/>
+                <TextBox x:Name="WidthTextBox" Margin="0,0,0,10"/>
 
-            <TextBlock Text="Samples per Pixel" Margin="0,0,0,2"/>
-            <TextBox x:Name="SamplesTextBox" Margin="0,0,0,10"/>
+                <TextBlock Text="Image Height" Margin="0,0,0,2"/>
+                <TextBox x:Name="HeightTextBox" Margin="0,0,0,10"/>
 
-            <TextBlock Text="Max Depth" Margin="0,0,0,2"/>
-            <TextBox x:Name="MaxDepthTextBox" Margin="0,0,0,10"/>
+                <TextBlock Text="Samples per Pixel" Margin="0,0,0,2"/>
+                <TextBox x:Name="SamplesTextBox" Margin="0,0,0,10"/>
 
-            <Button x:Name="RenderButton" Content="Render" Height="30" Click="RenderButton_Click"/>
+                <TextBlock Text="Max Depth" Margin="0,0,0,2"/>
+                <TextBox x:Name="MaxDepthTextBox" Margin="0,0,0,10"/>
+
+                <Button x:Name="RenderButton" Content="Render" Height="30" Click="RenderButton_Click"/>
+            </StackPanel>
         </StackPanel>
 
         <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" x:Name="image" UseLayoutRounding="False" SnapsToDevicePixels="true" RenderOptions.BitmapScalingMode="NearestNeighbor"/>

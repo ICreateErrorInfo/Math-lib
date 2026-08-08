@@ -16,9 +16,10 @@ public partial class MainWindow : Window
     RGBColorSpace colorSpace;
     Raytracer raytracer;
 
-    record SceneDefinition(string Name, Func<int, int, int, int, Scene> Factory, int Width, int Height, int Spp, int MaxDepth);
+    record SceneDefinition(string Name, Func<int, int, int, int, Scene> Factory, int Width, int Height, int Spp, int MaxDepth, bool RequiresMeshFile = false);
 
     List<SceneDefinition> sceneDefinitions;
+    string selectedMeshPath;
 
     public MainWindow()
     {
@@ -42,7 +43,7 @@ public partial class MainWindow : Window
             new("Simple Light",       SimpleLight,       400,  200,  1000, 50),
             new("Cornell Box",        CornellBox,        300,  300,  100,  50),
             new("Earth",              Earth,             1920, 1080, 10,   50),
-            new("Import Mesh...",     TestImporter,      400,  200,  100,  50),
+            new("Import Mesh...",     TestImporter,      400,  200,  100,  50, RequiresMeshFile: true),
         };
 
         SceneComboBox.ItemsSource = sceneDefinitions;
@@ -59,6 +60,33 @@ public partial class MainWindow : Window
         HeightTextBox.Text = selected.Height.ToString();
         SamplesTextBox.Text = selected.Spp.ToString();
         MaxDepthTextBox.Text = selected.MaxDepth.ToString();
+
+        UpdateSettingsVisibility();
+    }
+
+    void UpdateSettingsVisibility()
+    {
+        if (SceneComboBox.SelectedItem is not SceneDefinition selected) {
+            return;
+        }
+
+        MeshPanel.Visibility = selected.RequiresMeshFile ? Visibility.Visible : Visibility.Collapsed;
+
+        bool showSettings = !selected.RequiresMeshFile || !string.IsNullOrEmpty(selectedMeshPath);
+        SettingsPanel.Visibility = showSettings ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    void BrowseMeshButton_Click(object sender, RoutedEventArgs e)
+    {
+        string path = ShowOpenFile();
+        if (string.IsNullOrEmpty(path)) {
+            return;
+        }
+
+        selectedMeshPath = path;
+        MeshFilePathTextBox.Text = path;
+
+        UpdateSettingsVisibility();
     }
 
     async void RenderButton_Click(object sender, RoutedEventArgs e)
@@ -82,6 +110,9 @@ public partial class MainWindow : Window
             Scene scene = selected.Factory(width, height, spp, maxDepth);
             await raytracer.RenderScene(scene, colorSpace);
         }
+        catch (Exception ex) {
+            MessageBox.Show($"Rendering failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally {
             RenderButton.IsEnabled = true;
             SceneComboBox.IsEnabled = true;
@@ -101,7 +132,7 @@ public partial class MainWindow : Window
         return scene;
     }
     Scene TestImporter(int width = 400, int height = 200, int spp = 100, int maxDepth = 50) {
-        TriangleMesh mesh = TriangleMesh.Import(ShowOpenFile(), colorSpace);
+        TriangleMesh mesh = TriangleMesh.Import(selectedMeshPath, colorSpace);
         PrimitiveList h = new();
 
         for (int i = 0; i < mesh.NTriangles; i++) {
@@ -328,10 +359,6 @@ public partial class MainWindow : Window
         {
             Filter = "Object files (*.obj)|*.obj",
         };
-        if (ofn.ShowDialog() == true)
-        {
-            return ofn.FileName;
-        }
-        throw new System.Exception();
+        return ofn.ShowDialog() == true ? ofn.FileName : null;
     }
 }
