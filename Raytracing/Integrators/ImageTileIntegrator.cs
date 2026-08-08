@@ -31,7 +31,9 @@ public abstract class ImageTileIntegrator: IIntegrator {
         int waveStart = 0, waveEnd = 1, nextWaveSize = 1;
 
         while(waveStart < spp) {
-            token.ThrowIfCancellationRequested();
+            if (token.IsCancellationRequested) {
+                break;
+            }
 
             //for (int i = pixelBounds.PMin.X; i < pixelBounds.PMax.X; i++) {
             //    for (int j = pixelBounds.PMin.Y; j < pixelBounds.PMax.Y; j++) {

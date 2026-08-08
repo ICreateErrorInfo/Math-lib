@@ -116,9 +116,6 @@ public partial class MainWindow : Window
             Scene scene = selected.Factory(width, height, spp, maxDepth);
             await raytracer.RenderScene(scene, colorSpace, cts.Token);
         }
-        catch (OperationCanceledException) {
-            Time.Text = "Abgebrochen";
-        }
         catch (Exception ex) {
             MessageBox.Show($"Rendering failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }

@@ -17,6 +17,8 @@ public abstract class IIntegrator {
         _colorspace = colorspace;
     }
 
+    // Cancellation is cooperative: implementations must poll token.IsCancellationRequested and
+    // return early instead of throwing, so debugging a render isn't interrupted by first-chance exceptions.
     public abstract void Render(Scene scene, IProgress<ProgressData> progress, CancellationToken token);
 
     public SurfaceInteraction Intersect(Ray ray) {

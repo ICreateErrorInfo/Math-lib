@@ -51,14 +51,17 @@ namespace Raytracing {
             var progress = new Progress<ProgressData>(OnProgress);
 
             try {
-                var imageData = await Task.Run(() => RenderImageData(progress, scene, token), token);
+                var imageData = await Task.Run(() => RenderImageData(progress, scene, token));
 
                 var bitmap = ToBitmap(imageData, scene.SamplesPerPixel);
 
                 _image.Source = ToImageSource(bitmap);
 
                 timer.Stop();
-                _time.Text = (timer.ElapsedMilliseconds / 1000.0).ToString() + "s";
+
+                _time.Text = token.IsCancellationRequested
+                    ? "Abgebrochen"
+                    : (timer.ElapsedMilliseconds / 1000.0).ToString() + "s";
             }
             finally {
                 _progressBar.Visibility = Visibility.Collapsed;
