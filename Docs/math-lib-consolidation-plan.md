@@ -48,10 +48,10 @@ eigentlichen Sinn sind, sondern Teil von Projections Mesh/Render-Pipeline: `Mesh
 
 ### Phase 2 — BenchmarkTests
 
-- [ ] `BenchmarkTests/VertexBenchmarks.cs` löschen (benchmarkt `Math_lib.Vertex`/
+- [x] `BenchmarkTests/VertexBenchmarks.cs` löschen (benchmarkt `Math_lib.Vertex`/
       `VertexAttributes` — ein Konzept, das ausschließlich zu `Projection` gehört und in
       Moarx.Math kein Äquivalent hat/bekommt, siehe Phase 4).
-- [ ] `ProjectReference` auf `Math-lib.csproj` aus `BenchmarkTests.csproj` entfernen
+- [x] `ProjectReference` auf `Math-lib.csproj` aus `BenchmarkTests.csproj` entfernen
       (kein anderer Benchmark referenziert Math-lib).
 
 ### Phase 3 — Projection: Geometrie-Typen migrieren

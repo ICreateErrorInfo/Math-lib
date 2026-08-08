@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
     <ProjectReference Include="..\Moarx.Math\Moarx.Math.csproj" />
   </ItemGroup>
 
