@@ -111,6 +111,23 @@ These are largely independent, older WPF applications not on the active developm
 `Neural_Network_WPF` (from-scratch neural net + WPF visualizer), `Recognizer`. Each has its own
 `.csproj`; most reference `Math-lib` rather than `Moarx.Math`.
 
+## Git workflow
+
+- Never run `git commit` (or `git push`) on your own initiative. Committing and pushing are always
+  the user's call.
+- After each meaningful change, instead of committing, write a ready-to-use commit message enclosed
+  between `+++beginn commit message` and `+++end commit message` markers, e.g.:
+
+  ```
+  +++beginn commit message
+  Short summary of the change
+
+  Optional body with more detail.
+  +++end commit message
+  ```
+
+  The user copies/runs this themselves when they're ready to commit.
+
 ## Code style
 
 Formatting/style is enforced via `.editorconfig` at the repo root (applies to all `*.cs` files across
