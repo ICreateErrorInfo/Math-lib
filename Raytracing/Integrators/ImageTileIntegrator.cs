@@ -19,7 +19,7 @@ public abstract class ImageTileIntegrator: IIntegrator {
         _camera = camera;
     }
 
-    public override void Render(Scene scene, IProgress<ProgressData> progress) {
+    public override void Render(Scene scene, IProgress<ProgressData> progress, CancellationToken token) {
         Bounds2D<int> pixelBounds = new(new((int)_camera.ResolutionWidth, (int)_camera.ResolutionHeight), new(0,0)); //TODO int
         int spp = scene.SamplesPerPixel;
         background = scene.Background;
@@ -31,6 +31,7 @@ public abstract class ImageTileIntegrator: IIntegrator {
         int waveStart = 0, waveEnd = 1, nextWaveSize = 1;
 
         while(waveStart < spp) {
+            token.ThrowIfCancellationRequested();
 
             //for (int i = pixelBounds.PMin.X; i < pixelBounds.PMax.X; i++) {
             //    for (int j = pixelBounds.PMin.Y; j < pixelBounds.PMax.Y; j++) {

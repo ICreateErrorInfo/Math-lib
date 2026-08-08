@@ -39,7 +39,10 @@
                 <TextBlock Text="Max Depth" Margin="0,0,0,2"/>
                 <TextBox x:Name="MaxDepthTextBox" Margin="0,0,0,10"/>
 
-                <Button x:Name="RenderButton" Content="Render" Height="30" Click="RenderButton_Click"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="RenderButton" Content="Render" Width="90" Height="30" Click="RenderButton_Click"/>
+                    <Button x:Name="CancelButton" Content="Abbrechen" Width="90" Height="30" Margin="8,0,0,0" IsEnabled="False" Click="CancelButton_Click"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
 

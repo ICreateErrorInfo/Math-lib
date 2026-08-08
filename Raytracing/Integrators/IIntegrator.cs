@@ -4,6 +4,7 @@ using Raytracing.Mathmatic;
 using Raytracing.Primitives;
 using static Raytracing.Raytracer;
 using System;
+using System.Threading;
 
 namespace Raytracing.Integrators;
 public abstract class IIntegrator {
@@ -16,7 +17,7 @@ public abstract class IIntegrator {
         _colorspace = colorspace;
     }
 
-    public abstract void Render(Scene scene, IProgress<ProgressData> progress);
+    public abstract void Render(Scene scene, IProgress<ProgressData> progress, CancellationToken token);
 
     public SurfaceInteraction Intersect(Ray ray) {
         return Aggregate.Intersect(ray, new());

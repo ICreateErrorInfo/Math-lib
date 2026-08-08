@@ -38,7 +38,7 @@ namespace Raytracing {
             RGBToSpectrumTable.Init();
             RGBColorSpace.Init();
         }
-        public async Task RenderScene(Scene scene, RGBColorSpace colorspace)
+        public async Task RenderScene(Scene scene, RGBColorSpace colorspace, CancellationToken token)
         {
             _ColorSpace = colorspace;
 
@@ -50,18 +50,21 @@ namespace Raytracing {
 
             var progress = new Progress<ProgressData>(OnProgress);
 
-            var imageData = await Task.Run(() => RenderImageData(progress, scene));
+            try {
+                var imageData = await Task.Run(() => RenderImageData(progress, scene, token), token);
 
-            var bitmap = ToBitmap(imageData, scene.SamplesPerPixel);
+                var bitmap = ToBitmap(imageData, scene.SamplesPerPixel);
 
-            _image.Source = ToImageSource(bitmap);
+                _image.Source = ToImageSource(bitmap);
 
-            _progressBar.Visibility = Visibility.Collapsed;
-
-            timer.Stop();
-            _time.Text = (timer.ElapsedMilliseconds / 1000.0).ToString() + "s";
+                timer.Stop();
+                _time.Text = (timer.ElapsedMilliseconds / 1000.0).ToString() + "s";
+            }
+            finally {
+                _progressBar.Visibility = Visibility.Collapsed;
+            }
         }
-        ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene)
+        ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene, CancellationToken token)
         {
             int samplesPerPixel = scene.SamplesPerPixel;
             int maxDepth = scene.MaxDepth;
@@ -74,7 +77,7 @@ namespace Raytracing {
 
             var integrator = new RandomWalkIntegrator(scene.Camera, worldBVHTree, _ColorSpace, maxDepth);
 
-            integrator.Render(scene, progress);
+            integrator.Render(scene, progress, token);
 
             RGB[,] pixelArray = new RGB[imageWidth, imageHeight];
 

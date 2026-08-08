@@ -8,6 +8,7 @@ using Raytracing.Primitives;
 using Raytracing.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 
 namespace Raytracing;
@@ -20,6 +21,7 @@ public partial class MainWindow : Window
 
     List<SceneDefinition> sceneDefinitions;
     string selectedMeshPath;
+    CancellationTokenSource cts;
 
     public MainWindow()
     {
@@ -104,19 +106,37 @@ public partial class MainWindow : Window
         }
 
         RenderButton.IsEnabled = false;
+        CancelButton.IsEnabled = true;
         SceneComboBox.IsEnabled = false;
+        BrowseMeshButton.IsEnabled = false;
+
+        cts = new CancellationTokenSource();
 
         try {
             Scene scene = selected.Factory(width, height, spp, maxDepth);
-            await raytracer.RenderScene(scene, colorSpace);
+            await raytracer.RenderScene(scene, colorSpace, cts.Token);
+        }
+        catch (OperationCanceledException) {
+            Time.Text = "Abgebrochen";
         }
         catch (Exception ex) {
             MessageBox.Show($"Rendering failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally {
+            cts.Dispose();
+            cts = null;
+
             RenderButton.IsEnabled = true;
+            CancelButton.IsEnabled = false;
             SceneComboBox.IsEnabled = true;
+            BrowseMeshButton.IsEnabled = true;
         }
+    }
+
+    void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        cts?.Cancel();
+        CancelButton.IsEnabled = false;
     }
 
     Scene TestSphere(int width = 400, int height = 200, int spp = 100, int maxDepth = 10) {
