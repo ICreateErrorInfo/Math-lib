@@ -232,4 +232,29 @@ public class Bounds3DTests {
         Assert.That(b1[0], Is.EqualTo(pMin));
         Assert.That(b1[1], Is.EqualTo(pMax));
     }
+    [Test]
+    public void TestDistanceSquaredForPointInsideIsZero() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+
+        Assert.That(b.DistanceSquared(new Point3D<double>(0, 0, 0)), Is.EqualTo(0));
+    }
+    [Test]
+    public void TestDistanceSquaredForPointOnBoundaryIsZero() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+
+        Assert.That(b.DistanceSquared(new Point3D<double>(1, 1, 1)), Is.EqualTo(0));
+    }
+    [Test]
+    public void TestDistanceSquaredForPointOutsideOnOneAxis() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+
+        // Outside along X only; Y and Z are inside the bounds and must not contribute.
+        Assert.That(b.DistanceSquared(new Point3D<double>(3, 0, 0)), Is.EqualTo(4));
+    }
+    [Test]
+    public void TestDistanceSquaredForPointOutsideOnAllAxes() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+
+        Assert.That(b.DistanceSquared(new Point3D<double>(3, 3, 3)), Is.EqualTo(12));
+    }
 }

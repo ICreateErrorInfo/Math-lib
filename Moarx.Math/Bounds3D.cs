@@ -150,9 +150,13 @@ public readonly record struct Bounds3D<T>
     }
 
     public T DistanceSquared<U>(Point3D<U> p) where U: struct, INumber<U> {
-        T dx = T.Max(PMin.X - (T)Convert.ChangeType(p.X, typeof(T)), (T)Convert.ChangeType(p.X, typeof(T)) - PMax.X);
-        T dy = T.Max(PMin.Y - (T)Convert.ChangeType(p.Y, typeof(T)), (T)Convert.ChangeType(p.Y, typeof(T)) - PMax.Y);
-        T dz = T.Max(PMin.Z - (T)Convert.ChangeType(p.Z, typeof(T)), (T)Convert.ChangeType(p.Z, typeof(T)) - PMax.Z);
+        T px = (T)Convert.ChangeType(p.X, typeof(T));
+        T py = (T)Convert.ChangeType(p.Y, typeof(T));
+        T pz = (T)Convert.ChangeType(p.Z, typeof(T));
+
+        T dx = T.Max(T.Zero, T.Max(PMin.X - px, px - PMax.X));
+        T dy = T.Max(T.Zero, T.Max(PMin.Y - py, py - PMax.Y));
+        T dz = T.Max(T.Zero, T.Max(PMin.Z - pz, pz - PMax.Z));
 
         return dx * dx + dy * dy + dz * dz;
     }

@@ -11,19 +11,32 @@ Quelle: Analyse von `Moarx.Math` vs. `Moarx.Math.Tests` (2026-08-08).
 
 Verifiziert: `Moarx.Math.Tests` (143/143 grün) und `Raytracing` bauen fehlerfrei nach den Änderungen.
 
-## 2. Komplett fehlende Testdateien (neue Typen ohne jeden Test)
+## 2. Komplett fehlende Testdateien (neue Typen ohne jeden Test) — ✅ erledigt (2026-08-08)
 
-- [ ] `Bounds2D<T>` — Testfile anlegen (Kandidat: Portierung aus `Math-lib.Tests\Bound2DTests.cs`, ~20 Tests, inkl. `IntersectP1/2`, `Union`, `Overlap`, `Inside`, `Expand`, `Volume`, `SurfaceArea`, `Offset`, Indexer)
-- [ ] `MathmaticMethods.cs` — direkter Testfile für `SolveQuadratic` (3 Overloads), `FindInterval`, `DifferenceOfProducts`, `FMA`, `Lerp`, `SafeASin/ACos/Sqrt`, `Partition<T>`
-- [ ] `DirectionCone` — Testfile (nach Klärung von Punkt 1)
-- [ ] `Ellipse2D<T>` — Testfile (mindestens Ctor/`Create`, `MidPoint`, `HorizontalStretch`, `VerticalStretch`)
-- [ ] `Line2D<T>` — Testfile (`GetBoundingBox`, `Transform`)
-- [ ] `Triangle2D<T>` — Testfile (`GetBoundingBox`, `Transform`)
-- [ ] `CubicBezierCurve2D<T>` — Testfile (Ctor, Indexer)
-- [ ] `QuadBezierCurve2D<T>` — Testfile (Ctor, Indexer)
-- [ ] `rng.cs` (PCG32) — Testfile (Determinismus bei fixem Seed, `UniformInt`-Grenzen, grobe Verteilungsprüfung)
-- [ ] `VectorExtensions.cs` — Testfile für `Normalize`/`GetLength` (generischer Pfad **und** `float`-Fastpath-Overload gegeneinander prüfen)
-- [ ] `BoundsExtensions.cs` — Test für `Distance<T,U>`
+Hinweis: Bounds2D<T> hat in Wirklichkeit eine viel kleinere API als Bounds3D<T> (nur Ctor, PMin/PMax,
+ToRectangle, Diagonal, statisches Intersect, Indexer — kein Union/Overlaps/Inside/Expand/Volume/etc.),
+daher war eine 1:1-Portierung von `Bound2DTests.cs` (Legacy) nicht möglich; stattdessen wurde ein
+schlankerer, zur tatsächlichen API passender Testfile geschrieben.
+
+- [x] `Bounds2D<T>` — `Bounds2DTests.cs` (11 Tests)
+- [x] `MathmaticMethods.cs` — `MathmaticMethodsTests.cs` (25 Tests)
+- [x] `DirectionCone` — `DirectionConeTests.cs` (15 Tests, inkl. `NotImplementedException`-Zweig von `Union()`)
+- [x] `Ellipse2D<T>` — `Ellipse2DTests.cs`
+- [x] `Line2D<T>` — `Line2DTests.cs`
+- [x] `Triangle2D<T>` — `Triangle2DTests.cs`
+- [x] `CubicBezierCurve2D<T>` — `CubicBezierCurve2DTests.cs`
+- [x] `QuadBezierCurve2D<T>` — `QuadBezierCurve2DTests.cs`
+- [x] `rng.cs` (PCG32) — `RngTests.cs` (Determinismus verifiziert: `rng` hat keine Seed-API, jede Instanz startet mit demselben Fixed-State — zwei frische Instanzen liefern identische Sequenzen)
+- [x] `VectorExtensions.cs` — `VectorExtensionsTests.cs` (generischer Pfad + `float`-Fastpath gegeneinander geprüft; `Normalize()` eines Nullvektors wirft `ArgumentOutOfRangeException`, kein stilles NaN — durch den NaN-Guard im Vector-Ctor)
+- [x] `BoundsExtensions.cs` — `BoundsExtensionsTests.cs`
+
+**Bug gefunden und gefixt:** `Bounds3D<T>.DistanceSquared` (genutzt von `BoundsExtensions.Distance`) klammerte
+die Achsen-Differenzen nicht mit `0`, bevor quadriert wurde — für Punkte **innerhalb** der Bounds lieferte
+die Methode einen falschen, positiven Wert statt `0` (fehlendes `Max(0, ...)`, vgl. pbrt-Referenz). Fix in
+`Bounds3D.cs`, direkte Tests dafür in `Bounds3DTests.cs` ergänzt (`TestDistanceSquaredForPointInsideIsZero`,
+`...OnBoundary...`, `...OnOneAxis`, `...OnAllAxes`).
+
+Verifiziert: `Moarx.Math.Tests` (238/238 grün) und `Raytracing` bauen fehlerfrei.
 
 ## 3. Bestehende Testdateien mit großen Lücken
 
