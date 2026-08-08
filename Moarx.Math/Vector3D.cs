@@ -86,7 +86,7 @@ public readonly record struct Vector3D<T>
     public static Vector3D<U> Refract<U>(Vector3D<U> v, Vector3D<U> v1, U eta) where U : struct, INumber<U>, IRootFunctions<U> {
         U cosi = -v * v1;
         U cost2 = U.CreateChecked(1) - eta * eta * (U.CreateChecked(1) - cosi * cosi);
-        Vector3D<U> t = eta * v + (new Vector3D<U>(eta * cosi) - U.Sqrt(U.Abs(cost2)) * v1);
+        Vector3D<U> t = eta * v + (eta * cosi - U.Sqrt(U.Abs(cost2))) * v1;
         if (cost2 > U.CreateChecked(0)) {
             return t * U.CreateChecked(1);
         } else {

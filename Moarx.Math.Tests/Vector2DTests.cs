@@ -122,5 +122,30 @@ public class Vector2DTests {
 
         Assert.That(expectedVector, Is.EqualTo(vector1.ToPoint()));
     }
+    [Test]
+    public void TestExplicitCastToInt() {
+        var v = new Vector2D<double>(1.7, 2.2);
+
+        var casted = (Vector2D<int>)v;
+
+        Assert.That(casted.X, Is.EqualTo(2));
+        Assert.That(casted.Y, Is.EqualTo(2));
+    }
+    [Test]
+    public void TestExplicitCastToDouble() {
+        var v = new Vector2D<int>(1, 2);
+
+        var casted = (Vector2D<double>)v;
+
+        Assert.That(casted.X, Is.EqualTo(1));
+        Assert.That(casted.Y, Is.EqualTo(2));
+    }
+    [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var v = new Vector2D<double>(1, 2);
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = v[2]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = v[-1]);
+    }
 }
 

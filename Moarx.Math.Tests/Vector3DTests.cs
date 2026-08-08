@@ -139,4 +139,131 @@ public class Vector3DTests {
 
         Assert.That(expectedVector, Is.EqualTo(vector1.ToPoint()));
     }
+    [Test]
+    public void TestIsNormalized() {
+        var v = new Vector3D<double>(0, 1, 0);
+        var v1 = new Vector3D<double>(3, 4, 0);
+
+        Assert.That(v.IsNormalized(), Is.True);
+        Assert.That(v1.IsNormalized(), Is.False);
+    }
+    [Test]
+    public void TestPermute() {
+        var p = new Vector3D<double>(10, 20, 30);
+
+        Assert.That(Vector3D<double>.Permute(p, 2, 0, 1), Is.EqualTo(new Vector3D<double>(30, 10, 20)));
+        Assert.That(Vector3D<double>.Permute(p, 0, 1, 2), Is.EqualTo(p));
+    }
+    [Test]
+    public void TestMaxDimension() {
+        Assert.That(Vector3D<double>.MaxDimension(new Vector3D<double>(5, 1, 3)), Is.EqualTo(0));
+        Assert.That(Vector3D<double>.MaxDimension(new Vector3D<double>(1, 5, 3)), Is.EqualTo(1));
+        Assert.That(Vector3D<double>.MaxDimension(new Vector3D<double>(1, 3, 5)), Is.EqualTo(2));
+    }
+    [Test]
+    public void TestAbs() {
+        var v = new Vector3D<double>(-1, 2, -3);
+
+        Assert.That(Vector3D<double>.Abs(v), Is.EqualTo(new Vector3D<double>(1, 2, 3)));
+    }
+    [Test]
+    public void TestRefractAtNormalIncidenceIsUnchanged() {
+        // Straight-on incidence never bends, regardless of eta.
+        var v = new Vector3D<double>(0, -1, 0);
+        var n = new Vector3D<double>(0, 1, 0);
+
+        var t = Vector3D<double>.Refract(v, n, 0.75);
+
+        Assert.That(t.X, Is.EqualTo(0).Within(1e-10));
+        Assert.That(t.Y, Is.EqualTo(-1).Within(1e-10));
+        Assert.That(t.Z, Is.EqualTo(0).Within(1e-10));
+    }
+    [Test]
+    public void TestRefractBendsTowardNormalForDenserMedium() {
+        // 3-4-5 incidence angle (sini=0.8, cosi=0.6) against the surface normal.
+        var v = new Vector3D<double>(0.8, -0.6, 0);
+        var n = new Vector3D<double>(0, 1, 0);
+        double eta = 0.5;
+
+        var t = Vector3D<double>.Refract(v, n, eta);
+
+        double cosi = 0.6;
+        double cost2 = 1 - (eta * eta * (1 - (cosi * cosi)));
+        double expectedX = eta * v.X;
+        double expectedY = (eta * v.Y) + ((eta * cosi) - System.Math.Sqrt(cost2));
+
+        Assert.That(t.X, Is.EqualTo(expectedX).Within(1e-10));
+        Assert.That(t.Y, Is.EqualTo(expectedY).Within(1e-10));
+        Assert.That(t.Z, Is.EqualTo(0).Within(1e-10));
+        // The refracted direction must stay unit length, same as the incident direction.
+        Assert.That(t.GetLengthSquared(), Is.EqualTo(1).Within(1e-10));
+    }
+    [Test]
+    public void TestRefractTotalInternalReflectionReturnsZero() {
+        // eta > 1 with a steep incidence angle pushes sin2Theta_t above 1 -> no real refraction.
+        var v = new Vector3D<double>(0.8, -0.6, 0);
+        var n = new Vector3D<double>(0, 1, 0);
+
+        var t = Vector3D<double>.Refract(v, n, 2.0);
+
+        Assert.That(t, Is.EqualTo(new Vector3D<double>(0, 0, 0)));
+    }
+    [Test]
+    public void TestReflect() {
+        var v = new Vector3D<double>(1, -1, 0);
+        var n = new Vector3D<double>(0, 1, 0);
+
+        Assert.That(Vector3D<double>.Reflect(v, n), Is.EqualTo(new Vector3D<double>(1, 1, 0)));
+    }
+    [Test]
+    public void TestAngleBetweenParallelVectorsIsZero() {
+        var v = new Vector3D<double>(1, 0, 0);
+
+        Assert.That(Vector3D<double>.AngleBetween(v, v), Is.EqualTo(0).Within(1e-10));
+    }
+    [Test]
+    public void TestAngleBetweenPerpendicularVectorsIsHalfPi() {
+        var v1 = new Vector3D<double>(1, 0, 0);
+        var v2 = new Vector3D<double>(0, 1, 0);
+
+        Assert.That(Vector3D<double>.AngleBetween(v1, v2), Is.EqualTo(System.Math.PI / 2).Within(1e-10));
+    }
+    [Test]
+    public void TestAngleBetweenOppositeVectorsIsPi() {
+        var v1 = new Vector3D<double>(1, 0, 0);
+        var v2 = new Vector3D<double>(-1, 0, 0);
+
+        Assert.That(Vector3D<double>.AngleBetween(v1, v2), Is.EqualTo(System.Math.PI).Within(1e-10));
+    }
+    [Test]
+    public void TestNearZero() {
+        Assert.That(new Vector3D<double>(0, 0, 0).NearZero(), Is.True);
+        Assert.That(new Vector3D<double>(1e-9, 1e-9, 1e-9).NearZero(), Is.True);
+        Assert.That(new Vector3D<double>(0.1, 0, 0).NearZero(), Is.False);
+    }
+    [Test]
+    public void TestRandomIsWithinRange() {
+        for (int i = 0; i < 100; i++) {
+            var v = Vector3D<double>.Random(-2, 3);
+
+            Assert.That(v.X, Is.InRange(-2, 3));
+            Assert.That(v.Y, Is.InRange(-2, 3));
+            Assert.That(v.Z, Is.InRange(-2, 3));
+        }
+    }
+    [Test]
+    public void TestRandomInUnitSphereStaysWithinUnitSphere() {
+        for (int i = 0; i < 100; i++) {
+            var v = Vector3D<double>.RandomInUnitSphere();
+
+            Assert.That(v.GetLengthSquared(), Is.LessThan(1));
+        }
+    }
+    [Test]
+    public void TestIndexerThrowsOnOutOfRange() {
+        var v = new Vector3D<double>(1, 2, 3);
+
+        Assert.Throws<IndexOutOfRangeException>(() => _ = v[3]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = v[-1]);
+    }
 }

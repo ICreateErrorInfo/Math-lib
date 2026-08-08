@@ -40,18 +40,35 @@ Verifiziert: `Moarx.Math.Tests` (238/238 grün) und `Raytracing` bauen fehlerfre
 
 ## 3. Bestehende Testdateien mit großen Lücken
 
-### Vector3D
-- [ ] `Reflect`
-- [ ] `Refract<U>`
-- [ ] `AngleBetween`
-- [ ] `Permute`
-- [ ] `MaxDimension`
-- [ ] `Abs`
-- [ ] `NearZero`
-- [ ] `RandomInUnitSphere` / `Random`
+### Vector3D — ✅ erledigt (2026-08-08)
+- [x] `Reflect`
+- [x] `Refract<U>` — **Bug gefunden und gefixt** (siehe unten)
+- [x] `AngleBetween`
+- [x] `Permute`
+- [x] `MaxDimension`
+- [x] `Abs`
+- [x] `NearZero`
+- [x] `RandomInUnitSphere` / `Random`
+- [x] `IsNormalized` (Ergänzung, war in Punkt 1 nur gefixt, nicht getestet)
+- [x] Indexer Out-of-Range
 
-### Vector2D
-- [ ] `GetLength`/`Normalize` (via `VectorExtensions`, s.o.)
+**Bug gefunden und gefixt:** `Vector3D<T>.Refract<U>` berechnete den gebrochenen Vektor falsch. Statt den
+Skalarterm `(eta*cosi - sqrt(cost2))` mit dem Normalenvektor zu multiplizieren (Standard-Snellsche-Brechungsformel),
+wurde `new Vector3D<U>(eta*cosi)` gebildet — ein Vektor mit allen drei Komponenten `= eta*cosi`, unabhängig von
+der tatsächlichen Normalenrichtung. Beispiel: `v=(0,-1,0)`, `n=(0,1,0)`, `eta=1` (kein Brechungsindex-Unterschied,
+sollte `v` unverändert lassen) lieferte `(1,-1,1)` statt `(0,-1,0)`. Der Bug bestand identisch bereits im
+Legacy-`Math-lib\Vector3D.cs` (keine Migrationsregression) und ist **aktiv im Renderer**:
+`Raytracing\Materials\Dielectric.cs` (Glas/Wasser-Material) ruft `Refract` direkt auf — betraf also sichtbar
+die Glasbrechung beim Rendern. Fix nur in `Moarx.Math\Vector3D.cs` (aktiver Code), Legacy-`Math-lib` bewusst
+unangetastet gelassen. Neue Tests: `TestRefractAtNormalIncidenceIsUnchanged`, `TestRefractBendsTowardNormalForDenserMedium`
+(inkl. Unit-Length-Check), `TestRefractTotalInternalReflectionReturnsZero`.
+
+### Vector2D — ✅ erledigt (2026-08-08)
+- [x] `GetLength`/`Normalize` (via `VectorExtensions`, s.o.)
+- [x] Explizite Casts (`(Vector2D<int>)`, `(Vector2D<double>)`)
+- [x] Indexer Out-of-Range
+
+Verifiziert: `Moarx.Math.Tests` (256/256 grün) und `Raytracing` bauen fehlerfrei.
 
 ### Point2D
 - [ ] `Min`
