@@ -38,9 +38,14 @@ namespace Raytracing {
             RGBToSpectrumTable.Init();
             RGBColorSpace.Init();
         }
-        public async void RenderScene(Scene scene, RGBColorSpace colorspace)
+        public async Task RenderScene(Scene scene, RGBColorSpace colorspace)
         {
             _ColorSpace = colorspace;
+
+            _progressBar.Visibility = Visibility.Visible;
+            _progressBar.Value = 0;
+            _time.Text = "";
+
             Stopwatch timer = Stopwatch.StartNew();
 
             var progress = new Progress<ProgressData>(OnProgress);
@@ -67,7 +72,7 @@ namespace Raytracing {
             int imageWidth = scene.ImageWidth;
             int imageHeight = scene.ImageHeight;
 
-            RandomWalkIntegrator integrator = new RandomWalkIntegrator(scene.Camera, worldBVHTree, _ColorSpace, 50);
+            var integrator = new RandomWalkIntegrator(scene.Camera, worldBVHTree, _ColorSpace, maxDepth);
 
             integrator.Render(scene, progress);
 
