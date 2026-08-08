@@ -53,7 +53,7 @@ namespace Raytracing {
             try {
                 var imageData = await Task.Run(() => RenderImageData(progress, scene, token));
 
-                var bitmap = ToBitmap(imageData, scene.SamplesPerPixel);
+                var bitmap = ToBitmap(imageData, imageData.SamplesPerPixel);
 
                 _image.Source = ToImageSource(bitmap);
 
@@ -69,7 +69,6 @@ namespace Raytracing {
         }
         ImageData RenderImageData(IProgress<ProgressData> progress, Scene scene, CancellationToken token)
         {
-            int samplesPerPixel = scene.SamplesPerPixel;
             int maxDepth = scene.MaxDepth;
             var worldBVHTree = scene.Accel;
 
@@ -80,7 +79,7 @@ namespace Raytracing {
 
             var integrator = new RandomWalkIntegrator(scene.Camera, worldBVHTree, _ColorSpace, maxDepth);
 
-            integrator.Render(scene, progress, token);
+            int completedSamples = integrator.Render(scene, progress, token);
 
             RGB[,] pixelArray = new RGB[imageWidth, imageHeight];
 
@@ -120,7 +119,7 @@ namespace Raytracing {
                 data: scene.Camera.Film.Pixel,
                 width: imageWidth,
                 height: imageHeight,
-                samplesPerPixel: samplesPerPixel);
+                samplesPerPixel: completedSamples);
         }
         void OnProgress(ProgressData d)
         {

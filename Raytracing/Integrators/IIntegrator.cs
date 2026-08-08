@@ -19,7 +19,8 @@ public abstract class IIntegrator {
 
     // Cancellation is cooperative: implementations must poll token.IsCancellationRequested and
     // return early instead of throwing, so debugging a render isn't interrupted by first-chance exceptions.
-    public abstract void Render(Scene scene, IProgress<ProgressData> progress, CancellationToken token);
+    // Returns the number of samples per pixel actually completed (equals scene.SamplesPerPixel unless canceled early).
+    public abstract int Render(Scene scene, IProgress<ProgressData> progress, CancellationToken token);
 
     public SurfaceInteraction Intersect(Ray ray) {
         return Aggregate.Intersect(ray, new());
