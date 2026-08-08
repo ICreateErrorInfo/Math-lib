@@ -254,10 +254,25 @@ abgedeckt werden (vermutlich Copy-Paste-Rest einer `double`-Variante). Nach Rüc
 
 Verifiziert: `Moarx.Math.Tests` (367/367 grün) und `Raytracer.Tests` (33/33 grün), beide Projekte bauen fehlerfrei.
 
-## 9. Code-Coverage-Lücken: Normal3D<T> (Coverage-Lauf 2026-08-08: 88.9% Lines, 100% Branches)
+## 9. Code-Coverage-Lücken: Normal3D<T> — ✅ erledigt (2026-08-08)
 
-- [ ] `ToString()` — 0% abgedeckt
-- [ ] `operator*(Normal3D, T)` (Skalarmultiplikation) — 0% abgedeckt
+Quelle: `dotnet test --collect:"XPlat Code Coverage"` gegen `Moarx.Math.Tests` (Lauf 2026-08-08: 88.9% Lines, 100% Branches).
+
+- [x] `ToString()` — `TestToString` ergänzt (delegiert an `Vector3D.ToString()`, Format `[X, Y, Z]`).
+- [x] `operator*(Normal3D, T)` (Skalarmultiplikation) — drei Tests ergänzt:
+  `TestScalarMultiplicationByPositiveScalarKeepsDirectionAndUnitLength`,
+  `TestScalarMultiplicationByNegativeScalarFlipsSign`, `TestScalarMultiplicationByZeroThrows`.
+
+**Kein Bug, aber bemerkenswertes (dokumentiertes) Verhalten:** `operator*(Normal3D<T>, T)` ruft intern wieder den
+normalisierenden Ctor auf (`new Normal3D<T>(left._vector * right)`), da `Normal3D<T>` laut Typ-Invariante (s. Punkt 1)
+*immer* Einheitslänge hat. Dadurch ist Multiplikation mit einem positiven Skalar ein reines No-Op (Richtung/Länge
+bleiben unverändert), Multiplikation mit einem negativen Skalar ist äquivalent zu unärem `-`, und Multiplikation mit
+`0` wirft `ArgumentException` (Nullvektor verboten) statt einen Nullvektor zurückzugeben. Das ist konsistent mit der
+in Punkt 1 bewusst getroffenen Design-Entscheidung, nicht mit klassischer Skalarmultiplikation eines Vektors zu
+verwechseln — der Operator ist aktuell nirgends im Code aufgerufen. Kein Fix beauftragt, nur als Verhalten
+festgehalten und mit den drei Tests abgesichert.
+
+Verifiziert: `Moarx.Math.Tests` (371/371 grün).
 
 ## 10. Point3D<T> — erst API-Frage klären, dann ggf. testen (Coverage-Lauf 2026-08-08)
 

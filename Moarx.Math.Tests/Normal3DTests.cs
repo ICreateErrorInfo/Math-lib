@@ -100,6 +100,35 @@ public class Normal3DTests {
         Assert.That(p1 * p2, Is.EqualTo(n));
     }
     [Test]
+    public void TestScalarMultiplicationByPositiveScalarKeepsDirectionAndUnitLength() {
+        // The ctor always renormalizes, so scaling a Normal3D by a positive scalar is a no-op on direction/magnitude.
+        var p1 = new Normal3D<double>(new(12, -1, 3));
+        var scaled = p1 * 5.0;
+
+        Assert.That(scaled.X, Is.EqualTo(p1.X).Within(1e-10));
+        Assert.That(scaled.Y, Is.EqualTo(p1.Y).Within(1e-10));
+        Assert.That(scaled.Z, Is.EqualTo(p1.Z).Within(1e-10));
+        Assert.That(scaled.ToVector().IsNormalized(), Is.True);
+    }
+    [Test]
+    public void TestScalarMultiplicationByNegativeScalarFlipsSign() {
+        var p1 = new Normal3D<double>(new(0, 1, 0));
+
+        Assert.That(p1 * -2.0, Is.EqualTo(-p1));
+    }
+    [Test]
+    public void TestScalarMultiplicationByZeroThrows() {
+        var p1 = new Normal3D<double>(new(0, 1, 0));
+
+        Assert.Throws<ArgumentException>(() => _ = p1 * 0.0);
+    }
+    [Test]
+    public void TestToString() {
+        var p1 = new Normal3D<double>(new(0, 1, 0));
+
+        Assert.That(p1.ToString(), Is.EqualTo($"[{p1.X}, {p1.Y}, {p1.Z}]"));
+    }
+    [Test]
     public void TestFaceForwardKeepsNormalWhenAlreadyFacingSameDirection() {
         var n = new Normal3D<double>(new(0, 1, 0));
         var v = new Vector3D<double>(0, 1, 0);
