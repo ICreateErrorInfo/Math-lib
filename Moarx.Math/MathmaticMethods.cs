@@ -147,7 +147,7 @@ public class MathmaticMethods {
         foreach (var info in primitevesfalse) {
             newPrimitiveInfos.Add(info);
         }
-        for (int i = primitiveInfos.Count - 1; i > end; i--) {
+        for (int i = end; i < primitiveInfos.Count; i++) {
             newPrimitiveInfos.Add(primitiveInfos[i]);
         }
 
@@ -222,7 +222,8 @@ public class MathmaticMethods {
 
         Point2D<int> nextStart = extent.PMin;
 
-        int sumTiles = (int)(System.Math.Ceiling((double)extent.PMax.X / tileSize) * System.Math.Ceiling((double)extent.PMax.Y / tileSize));
+        Vector2D<int> diagonal = extent.Diagonal();
+        int sumTiles = (int)(System.Math.Ceiling((double)diagonal.X / tileSize) * System.Math.Ceiling((double)diagonal.Y / tileSize));
 
         Bounds2D<int>[] tiles = new Bounds2D<int>[sumTiles];
 

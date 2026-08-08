@@ -25,6 +25,13 @@ Ergebnis einer Code-Analyse des `Raytracing`-Projekts (Stand 2026-08-08). Priori
 - [ ] **`Shapes/Disk.cs:49`** – Normale ist der Trefferpunkt selbst statt der konstanten Flächennormale `(0,0,±1)`.
 - [ ] **`Shapes/Cone.cs:56-58`** – Normalenformel falsch: X/Y-Komponente werden immer identisch gesetzt, unabhängig vom
       tatsächlichen Trefferpunkt; korrekter Gradient wäre `(2x, 2y, -2k²(z-h))`.
+- [x] **`Moarx.Math/MathmaticMethods.cs` `Partition<T>`** – die Tail-Schleife lief rückwärts mit `i > end` statt
+      vorwärts mit `i >= end`: das Element an Index `end` wurde beim Zusammensetzen des Ergebnisses stillschweigend
+      verworfen und die restlichen Tail-Elemente in umgekehrter Reihenfolge angehängt. `Partition` wird in
+      `Accelerators/BVHAccelerator.cs` (Split-Methoden `Middle` und `SAH`) mit `end < primitiveInfos.Count` aufgerufen
+      (rekursive Teilbereiche), betraf also aktiv den BVH-Aufbau – ein Primitive pro betroffenem Split verschwand
+      unbemerkt aus der Liste. Behoben (2026-08-08), Regressionstest in `MathmaticMethodsTests.cs`
+      (`TestPartitionPreservesPrefixAndTailForSubRange`).
 
 ## Mittel
 
@@ -56,5 +63,6 @@ Ergebnis einer Code-Analyse des `Raytracing`-Projekts (Stand 2026-08-08). Priori
 - [ ] `Accelerators/BVHAccelerator.cs:369` – `nodesToVisit`-Array wird pro Ray neu alloziert; poolen/wiederverwenden
       statt GC-Druck pro Sample.
 - [ ] `Materials/Metal.cs` – `_fuzz` auch nach unten clampen (`Math.Clamp(fuzz, 0, 1)` statt nur `< 1 ? fuzz : 1`).
-- [ ] `Moarx.Math/MathmaticMethods.cs:225` `ParallelFor2D` – Kachelanzahl über `extent.PMax.X/Y` statt
+- [x] `Moarx.Math/MathmaticMethods.cs:225` `ParallelFor2D` – Kachelanzahl wurde über `extent.PMax.X/Y` statt
       `extent.Diagonal()` berechnet; für aktuelle Aufrufer (`PMin=(0,0)`) folgenlos, aber nicht generisch korrekt.
+      Behoben (2026-08-08), Regressionstests in `MathmaticMethodsTests.cs`.

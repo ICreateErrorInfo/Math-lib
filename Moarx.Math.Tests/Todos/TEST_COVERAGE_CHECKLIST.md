@@ -193,3 +193,70 @@ Kein neuer Bug in aktiv genutztem Code gefunden (die Int-Division-Falle in `Vect
 - [x] `MatrixTests.cs` — `Mul`-Test gegen `Point3D`/`Vector3D` als Vorlage für `SquareMatrix.Mul<T>` ergänzt: `TestMulAgainstPoint3D`/`TestMulAgainstVector3D` in `SquareMatrixTests.cs` übernehmen die Legacy-3x3-Matrix aus `TestMulMP3x3`/`TestMulMV3x3` (inkl. erwartetem Ergebnis `(1, 16, 3)`), extrahieren die Komponenten von `Point3D<double>`/`Vector3D<double>` in ein `double[]`, rufen `SquareMatrix.Mul<T>` auf und rekonstruieren das Ergebnis als `Point3D`/`Vector3D`. Es gibt (anders als im Legacy-`Matrix`) keinen `SquareMatrix * Point3D`/`* Vector3D`-Operator auf dem neuen Typ, daher der Umweg über das Array — das ist die reguläre, vorgesehene Nutzung von `Mul<T>`.
 
 Kein neuer Bug gefunden. Verifiziert: `Moarx.Math.Tests` (346/346 grün).
+
+## 7. Code-Coverage-Lücken: MathmaticMethods — ✅ erledigt (2026-08-08)
+
+Quelle: `dotnet test --collect:"XPlat Code Coverage"` gegen `Moarx.Math.Tests` (346/346 grün, Lauf 2026-08-08:
+81.5% Lines / 80.3% Branches).
+
+- [x] `ParallelFor2D` (Tiling-Logik, Zeilen 217–244) — **Bug gefunden und gefixt** (siehe unten). Tests:
+  `TestParallelFor2DCoversEntireExtentExactlyOnce`, `TestParallelFor2DWithNonZeroOriginCoversEntireExtent`,
+  `TestParallelFor2DWithEntirelyNegativeExtentIsNotSkipped`, `TestParallelFor2DSinglePixelExtent`.
+- [x] `Partition<T>` — **Bug gefunden und gefixt** (siehe unten). Tests: `TestPartitionSplitsByPredicate`
+  (bereits vorhanden), `TestPartitionPreservesPrefixAndTailForSubRange` (neue Regression).
+- [x] `SolveQuadratic(a, halfB, c, out t0, tMin, tMax)`-Überladung — verbleibende Branches ergänzt:
+  `TestSolveQuadraticHalfBNoRealRoots` (Diskriminante < 0), `TestSolveQuadraticHalfBFallsBackToSecondRoot`
+  (erste Nullstelle außerhalb, zweite greift).
+- [x] `Random1Tom1()` / `SampleUniformDiskConcentric` — `TestRandom1Tom1WithinRange` ergänzt;
+  `SampleUniformDiskConcentric` hatte bereits zwei Tests, aber nur den `|X|>|Y|`-Zweig — `TestSampleUniformDiskConcentricElseBranch` deckt jetzt auch den `|Y|>=|X|`-Zweig ab.
+
+**Bug gefunden und gefixt (1/2):** `ParallelFor2D` berechnete die Kachelanzahl `sumTiles` direkt aus
+`extent.PMax.X`/`extent.PMax.Y` statt aus der tatsächlichen Breite/Höhe (`extent.Diagonal()`). Für Extents mit
+`PMin == (0,0)` (der einzige aktuelle Aufrufer, `ImageTileIntegrator`) ist `PMax` zufällig identisch mit der
+Breite/Höhe, daher bisher folgenlos — für jeden anderen `PMin` (insbesondere negative Koordinaten) ist die Methode
+aber grundsätzlich falsch: Bei `PMin=(-5,-5), PMax=(0,0)` (5×5-Bereich, vollständig links/oberhalb des Ursprungs)
+ergibt `ceil(PMax.X/tileSize) * ceil(PMax.Y/tileSize) = 0`, das Kachel-Array hat Länge 0 und `func` wird **kein
+einziges Mal** aufgerufen — die gesamte Fläche wird stillschweigend übersprungen. War bereits als bekannter,
+aber "folgenloser" Punkt in `Raytracing/TODO.md` dokumentiert; jetzt behoben (`sumTiles` nutzt `extent.Diagonal()`)
+und mit Tests für Ursprungs-zentrierte sowie vollständig negative Extents abgesichert.
+
+**Bug gefunden und gefixt (2/2):** `Partition<T>` hängte die Elemente nach dem partitionierten Bereich
+(`newPrimitiveInfos`) über `for (int i = primitiveInfos.Count - 1; i > end; i--)` an — rückwärts und mit `i > end`
+statt `i >= end`. Dadurch wurde das Element an Index `end` komplett aus dem Ergebnis verworfen und die übrigen
+"Tail"-Elemente in umgekehrter Reihenfolge angehängt. `Partition` wird aktiv aus `Raytracing/Accelerators/BVHAccelerator.cs`
+(Split-Methoden `Middle` und `SAH`) mit rekursiven Teilbereichen aufgerufen, bei denen `end < primitiveInfos.Count`
+der Regelfall ist — ein aktiver Renderer-Bug, der pro betroffenem BVH-Split ein Primitive stillschweigend aus der
+Liste verschwinden ließ. Fix: `for (int i = end; i < primitiveInfos.Count; i++)`. Regressionstest
+`TestPartitionPreservesPrefixAndTailForSubRange` hätte vor dem Fix sowohl das fehlende Element als auch die
+vertauschte Tail-Reihenfolge aufgedeckt.
+
+Verifiziert: `Moarx.Math.Tests` (355/355 grün) und `Raytracing` baut fehlerfrei.
+
+## 8. Code-Coverage-Lücken: Bounds3D<T> (Coverage-Lauf 2026-08-08: 90.8% Lines / 72.5% Branches)
+
+- [ ] `IntersectP(Ray, Vector3D invDir, bool[] dirIsNeg)` — mehrere Branches ungetestet (Zeilen 86–98)
+- [ ] `Corner(int)` — Zeilen 104/108 ungetestet
+- [ ] `Expand` — Zeile 166 ungetestet
+- [ ] `MaxDimension()` — fast komplett ungetestet (nur 33% Branches)
+
+## 9. Code-Coverage-Lücken: Normal3D<T> (Coverage-Lauf 2026-08-08: 88.9% Lines, 100% Branches)
+
+- [ ] `ToString()` — 0% abgedeckt
+- [ ] `operator*(Normal3D, T)` (Skalarmultiplikation) — 0% abgedeckt
+
+## 10. Point3D<T> — erst API-Frage klären, dann ggf. testen (Coverage-Lauf 2026-08-08)
+
+- [ ] `operator+(Point3D, Point3D)` und `operator*(Point3D, Point3D)` (Zeilen 89–93, 134–138) sind komplett ungetestet und mathematisch unüblich (Punkt+Punkt/Punkt·Punkt ist keine Standardoperation, anders als Punkt±Vektor). Erst klären, ob das beabsichtigte API ist oder totes Leftover — je nach Antwort Test ergänzen oder Methode entfernen.
+
+## 11. Code-Coverage-Lücken: Bounds2D<T> (Coverage-Lauf 2026-08-08: 95.6% Lines / 66.7% Branches)
+
+- [ ] `set_PMin`/`set_PMax` — die Swap-Korrektur-Branch (PMin > PMax → tauschen) ist ungetestet (Zeilen 31/41)
+
+## 12. Code-Coverage-Lücken: Transform (Coverage-Lauf 2026-08-08: 98.8% Lines / 76.9% Branches)
+
+- [ ] `Transform(SquareMatrix)`-Einzelargument-Ctor — ungetestet
+- [ ] Ein Branch in `RotateFromTo` (Zeile 180) ungetestet — prüfen, ob es der Early-Return-Zweig für (annähernd) parallele Vektoren ist
+
+## 13. Code-Coverage-Lücken: Rectangle2D<T> (Coverage-Lauf 2026-08-08: 100% Lines / 89.3% Branches)
+
+- [ ] `Contains(Rectangle2D<T>)` — ein Branch ungetestet (Teil-Überlapp-Fall, der `false` liefern sollte)
