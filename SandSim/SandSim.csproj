@@ -7,8 +7,4 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Math-lib\Math-lib.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Math-lib\Math-lib.csproj" />
     <ProjectReference Include="..\..\NeuralNetwork\NeuralNetwork.csproj" />
   </ItemGroup>
 
