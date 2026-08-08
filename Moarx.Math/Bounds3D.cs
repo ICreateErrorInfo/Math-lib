@@ -104,10 +104,6 @@ public readonly record struct Bounds3D<T>
             throw new IndexOutOfRangeException(nameof(corner));
         }
 
-        if (double.IsNaN(corner)) {
-            throw new ArgumentOutOfRangeException();
-        }
-
         return new Point3D<T>(this[corner & 1].X,
                               this[(corner & 2) == 2 ? 1 : 0].Y,
                               this[(corner & 4) == 4 ? 1 : 0].Z);

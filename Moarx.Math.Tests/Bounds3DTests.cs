@@ -52,6 +52,13 @@ public class Bounds3DTests {
         Assert.That(b.Corner(7), Is.EqualTo(new Point3D<double>(2.5, 1, 1)));
     }
     [Test]
+    public void TestCornerThrowsOnOutOfRange() {
+        Bounds3D<double> b = new(new(0, 0, 0), new(1, 1, 1));
+
+        Assert.Throws<IndexOutOfRangeException>(() => b.Corner(-1));
+        Assert.Throws<IndexOutOfRangeException>(() => b.Corner(8));
+    }
+    [Test]
     public void TestUnion() {
         Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
         Point3D<double> pMax = new Point3D<double>(2.5, 1, 1);
@@ -143,6 +150,12 @@ public class Bounds3DTests {
         Assert.That(Bounds3D<double>.Expand(b1, 1).PMax, Is.EqualTo(b2.PMax));
     }
     [Test]
+    public void TestExpandThrowsOnNaNDelta() {
+        Bounds3D<double> b = new(new(0, 0, 0), new(1, 1, 1));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Bounds3D<double>.Expand(b, double.NaN));
+    }
+    [Test]
     public void TestDiagonal() {
         Point3D<double> pMin = new Point3D<double>(-2.5, -1, -1.5);
         Point3D<double> pMax = new Point3D<double>(2.5, 1, 1);
@@ -184,6 +197,24 @@ public class Bounds3DTests {
 
         Assert.That(b1.MaxDimension(), Is.EqualTo(0));
         Assert.That(b1.MaxDimension(), !Is.EqualTo(1));
+    }
+    [Test]
+    public void TestMaxDimensionReturnsYWhenYIsLargest() {
+        Bounds3D<double> b = new(new(0, 0, 0), new(1, 5, 2));
+
+        Assert.That(b.MaxDimension(), Is.EqualTo(1));
+    }
+    [Test]
+    public void TestMaxDimensionReturnsZWhenZIsLargest() {
+        Bounds3D<double> b = new(new(0, 0, 0), new(1, 2, 5));
+
+        Assert.That(b.MaxDimension(), Is.EqualTo(2));
+    }
+    [Test]
+    public void TestMaxDimensionFallsBackToZOnTie() {
+        Bounds3D<double> b = new(new(0, 0, 0), new(3, 3, 3));
+
+        Assert.That(b.MaxDimension(), Is.EqualTo(2));
     }
     [Test]
     public void TestLerp() {
@@ -305,6 +336,91 @@ public class Bounds3DTests {
         Ray ray = new(new Point3D<double>(-5, 5, 0), new Vector3D<double>(1, 0, 0));
         Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
         bool[] dirIsNeg = { ray.Direction.X < 0, ray.Direction.Y < 0, ray.Direction.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirNegativeDirectionHits() {
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(5, 0, 0), new Vector3D<double>(-1, 0, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.True);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirMissViaYBranch() {
+        // Crosses the X-slab during t in [4,6], but only enters the Y-slab at t in [9,11] -
+        // exercises the early-return "tyMin > tMax" branch, not just the X-slab check.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, -10, 0), new Vector3D<double>(1, -1, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirMissViaZBranch() {
+        // Same shape of miss as the Y-branch case, but on the Z axis with a negative direction component.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 0, 10), new Vector3D<double>(1, 0, -1));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirYNarrowsInterval() {
+        // X-slab alone gives t in [4,6]; the Y-slab is strictly inside that range ([4.5,5.5]),
+        // so both "tyMin > tMin" and "tyMax < tMax" narrowing branches fire.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, -10, 0), new Vector3D<double>(1, 2, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.True);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirZNarrowsInterval() {
+        // Mirrors the Y-narrowing case on the Z axis.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 0, -10), new Vector3D<double>(1, 0, 2));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.True);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirBoxBehindRayMisses() {
+        // The box is entirely behind the ray origin -> tMax <= 0, covering the final "tMax > 0" check.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(5, 0, 0), new Vector3D<double>(1, 0, 0));
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
+
+        bool hit = b.IntersectP(ray, invDir, dirIsNeg);
+
+        Assert.That(hit, Is.False);
+    }
+    [Test]
+    public void TestIntersectPWithPrecomputedInvDirRayTMaxTooSmallMisses() {
+        // Same geometry as the basic hit case (tMin = 4), but ray.TMax = 2 -> covers the final "tMin < ray.TMax" check.
+        Bounds3D<double> b = new(new(-1, -1, -1), new(1, 1, 1));
+        Ray ray = new(new Point3D<double>(-5, 0, 0), new Vector3D<double>(1, 0, 0), tMax: 2);
+        Vector3D<double> invDir = new(1 / ray.Direction.X, 1 / ray.Direction.Y, 1 / ray.Direction.Z);
+        bool[] dirIsNeg = { invDir.X < 0, invDir.Y < 0, invDir.Z < 0 };
 
         bool hit = b.IntersectP(ray, invDir, dirIsNeg);
 

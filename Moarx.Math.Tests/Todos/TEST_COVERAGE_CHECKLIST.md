@@ -232,12 +232,27 @@ vertauschte Tail-Reihenfolge aufgedeckt.
 
 Verifiziert: `Moarx.Math.Tests` (355/355 grün) und `Raytracing` baut fehlerfrei.
 
-## 8. Code-Coverage-Lücken: Bounds3D<T> (Coverage-Lauf 2026-08-08: 90.8% Lines / 72.5% Branches)
+## 8. Code-Coverage-Lücken: Bounds3D<T> — ✅ erledigt (2026-08-08)
 
-- [ ] `IntersectP(Ray, Vector3D invDir, bool[] dirIsNeg)` — mehrere Branches ungetestet (Zeilen 86–98)
-- [ ] `Corner(int)` — Zeilen 104/108 ungetestet
-- [ ] `Expand` — Zeile 166 ungetestet
-- [ ] `MaxDimension()` — fast komplett ungetestet (nur 33% Branches)
+Quelle: `dotnet test --collect:"XPlat Code Coverage"` gegen `Moarx.Math.Tests` (Lauf 2026-08-08: 90.8% Lines / 72.5% Branches).
+
+- [x] `IntersectP(Ray, Vector3D invDir, bool[] dirIsNeg)` — alle bisher fehlenden Branches ergänzt: negative
+  Richtungskomponente (`dirIsNeg`-Pfad), früher `false`-Return über den Y-Zweig und den Z-Zweig, tatsächliches
+  Einengen des `[tMin,tMax]`-Intervalls über Y bzw. Z (beide Vergleiche pro Achse), Box komplett hinter dem
+  Ray-Ursprung (`tMax <= 0`), sowie `ray.TMax` kleiner als der Trefferabstand. Alle Fälle von Hand gegen die
+  pbrt-Referenzformel durchgerechnet — kein Bug gefunden, nur fehlende Coverage.
+- [x] `Corner(int)` — Out-of-Range-Test ergänzt (`TestCornerThrowsOnOutOfRange`, deckt Zeile 104 ab).
+  **Toter Code gefunden und entfernt** (siehe unten).
+- [x] `Expand` — `TestExpandThrowsOnNaNDelta` ergänzt (Zeile 166, NaN-Guard).
+- [x] `MaxDimension()` — Y-Achse größte, Z-Achse größte und Gleichstand-Fallback (→ Z) ergänzt.
+
+**Toter Code gefunden und entfernt (kein Bug, kein Verhaltensfix):** `Corner(int corner)` prüfte zusätzlich zur
+Range-Prüfung `double.IsNaN(corner)` — `corner` ist aber ein `int`, wird also implizit nach `double` konvertiert;
+ein `int` kann nie `NaN` sein, der Zweig war folglich unerreichbar und konnte prinzipiell nie von einem Test
+abgedeckt werden (vermutlich Copy-Paste-Rest einer `double`-Variante). Nach Rückfrage beim User entfernt
+(`Bounds3D.cs`); die Range-Prüfung direkt darüber deckt bereits alle ungültigen Werte ab.
+
+Verifiziert: `Moarx.Math.Tests` (367/367 grün) und `Raytracer.Tests` (33/33 grün), beide Projekte bauen fehlerfrei.
 
 ## 9. Code-Coverage-Lücken: Normal3D<T> (Coverage-Lauf 2026-08-08: 88.9% Lines, 100% Branches)
 
