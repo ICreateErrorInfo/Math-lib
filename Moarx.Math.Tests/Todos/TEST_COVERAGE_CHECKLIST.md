@@ -105,18 +105,34 @@ Kein Bug gefunden. Verifiziert: `Moarx.Math.Tests` (284/284 grün) und `Raytraci
 
 Kein Bug gefunden.
 
-### Transform
-- [ ] `Transpose()`
-- [ ] `SwapHandness()`
-- [ ] `Rotate(theta, axis)` (Rotation um beliebige Achse)
-- [ ] `RotateFromTo`
-- [ ] `LookAt`
-- [ ] `Orthographic`
-- [ ] `Perspective`
-- [ ] Operator `*` mit `Vector3D`, `Normal3D`, `Ray`, `Bounds3D`, `Transform`
-- [ ] `==` / `!=`
-- [ ] `Inverse()`-Korrektheit für Rotate/Scale (nicht nur Ctor-Fall)
-- [ ] `IsIdentity() == false`-Fall
+### Transform — ✅ erledigt (2026-08-08)
+- [x] `Transpose()`
+- [x] `SwapHandness()`
+- [x] `Rotate(theta, axis)` (Rotation um beliebige Achse) — **Bug gefunden und gefixt** (siehe unten)
+- [x] `RotateFromTo` — **derselbe Bug gefunden und gefixt**
+- [x] `LookAt`
+- [x] `Orthographic`
+- [x] `Perspective`
+- [x] Operator `*` mit `Vector3D`, `Normal3D`, `Ray`, `Bounds3D`, `Transform`
+- [x] `==` / `!=`
+- [x] `Inverse()`-Korrektheit für Rotate/Scale (Round-Trip-Test, nicht nur Ctor-Fall)
+- [x] `IsIdentity() == false`-Fall
+
+**Bug gefunden und gefixt:** `Transform.Rotate(sinTheta,cosTheta,axis)` (und die `Rotate(theta,axis)`-Überladung,
+die diese aufruft) sowie `Transform.RotateFromTo` bauen ihre 4x4-Matrix aus einem frischen `double[4,4]`
+(alle Einträge starten bei `0`) und füllen nur die obere-linke 3x3-Rotationsmatrix — die letzte Zeile
+(`m[3,0..3]`) wird nie beschrieben und bleibt `[0,0,0,0]` statt der für eine affine Transformation
+erforderlichen `[0,0,0,1]`. Da der `Point3D`-Transformoperator durch die homogene Koordinate `wp = m[3,*]·p + m[3,3]`
+dividiert, war `wp` dadurch immer `0` → jede Punkt-Transformation mit diesen beiden Methoden warf eine
+`DivideByZeroException`. `Vector3D`/`Normal3D`-Transformationen waren nicht betroffen (deren Operatoren
+greifen nie auf Zeile/Spalte 3 zu). Beide Methoden waren zum Fundzeitpunkt nirgends im Code aufgerufen
+(kein aktiver Rendering-Bug, aber ein sofortiger Crash beim ersten Gebrauch). Fix: `m[3,3] = 1` (und zur
+Klarheit `m[3,0..2] = 0`) in `Rotate(...)` ergänzt, `r[3,3] = 1` in `RotateFromTo` ergänzt. Neue Tests
+(`TestRotateAroundZAxisMatchesRotateZ`, `TestRotateInverseRoundTrips`, `TestRotateFromToMapsFromOntoTo`,
+`TestRotateFromToWithOppositeAxis`) transformieren `Point3D`-Werte über diese Methoden und hätten vor dem
+Fix mit `DivideByZeroException` fehlgeschlagen.
+
+Verifiziert: `Moarx.Math.Tests` (304/304 grün) und `Raytracing` bauen fehlerfrei.
 
 ### Rectangle2D
 - [ ] `Intersect`

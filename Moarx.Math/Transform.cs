@@ -158,6 +158,11 @@ public class Transform {
         m[2,2] = a.Z * a.Z + (1 - a.Z * a.Z) * cosTheta;
         m[2,3] = 0;
 
+        m[3,0] = 0;
+        m[3,1] = 0;
+        m[3,2] = 0;
+        m[3,3] = 1;
+
         SquareMatrix squareMatrix = new SquareMatrix(m);
 
         return new Transform(squareMatrix, squareMatrix.Transpose());
@@ -187,6 +192,7 @@ public class Transform {
                           4 * (u*v) / ((u*u) * (v*v)) * v[i] * u[j];
             }
         }
+        r[3,3] = 1;
 
         SquareMatrix squareMatrix = new SquareMatrix(r);
 
