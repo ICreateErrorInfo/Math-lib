@@ -40,6 +40,6 @@ public class RandomWalkIntegrator: RayIntegrator {
             return emitted.Sample(lambda);
         }
 
-        return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * LiRandomWalk(interaction.ScatteredRay, lambda, depth++) ;
+        return emitted.Sample(lambda) + interaction.Attenuation.Sample(lambda) * LiRandomWalk(interaction.ScatteredRay, lambda, depth + 1) ;
     }
 }

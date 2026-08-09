@@ -8,9 +8,11 @@ Ergebnis einer Code-Analyse des `Raytracing`-Projekts (Stand 2026-08-08). Priori
       diesen Wert in `r.TMax` übernimmt, kollabiert nach jedem Zylindertreffer der gültige Suchbereich für den Rest der
       BVH-Traversierung auf diesem Ray (`Bounds3D.IntersectP` prüft `tMin < ray.TMax`). Folge: nach einem Zylindertreffer
       werden alle weiteren, auch näherliegenden Objekte im selben Traversierungslauf ignoriert.
-- [ ] **`Integrators/RandomWalkIntegrator.cs:43`** – `LiRandomWalk(interaction.ScatteredRay, lambda, depth++)` nutzt
-      Post-Inkrement als Argument; der rekursive Aufruf bekommt immer den alten `depth`-Wert. `MaxDepth` greift dadurch
-      nie. Fix: `depth + 1`. Risiko: Stack-Overflow in geschlossenen Szenen (z. B. Cornell Box).
+- [x] **`Integrators/RandomWalkIntegrator.cs:43`** – `LiRandomWalk(interaction.ScatteredRay, lambda, depth++)` nutzte
+      Post-Inkrement als Argument; der rekursive Aufruf bekam immer den alten `depth`-Wert. `MaxDepth` griff dadurch
+      nie. Risiko: Stack-Overflow in geschlossenen Szenen (z. B. Cornell Box). Behoben (2026-08-09, `depth + 1`),
+      Regressionstest in `RandomWalkIntegratorTests.cs` (`MaxDepthLimitsIndirectBounces`, rendert die "Simple Light"-
+      Szene bei `maxDepth` 1 vs. 50 und prüft, dass die Helligkeit spürbar unterschiedlich ist).
 - [ ] **`Moarx.Math/Vector3D.cs:89`** (`Refract`) – `new Vector3D<U>(eta * cosi)` nutzt den Ein-Parameter-Ctor und
       erzeugt den uniformen Vektor `(eta·cosi, eta·cosi, eta·cosi)` statt `eta·cosi · v1` (Normalenvektor). Betrifft
       `Dielectric.Scatter` direkt – Glas-Rendering ist physikalisch falsch, sobald die Normale nicht zufällig
@@ -49,7 +51,6 @@ Ergebnis einer Code-Analyse des `Raytracing`-Projekts (Stand 2026-08-08). Priori
       wirft beim Rendern). Entweder echten Texturpfad hinterlegen oder aus dem Szenen-Dropdown entfernen.
 - [ ] Tests ergänzen für die am wenigsten abgedeckten, aber am fehleranfälligsten Bereiche:
   - Materials (v. a. `Dielectric`-Refraction gegen Referenzwerte)
-  - Integrator-Tiefenbegrenzung (`MaxDepth` wird eingehalten)
   - `TriangleMesh`-Normalenimport
   - `BVHAccelerator.Intersect()` (aktuell nur der Ctor getestet, keine Traversierungs-Assertions)
 - [ ] `Shapes/Sphere.cs` `GetSphereUV` nutzt Y-Achsen-Polkoordinaten, während das Clipping (`_zMin`/`_zMax`/`_phiMax`)
